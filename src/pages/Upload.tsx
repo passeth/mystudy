@@ -2,9 +2,11 @@ import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useManifest } from "../lib/manifest";
 import { BLOCK_COLORS, COLOR_HEX, type BlockColor } from "../lib/types";
+import { mdToHtml } from "../lib/markdown";
 
 type Mode = "existing" | "new";
 type Source = "paste" | "file";
+type Format = "html" | "markdown";
 
 const slugify = (s: string) =>
   s
@@ -29,8 +31,10 @@ export default function Upload() {
   const [lessonSubtitle, setLessonSubtitle] = useState("");
 
   const [source, setSource] = useState<Source>("paste");
-  const [html, setHtml] = useState("");
+  const [format, setFormat] = useState<Format>("html");
+  const [raw, setRaw] = useState("");
   const [fileName, setFileName] = useState("");
+  const [showPreview, setShowPreview] = useState(false);
 
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState<
@@ -42,9 +46,15 @@ export default function Upload() {
     return slugify(newTitle);
   }, [mode, existingId, newTitle, topics]);
 
+  // the HTML that will actually be uploaded
+  const finalHtml = useMemo(
+    () => (format === "markdown" ? mdToHtml(raw, lessonTitle || "Untitled") : raw),
+    [format, raw, lessonTitle]
+  );
+
   const canSubmit =
     !!lessonTitle.trim() &&
-    !!html.trim() &&
+    !!raw.trim() &&
     (mode === "existing"
       ? !!(existingId || topics[0]?.id)
       : !!newTitle.trim());
@@ -53,11 +63,15 @@ export default function Upload() {
     const f = e.target.files?.[0];
     if (!f) return;
     setFileName(f.name);
+    const isMd = /\.(md|markdown|mdown)$/i.test(f.name);
+    setFormat(isMd ? "markdown" : "html");
     const text = await f.text();
-    setHtml(text);
+    setRaw(text);
     if (!lessonTitle) {
-      const m = text.match(/<title>([^<]*)<\/title>/i);
-      if (m) setLessonTitle(m[1].trim());
+      const mt = text.match(/<title>([^<]*)<\/title>/i);
+      const mh = text.match(/^\s*#\s+(.+)$/m);
+      if (mt) setLessonTitle(mt[1].trim());
+      else if (isMd && mh) setLessonTitle(mh[1].trim());
     }
   }
 
@@ -76,11 +90,8 @@ export default function Upload() {
                 subtitle: newSubtitle.trim(),
                 color: newColor,
               },
-        lesson: {
-          title: lessonTitle.trim(),
-          subtitle: lessonSubtitle.trim(),
-        },
-        html,
+        lesson: { title: lessonTitle.trim(), subtitle: lessonSubtitle.trim() },
+        html: finalHtml,
       };
       const r = await fetch("/api/upload", {
         method: "POST",
@@ -94,10 +105,11 @@ export default function Upload() {
         topicId: j.topicId,
         msg: "커밋 완료! Vercel이 재배포되는 데 30~60초 정도 걸립니다. 잠시 후 새로고침하면 보입니다.",
       });
-      setHtml("");
+      setRaw("");
       setFileName("");
       setLessonTitle("");
       setLessonSubtitle("");
+      setShowPreview(false);
     } catch (e: any) {
       setResult({ ok: false, msg: e.message || String(e) });
     } finally {
@@ -109,11 +121,12 @@ export default function Upload() {
     <div className="wrap section">
       <span className="eyebrow">UPLOAD</span>
       <h1 className="display-lg" style={{ margin: "12px 0 8px" }}>
-        학습 HTML 올리기
+        학습 글 올리기
       </h1>
       <p className="muted" style={{ marginBottom: 32, maxWidth: "60ch" }}>
-        스킬로 만든 HTML 한 편을 토픽에 추가합니다. 기존 토픽을 고르거나 새
-        토픽을 만들 수 있어요. 올리면 GitHub에 커밋되고 자동 재배포됩니다.
+        스킬로 만든 HTML 또는 마크다운(.md) 한 편을 토픽에 추가합니다. 마크다운은
+        업로드 시 자동으로 보기 좋은 HTML로 변환됩니다. 올리면 GitHub에 커밋되고
+        자동 재배포됩니다.
       </p>
 
       <div className="form-card">
@@ -224,44 +237,105 @@ export default function Upload() {
           </div>
         </div>
 
-        {/* html source */}
+        {/* content source */}
         <div className="field">
-          <label>HTML</label>
-          <div className="seg" style={{ marginBottom: 14 }}>
-            <button
-              className={source === "paste" ? "active" : ""}
-              onClick={() => setSource("paste")}
-              type="button"
-            >
-              붙여넣기
-            </button>
-            <button
-              className={source === "file" ? "active" : ""}
-              onClick={() => setSource("file")}
-              type="button"
-            >
-              파일 선택
-            </button>
+          <label>본문</label>
+          <div
+            style={{
+              display: "flex",
+              gap: 10,
+              flexWrap: "wrap",
+              marginBottom: 14,
+            }}
+          >
+            <div className="seg">
+              <button
+                className={source === "paste" ? "active" : ""}
+                onClick={() => setSource("paste")}
+                type="button"
+              >
+                붙여넣기
+              </button>
+              <button
+                className={source === "file" ? "active" : ""}
+                onClick={() => setSource("file")}
+                type="button"
+              >
+                파일 선택
+              </button>
+            </div>
+            {source === "paste" ? (
+              <div className="seg">
+                <button
+                  className={format === "html" ? "active" : ""}
+                  onClick={() => setFormat("html")}
+                  type="button"
+                >
+                  HTML
+                </button>
+                <button
+                  className={format === "markdown" ? "active" : ""}
+                  onClick={() => setFormat("markdown")}
+                  type="button"
+                >
+                  마크다운
+                </button>
+              </div>
+            ) : (
+              <span className="chip">
+                형식: {format === "markdown" ? "마크다운 (.md)" : "HTML"}
+              </span>
+            )}
           </div>
 
           {source === "paste" ? (
             <textarea
               className="textarea"
-              placeholder="<!DOCTYPE html> ... 전체 HTML을 붙여넣으세요"
-              value={html}
-              onChange={(e) => setHtml(e.target.value)}
+              placeholder={
+                format === "markdown"
+                  ? "# 제목\n\n**굵게**, *기울임*, `코드`, - 목록, > 인용, | 표 | ... 마크다운을 붙여넣으세요"
+                  : "<!DOCTYPE html> ... 전체 HTML을 붙여넣으세요"
+              }
+              value={raw}
+              onChange={(e) => setRaw(e.target.value)}
             />
           ) : (
             <div>
               <input
                 type="file"
-                accept=".html,text/html"
+                accept=".html,.htm,.md,.markdown,text/html,text/markdown"
                 onChange={onFile}
               />
               {fileName && (
                 <div className="hint">
-                  {fileName} · {Math.round(html.length / 1024)} KB 로드됨
+                  {fileName} · {Math.round(raw.length / 1024)} KB 로드됨
                 </div>
+              )}
+            </div>
+          )}
+
+          {format === "markdown" && raw.trim() && (
+            <div style={{ marginTop: 12 }}>
+              <button
+                type="button"
+                className="btn btn-secondary btn-sm"
+                onClick={() => setShowPreview((v) => !v)}
+              >
+                {showPreview ? "미리보기 닫기" : "변환 미리보기"}
+              </button>
+              {showPreview && (
+                <iframe
+                  title="markdown preview"
+                  srcDoc={finalHtml}
+                  style={{
+                    width: "100%",
+                    height: 360,
+                    border: "1px solid var(--hairline)",
+                    borderRadius: 8,
+                    marginTop: 10,
+                    background: "#fff",
+                  }}
+                />
               )}
             </div>
           )}
