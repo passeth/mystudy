@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Git 설정 출처 확인부터 GitHub PR 리뷰 하네스와 CodeRabbit merge gate 신호를 분리 진단하는 첫 레슨.">
+  <title>1</title>
+  <style>
+/* Shared lesson stylesheet for the teaching workspace. */
+:root {
+  --ink: #17202a;
+  --muted: #5d6d7e;
+  --paper: #fbfaf7;
+  --panel: #ffffff;
+  --line: #e4dfd5;
+  --accent: #2f6f73;
+  --accent-soft: #e7f0ef;
+  --warn: #8a5a00;
+  --code: #102027;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: ui-serif, Georgia, 'Noto Serif KR', 'Apple SD Gothic Neo', serif;
+  color: var(--ink);
+  background: radial-gradient(circle at top left, #fff 0, var(--paper) 38rem);
+  line-height: 1.65;
+}
+main {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 56px 24px 96px;
+}
+header.lesson-header {
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+}
+.kicker {
+  color: var(--accent);
+  font: 700 0.8rem/1 ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+h1 {
+  font-size: clamp(2rem, 5vw, 4rem);
+  line-height: 1.05;
+  margin: 12px 0 16px;
+  letter-spacing: -0.04em;
+}
+.subtitle {
+  max-width: 720px;
+  color: var(--muted);
+  font-size: 1.1rem;
+}
+h2 {
+  margin-top: 42px;
+  font-size: 1.65rem;
+  letter-spacing: -0.02em;
+}
+h3 { margin-top: 28px; }
+a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.card, .quiz-card {
+  background: rgba(255,255,255,0.82);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 22px;
+  margin: 20px 0;
+  box-shadow: 0 12px 36px rgba(23, 32, 42, 0.05);
+}
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+.callout {
+  border-left: 4px solid var(--accent);
+  background: var(--accent-soft);
+  padding: 16px 18px;
+  border-radius: 12px;
+}
+.warn {
+  border-left-color: #d79a00;
+  background: #fff6dc;
+}
+code, pre {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
+}
+pre {
+  overflow-x: auto;
+  background: var(--code);
+  color: #eef7f6;
+  padding: 16px;
+  border-radius: 14px;
+  font-size: 0.92rem;
+}
+code { color: #0f4d52; }
+pre code { color: inherit; }
+.small { color: var(--muted); font-size: 0.92rem; }
+.checklist li { margin-bottom: 8px; }
+.quiz-card button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin: 8px 0;
+  color: var(--ink);
+  cursor: pointer;
+  font: inherit;
+}
+.quiz-card button:hover, .quiz-card button:focus { border-color: var(--accent); outline: none; }
+.quiz-card button.correct { background: #e8f5e9; border-color: #2e7d32; }
+.quiz-card button.incorrect { background: #ffebee; border-color: #c62828; }
+.quiz-feedback { min-height: 1.5em; font-weight: 700; }
+footer {
+  margin-top: 52px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+}
+@media print {
+  body { background: white; }
+  main { padding: 24px; }
+  .card, .quiz-card { box-shadow: none; break-inside: avoid; }
+  a::after { content: ' (' attr(href) ')'; font-size: 0.8em; color: var(--muted); }
+}
+
+</style>
+</head>
+<body>
+<main>
+  <header class="lesson-header">
+    <p class="kicker">Lesson 0001 · Git / PR / CodeRabbit</p>
+    <h1>Git 설정에서 PR 리뷰 게이트까지</h1>
+    <p class="subtitle">오늘의 한 가지 승리: “PR이 왜 merge되지 않는지”를 추측하지 않고 네 가지 신호로 분리해서 말할 수 있게 된다.</p>
+  </header>
+
+  <section class="callout">
+    <strong>미션 연결:</strong> 이 레슨은 Git 명령어를 외우는 것이 아니라, 실제 저장소에서 PR을 만들고 리뷰/CI/CodeRabbit 게이트를 안전하게 통과시키는 운영 감각을 만드는 첫 단계다.
+  </section>
+
+  <section>
+    <h2>1. Git 설정은 “어디서 왔는가”가 중요하다</h2>
+    <p>Git 설정은 보통 세 계층으로 겹친다: 시스템 전체, 사용자 전체, 현재 저장소. 더 가까운 계층이 이전 계층을 덮어쓴다. 그래서 처음 배울 명령은 값을 바꾸는 명령보다 <em>출처를 보는 명령</em>이다.</p>
+    <pre><code>git config --list --show-origin
+
+git config --show-origin user.name
+git config --show-origin user.email</code></pre>
+    <p class="small">Primary source: <a href="https://git-scm.com/book/en/v2/Getting-Started-First-Time-Git-Setup">Pro Git, First-Time Git Setup</a>.</p>
+  </section>
+
+  <section>
+    <h2>2. PR 리뷰 하네스란 무엇인가?</h2>
+    <p>여기서 “리뷰 하네스”는 PR을 merge하기 전에 여러 시스템이 붙어서 판단하는 장치 전체를 뜻한다. 사람 리뷰, CI status check, branch protection/ruleset, CodeRabbit 리뷰가 모두 하네스의 일부다.</p>
+    <div class="grid">
+      <div class="card"><h3>사람 리뷰</h3><p>Comment, Approve, Request changes. GitHub의 reviewDecision에 영향을 준다.</p></div>
+      <div class="card"><h3>상태 체크</h3><p>테스트, 빌드, 보안 스캔, CodeRabbit commit status. required check면 merge를 막을 수 있다.</p></div>
+      <div class="card"><h3>정책</h3><p>branch protection/ruleset: required reviews, required status checks, conversation resolution 등.</p></div>
+      <div class="card"><h3>CodeRabbit</h3><p>자동 리뷰, walkthrough, pre-merge checks, blocking findings. 사람의 GitHub approval과는 별개다.</p></div>
+    </div>
+    <p class="small">GitHub는 PR 리뷰에서 approve/request changes/comment를 구분하고, protected branch는 required reviews/checks/conversation resolution 같은 merge 조건을 둘 수 있다. Sources: <a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/about-pull-request-reviews">GitHub PR reviews</a>, <a href="https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches">protected branches</a>.</p>
+  </section>
+
+  <section class="card">
+    <h2>3. naruon 스킬에서 가져온 핵심 규칙</h2>
+    <p><a href="https://raw.githubusercontent.com/ContextualWisdomLab/naruon/develop/.agents/skills/github-robot-review-gate/SKILL.md">naruon의 GitHub Robot Review Gate</a> 스킬은 다음 사고방식을 요구한다:</p>
+    <ol class="checklist">
+      <li>코드나 저장소 설정을 바꾸기 전에 <strong>정확한 merge blocker</strong>를 먼저 진단한다.</li>
+      <li>GitHub review state, CodeRabbit robot-review evidence, required status contexts, ruleset settings를 분리한다.</li>
+      <li>모든 증거에 <strong>현재 PR head SHA</strong>를 붙인다. stale evidence를 current-head approval로 착각하지 않기 위해서다.</li>
+      <li>branch protection 우회, admin merge, 보안 체크 비활성화는 기본 해법이 아니다.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>4. PR 상태를 읽는 최소 명령</h2>
+    <p>실제 저장소에서 이 네 줄을 실행하면 “무엇이 막고 있는가”를 분리할 수 있다.</p>
+    <pre><code>gh pr view &lt;PR&gt;   --json number,headRefOid,mergeable,mergeStateStatus,reviewDecision,statusCheckRollup,latestReviews
+
+gh pr checks &lt;PR&gt; --required
+
+gh api repos/&lt;OWNER&gt;/&lt;REPO&gt;/pulls/&lt;PR&gt;/reviews
+
+gh api repos/&lt;OWNER&gt;/&lt;REPO&gt;/rulesets --jq '.[] | {name, enforcement, conditions, rules}'</code></pre>
+    <p>이 명령 묶음은 <a href="0002-pr-review-harness-cheatsheet.html">PR 리뷰 하네스 치트시트</a>에 다시 정리해 두었다.</p>
+  </section>
+
+  <section>
+    <h2>5. CodeRabbit은 어떻게 활용하는가?</h2>
+    <p>CodeRabbit은 PR 생성/커밋 푸시 때 자동 리뷰를 수행하고, 새 커밋에는 incremental review를 한다. PR 댓글로 동작을 제어할 수 있다.</p>
+    <pre><code>@coderabbitai review        # incremental review
+@coderabbitai full review   # 전체 PR 재리뷰
+@coderabbitai pause         # 자동 리뷰 일시정지
+@coderabbitai resume        # 자동 리뷰 재개
+@coderabbitai resolve       # CodeRabbit 코멘트 resolve 요청
+@coderabbitai run pre-merge checks</code></pre>
+    <p>저장소 설정은 루트의 <code>.coderabbit.yaml</code>로 버전 관리할 수 있고, pre-merge checks는 warning으로 시작해 팀 합의 후 error 모드로 올리는 것이 안전하다.</p>
+    <p class="small">Sources: <a href="https://docs.coderabbit.ai/guides/code-review-overview">CodeRabbit PR review overview</a>, <a href="https://docs.coderabbit.ai/guides/commands">CodeRabbit commands</a>, <a href="https://docs.coderabbit.ai/getting-started/yaml-configuration">YAML configuration</a>, <a href="https://docs.coderabbit.ai/pr-reviews/pre-merge-checks">pre-merge checks</a>.</p>
+  </section>
+
+  <section class="warn callout">
+    <h2>보안 감각: secrets가 있으면 PR 코드는 untrusted다</h2>
+    <p><code>pull_request_target</code>나 <code>workflow_run</code>처럼 더 높은 권한이나 secrets에 접근할 수 있는 workflow에서는 PR 작성자가 바꾼 코드를 그대로 checkout/실행하면 위험하다. naruon의 privileged PR scan 스킬도 “trusted base workflow code를 실행하고, PR head는 데이터로만 스캔하라”는 원칙을 둔다.</p>
+    <p class="small">Sources: <a href="https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows">GitHub Actions events</a>, <a href="https://raw.githubusercontent.com/ContextualWisdomLab/naruon/develop/.agents/skills/github-actions-privileged-pr-scan/SKILL.md">naruon privileged PR scan</a>.</p>
+  </section>
+
+  <section class="quiz-card" data-quiz data-correct="맞습니다. CodeRabbit 성공은 봇 증거 또는 status check일 수 있지만, GitHub 사람 리뷰의 APPROVED 객체와는 분리해서 봐야 합니다." data-incorrect="다시 생각해보세요. naruon 규칙은 사람 리뷰, status check, ruleset, CodeRabbit evidence를 분리하라고 합니다.">
+    <h2>30초 회상 퀴즈</h2>
+    <p><strong>질문:</strong> PR merge box에 CodeRabbit 관련 check는 success인데 GitHub reviewDecision이 여전히 REVIEW_REQUIRED다. 먼저 확인해야 할 것은?</p>
+    <button type="button" data-answer="wrong">CodeRabbit을 다시 설치한다</button>
+    <button type="button" data-answer="correct">ruleset의 required review 수를 확인한다</button>
+    <button type="button" data-answer="wrong">CI를 모두 비활성화한다</button>
+    <p class="quiz-feedback" data-feedback aria-live="polite"></p>
+  </section>
+
+  <section class="card">
+    <h2>오늘의 실습</h2>
+    <ol class="checklist">
+      <li>터미널에서 <code>git config --list --show-origin</code>을 실행한다.</li>
+      <li><code>user.name</code>, <code>user.email</code>, <code>pull.rebase</code>, <code>init.defaultBranch</code>가 어디서 왔는지 적는다.</li>
+      <li>GitHub PR 하나를 열어볼 수 있다면 <code>gh pr view &lt;PR&gt; --json reviewDecision,statusCheckRollup</code>으로 사람 리뷰와 status check를 분리해 본다.</li>
+      <li>헷갈리는 출력이 있으면 에이전트에게 그대로 붙여넣고 “네 신호로 분리해줘”라고 요청한다.</li>
+    </ol>
+  </section>
+
+  <footer>
+    <p>다음 레슨 후보: <strong>실제 PR 하나를 `gh`로 읽고 merge blocker 진단표 작성하기</strong>.</p>
+    <p>궁금한 점이 생기면 이 레슨의 어떤 문장이나 명령이든 그대로 물어보세요. 선생 역할의 에이전트가 이어서 설명합니다.</p>
+  </footer>
+</main>
+<script>
+// Minimal reusable quiz feedback component.
+document.querySelectorAll('[data-quiz]').forEach((quiz) => {
+  const feedback = quiz.querySelector('[data-feedback]');
+  quiz.querySelectorAll('button[data-answer]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const isCorrect = button.dataset.answer === 'correct';
+      quiz.querySelectorAll('button[data-answer]').forEach((b) => {
+        b.classList.remove('correct', 'incorrect');
+        b.setAttribute('aria-pressed', 'false');
+      });
+      button.classList.add(isCorrect ? 'correct' : 'incorrect');
+      button.setAttribute('aria-pressed', 'true');
+      feedback.textContent = isCorrect ? quiz.dataset.correct : quiz.dataset.incorrect;
+    });
+  });
+});
+
+</script>
+</body>
+</html>
