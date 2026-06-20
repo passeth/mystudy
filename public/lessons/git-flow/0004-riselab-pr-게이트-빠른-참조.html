@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RISELAB PR 게이트 빠른 참조</title>
+  <link rel="stylesheet" href="assets/course.css">
+</head>
+<body>
+  <main>
+    <header class="course-header">
+      <p class="kicker">Reference 0002</p>
+      <h1>RISELAB PR 게이트 빠른 참조</h1>
+      <p class="lede">RISELAB에서 변경을 만들고, PR을 열고, CodeRabbit과 GitHub Actions 결과를 읽고, 승인 후 merge하는 최소 운영 절차입니다.</p>
+    </header>
+
+    <section class="callout">
+      <h2>한 줄 모델</h2>
+      <p><strong>작업자는 branch에서 고치고, GitHub Actions는 기계 검증을 하고, CodeRabbit은 리뷰 의견을 주고, 사람 reviewer가 승인해야 <code>main</code>으로 들어간다.</strong></p>
+    </section>
+
+    <section class="card">
+      <h2>현재 RISELAB 규칙</h2>
+      <table>
+        <thead>
+          <tr><th>규칙</th><th>의미</th><th>근거 위치</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>GitHub Flow</td><td><code>main</code>에 직접 넣지 않고 <code>codex/...</code> 같은 작업 branch에서 PR을 연다.</td><td><code>AGENTS.md</code></td></tr>
+          <tr><td>한국어 PR</td><td>PR 제목, 본문, 리뷰 답변, merge note는 한국어로 쓴다.</td><td><code>.github/workflows/pr-checks.yml</code></td></tr>
+          <tr><td>필수 체크</td><td><code>Minimal Verification</code>이 통과해야 merge 가능하다.</td><td><code>.github/workflows/pr-checks.yml</code></td></tr>
+          <tr><td>필수 승인</td><td>사람 승인 리뷰 1개가 필요하다. 새 commit이 올라가면 오래된 승인은 무효화된다.</td><td>GitHub branch protection</td></tr>
+          <tr><td>대화 해결</td><td>리뷰 thread가 unresolved이면 merge가 막힌다.</td><td>GitHub branch protection</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="card">
+      <h2>상태 읽기</h2>
+      <table>
+        <thead>
+          <tr><th>보이는 값</th><th>뜻</th><th>다음 행동</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>Minimal Verification: SUCCESS</code></td><td>테스트와 Agentation build가 통과했다.</td><td>리뷰/대화 상태를 본다.</td></tr>
+          <tr><td><code>Minimal Verification: FAILURE</code></td><td>테스트, build, PR 한국어 검증 중 하나가 실패했다.</td><td>로그 comment를 읽고 같은 branch에 수정 commit을 push한다.</td></tr>
+          <tr><td><code>CodeRabbit: SUCCESS</code></td><td>CodeRabbit status가 통과했다.</td><td>GitHub 승인 리뷰와 동일시하지 않는다.</td></tr>
+          <tr><td><code>reviewDecision: REVIEW_REQUIRED</code></td><td>아직 사람 approval이 부족하다.</td><td>reviewer에게 승인 요청한다.</td></tr>
+          <tr><td><code>mergeStateStatus: BLOCKED</code></td><td>체크, 승인, unresolved thread 중 하나가 merge를 막고 있다.</td><td>세부 blocker를 분리해서 확인한다.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="card">
+      <h2>기본 명령</h2>
+      <pre><code>gh pr view 2 --json number,title,url,headRefName,baseRefName,mergeStateStatus,reviewDecision,statusCheckRollup
+gh pr checks 2 --required
+gh api repos/passeth/riselab/branches/main/protection
+npm run ci:minimal</code></pre>
+    </section>
+
+    <section class="grid">
+      <div class="card">
+        <h2>다른 프로젝트에 옮기는 체크리스트</h2>
+        <ol class="checklist">
+          <li><code>AGENTS.md</code>에 GitHub Flow, PR 필수, 한국어 PR 여부, 자동 self-fix loop를 적는다.</li>
+          <li><code>.github/workflows/pr-checks.yml</code>을 만들고 그 프로젝트의 최소 검증 명령으로 바꾼다.</li>
+          <li><code>.github/pull_request_template.md</code>를 만든다.</li>
+          <li>CodeRabbit 또는 robot reviewer 대응 스킬을 <code>.agents/skills/</code>에 둔다.</li>
+          <li>GitHub settings에서 <code>main</code> branch protection을 켠다.</li>
+          <li>필수 status check 이름이 workflow job 이름과 정확히 맞는지 확인한다.</li>
+          <li>테스트용 PR을 하나 열어 실패/성공/승인 대기를 실제로 확인한다.</li>
+        </ol>
+      </div>
+      <div class="card success">
+        <h2>기억할 점</h2>
+        <p>CodeRabbit 통과, Actions 통과, 사람 approval은 서로 다른 조건입니다. merge가 막혔을 때는 하나로 뭉뚱그리지 말고 각각 분리해서 확인합니다.</p>
+      </div>
+    </section>
+
+    <footer>
+      관련 lesson: <a href="0005-pr-actions-coderabbit-operating-loop.html">PR, CodeRabbit, Actions 운영 루프</a>
+      <br><a href="index.html">코스 시작으로 돌아가기</a>
+    </footer>
+  </main>
+</body>
+</html>
