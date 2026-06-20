@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lesson 0003 — Git 기초: commit, branch, push, PR</title>
+  <link rel="stylesheet" href="assets/course.css">
+  <script src="assets/course.js" defer></script>
+</head>
+<body>
+<main>
+  <header class="course-header">
+    <p class="kicker">Lesson 0003</p>
+    <h1>Git 기초: commit, branch, push, PR</h1>
+    <p class="lede">Git은 “파일 변경 이력”을 관리하는 도구이고, GitHub는 그 이력을 팀이 같이 보고 검토하는 공간입니다. 처음에는 아래 6단계만 정확히 알면 됩니다.</p>
+  </header>
+
+  <section class="callout">
+    <h2>비유로 이해하기</h2>
+    <p><strong>repository</strong>는 프로젝트 서랍장입니다. <strong>branch</strong>는 별도 작업 복사본입니다. <strong>commit</strong>은 저장된 스냅샷입니다. <strong>push</strong>는 내 스냅샷을 GitHub에 올리는 일입니다. <strong>PR</strong>은 그 변경을 공식 서랍장인 <code>main</code>에 넣어도 되는지 검토받는 요청입니다.</p>
+  </section>
+
+  <section>
+    <h2>핵심 용어</h2>
+    <table>
+      <thead><tr><th>용어</th><th>쉬운 뜻</th><th>언제 쓰나</th></tr></thead>
+      <tbody>
+        <tr><td><code>repository</code></td><td>프로젝트 전체 보관함</td><td>GitHub의 <code>passeth/riselab</code> 같은 단위</td></tr>
+        <tr><td><code>main</code></td><td>공식 버전 branch</td><td>배포되거나 기준이 되는 안정된 줄기</td></tr>
+        <tr><td><code>branch</code></td><td>작업용 줄기</td><td>기능 추가, 버그 수정, 문서 수정</td></tr>
+        <tr><td><code>commit</code></td><td>변경 저장점</td><td>의미 있는 변경 묶음을 남길 때</td></tr>
+        <tr><td><code>push</code></td><td>GitHub에 올리기</td><td>내 컴퓨터 commit을 원격 branch에 올릴 때</td></tr>
+        <tr><td><code>pull</code></td><td>GitHub 변경 가져와 합치기</td><td>다른 사람이 올린 변경을 내 컴퓨터에 반영할 때</td></tr>
+        <tr><td><code>PR</code></td><td>merge 검토 요청</td><td>작업 branch를 <code>main</code>에 넣고 싶을 때</td></tr>
+        <tr><td><code>merge</code></td><td>두 branch 합치기</td><td>승인된 PR을 공식 branch에 반영할 때</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>초보자용 작업 흐름</h2>
+    <div class="flow">
+      <div class="flow-step"><strong>1. 확인</strong><code>git status</code>로 현재 변경을 봅니다.</div>
+      <div class="flow-step"><strong>2. branch</strong><code>git switch -c codex/my-work</code></div>
+      <div class="flow-step"><strong>3. 수정</strong>파일을 바꿉니다.</div>
+      <div class="flow-step"><strong>4. commit</strong><code>git add</code> 후 <code>git commit</code></div>
+      <div class="flow-step"><strong>5. push</strong><code>git push -u origin branch</code></div>
+      <div class="flow-step"><strong>6. PR</strong>GitHub에서 PR을 엽니다.</div>
+    </div>
+    <pre><code>git status
+git switch -c codex/my-small-change
+git add path/to/file
+git commit -m "Explain why this change exists"
+git push -u origin codex/my-small-change</code></pre>
+  </section>
+
+  <section class="grid">
+    <div class="card">
+      <h3>commit과 push의 차이</h3>
+      <p><strong>commit</strong>은 내 컴퓨터에 저장하는 일입니다. <strong>push</strong>는 그 저장점을 GitHub에 올리는 일입니다. commit만 하면 GitHub 화면에는 아직 보이지 않습니다.</p>
+    </div>
+    <div class="card">
+      <h3>push와 PR의 차이</h3>
+      <p><strong>push</strong>는 branch를 올리는 일입니다. <strong>PR</strong>은 올린 branch를 <code>main</code>에 합쳐도 되는지 검토받는 일입니다.</p>
+    </div>
+  </section>
+
+  <section class="warning card">
+    <h2>RISELAB에서 특히 중요한 규칙</h2>
+    <p>지금 만든 운영 규칙은 <code>main</code> 직접 push를 피하고, 모든 변경을 PR로 검토하게 합니다. 그래서 작업자는 branch를 만들고, 테스트를 통과시키고, PR에서 approval을 받아야 합니다.</p>
+  </section>
+
+  <section class="quiz-card">
+    <h2>짧은 확인</h2>
+    <p>내 컴퓨터에서 commit을 만들었지만 GitHub PR 화면에는 아직 보이지 않습니다. 빠진 단계는 무엇일까요?</p>
+    <button data-answer="false">PR approval</button>
+    <button data-answer="true">push</button>
+    <button data-answer="false">merge</button>
+    <p class="quiz-feedback"></p>
+  </section>
+
+  <footer>
+    Sources:
+    <a href="https://git-scm.com/book/en/v2/Git-Branching-Branches-in-a-Nutshell">Git SCM: Branches in a Nutshell</a>,
+    <a href="https://docs.github.com/articles/about-branches">GitHub Docs: About branches</a>,
+    <a href="https://docs.github.com/en/pull-requests/committing-changes-to-your-project/creating-and-editing-commits/about-commits">GitHub Docs: About commits</a>,
+    <a href="https://docs.github.com/get-started/quickstart/github-flow">GitHub Docs: GitHub flow</a>.
+    <br><a href="index.html">코스 시작으로 돌아가기</a>
+  </footer>
+</main>
+</body>
+</html>
