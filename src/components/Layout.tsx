@@ -10,9 +10,6 @@ export default function Layout() {
       <header className="nav">
         <div className="wrap nav-inner">
           <Link to="/" className="brand">
-            <span className="brand-mark" aria-hidden="true">
-              ms
-            </span>
             <span>mystudy</span>
           </Link>
           <nav className="nav-actions">
