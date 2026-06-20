@@ -19,12 +19,5 @@
     "subtitle": "용어집·패키징 소재 지도·시스템 치트시트 등 상시 참고 자료",
     "color": "cream",
     "order": 3
-  },
-  {
-    "id": "삭제테스트",
-    "title": "삭제테스트",
-    "subtitle": "삭제 검증",
-    "color": "coral",
-    "order": 4
   }
 ]

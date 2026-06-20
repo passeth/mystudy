@@ -92,7 +92,48 @@ export default async function handler(req: any, res: any) {
       throw new Error(`삭제 실패: ${delRes.status} ${t.slice(0, 160)}`);
     }
 
-    res.status(200).json({ ok: true, topicId, lessonId });
+    // if that was the topic's last lesson, drop the topic from topics.json too
+    let topicRemoved = false;
+    const dirRes = await ghFetch(
+      `/repos/${repo}/contents/${encodeURIComponent(`public/lessons/${topicId}`)}?ref=${branch}`,
+      token
+    );
+    const stillHasLessons =
+      dirRes.ok &&
+      (await dirRes.json()).some(
+        (it: any) => it.type === "file" && it.name.endsWith(".html")
+      );
+    if (!stillHasLessons) {
+      const tjPath = "content/topics.json";
+      const getTj = await ghFetch(
+        `/repos/${repo}/contents/${tjPath}?ref=${branch}`,
+        token
+      );
+      if (getTj.ok) {
+        const j = await getTj.json();
+        const topics = JSON.parse(
+          Buffer.from(j.content, "base64").toString("utf8")
+        );
+        const next = topics.filter((t: any) => t.id !== topicId);
+        if (next.length !== topics.length) {
+          await ghFetch(`/repos/${repo}/contents/${tjPath}`, token, {
+            method: "PUT",
+            body: JSON.stringify({
+              message: `topic: remove empty ${topicId}`,
+              content: Buffer.from(
+                JSON.stringify(next, null, 2) + "\n",
+                "utf8"
+              ).toString("base64"),
+              sha: j.sha,
+              branch,
+            }),
+          });
+          topicRemoved = true;
+        }
+      }
+    }
+
+    res.status(200).json({ ok: true, topicId, lessonId, topicRemoved });
   } catch (e: any) {
     res.status(500).json({ error: e?.message || String(e) });
   }
