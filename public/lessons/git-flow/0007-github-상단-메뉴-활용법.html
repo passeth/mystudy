@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lesson 0004 — GitHub 상단 메뉴 활용법</title>
+  <link rel="stylesheet" href="assets/course.css">
+  <script src="assets/course.js" defer></script>
+</head>
+<body>
+<main>
+  <header class="course-header">
+    <p class="kicker">Lesson 0004</p>
+    <h1>GitHub 상단 메뉴 활용법</h1>
+    <p class="lede">GitHub 저장소 상단 메뉴는 “코드 보기, 일감 관리, 변경 검토, 자동화 확인, 문서 관리, 보안 확인, 운영 설정”으로 나뉩니다. 처음에는 각 메뉴를 눌렀을 때 어떤 질문에 답하는지만 알면 됩니다.</p>
+  </header>
+
+  <nav class="menu-map" aria-label="sections">
+    <a class="menu-pill" href="#code">Code</a>
+    <a class="menu-pill" href="#issues">Issues</a>
+    <a class="menu-pill" href="#pull-requests">Pull requests</a>
+    <a class="menu-pill" href="#agents">Agents</a>
+    <a class="menu-pill" href="#actions">Actions</a>
+    <a class="menu-pill" href="#projects">Projects</a>
+    <a class="menu-pill" href="#wiki">Wiki</a>
+    <a class="menu-pill" href="#security">Security and quality</a>
+    <a class="menu-pill" href="#insights">Insights</a>
+    <a class="menu-pill" href="#settings">Settings</a>
+  </nav>
+
+  <section id="code" class="card">
+    <h2>Code</h2>
+    <p><strong>무엇:</strong> 저장소의 파일, 폴더, branch, commit history, README를 보는 기본 화면입니다.</p>
+    <p><strong>언제:</strong> 파일 위치를 찾거나, 최신 commit이 무엇인지 보거나, branch를 바꾸어 특정 작업 상태를 확인할 때 씁니다.</p>
+    <p><strong>RISELAB에서:</strong> 지금 화면의 <code>main</code> branch는 공식 상태입니다. PR 작업 branch는 branch dropdown에서 따로 봅니다.</p>
+  </section>
+
+  <section id="issues" class="card">
+    <h2>Issues</h2>
+    <p><strong>무엇:</strong> 해야 할 일, 버그, 질문, 논의 주제를 ticket처럼 모아두는 곳입니다.</p>
+    <p><strong>언제:</strong> “무엇을 해야 하는가”를 기록하고, 담당자/라벨/우선순위를 붙이고, PR과 연결할 때 씁니다.</p>
+    <p><strong>주의:</strong> Issue는 작업 계획이고 PR은 실제 변경 제안입니다. 둘은 연결될 수 있지만 같은 것은 아닙니다.</p>
+  </section>
+
+  <section id="pull-requests" class="card">
+    <h2>Pull requests</h2>
+    <p><strong>무엇:</strong> branch의 변경을 <code>main</code>에 합쳐도 되는지 검토하는 공간입니다.</p>
+    <p><strong>언제:</strong> 변경 내용, Files changed, Checks, 리뷰 comment, approval, merge 가능 여부를 볼 때 씁니다.</p>
+    <p><strong>RISELAB에서:</strong> PR 제목/본문은 한국어여야 하고, <code>Minimal Verification</code> 통과와 사람 approval이 필요합니다.</p>
+    <table>
+      <thead><tr><th>PR에서 보는 탭</th><th>무엇을 확인하나</th></tr></thead>
+      <tbody>
+        <tr><td>Conversation</td><td>요약, 리뷰 대화, CodeRabbit comment, merge box</td></tr>
+        <tr><td>Commits</td><td>이 PR에 올라온 commit 목록</td></tr>
+        <tr><td>Checks</td><td>Actions, Vercel, CodeRabbit 같은 자동 검사 결과</td></tr>
+        <tr><td>Files changed</td><td>실제로 어떤 줄이 바뀌는지</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="agents" class="card">
+    <h2>Agents</h2>
+    <p><strong>무엇:</strong> GitHub Copilot cloud agent나 연결된 coding agent 작업을 보는 영역입니다. agent는 repo를 읽고 branch에서 변경을 만들고 PR을 준비할 수 있습니다.</p>
+    <p><strong>언제:</strong> AI에게 issue나 prompt 기반 작업을 맡기거나, agent가 만든 branch/PR을 확인할 때 봅니다.</p>
+    <p><strong>중요:</strong> agent는 작업자입니다. agent가 만든 변경도 PR, Actions, CodeRabbit, 사람 approval을 통과해야 합니다.</p>
+  </section>
+
+  <section id="actions" class="card">
+    <h2>Actions</h2>
+    <p><strong>무엇:</strong> 테스트, 빌드, 배포 같은 자동 workflow가 실행되는 곳입니다.</p>
+    <p><strong>언제:</strong> PR check가 왜 실패했는지 로그를 보거나, 어떤 workflow가 언제 돌았는지 확인할 때 씁니다.</p>
+    <p><strong>RISELAB에서:</strong> <code>PR Checks</code> workflow의 <code>Minimal Verification</code>이 PR gate의 핵심 자동 검사입니다.</p>
+  </section>
+
+  <section id="projects" class="card">
+    <h2>Projects</h2>
+    <p><strong>무엇:</strong> issue, PR, draft item을 table/board/roadmap으로 정리하는 작업 관리판입니다.</p>
+    <p><strong>언제:</strong> 여러 작업의 상태, 우선순위, 담당자, 마감일, 로드맵을 보고 싶을 때 씁니다.</p>
+    <p><strong>활용:</strong> “해야 할 일은 Issue, 실제 변경은 PR, 전체 흐름 관리는 Projects”로 나누면 이해가 쉽습니다.</p>
+  </section>
+
+  <section id="wiki" class="card">
+    <h2>Wiki</h2>
+    <p><strong>무엇:</strong> README보다 긴 운영 문서, 사용법, 설계 원칙을 모아두는 문서 공간입니다.</p>
+    <p><strong>언제:</strong> 기능 사용법, 팀 규칙, 운영 절차, 배경 설명을 장기 문서로 남길 때 씁니다.</p>
+    <p><strong>RISELAB에서:</strong> 운영 방식이 바뀌면 관련 wiki와 index도 같이 업데이트하는 규칙이 있습니다.</p>
+  </section>
+
+  <section id="security" class="card">
+    <h2>Security and quality</h2>
+    <p><strong>무엇:</strong> secret scanning, code scanning, Dependabot alerts 같은 보안/품질 경고를 보는 곳입니다.</p>
+    <p><strong>언제:</strong> API key가 올라갔는지, 취약한 dependency가 있는지, 코드 보안 경고가 있는지 확인할 때 씁니다.</p>
+    <p><strong>주의:</strong> 보안 경고는 단순 테스트 실패보다 위험도가 높습니다. 임의로 무시하지 말고 원인을 확인해야 합니다.</p>
+  </section>
+
+  <section id="insights" class="card">
+    <h2>Insights</h2>
+    <p><strong>무엇:</strong> commit 활동, contributor, traffic, forks, pulse 같은 저장소 활동 통계를 보는 곳입니다.</p>
+    <p><strong>언제:</strong> 누가 얼마나 기여했는지, 최근 PR/issue 활동이 어떤지, 방문자/clone 추세를 보고 싶을 때 씁니다.</p>
+    <p><strong>활용:</strong> 운영자가 “프로젝트가 살아 있는지”, “최근 변경이 많았는지”를 빠르게 보는 dashboard처럼 씁니다.</p>
+  </section>
+
+  <section id="settings" class="card warning">
+    <h2>Settings</h2>
+    <p><strong>무엇:</strong> 저장소 이름, 권한, branch protection, Actions 권한, secrets, Pages, feature enable/disable 등을 바꾸는 관리자 영역입니다.</p>
+    <p><strong>언제:</strong> PR 승인 필수화, required status check, collaborator 권한, secret 등록, Actions 제한 같은 운영 규칙을 설정할 때 씁니다.</p>
+    <p><strong>주의:</strong> Settings는 저장소 전체 동작을 바꾸는 곳입니다. 특히 branch protection, secrets, Actions 권한, visibility는 변경 전후를 기록해야 합니다.</p>
+  </section>
+
+  <section class="quiz-card">
+    <h2>짧은 확인</h2>
+    <p>PR의 테스트 실패 로그를 자세히 보려면 어느 메뉴를 봐야 할까요?</p>
+    <button data-answer="false">Wiki</button>
+    <button data-answer="true">Actions</button>
+    <button data-answer="false">Insights</button>
+    <p class="quiz-feedback"></p>
+  </section>
+
+  <footer>
+    Sources:
+    <a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests">GitHub Docs: About pull requests</a>,
+    <a href="https://docs.github.com/actions">GitHub Actions documentation</a>,
+    <a href="https://docs.github.com/en/copilot/concepts/agents/cloud-agent/about-cloud-agent">GitHub Docs: Copilot cloud agent</a>,
+    <a href="https://docs.github.com/en/issues/planning-and-tracking-with-projects">GitHub Docs: Projects</a>,
+    <a href="https://docs.github.com/en/communities/documenting-your-project-with-wikis">GitHub Docs: Wikis</a>,
+    <a href="https://docs.github.com/en/repositories/viewing-activity-and-data-for-your-repository">GitHub Docs: Repository insights</a>,
+    <a href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features">GitHub Docs: Repository settings</a>.
+    <br><a href="index.html">코스 시작으로 돌아가기</a>
+  </footer>
+</main>
+</body>
+</html>
