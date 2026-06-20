@@ -19,11 +19,25 @@ src/                       # Vite + React 프론트엔드
 
 ## 업로드 동작 방식
 
-1. `/upload`에서 토픽 선택(또는 새로 생성) + 레슨 제목 + HTML 입력
+1. `/upload`에서 토픽 선택(또는 새로 생성) + 레슨 제목 + 본문 입력
+   - 본문은 **HTML** 또는 **마크다운(.md)** 선택 가능. 마크다운은 클라이언트에서
+     `src/lib/markdown.ts`로 보기 좋은 HTML로 변환된 뒤 업로드됨(변환 미리보기 제공).
 2. `POST /api/upload` → 서버리스 함수가 GitHub repo에 커밋
    - `public/lessons/<topic>/NNNN-slug.html`
    - 새 토픽이면 `content/topics.json`에 항목 추가
 3. GitHub push → Vercel 자동 재배포 → `prebuild`가 manifest 재생성 → 새 글 노출 (약 30~60초)
+
+## 삭제
+
+- 토픽 페이지의 각 레슨 행 🗑 버튼 → `POST /api/delete`가 해당 HTML을 repo에서 제거.
+- 토픽의 마지막 레슨을 지우면 `content/topics.json`에서 토픽 항목도 자동 삭제됨.
+
+## 마크다운 변환 규칙 (`src/lib/markdown.ts`)
+
+`#~######` 헤딩 · `**굵게**`/`__굵게__` · `*기울임*`/`_기울임_` · `~~취소선~~` ·
+`` `인라인코드` `` · ```` ``` 코드블록 ``` ```` · `>` 인용 · `-`/`*`/`+` 목록 ·
+`1.` 순서목록 · `---`/`***` 구분선 · `[텍스트](url)` 링크 · `![alt](src)` 이미지 ·
+`| a | b |` 표. 모든 텍스트는 HTML 이스케이프되어 안전하게 렌더됨.
 
 ## 로컬 개발
 
