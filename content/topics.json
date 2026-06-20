@@ -19,5 +19,12 @@
     "subtitle": "용어집·패키징 소재 지도·시스템 치트시트 등 상시 참고 자료",
     "color": "cream",
     "order": 3
+  },
+  {
+    "id": "샌드박스-테스트",
+    "title": "샌드박스 테스트",
+    "subtitle": "업로드 동작 확인용",
+    "color": "mint",
+    "order": 4
   }
 ]
