@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Lesson 0021 — 스크리닝 엔진 + 공급사 포털: 룰을 시스템으로</title>
+<style>
+  :root {
+    --ink:#1a1a1a; --muted:#5a5a5a; --line:#d8d3c7;
+    --accent:#0369a1; --accent2:#15803d; --highlight:#f0f9ff;
+    --code-bg:#f3efe5; --quiz-bg:#f9f5ea;
+    --warn:#b45309; --good:#15803d; --bad:#b91c1c;
+  }
+  * { box-sizing:border-box; }
+  body { font-family:"Iowan Old Style","Georgia","Apple SD Gothic Neo","Noto Serif KR",serif; color:var(--ink); max-width:820px; margin:60px auto; padding:0 28px 80px; line-height:1.7; font-size:17px; background:#fefcf7; }
+  .meta { font-family:"SF Mono","Menlo",monospace; font-size:12px; letter-spacing:0.1em; color:var(--muted); text-transform:uppercase; margin-bottom:12px; }
+  .tier-tag { display:inline-block; background:var(--accent2); color:#fff; padding:3px 10px; border-radius:4px; font-family:"SF Mono","Menlo",monospace; font-size:11px; font-weight:600; letter-spacing:0.08em; margin-right:8px; }
+  h1 { font-size:26px; line-height:1.25; margin:0 0 8px; letter-spacing:-0.01em; }
+  .subtitle { color:var(--muted); font-style:italic; margin-bottom:36px; }
+  h2 { font-size:22px; margin:44px 0 12px; padding-bottom:6px; border-bottom:1px solid var(--line); }
+  h3 { font-size:18px; margin:30px 0 8px; color:var(--accent); }
+  p { margin:12px 0; }
+  ul, ol { padding-left:24px; } li { margin:6px 0; }
+  code { font-family:"SF Mono","Menlo",monospace; font-size:14px; background:var(--code-bg); padding:2px 6px; border-radius:3px; }
+  .callout { background:var(--highlight); border-left:4px solid var(--accent); padding:16px 20px; margin:24px 0; border-radius:0 6px 6px 0; }
+  .callout-warn { background:#fef7e6; border-left-color:var(--warn); }
+  .callout-bad { background:#fef2f2; border-left-color:var(--bad); }
+  .callout-good { background:#f0fdf4; border-left-color:var(--good); }
+  .callout .label { display:block; font-size:12px; text-transform:uppercase; letter-spacing:0.1em; color:var(--accent); margin-bottom:6px; font-weight:600; }
+  .callout-warn .label { color:var(--warn); } .callout-bad .label { color:var(--bad); } .callout-good .label { color:var(--good); }
+  table { width:100%; border-collapse:collapse; margin:20px 0; font-size:13.5px; }
+  th, td { text-align:left; padding:9px 11px; border-bottom:1px solid var(--line); vertical-align:top; }
+  th { background:var(--code-bg); font-weight:600; font-size:11.5px; text-transform:uppercase; letter-spacing:0.04em; }
+  .ok { color:var(--good); font-weight:700; } .down { color:var(--warn); font-weight:700; } .kill { color:var(--bad); font-weight:700; }
+  .erd { font-family:"SF Mono","Menlo",monospace; font-size:12.5px; background:#1a1a1a; color:#f0ebe0; padding:20px 24px; border-radius:8px; margin:20px 0; line-height:1.7; overflow-x:auto; }
+  .erd .k { color:#c4b5fd; } .erd .c { color:#6b7280; } .erd .s { color:#fcd34d; }
+  .tool { background:#fff; border:2px solid var(--accent2); border-radius:12px; padding:24px 26px; margin:28px 0; box-shadow:0 2px 12px rgba(0,0,0,0.04); }
+  .tool h3 { margin-top:0; color:var(--accent2); }
+  .tool label { font-weight:600; font-size:14px; display:block; margin-top:12px; }
+  .tool input, .tool select { font-family:inherit; font-size:15px; padding:7px 10px; border:1px solid var(--line); border-radius:6px; background:#fefcf7; color:var(--ink); width:100%; margin-top:4px; }
+  .tool .row { display:flex; gap:14px; flex-wrap:wrap; } .tool .row > div { flex:1; min-width:160px; }
+  .tool .chk { display:flex; align-items:center; gap:8px; margin-top:12px; } .tool .chk input { width:auto; transform:scale(1.2); }
+  .tool button { margin-top:16px; background:var(--accent2); color:#fff; border:none; padding:11px 22px; border-radius:8px; font-family:inherit; font-size:16px; font-weight:700; cursor:pointer; }
+  .tool button:hover { background:#166534; }
+  .tool-out { margin-top:18px; display:none; }
+  .verdict-row { display:flex; align-items:center; gap:12px; padding:10px 14px; border-radius:8px; margin:8px 0; background:var(--code-bg); }
+  .vbadge { font-family:"SF Mono",monospace; font-weight:800; font-size:13px; padding:3px 12px; border-radius:6px; color:#fff; min-width:54px; text-align:center; }
+  .v-pass { background:#15803d; } .v-flag { background:#ca8a04; } .v-fail { background:#b91c1c; }
+  .overall { font-weight:800; font-size:18px; padding:12px 16px; border-radius:8px; margin-top:12px; }
+  .quiz { background:var(--quiz-bg); padding:28px 32px; margin:40px 0; border-radius:8px; }
+  .quiz h2 { border:none; margin-top:0; } .question { margin:24px 0; }
+  details { margin:8px 0; } details > summary { cursor:pointer; color:var(--accent); font-size:14px; user-select:none; list-style:revert; }
+  details[open] > summary { margin-bottom:8px; }
+  .answer { margin-top:8px; padding:12px 16px; background:#fff; border:1px dashed var(--line); border-radius:4px; }
+  .nav { margin-top:60px; padding-top:24px; border-top:1px solid var(--line); font-size:14px; color:var(--muted); }
+  .nav a { color:var(--accent); text-decoration:none; } .nav a:hover { text-decoration:underline; }
+  .cite { font-size:13px; color:var(--muted); } .cite a { color:var(--muted); text-decoration:underline; }
+  strong { font-weight:700; }
+  @media print { body { background:#fff; max-width:100%; margin:0; } .tool { break-inside:avoid; } }
+
+  .tracklink { background:#f0fdf4; border:1px solid #15803d; border-radius:10px; padding:12px 16px; margin:0 0 30px; font-size:13px; line-height:2.0; }
+  .tracklink b { color:#15803d; text-transform:uppercase; letter-spacing:0.08em; font-size:11px; display:block; margin-bottom:5px; }
+  .tracklink a { color:#0369a1; text-decoration:none; }
+  .tracklink a:hover { text-decoration:underline; }
+  .tracklink .cur { background:#15803d; color:#fff; padding:1px 8px; border-radius:4px; font-weight:700; }
+  .tracklink .sep { color:#cdd6c9; margin:0 2px; }
+</style>
+</head>
+<body>
+
+<div class="meta"><span class="tier-tag">PPWR · 패키징</span>Lesson 0021 · 약 40분 · 시스템 구현</div>
+<h1>스크리닝 엔진 + 공급사 포털 — 룰을 시스템으로</h1>
+<p class="subtitle">"항목·% 입력하면 스크리닝 결과를 보여주고 싶은데, 그 검증 DB는 어디서 구하나?" — 답: 대부분 *사오는 DB가 아니라 규칙*이고, 그 규칙은 이미 0012·0013·0015 인터랙티브에 있다. 이 레슨은 그 룰을 <strong>실제 Supabase 스키마 + 스크리닝 함수</strong>로 옮기고, 공급사 포털·자기선언까지 시스템으로 묶는다. 하단 데모는 스키마의 SQL 함수와 동일 로직을 브라우저에서 돌린다.</p>
+
+<div class="tracklink">
+  <b>📦 PPWR 트랙 · 화장품 패키징 규제</b>
+  <a href="0011-ppwr-foundation.html">0011 토대</a> <span class="sep">·</span> <a href="0012-recyclability-grade-estimator.html">0012 등급추정</a> <span class="sep">·</span> <a href="0013-substances-and-pcr.html">0013 유해물질·PCR</a> <span class="sep">·</span> <a href="0014-rpet-pcr-sourcing-certification.html">0014 rPET조달</a> <span class="sep">·</span> <a href="0015-reduce-and-reuse.html">0015 감축·재사용</a> <span class="sep">·</span> <a href="0016-labelling-epr-doc.html">0016 라벨·EPR·DoC</a> <span class="sep">·</span> <a href="0017-korea-memberstates-roadmap.html">0017 실무로드맵</a> <span class="sep">·</span> <a href="0018-td-data-collection-bom.html">0018 부자재TD수집</a> <span class="sep">·</span> <a href="0019-component-master-architecture.html">0019 스케일수집</a> <span class="sep">·</span> <a href="0020-self-declaration-and-verification.html">0020 자기선언·검증</a> <span class="sep">·</span> <span class="cur">0021 스크리닝엔진</span> <span class="sep">·</span> <a href="../reference/packaging-materials.html">📋 매터리얼 지도</a>
+</div>
+
+<div class="callout">
+  <span class="label">이 레슨의 약속</span>
+  마치면 (1) "검증 DB"의 정체 — <strong>룰 테이블(인코딩) + 외부 명단(동기화)</strong>, (2) 그 룰을 담은 <strong>실제 스키마</strong>(<code>system/ppwr-screening/schema.sql</code>, Postgres 17 검증 완료), (3) 하단 <strong>라이브 스크리닝 데모</strong>로 입력→판정을 직접, (4) 공급사 포털·AES 서명·불변 audit이 어떻게 RLS로 묶이는지. </p>
+</div>
+
+<h2>1. "검증 DB"의 정체 — 3종류, 대부분 룰이다</h2>
+<table>
+  <tr><th>스크리닝</th><th>무엇으로 판정</th><th>출처</th><th>외부 DB?</th></tr>
+  <tr><td>PCR %</td><td>정적 목표 테이블 lookup</td><td>PPWR 제7 (0013) → <code>pcr_targets</code></td><td>❌ 인코딩</td></tr>
+  <tr><td>재활용성</td><td>룰셋(재질·색·구조)</td><td>RecyClass/APR (0012) → <code>recyclability_rules</code></td><td>부분(가이드)</td></tr>
+  <tr><td>형식 금지</td><td>정적 명단</td><td>부속서 V (0015) → <code>format_bans</code></td><td>❌ 인코딩</td></tr>
+  <tr><td>중금속 임계</td><td>숫자 + COC 유무</td><td>제5 (≤100mg/kg) → <code>screen_evidence</code></td><td>❌ 규정</td></tr>
+  <tr><td>우려물질 명단</td><td>명단 대조</td><td><strong>ECHA SVHC·REACH·EuPIA</strong> → <code>restricted_substances</code></td><td>✅ 동기화</td></tr>
+</table>
+<div class="callout callout-good">
+  <span class="label">핵심 — 검증 DB의 ~90%는 이미 만들어졌다</span>
+  0012 추정기·0013 파인더·0015 스캐너·0019 분류기의 룰이 곧 스크리닝 엔진이다. 프로덕션화 = 이 룰을 <strong>버전 관리되는 테이블(<code>seed_rules.sql</code>)</strong>로 옮기는 것. 진짜 "구하는" 건 <strong>ECHA SVHC·EuPIA 명단</strong>뿐.
+</div>
+
+<h2>2. 데이터 모델 (검증 완료된 스키마)</h2>
+<div class="erd">
+<span class="c"># 컴포넌트 마스터 (0019) + 증빙(0020) + 룰(0021)</span>
+suppliers <span class="k">1─N</span> components <span class="k">N─N</span> products      <span class="c"># BOM, 정규화</span>
+components <span class="k">N─1</span> materials   <span class="k">1─N</span> evidence     <span class="c"># COC=재질 귀속</span>
+components <span class="k">N─N</span> decorations <span class="k">N─1</span> ink_series   <span class="c"># 팬톤=라벨, COC=시리즈</span>
+declarations(scope: component|product, doc_hash, esign=AES)  <span class="c"># 2자 선언</span>
+
+<span class="c"># 룰 (사오는 게 아니라 인코딩)</span>
+pcr_targets · recyclability_rules · format_bans         <span class="c"># 규정+RecyClass</span>
+restricted_substances                                   <span class="c"># ECHA/EuPIA 동기화</span>
+screening_results · audit_log(append-only)
+</div>
+<p class="cite">전체: <code>system/ppwr-screening/schema.sql</code> · 룰 seed: <code>seed_rules.sql</code> (Postgres 17에서 스크리닝 함수 정답·RLS 16테이블 검증).</p>
+
+<h2>3. ▶ 라이브 스크리닝 데모 (스키마 SQL과 동일 로직)</h2>
+<p>아래 데모는 <code>screen_pcr()</code>·<code>screen_recyclability()</code>·<code>screen_evidence()</code>를 브라우저에서 그대로 재현한다. 공급사가 포털에서 입력하면 보게 될 화면.</p>
+<div class="tool">
+  <h3>🧪 부품 스크리닝</h3>
+  <div class="row">
+    <div><label>패키징 유형</label>
+      <select id="ptype">
+        <option value="pet_contact">PET 접촉민감 (화장품 보틀)</option>
+        <option value="nonpet_contact">PET 외 접촉민감 (PP/HDPE)</option>
+        <option value="bottle">일회용 음료병</option>
+        <option value="other">기타 플라스틱</option>
+      </select>
+    </div>
+    <div><label>본체 폴리머</label>
+      <select id="poly">
+        <option>PET</option><option>HDPE</option><option>PP</option>
+        <option>PVC</option><option>PS</option><option>PLA</option><option>PETG</option>
+      </select>
+    </div>
+  </div>
+  <div class="row">
+    <div><label>PCR 함량 (%)</label><input type="number" id="pcr" value="20"></div>
+    <div><label>목표 연도</label><select id="year"><option>2030</option><option>2040</option></select></div>
+  </div>
+  <div class="chk"><input type="checkbox" id="cb"><label for="cb" style="margin:0;">카본블랙(검정) 인쇄·착색</label></div>
+  <div class="chk"><input type="checkbox" id="sleeve"><label for="sleeve" style="margin:0;">전면 슬리브</label></div>
+  <div class="chk"><input type="checkbox" id="coc" checked><label for="coc" style="margin:0;">유효 중금속 COC 보유 (≤100mg/kg · Cr6 speciation · 미만료)</label></div>
+  <button onclick="screen()">스크리닝 →</button>
+  <div class="tool-out" id="out"></div>
+</div>
+
+<h2>4. 공급사 포털 — 데이터를 적합 상태로 받는 법</h2>
+<table>
+  <tr><th>요소</th><th>구현</th><th>근거</th></tr>
+  <tr><td>멀티테넌트</td><td>공급사별 RLS (<code>supplier_users</code> 매핑 → 자기 데이터만)</td><td>0019</td></tr>
+  <tr><td>intake 게이트</td><td>substance 필드엔 <strong>COC 업로드 없으면 제출 거부</strong> + post-consumer 명시 강제</td><td>0014·0020</td></tr>
+  <tr><td>자기선언</td><td><code>declarations</code>: 불변 <code>doc_hash</code> + named signer + <strong>AES</strong>(eIDAS)</td><td>0020</td></tr>
+  <tr><td>변경·만료</td><td>재질·염료·사이트 변경 또는 COC 만료 → 재선언 트리거 + 버전</td><td>0020</td></tr>
+  <tr><td>불변 audit</td><td><code>audit_log</code> append-only 트리거 (update/delete 차단)</td><td>0020</td></tr>
+</table>
+<div class="callout callout-warn">
+  <span class="label">스크리닝 ≠ 최종 적합</span>
+  데모가 보여주는 건 <strong>설계 heuristic</strong>(RecyClass/APR, 2028 위임법 전). 그래서 룰에 <code>effective_date</code>·<code>source</code>를 둔다 — 위임법이 나오면 <strong>룰 테이블만 교체</strong>, 시스템은 불변. 그리고 화면은 <strong>룰 판정 + 증빙 완성도</strong> 둘 다 보여줘야 한다(데이터≠증빙).
+</div>
+
+<h2>5. 생산자 DoC 자동 생성</h2>
+<p>컴포넌트가 데이터+증빙을 갖추면, 제품 DoC = <strong>BOM 펼쳐 컴포넌트·증빙·스크리닝 조립 + 생산자 AES 서명</strong>. 수백 SKU의 TD/DoC가 마스터에서 생성된다(0019). 시장감시 요청 시 10일 내 export(0020).</p>
+
+<div class="quiz">
+<h2>되짚기 — 보지 말고 답하기</h2>
+<div class="question">
+  <strong>Q1.</strong> "검증 DB를 어디서 구하나"의 답을 한 문장으로. 외부에서 진짜 당겨와야 하는 건?
+  <details><summary>답 보기</summary>
+  <div class="answer">대부분 <strong>사오는 DB가 아니라 규정·RecyClass/APR을 인코딩한 룰 테이블</strong>(pcr_targets·recyclability_rules·format_bans). 외부 동기화가 필요한 건 <strong>ECHA SVHC·REACH·EuPIA 우려물질 명단</strong>(restricted_substances)뿐.</div>
+  </details>
+</div>
+<div class="question">
+  <strong>Q2.</strong> 룰 테이블에 <code>effective_date</code>·<code>source</code>를 두는 이유는?
+  <details><summary>답 보기</summary>
+  <div class="answer">스크리닝은 위임법(2028) 전엔 <strong>RecyClass/APR proxy</strong>다. 공식 기준이 나오면 <strong>룰 테이블만 버전 교체</strong>하고 시스템 코드는 불변으로 두기 위해. 어느 룰 버전으로 판정했는지 추적도 가능.</div>
+  </details>
+</div>
+<div class="question">
+  <strong>Q3.</strong> 스크리닝 화면이 보여줘야 하는 "두 종류"는?
+  <details><summary>답 보기</summary>
+  <div class="answer">① <strong>룰 판정</strong>(PCR≥목표? 카본블랙? 재질) → pass/flag/fail. ② <strong>증빙 완성도</strong>(유효 COC·post-consumer·Cr6 speciation 유무). 데이터만으론 통과 못 함(0020).</div>
+  </details>
+</div>
+<div class="question">
+  <strong>Q4.</strong> 공급사 포털에서 "데이터가 적합 상태로 들어오게" 막는 intake 게이트 2가지는?
+  <details><summary>답 보기</summary>
+  <div class="answer">substance 필드엔 <strong>COC 업로드 없으면 제출 거부</strong>, 재생원료엔 <strong>"post-consumer" 명시 강제</strong>(PIR 차단). + 필수필드·EuPIA ref·Cr6 speciation 확인.</div>
+  </details>
+</div>
+<div class="question">
+  <strong>Q5.</strong> 멀티테넌트 격리를 Supabase에서 무엇으로 구현하며, 그 축이 되는 매핑은?
+  <details><summary>답 보기</summary>
+  <div class="answer"><strong>RLS(Row Level Security)</strong>. 축은 <code>supplier_users(user_id→supplier_id)</code> 매핑 + <code>my_supplier_ids()</code> 헬퍼로 "자기 supplier 데이터만" 정책. 공급사는 남의 부품을 못 본다.</div>
+  </details>
+</div>
+</div>
+
+<div class="callout">
+  <span class="label">📌 산출물 · 출처</span>
+  <ul style="margin:8px 0 0;">
+    <li><strong>스키마:</strong> <code>system/ppwr-screening/schema.sql</code> · <code>seed_rules.sql</code> · <code>README.md</code></li>
+    <li>룰 원천: PPWR 제5·6·7·부속서 II·V (<a href="https://eur-lex.europa.eu/eli/reg/2025/40/oj/eng" target="_blank">EUR-Lex</a>) · <a href="https://recyclass.eu/our-approach/recyclass-methodology/" target="_blank">RecyClass</a> · <a href="https://www.eupia.org/our-commitment/eupia-exclusion-policy-for-printing-inks-and-related-products/" target="_blank">EuPIA</a> · <a href="https://echa.europa.eu/candidate-list-table" target="_blank">ECHA SVHC</a></li>
+  </ul>
+</div>
+
+<div class="callout callout-warn">
+  <span class="label">교사에게 질문</span>
+  예: "복합 재활용성 점수(0012 전체)를 Edge Function(TS)으로 옮겨줘", "공급사 포털 Next.js + AES e-sign 연동 설계", "ECHA SVHC 동기화 잡(주기 fetch→upsert) 코드", "DoC 자동 생성(BOM→PDF) 파이프라인" — 스키마 위에 올릴 다음 레이어를 같이 구현합니다.
+</div>
+
+<div class="nav">
+  Track: PPWR · 패키징 ·
+  Previous: <a href="0020-self-declaration-and-verification.html">0020 — 자기선언·검증</a> ·
+  Related: <a href="0019-component-master-architecture.html">0019 마스터</a> · <a href="0013-substances-and-pcr.html">0013 PCR</a> ·
+  Materials: <a href="../reference/packaging-materials.html">매터리얼 지도</a>
+</div>
+
+<script>
+// 스키마의 SQL 함수와 동일 로직 (seed_rules.sql 값 그대로)
+var PCR_TARGETS = {
+  pet_contact:{2030:30,2040:50}, nonpet_contact:{2030:10,2040:25},
+  bottle:{2030:30,2040:65}, other:{2030:35,2040:65}
+};
+var POLY_FAIL = {PVC:'재활용 독·PET 오염', PS:'스트림 빈약', PLA:'PET 오염(밀도 유사)', PETG:'PET 오염(밀도 유사)'};
+function screenPcr(t,pct,y){ var req=PCR_TARGETS[t][y];
+  if(pct>=req) return {v:'pass',r:'PCR '+pct+'% ≥ 의무 '+req+'%'};
+  return {v:'fail',r:'PCR '+pct+'% < 의무 '+req+'% ('+y+'년)'}; }
+function screenRecyc(poly,cb,sl){
+  if(cb) return {v:'fail',r:'카본블랙 → NIR 선별 실패(즉사)'};
+  if(POLY_FAIL[poly]) return {v:'fail',r:poly+' → '+POLY_FAIL[poly]};
+  if(sl) return {v:'flag',r:'전면 슬리브 → NIR 가림 위험'};
+  return {v:'pass',r:poly+' 주류 스트림 · 즉사 요인 없음'}; }
+function screenEvi(hasCoc){ return hasCoc ? {v:'pass',r:'유효 중금속 COC 확인'} :
+  {v:'fail',r:'유효 COC 없음 → DoC 서명 불가 (데이터≠증빙)'}; }
+
+function badge(v){ var m={pass:'PASS',flag:'FLAG',fail:'FAIL'}; return '<span class="vbadge v-'+v+'">'+m[v]+'</span>'; }
+function row(label,res){ return '<div class="verdict-row">'+badge(res.v)+'<div><strong>'+label+'</strong> — '+res.r+'</div></div>'; }
+
+function screen(){
+  var t=document.getElementById('ptype').value;
+  var poly=document.getElementById('poly').value;
+  var pct=parseFloat(document.getElementById('pcr').value)||0;
+  var y=parseInt(document.getElementById('year').value);
+  var cb=document.getElementById('cb').checked;
+  var sl=document.getElementById('sleeve').checked;
+  var coc=document.getElementById('coc').checked;
+
+  var rPcr=screenPcr(t,pct,y), rRec=screenRecyc(poly,cb,sl), rEvi=screenEvi(coc);
+  var order={pass:0,flag:1,fail:2};
+  var worst=[rPcr,rRec,rEvi].reduce(function(a,b){return order[b.v]>order[a.v]?b:a;});
+  var ov, cls;
+  if(worst.v==='fail'){ ov='⛔ 부적합 — 출시 차단 / DoC 서명 불가'; cls='v-fail'; }
+  else if(worst.v==='flag'){ ov='⚠️ 조건부 — 보완 필요'; cls='v-flag'; }
+  else { ov='✅ 통과 — 선언 가능'; cls='v-pass'; }
+
+  var html = row('제7 PCR 함량', rPcr) + row('제6 재활용성', rRec) + row('제5 증빙 완성도', rEvi) +
+    '<div class="overall" style="background:'+(cls==='v-fail'?'#fef2f2':cls==='v-flag'?'#fef7e6':'#f0fdf4')+';">'+ov+'</div>'+
+    '<p class="cite" style="margin-top:8px;">heuristic (RecyClass/APR·2028 위임법 전). schema.sql의 screen_pcr/screen_recyclability/screen_evidence와 동일 로직.</p>';
+  var o=document.getElementById('out'); o.innerHTML=html; o.style.display='block';
+}
+</script>
+
+</body>
+</html>

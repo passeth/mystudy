@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Lesson 0008 — Reference Set 구축: Historical CPSR을 acceptance ground truth로</title>
+<style>
+  :root {
+    --ink: #1a1a1a;
+    --muted: #5a5a5a;
+    --line: #d8d3c7;
+    --accent: #6d28d9;
+    --highlight: #f5f3ff;
+    --code-bg: #f3efe5;
+    --quiz-bg: #f9f5ea;
+    --warn: #b45309;
+    --good: #15803d;
+    --bad: #b91c1c;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Iowan Old Style", "Georgia", "Apple SD Gothic Neo", "Noto Serif KR", serif;
+    color: var(--ink);
+    max-width: 820px;
+    margin: 60px auto;
+    padding: 0 28px 80px;
+    line-height: 1.7;
+    font-size: 17px;
+    background: #fefcf7;
+  }
+  .meta {
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .tier-tag {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    padding: 3px 10px;
+    border-radius: 4px;
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    margin-right: 8px;
+  }
+  h1 {
+    font-size: 30px;
+    line-height: 1.25;
+    margin: 0 0 8px;
+    letter-spacing: -0.01em;
+  }
+  .subtitle { color: var(--muted); font-style: italic; margin-bottom: 36px; }
+  h2 {
+    font-size: 22px;
+    margin: 44px 0 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--line);
+  }
+  h3 { font-size: 18px; margin: 30px 0 8px; color: var(--accent); }
+  p { margin: 12px 0; }
+  ul, ol { padding-left: 24px; }
+  li { margin: 6px 0; }
+  code {
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 14px;
+    background: var(--code-bg);
+    padding: 2px 6px;
+    border-radius: 3px;
+  }
+  pre {
+    background: #1a1a1a;
+    color: #f0ebe0;
+    padding: 20px 24px;
+    border-radius: 8px;
+    overflow-x: auto;
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    margin: 20px 0;
+  }
+  pre .k { color: #c4b5fd; }
+  pre .s { color: #fcd34d; }
+  pre .n { color: #93c5fd; }
+  pre .c { color: #6b7280; font-style: italic; }
+  pre .str { color: #67e8f9; }
+  .callout {
+    background: var(--highlight);
+    border-left: 4px solid var(--accent);
+    padding: 16px 20px;
+    margin: 24px 0;
+    border-radius: 0 6px 6px 0;
+  }
+  .callout-warn { background: #fef7e6; border-left-color: var(--warn); }
+  .callout .label {
+    display: block; font-size: 12px;
+    text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--accent); margin-bottom: 6px; font-weight: 600;
+  }
+  .callout-warn .label { color: var(--warn); }
+  table {
+    width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px;
+  }
+  th, td {
+    text-align: left; padding: 10px 12px;
+    border-bottom: 1px solid var(--line); vertical-align: top;
+  }
+  th {
+    background: var(--code-bg); font-weight: 600;
+    font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  .compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 24px 0;
+  }
+  .compare > div {
+    padding: 18px 22px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    background: #fff;
+    font-size: 14px;
+    line-height: 1.55;
+  }
+  .compare .good { border-left: 4px solid var(--good); }
+  .compare .bad { border-left: 4px solid var(--bad); }
+  .compare h4 {
+    margin: 0 0 8px; font-size: 13px;
+    text-transform: uppercase; letter-spacing: 0.08em;
+  }
+  .compare .good h4 { color: var(--good); }
+  .compare .bad h4 { color: var(--bad); }
+  .quiz {
+    background: var(--quiz-bg);
+    padding: 28px 32px;
+    margin: 40px 0;
+    border-radius: 8px;
+  }
+  .quiz h2 { border: none; margin-top: 0; }
+  .question { margin: 24px 0; }
+  details { margin: 8px 0; }
+  details > summary {
+    cursor: pointer; color: var(--accent);
+    font-size: 14px; user-select: none;
+    list-style: revert;
+  }
+  details[open] > summary { margin-bottom: 8px; }
+  .answer {
+    margin-top: 8px; padding: 12px 16px;
+    background: #fff; border: 1px dashed var(--line);
+    border-radius: 4px;
+  }
+  .nav {
+    margin-top: 60px; padding-top: 24px;
+    border-top: 1px solid var(--line);
+    font-size: 14px; color: var(--muted);
+  }
+  .nav a { color: var(--accent); text-decoration: none; }
+  .nav a:hover { text-decoration: underline; }
+  .cite { font-size: 13px; color: var(--muted); }
+  .cite a { color: var(--muted); text-decoration: underline; }
+  @media print {
+    body { background: #fff; max-width: 100%; margin: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="meta"><span class="tier-tag">REF SET</span>Lesson 0008 · 약 35분</div>
+<h1>Reference Set 구축 — Historical CPSR을 Acceptance Ground Truth로</h1>
+<p class="subtitle">v1 MVP가 docx를 만들었다. 그러나 그 docx가 "좋은가"는 측정 불가다. Reference set이 없는 한 acceptance 95%는 슬로건이다. 사내 historical CPSR을 fact bundle + narrative pair로 역추출하는 작업이 이 솔로 메이커의 가장 큰 노동이다.</p>
+
+<div class="callout">
+  <span class="label">이 레슨의 약속</span>
+  마치면 (1) reference set 1건의 골격이 어떤 데이터 구조로 살아 있는지, (2) PDF historical CPSR에서 fact를 어떻게 역추출하는지(자동·반자동·수동의 경계), (3) "우리 SA 화법" 추출의 구체 방법, (4) reference set 5건이 모이기 전과 후의 시스템 변화. 가장 흔한 함정은 "양"을 노리는 것이다. <strong>5건의 정밀한 reference set이 50건의 거친 데이터셋보다 강하다.</strong>
+</div>
+
+<h2>1. Reference set이란 무엇인가</h2>
+
+<p>한 건의 reference set entry = <strong>(historical CPSR PDF, 역추출 fact bundle, SA가 실제 쓴 narrative, 평가 메타데이터)의 4-tuple</strong>. 한 entry는 한 제품·한 SA·한 시점의 acceptance 표준이다.</p>
+
+<pre><span class="k">class</span> <span class="n">ReferenceEntry</span>(BaseModel):
+    entry_id: str                <span class="c"># 2026-06-15-001</span>
+    source_pdf: Path             <span class="c"># 원본 CPSR PDF (사내 격리 저장)</span>
+    product_meta: ProductMeta    <span class="c"># 카테고리·brand·SKU·revision</span>
+    formula: <span class="n">list</span>[FormulaRow] <span class="c"># INCI %, 역추출</span>
+
+    <span class="c"># 역추출된 사실</span>
+    facts: WholeProductFacts     <span class="c"># 14개 성분 모든 fact bundle 묶음</span>
+
+    <span class="c"># SA가 실제로 쓴 글</span>
+    sa_narratives: SaNarratives  <span class="c"># B.1 + B.3 (per-substance) 원문 텍스트</span>
+
+    <span class="c"># 메타데이터</span>
+    sa_author: str               <span class="c"># 작성한 SA (필명·해시화)</span>
+    sa_signed_at: date
+    target_market: <span class="n">Literal</span>[<span class="s">"EU"</span>, <span class="s">"KR"</span>, <span class="s">"TW"</span>, <span class="s">"internal_only"</span>]
+    revision_history: <span class="n">list</span>[Revision]  <span class="c"># 수정 이력 (있으면)</span>
+
+    <span class="c"># 시스템이 추후 채울 평가</span>
+    system_generated_narratives: <span class="n">Optional</span>[SaNarratives] = <span class="n">None</span>
+    diff_metrics: <span class="n">Optional</span>[DiffMetrics] = <span class="n">None</span>
+    sa_blind_judgement: <span class="n">Optional</span>[SaBlindJudgement] = <span class="n">None</span>
+</pre>
+
+<p>이 데이터 구조가 reference set의 전체다. 50개 column 짜리 spreadsheet 대신 한 entry = 한 JSON 파일 + 한 PDF + LLM이 생성한 narrative 비교본.</p>
+
+<h2>2. 5건 우선 — "양" 함정의 회피</h2>
+
+<table>
+  <tr><th>전략</th><th>장점</th><th>단점</th></tr>
+  <tr><td>50건 빠르게 (1주 안에)</td><td>통계적 신뢰</td><td>한 건당 얕음. SA 화법 추출 실패. 갭 표시 없음.</td></tr>
+  <tr><td><strong>5건 정밀하게 (1주에 1건 페이스)</strong></td><td>한 건마다 SA와 대화. 화법·예외 패턴 명시화. v1·v2 generator 즉시 개선.</td><td>통계 부족 (다음 25건은 더 빨리 모음으로 보완).</td></tr>
+  <tr><td>1건만 시작 (proof of concept)</td><td>가장 빠른 첫 결과</td><td>n=1의 함정 — SA 한 명의 한 시점의 한 버릇이 ground truth로 굳음.</td></tr>
+</table>
+
+<div class="callout">
+  <span class="label">5건의 다양성 축</span>
+  <strong>SKU·SA·시점</strong>의 3축 다양성. 한 SA의 5건은 한 사람의 화법 5번 → 5건의 다양성 1배. 다른 SA 2명 × 5건 = 화법 다양성 2배. 같은 제품의 revision 3건은 시점 변화가 어떻게 보고서를 바꾸는지 보여줌. <strong>이상적인 첫 5건: 2명의 SA × (각 SA의 다른 카테고리 2건 + 같은 카테고리 1건)</strong>. 이게 안 되면 (a) 같은 SA의 5건이라도 카테고리 다양성, (b) 같은 카테고리 5건이라도 SA 다양성 — 둘 중 하나는 확보.
+</div>
+
+<h2>3. 역추출 — PDF에서 사실 끄집어내기</h2>
+
+<p>이 작업이 reference set 구축의 80% 노동이다. 자동·반자동·수동의 명확한 경계:</p>
+
+<h3>3.1 자동 영역 — text extraction + 구조 인식</h3>
+
+<table>
+  <tr><th>섹션</th><th>추출 도구</th><th>신뢰도</th></tr>
+  <tr><td>A.1 정량·정성 조성 표</td><td><code>pdfplumber</code>로 표 추출, INCI·% 컬럼 파싱</td><td>높음 (수치는 OCR 위험만 주의)</td></tr>
+  <tr><td>A.6 노출 표</td><td>표 추출 + 단위 정규화</td><td>높음</td></tr>
+  <tr><td>A.7 독성 표</td><td>표 추출 + NOAEL 컬럼 식별</td><td>중간 (출처가 footnote 참조면 별도 매핑)</td></tr>
+  <tr><td>B.3 narrative</td><td>section 헤더 detection + 본문 텍스트 추출</td><td>높음 (텍스트 자체)</td></tr>
+  <tr><td>B.1 결론</td><td>마지막 페이지 본문</td><td>높음</td></tr>
+</table>
+
+<pre><span class="k">import</span> pdfplumber
+<span class="k">from</span> <span class="n">pathlib</span> <span class="k">import</span> Path
+
+<span class="k">def</span> <span class="n">extract_formula_table</span>(pdf: Path) -> <span class="n">list</span>[FormulaRow]:
+    rows = []
+    <span class="k">with</span> <span class="n">pdfplumber</span>.open(pdf) <span class="k">as</span> doc:
+        <span class="k">for</span> page <span class="k">in</span> doc.pages:
+            <span class="k">if</span> <span class="s">"Annex I Part A.1"</span> <span class="k">in</span> page.extract_text() <span class="k">or</span> <span class="s">"정량적·정성적"</span> <span class="k">in</span> page.extract_text():
+                <span class="k">for</span> table <span class="k">in</span> page.extract_tables():
+                    inci_col, pct_col = <span class="n">detect_columns</span>(table[<span class="s">0</span>])
+                    <span class="k">if</span> inci_col <span class="k">is</span> <span class="n">None</span>:
+                        <span class="k">continue</span>
+                    <span class="k">for</span> row <span class="k">in</span> table[<span class="s">1</span>:]:
+                        rows.append(FormulaRow(
+                            inci=row[inci_col].strip(),
+                            pct=<span class="n">parse_pct</span>(row[pct_col]),
+                            source_page=page.page_number,
+                        ))
+    <span class="k">return</span> rows
+</pre>
+
+<h3>3.2 반자동 영역 — LLM 보조 + SA 검토</h3>
+
+<table>
+  <tr><th>섹션</th><th>전략</th></tr>
+  <tr><td>B.3 narrative ↔ 어떤 사실에서 도출됐는가</td><td>LLM에게 "이 narrative 단락에서 등장하는 NOAEL·MoS·SED를 모두 extract"로 호출. 결과를 SA가 확인.</td></tr>
+  <tr><td>인용된 SCCS Opinion·CIR 식별</td><td>본문에 "SCCS/1234/56" 패턴 regex 추출 → corpus DB와 매칭. 매칭 안 되면 SA 확인.</td></tr>
+  <tr><td>"이 SA가 즐겨 쓰는 표현" 추출</td><td>5건의 narrative를 LLM에 함께 주고 "반복되는 표현 패턴 20개" 요청. SA 검토로 50% 폐기 후 30% 채택.</td></tr>
+</table>
+
+<h3>3.3 수동 영역 — 솔로 메이커가 직접</h3>
+
+<table>
+  <tr><th>섹션</th><th>왜 수동인가</th></tr>
+  <tr><td>SA의 추론 chain 재구성</td><td>"왜 EFSA를 선택했는가, CIR을 안 봤는가?" — narrative에 안 나오는 의사결정. SA 인터뷰로만 가능.</td></tr>
+  <tr><td>비공식 회사 정책 적출</td><td>"우리 회사는 phenoxyethanol을 leave-on 0.5% 이하로 자체 제한한다" 같은 unwritten rule.</td></tr>
+  <tr><td>예외 처리 사례</td><td>"이 성분은 SCCS가 0.5% 한도지만 우리는 0.3% 자체 보수" 같은 자발적 감축.</td></tr>
+</table>
+
+<div class="callout">
+  <span class="label">PDF가 워드 원본이면 무조건 docx로</span>
+  Historical CPSR이 사내에 .docx 원본으로 보관되어 있다면 PDF는 무시하고 .docx 직접 파싱. python-docx로 단락·표·스타일이 그대로 잡힌다. PDF parsing은 line break·표 cell·OCR 오류의 지옥. <strong>"PDF 5건만 받았다"가 아니라 "Word 원본 5건이 어디 있는가"를 먼저 확인.</strong> 사내 PLM·문서관리 시스템에서 .docx를 끌어오는 권한 확보가 이번 레슨의 정치적 작업.
+</div>
+
+<h2>4. SA Style Anchor — "우리 화법"의 명시화</h2>
+
+<p>5건의 SA narrative를 모은 후 LLM과 함께 style anchor를 만든다. 결과물은 generator의 system prompt에 직접 박힌다.</p>
+
+<h3>4.1 추출 프로토콜</h3>
+
+<ol>
+  <li>5건의 B.3 단락 50개를 한 txt 파일로 합친다.</li>
+  <li>LLM(Claude)에게 다음 요청을 한 호출로 보낸다:</li>
+</ol>
+
+<pre>다음은 우리 회사 인증 SA가 작성한 CPSR Part B.3 narrative 단락 50개다.
+이를 분석해 다음을 추출하라:
+
+1. 반복되는 문장 시작 패턴 (10개): "본 성분은...", "노출 분석 결과..." 등
+2. 자주 사용하는 전이 표현 (10개): "따라서", "한편", "추가로 고려할 사항으로..."
+3. 결론 화법 패턴 (5개): "안전 여유가 확보된 것으로 판단됨" 등
+4. 명시적으로 피하는 표현 (관찰된 패턴): "안전하다" 단정, "권장" 등
+5. 수치 표기 관습: 소수점 자릿수, 콤마 사용, 단위 위치
+6. 인용 표기 형식: "(SCCS Opinion, 1647/22)" vs "(SCCS/1647/22)" vs "[1]"
+
+각 항목에 대해 실제 5건의 예문 3개씩을 인용. 추측·일반화 금지 —
+인용 못 하면 항목 자체를 빼라.
+</pre>
+
+<ol start="3">
+  <li>출력을 SA가 검토. "이건 내가 일부러 그렇게 쓴 것" vs "그건 그냥 그날의 우연" 분류.</li>
+  <li>의도된 패턴만 <code>reference/sa_style_anchor.md</code>에 박는다.</li>
+</ol>
+
+<h3>4.2 Style anchor의 시스템 통합</h3>
+
+<pre><span class="c"># reference/sa_style_anchor.md</span>
+## 1. 문장 시작 패턴 (의도된)
+- "본 성분 [INCI]은 [농도]%로 본 제형에 배합되었으며..."
+- "노출 분석 결과 SED는 [값] mg/kg bw/day로 산출되었다."
+- "독성 자료는 [출처]에 근거하여..."
+
+## 2. 결론 화법
+- "안전 여유가 충분히 확보된 것으로 판단됨"
+- "통상적 사용 조건 하에서 안전한 것으로 평가됨"
+- NEVER: "안전하다", "문제 없다", "권장한다"
+
+## 3. 수치 관습
+- MoS: 소수점 없는 정수 (예: "MoS 1755")
+- SED: 소수점 2자리 (예: "0.51 mg/kg bw/day")
+- 농도: 소수점 1자리 (예: "4.0%")
+
+## 4. 인용 형식
+- "(SCCS Opinion SCCS/[번호]/[년도])"
+- "(EFSA Journal [년도];[권]([호]):[페이지])"
+- 사내 R&D: "(사내 R&D Report [년도]-INT-[번호])"
+</pre>
+
+<p>이 파일이 generator의 system prompt에 그대로 들어간다. 5번째 reference entry 추출 후 anchor가 안정화되면 v2 generator로 이행.</p>
+
+<h2>5. 첫 비교 — System narrative vs SA narrative</h2>
+
+<p>Reference entry 1건이 완성되면 즉시 비교. system_generated_narratives를 채우고 SA의 원본과 나란히 놓는다.</p>
+
+<div class="compare">
+  <div class="bad">
+    <h4>System v1 narrative</h4>
+    Niacinamide (CAS 98-92-0) is used at 4% in this leave-on face cream. SED was calculated as 0.51 mg/kg bw/day. The NOAEL of 900 mg/kg bw/day was derived from EFSA Scientific Opinion. The resulting MoS of 1755 exceeds the threshold of 100, indicating an adequate margin of safety.
+  </div>
+  <div class="good">
+    <h4>SA가 실제 쓴 narrative</h4>
+    본 성분 Niacinamide은 4.0%로 본 제형에 배합되었으며, 노출 분석 결과 SED는 0.51 mg/kg bw/day로 산출되었다 (SCCS NoG 12판 디폴트 가정: A=1.54, F=1.0, DA%=50%, BW=60kg). SCCS Opinion 부재로 EFSA Scientific Opinion (EFSA Journal 2014;12(7):3759)의 경구 NOAEL 900 mg/kg bw/day를 보수적으로 적용하였으며, MoS는 1755로 임계 100을 충분히 상회하여 안전 여유가 확보된 것으로 판단됨. 사내 HRIPT 시험 결과(사내 R&D Report 2025-INT-038)에서도 자극·감작 양성 사례 없음.
+  </div>
+</div>
+
+<p>차이의 분석:</p>
+
+<table>
+  <tr><th>차이 축</th><th>System v1</th><th>SA</th></tr>
+  <tr><td>언어</td><td>영어</td><td>한국어 (Internal mode)</td></tr>
+  <tr><td>SED 가정</td><td>본문 미노출</td><td>괄호로 4개 모두 노출</td></tr>
+  <tr><td>EFSA 사용 이유</td><td>없음</td><td>"SCCS Opinion 부재로" 명시</td></tr>
+  <tr><td>경구→피부</td><td>없음</td><td>"보수적으로 적용" 명시</td></tr>
+  <tr><td>사내 시험 인용</td><td>없음</td><td>R&D Report ID 포함</td></tr>
+  <tr><td>결론 화법</td><td>"adequate margin"</td><td>"안전 여유가 확보된 것으로 판단됨"</td></tr>
+</table>
+
+<p>이 비교가 v2 generator의 prompt 보강 항목을 그대로 만들어낸다.</p>
+
+<h2>6. Diff Metrics — 정량 측정</h2>
+
+<p>매 entry마다 system vs SA 차이를 다음 지표로 측정:</p>
+
+<table>
+  <tr><th>지표</th><th>계산</th><th>해석</th></tr>
+  <tr><td><strong>char_modification_rate</strong></td><td>diff 알고리즘으로 변경된 char 수 / SA 전체 char 수</td><td>Modification Rate (Lesson 0006). 목표 ≤ 5%.</td></tr>
+  <tr><td><strong>fact_fidelity</strong></td><td>system narrative에 등장한 수치·출처가 fact bundle과 일치 비율</td><td>100% 필수. 미달이면 generator 즉시 수정.</td></tr>
+  <tr><td><strong>fact_completeness</strong></td><td>SA narrative의 fact bundle 중 system narrative에 누락된 비율</td><td>SA가 본문에 노출한 사실의 몇 %가 system에 빠졌는가.</td></tr>
+  <tr><td><strong>style_alignment</strong></td><td>SA의 anchor pattern 등장 빈도 / system narrative 길이</td><td>style anchor가 system에 얼마나 반영됐는가.</td></tr>
+  <tr><td><strong>boilerplate_overlap</strong></td><td>한 reference 내 N개 성분 narrative 간 6-gram 중복률</td><td>R1.8 (Lesson 0006). SA narrative의 baseline은 보통 30~50%. system이 그보다 높으면 fail.</td></tr>
+  <tr><td><strong>readability_delta</strong></td><td>SA 평균 문장 길이 vs system 평균 문장 길이</td><td>10단어 이상 차이 시 화법 mismatch.</td></tr>
+</table>
+
+<h2>7. SA Blind Judgement — 진짜 acceptance 측정</h2>
+
+<p>Diff metrics는 객관적 수치다. 그러나 acceptance는 SA의 주관 판단이다. 5건째 reference entry부터 다음 절차:</p>
+
+<ol>
+  <li>SA에게 system narrative와 자기 원본 narrative를 <strong>익명·랜덤 순서</strong>로 제시.</li>
+  <li>SA가 4개 항목을 5점 척도로 평가:
+    <ul>
+      <li>"이대로 서명 가능한가?" (1=거부, 5=수정 없이 서명)</li>
+      <li>"수치·출처가 정확한가?" (1=오류, 5=완전)</li>
+      <li>"화법이 우리 표준과 맞는가?" (1=불일치, 5=내가 쓴 것 같다)</li>
+      <li>"결론의 보수성·조건성이 적절한가?" (1=과대·과소, 5=적절)</li>
+    </ul>
+  </li>
+  <li>SA에게 "어느 것이 시스템 출력이라고 생각하는가?" 묻고 정답 공개.</li>
+  <li>모든 응답 + correct identification 여부를 <code>SaBlindJudgement</code> 객체로 저장.</li>
+</ol>
+
+<pre><span class="k">class</span> <span class="n">SaBlindJudgement</span>(BaseModel):
+    judged_at: date
+    judge_sa_id: str  <span class="c"># 평가자 (작성자와 다를 수 있음)</span>
+    signable: <span class="n">int</span>           <span class="c"># 1-5</span>
+    factual_accuracy: <span class="n">int</span>
+    style_match: <span class="n">int</span>
+    appropriate_conclusion: <span class="n">int</span>
+    identified_system_correctly: <span class="n">bool</span>
+    free_comment: <span class="n">Optional</span>[str]
+</pre>
+
+<div class="callout callout-warn">
+  <span class="label">평가자 ≠ 작성자가 이상적</span>
+  같은 SA가 자기 글과 system을 비교하면 "내 거" bias가 작동한다. 가능하면 <strong>5건의 작성자가 아닌 다른 SA가 blind judgement</strong> 수행. 작성자가 1명뿐이면 (a) 시간 간격 두기 (작성 후 1개월 이상), (b) 작성자에게 "익숙한 글"이 어느 쪽이었는지 인지하지 못하게 random label, (c) 가능하면 외부 인증 SA 1명에게 5건 평가 받기.
+</div>
+
+<h2>8. Reference set 5건 누적 후 — 시스템 변화</h2>
+
+<table>
+  <tr><th>0건일 때</th><th>5건일 때</th><th>25건일 때</th></tr>
+  <tr><td>Generator prompt는 SCCS NoG 일반 화법</td><td>Generator system prompt에 우리 SA anchor 포함</td><td>SA 1명별 anchor 분기 가능</td></tr>
+  <tr><td>Evaluator는 코드 rubric only</td><td>R1.8 boilerplate 임계가 데이터 기반 (SA baseline 측정)</td><td>LLM evaluator 도입 + reference 비교 기반 점수</td></tr>
+  <tr><td>Acceptance 측정 불가</td><td>SA blind judgement 5건의 modification rate 측정 가능</td><td>SA·카테고리별 modification rate 분해 가능</td></tr>
+  <tr><td>경구 NOAEL 화법 모름</td><td>"보수적으로 적용" 같은 사내 표준 명문화</td><td>route extrapolation 사례별 룰북 형성</td></tr>
+  <tr><td>HITL trigger 임계 추정</td><td>HITL precision·recall 5건 baseline</td><td>임계 보정으로 HITL 노이즈 감소</td></tr>
+</table>
+
+<h2>9. 위험 — Reference set의 함정</h2>
+
+<table>
+  <tr><th>위험</th><th>발현</th><th>회피</th></tr>
+  <tr><td>SA 1명의 idiosyncrasy를 표준으로 굳힘</td><td>5건 모두 같은 SA → "그 사람 화법"이 회사 화법이 됨</td><td>3명 이상의 SA narrative 확보 시도. 1명만 가능하면 reference set v1 명시.</td></tr>
+  <tr><td>Historical CPSR의 실수가 reference로 굳음</td><td>과거 CPSR에 오타·잘못된 NOAEL이 있어도 reference set이 그걸 정답으로 학습</td><td>역추출 단계에서 SA 검토 강제. 명백한 오류는 <code>known_corrections</code> 파일에 별도 기록.</td></tr>
+  <tr><td>대상 시장 mismatch</td><td>EU-submission용과 internal-only가 섞임 → 화법 anchor 오염</td><td><code>target_market</code> 필터로 entry 분리. v1에서는 internal_only만 사용.</td></tr>
+  <tr><td>최신성 부족</td><td>5년 전 CPSR이 reference인데 SCCS NoG 11→12판 변경 미반영</td><td>각 entry에 <code>sccs_nog_version</code> 메타데이터. v12 entry 우선.</td></tr>
+  <tr><td>처방 변경 이력 무시</td><td>같은 SKU의 reviSion 3개 중 가장 최근만 ground truth로 가정</td><td>revision_history에 모든 버전 보관, "현재 active version" 명시.</td></tr>
+  <tr><td>법무·정보보안 미허가 사용</td><td>사내 historical CPSR을 LLM extraction에 그대로 전송</td><td>Bedrock·Vertex private deployment 또는 INCI/수치만 추출 후 brand·product 익명화.</td></tr>
+</table>
+
+<h2>10. 작업 일정 — 5건 6주</h2>
+
+<table>
+  <tr><th>주</th><th>목표</th><th>산출</th></tr>
+  <tr><td>1</td><td>1건 정밀 역추출. SA 인터뷰 1시간.</td><td>ReferenceEntry 1, sa_style_anchor.md v0.1</td></tr>
+  <tr><td>2</td><td>2건째 역추출 + 자동 표 추출 pipeline 구축</td><td>ReferenceEntry 2, <code>extract_formula_table</code> 코드</td></tr>
+  <tr><td>3</td><td>3건째 + system narrative 첫 비교</td><td>ReferenceEntry 3, diff_metrics 코드</td></tr>
+  <tr><td>4</td><td>4건째 + sa_style_anchor v0.2 갱신 + generator v2 prompt 적용</td><td>ReferenceEntry 4, v2 generator</td></tr>
+  <tr><td>5</td><td>5건째 + SA Blind Judgement 1라운드</td><td>ReferenceEntry 5, 첫 acceptance 측정</td></tr>
+  <tr><td>6</td><td>retro + sa_style_anchor v1.0 확정</td><td>v2 시스템에서 새 처방 1건 시범 작성 → 다음 SA 검토</td></tr>
+</table>
+
+<h2>11. Quiz — 4문항</h2>
+
+<div class="quiz">
+
+<div class="question">
+  <p><strong>Q1.</strong> Reference entry 1건을 만드는 데 SA 인터뷰가 1시간 걸린다. 5건이면 5시간이다. SA의 5시간이 너무 비싸 보인다. 어떻게 인터뷰 시간을 절약할 수 있는가? 또는 절약하면 안 되는 이유는?</p>
+  <details>
+    <summary>답 보기</summary>
+    <div class="answer">
+      <strong>절약하면 안 된다 — 다만 시간 배분을 바꿔라.</strong> SA의 5시간은 reference set 전체 가치의 80%다. 인터뷰 없이 PDF만 가지고 만든 reference set은 fact 묶음일 뿐 SA 화법·예외 패턴·unwritten rule이 없다 — 즉 acceptance 모델로서 의미가 거의 없다. 절약 방법: (a) <strong>인터뷰 전 PDF 정독·1차 추출 완료</strong>해서 인터뷰는 "확인·예외만"으로. 1시간 → 30분. (b) <strong>5건 인터뷰를 일괄 1.5시간</strong>으로 묶어 동일 카테고리 다수를 SA가 한 번에 회상. (c) <strong>비동기 코멘트 가능 영역과 동기 인터뷰 필요 영역 분리</strong>: 화법 추출은 문서로, "이 사례는 왜 EFSA 골랐나" 같은 의사결정 chain은 동기. <strong>SA 5시간을 절약하려고 시스템 50시간을 잘못된 방향으로 쓰지 마라.</strong>
+    </div>
+  </details>
+</div>
+
+<div class="question">
+  <p><strong>Q2.</strong> SA blind judgement에서 작성한 SA 본인이 자기 글을 평가했다. "내 글" identification 정확도가 100%고 "이대로 서명 가능?" 점수도 5/5다. system 점수는 2/5. 이 결과의 어떤 부분이 신뢰 못 하는가?</p>
+  <details>
+    <summary>답 보기</summary>
+    <div class="answer">
+      <strong>전부.</strong> (1) Identification 100%는 blind가 깨졌다는 신호 — 차라리 익명화·random label·시간 간격 둔 후 재평가. (2) 자기 글을 5/5로 매기는 건 정상이지만 system 2/5에 대한 reference로는 쓸 수 없음 — 비교 기준이 자기 자신이라 anchor가 됐다. (3) 평가는 다른 SA가 또는 외부 인증 SA가 수행해야 의미. (4) 단, 이 결과가 <strong>완전히 무가치하지는 않다</strong>: SA가 자기 글의 무엇을 5점으로 보는지가 style anchor의 추가 신호. "내가 쓴 거랑 system 거의 비교해보니 system이 빠뜨린 게 [X, Y, Z]더라"라는 free_comment가 가장 가치 있는 데이터. <strong>score보다 free_comment를 reference로</strong>.
+    </div>
+  </details>
+</div>
+
+<div class="question">
+  <p><strong>Q3.</strong> 역추출 단계에서 historical CPSR의 한 narrative가 "이 성분의 NOAEL은 800 mg/kg bw/day"라고 적었는데, 같은 원본 SCCS Opinion에는 900 mg/kg bw/day로 나온다. SA가 5년 전 단순 오타로 800을 적은 것 같다. reference entry에 800 vs 900 중 어느 걸 넣어야 하는가?</p>
+  <details>
+    <summary>답 보기</summary>
+    <div class="answer">
+      <strong>둘 다 넣는다 — 다른 필드에.</strong> facts.noael_chosen에는 <em>정확한 값 900</em>을 넣고 출처를 SCCS Opinion에서 인용. sa_narratives.b3_per_substance에는 <em>원본 그대로 800</em>을 넣어 SA가 실제 쓴 문장을 보존. 그리고 <code>known_corrections</code> 별도 파일에 entry_id + "narrative의 800은 SCCS 원본 900의 오타로 추정 (출처: SCCS Opinion §4.2)"를 기록. 이렇게 하면 (a) <strong>학습 시 system이 800을 정답으로 학습하지 않고</strong>, (b) <strong>SA의 실제 화법은 보존</strong>되며, (c) <strong>"우리 회사 historical 보고서에 알려진 정정 사항" 목록</strong>이 자산이 된다. 미래 audit 시 "오타를 발견하고 적절히 처리했다"는 trail. <strong>역추출은 historical CPSR을 그대로 추상화하는 작업이 아니라, fact ground truth와 SA 행동 ground truth를 분리하는 작업.</strong>
+    </div>
+  </details>
+</div>
+
+<div class="question">
+  <p><strong>Q4.</strong> 5건의 reference entry를 모은 후 v2 generator의 prompt에 sa_style_anchor.md 전체를 system message로 그대로 inject했다. 그런데 새 처방에 대한 narrative가 너무 SA 1명의 표현에만 맞춰져 융통성이 사라졌다. 어떻게 균형 잡는가?</p>
+  <details>
+    <summary>답 보기</summary>
+    <div class="answer">
+      <strong>Anchor에는 mandatory vs preferred 분리가 필요하다.</strong> v0의 sa_style_anchor.md는 모든 항목을 같은 강도로 명령했다. v1에서는 (1) <strong>Mandatory (절대 위반 금지)</strong>: 인용 형식, 결론 화법, 단정형 금지 — 회사 규정에 가까운 것. (2) <strong>Preferred (선호하나 의무 아님)</strong>: 문장 시작 패턴, 전이 표현 — 자연스러운 다양화 허용. (3) <strong>Forbidden</strong>: "안전하다" 단정, "권장" — 절대 금지. system prompt 구조: "다음 mandatory 룰을 모두 지키고, preferred 표현을 가능한 한 활용하되 문맥에 맞게 다양화하라. forbidden 표현을 사용하지 마라." 또한 <strong>reference SA가 1명만 있다면 anchor에 그 사실을 명시</strong>: "이 anchor는 단일 SA의 화법에 기반한다. 다른 SA가 향후 합류 시 갱신 예정." 이 명시 자체가 향후 anchor 다양화의 기반.
+    </div>
+  </details>
+</div>
+
+</div>
+
+<h2>12. 다음 단계</h2>
+
+<ul>
+  <li>5건 + Blind Judgement 1라운드 완료 → <strong>HITL UI 설계 (Lesson 0009)</strong>로 이행. 5건의 SA 인터뷰에서 "어디서 사람 손이 필요한가"가 충분히 드러난다.</li>
+  <li>Reference set 25건 도달 후 LLM evaluator + style anchor 분기 시스템 도입.</li>
+  <li>외부 인증 SA 1명에게 anchor 검토 요청 (단일 SA 함정 회피).</li>
+</ul>
+
+<div class="callout">
+  <span class="label">교사에게 질문</span>
+  "사내 historical CPSR은 누구로부터 몇 건 받을 수 있는가, 그리고 어떤 형식(PDF·docx·DB)인가?", "역추출 LLM 호출 시 사내 처방 데이터 외부 전송 정책은 v1에서 결정됐는가?", "Blind judgement용 SA가 작성자와 분리될 수 있는가, 가능하면 외부 SA 1명을 확보할 수 있는가?" — 답에 따라 reference set 수집 페이스와 범위가 정해집니다.
+</div>
+
+<div class="nav">
+  Previous: <a href="0007-mvp-build-niacinamide-cream.html">0007 — End-to-end MVP Build</a> ·
+  Next: <a href="0009-hitl-workflow-ui.html">0009 — HITL Workflow UI 설계</a> ·
+  Glossary: <a href="../reference/glossary.html">용어집</a>
+</div>
+
+</body>
+</html>

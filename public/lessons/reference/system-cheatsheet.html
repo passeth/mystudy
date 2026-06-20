@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>CPSR Agent System — Master Cheat Sheet</title>
+<style>
+  :root {
+    --ink: #1a1a1a;
+    --muted: #5a5a5a;
+    --line: #d8d3c7;
+    --accent: #7a3b2e;
+    --highlight: #fbf6ec;
+    --code-bg: #f3efe5;
+    --t1: #2563eb;
+    --t2: #0891b2;
+    --t3: #7c3aed;
+    --t4: #be185d;
+    --t5: #b45309;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Iowan Old Style", "Georgia", "Apple SD Gothic Neo", "Noto Serif KR", serif;
+    color: var(--ink);
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 0 28px 80px;
+    line-height: 1.55;
+    font-size: 15px;
+    background: #fefcf7;
+  }
+  .meta {
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  h1 {
+    font-size: 28px;
+    line-height: 1.2;
+    margin: 0 0 6px;
+    letter-spacing: -0.01em;
+  }
+  .subtitle {
+    color: var(--muted);
+    font-style: italic;
+    margin-bottom: 28px;
+    font-size: 14px;
+  }
+  h2 {
+    font-size: 18px;
+    margin: 36px 0 10px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--line);
+    letter-spacing: 0.02em;
+  }
+  h3 {
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    margin: 20px 0 6px;
+  }
+  p { margin: 8px 0; }
+  ul, ol { padding-left: 22px; margin: 8px 0; }
+  li { margin: 3px 0; }
+  code {
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 13px;
+    background: var(--code-bg);
+    padding: 1px 5px;
+    border-radius: 3px;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 16px 0;
+  }
+  .grid > div {
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 14px 18px;
+    background: #fff;
+  }
+  .grid h3 { margin-top: 0; }
+  .tier {
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 14px 18px;
+    margin: 8px 0;
+    background: #fff;
+    border-left-width: 5px;
+  }
+  .tier.t1 { border-left-color: var(--t1); }
+  .tier.t2 { border-left-color: var(--t2); }
+  .tier.t3 { border-left-color: var(--t3); }
+  .tier.t4 { border-left-color: var(--t4); }
+  .tier.t5 { border-left-color: var(--t5); }
+  .tier-head {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: #fff;
+  }
+  .t1 .badge { background: var(--t1); }
+  .t2 .badge { background: var(--t2); }
+  .t3 .badge { background: var(--t3); }
+  .t4 .badge { background: var(--t4); }
+  .t5 .badge { background: var(--t5); }
+  .tier-name { font-weight: 600; font-size: 15px; }
+  .tier-detail {
+    font-size: 13px;
+    color: var(--ink);
+    line-height: 1.5;
+  }
+  .tier-detail dt {
+    display: inline;
+    font-weight: 600;
+    color: var(--muted);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-right: 6px;
+  }
+  .tier-detail dd { display: inline; margin: 0; }
+  .tier-detail .row { margin: 4px 0; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    font-size: 13px;
+  }
+  th, td {
+    text-align: left;
+    padding: 7px 10px;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+  th {
+    background: var(--code-bg);
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .formula {
+    background: #fff;
+    border: 2px solid var(--accent);
+    padding: 14px 20px;
+    border-radius: 6px;
+    margin: 12px 0;
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 14px;
+    text-align: center;
+  }
+  .formula .var { color: var(--accent); font-weight: 600; }
+  .callout {
+    background: var(--highlight);
+    border-left: 4px solid var(--accent);
+    padding: 10px 14px;
+    margin: 14px 0;
+    border-radius: 0 4px 4px 0;
+    font-size: 13px;
+  }
+  .arch {
+    background: #1a1a1a;
+    color: #f0ebe0;
+    padding: 16px 20px;
+    border-radius: 6px;
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 12px;
+    line-height: 1.5;
+    overflow-x: auto;
+    margin: 14px 0;
+  }
+  .arch .t1c { color: #93c5fd; }
+  .arch .t2c { color: #67e8f9; }
+  .arch .t3c { color: #c4b5fd; }
+  .arch .t4c { color: #f9a8d4; }
+  .arch .t5c { color: #fcd34d; }
+  .arch .c { color: #6b7280; font-style: italic; }
+  .lesson-index {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 14px 18px;
+    margin: 16px 0;
+    font-size: 13px;
+  }
+  .lesson-index a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .lesson-index a:hover { text-decoration: underline; }
+  .lesson-index .num {
+    font-family: "SF Mono", "Menlo", monospace;
+    color: var(--muted);
+    margin-right: 8px;
+  }
+  .nav {
+    margin-top: 40px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .nav a { color: var(--accent); text-decoration: none; }
+  .checklist {
+    list-style: none;
+    padding-left: 0;
+  }
+  .checklist li {
+    padding: 4px 0 4px 24px;
+    position: relative;
+  }
+  .checklist li::before {
+    content: "☐";
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-weight: 600;
+  }
+  @media print {
+    body { background: #fff; max-width: 100%; margin: 0; font-size: 13px; }
+    .tier, .grid > div { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<div class="meta">Reference · Master Cheat Sheet · 인쇄용</div>
+<h1>CPSR Agent System — 한 장 정리</h1>
+<p class="subtitle">사내 CPSR 자동작성 AI 에이전트, acceptance 95%. 6개 레슨이 도달한 모든 결론을 한 페이지로.</p>
+
+<h2>1. Mission</h2>
+<p>처방·노출·독성 자료를 통합 추론해 <strong>CPSR Annex I Part A + Part B 초안</strong>을 LLM 에이전트가 생성. 사내 인증 SA가 거의 손대지 않고 서명·검토 가능한 수준. <strong>SCCS NoG 12th Rev (2023)</strong> 1차 기준, leave-on 스킨케어 우선, 솔로 메이커.</p>
+
+<h2>2. CPSR Annex I 구조 (Lesson 0001)</h2>
+
+<div class="grid">
+  <div>
+    <h3>Part A — 사실 (10 섹션)</h3>
+    <table>
+      <tr><td><strong>A.1</strong></td><td>Composition (INCI %)</td></tr>
+      <tr><td><strong>A.2</strong></td><td>Physico-chem + stability</td></tr>
+      <tr><td><strong>A.3</strong></td><td>Microbiological quality</td></tr>
+      <tr><td><strong>A.4</strong></td><td>Impurities, packaging</td></tr>
+      <tr><td><strong>A.5</strong></td><td>Normal & foreseeable use</td></tr>
+      <tr><td><strong>A.6</strong></td><td>Product exposure</td></tr>
+      <tr><td><strong>A.7</strong></td><td>Substance exposure (SED)</td></tr>
+      <tr><td><strong>A.8</strong></td><td>Toxicological profile</td></tr>
+      <tr><td><strong>A.9</strong></td><td>Undesirable effects</td></tr>
+      <tr><td><strong>A.10</strong></td><td>Other info (HRIPT 등)</td></tr>
+    </table>
+  </div>
+  <div>
+    <h3>Part B — 판단 (4 섹션)</h3>
+    <table>
+      <tr><td><strong>B.1</strong></td><td>Conclusion</td></tr>
+      <tr><td><strong>B.2</strong></td><td>Labelled warnings</td></tr>
+      <tr><td><strong>B.3</strong></td><td><strong>Reasoning</strong> (본체)</td></tr>
+      <tr><td><strong>B.4</strong></td><td>Assessor credentials</td></tr>
+    </table>
+    <p style="font-size: 12px; color: var(--muted); margin-top: 12px;">
+      읽는 순서: B.1→B.4<br>
+      <strong>쓰는 순서: B.3 → B.1 → B.2 → B.4</strong>
+    </p>
+  </div>
+</div>
+
+<h2>3. 핵심 수식 (Lesson 0003 · Tier 1)</h2>
+
+<div class="formula">
+  <strong>SED</strong> = <span class="var">A</span> × <span class="var">C</span> × <span class="var">F</span> × <span class="var">DA<sub>p</sub></span> / <span class="var">BW</span> &nbsp;&nbsp;[mg/kg bw/day]
+</div>
+<div class="formula" style="border-color: #b45309;">
+  <strong>MoS</strong> = <span class="var">NOAEL</span> / <span class="var">SED</span> ≥ <strong>100</strong>
+</div>
+
+<table>
+  <tr><th>기호</th><th>값/단위</th><th>비고</th></tr>
+  <tr><td>A</td><td>g/day</td><td>SCCS Table 1 — face cream 1.54</td></tr>
+  <tr><td>C</td><td>fraction</td><td>% ÷ 100 (4% → 0.04)</td></tr>
+  <tr><td>F</td><td>0~1</td><td>Leave-on 1.0, Rinse-off ≪1</td></tr>
+  <tr><td>DA<sub>p</sub></td><td>fraction</td><td>측정값 없으면 0.5 default</td></tr>
+  <tr><td>BW</td><td>60 kg</td><td>SCCS default</td></tr>
+  <tr><td>NOAEL</td><td>mg/kg bw/day</td><td>Tier 3에서 추출, 보수성+품질 가중</td></tr>
+  <tr><td>MoS</td><td>≥ 100</td><td>종간차 10 × 개체차 10 (default UF)</td></tr>
+</table>
+
+<div class="callout">
+  <strong>단위 함정 5종:</strong> % vs fraction · g vs mg · retention 0 vs 1 · DA% vs DA fraction · 종 NOAEL을 인간에 그대로 적용 금지.<br>
+  <strong>Aggregate:</strong> SED<sub>agg</sub> = Σ SED<sub>i</sub> (동일 성분, 여러 제품 동시 사용).
+</div>
+
+<h2>4. 5-Tier 자동화 분류 (Lesson 0002 · Backbone)</h2>
+
+<div class="tier t1">
+  <div class="tier-head"><span class="badge">TIER 1</span><span class="tier-name">Deterministic Compute</span></div>
+  <div class="tier-detail">
+    <div class="row"><dt>예:</dt><dd>SED·MoS·retention·단위 변환·aggregate 합산</dd></div>
+    <div class="row"><dt>구현:</dt><dd>순수 함수, unit test 100%. LLM 금지.</dd></div>
+    <div class="row"><dt>실패:</dt><dd>입력 단위 혼동, 농도 합 ≠ 100%</dd></div>
+  </div>
+</div>
+
+<div class="tier t2">
+  <div class="tier-head"><span class="badge">TIER 2</span><span class="tier-name">Structured Data Retrieval</span></div>
+  <div class="tier-detail">
+    <div class="row"><dt>예:</dt><dd>CosIng INCI 정규화·Annex 상태·CAS lookup·내부 R&D DB</dd></div>
+    <div class="row"><dt>구현:</dt><dd>API client + Substance Identity Hub. CosIng API 없음.</dd></div>
+    <div class="row"><dt>실패:</dt><dd>INCI 변종, 동의어, 한국명, 염·수화물, 복합 성분</dd></div>
+  </div>
+</div>
+
+<div class="tier t3">
+  <div class="tier-head"><span class="badge">TIER 3</span><span class="tier-name">LLM Extraction with Grounding (RAG)</span></div>
+  <div class="tier-detail">
+    <div class="row"><dt>예:</dt><dd>SCCS Opinion·CIR·ECHA PDF에서 NOAEL/DA% 추출</dd></div>
+    <div class="row"><dt>구현:</dt><dd>Pydantic 스키마 + Citation 강제 + evaluator (quote literal match)</dd></div>
+    <div class="row"><dt>실패:</dt><dd>fabrication, 종 오인, 단위 혼동, 보수값 미선택</dd></div>
+  </div>
+</div>
+
+<div class="tier t4">
+  <div class="tier-head"><span class="badge">TIER 4</span><span class="tier-name">LLM Reasoning with Rubric Evaluation</span></div>
+  <div class="tier-detail">
+    <div class="row"><dt>예:</dt><dd>B.3 Reasoning, B.1 Conclusion, A.4·A.8 narrative</dd></div>
+    <div class="row"><dt>구현:</dt><dd>Generator → Evaluator(rubric) → Refiner 루프. 3회 retry 후 HITL.</dd></div>
+    <div class="row"><dt>실패:</dt><dd>boilerplate, 갭 침묵, 민감군 미고려, MoS&lt;100인데 safe 결론</dd></div>
+  </div>
+</div>
+
+<div class="tier t5">
+  <div class="tier-head"><span class="badge">TIER 5 / HITL</span><span class="tier-name">Human-in-the-Loop (필수)</span></div>
+  <div class="tier-detail">
+    <div class="row"><dt>예:</dt><dd>B.4 자격자 서명, MoS&lt;100, 신성분, Evaluator retry 실패</dd></div>
+    <div class="row"><dt>구현:</dt><dd>워크플로우 게이트 + 알림 + 결정 audit log → 학습 데이터</dd></div>
+    <div class="row"><dt>실패:</dt><dd>silent failure → HITL 호출 누락 (false negative)</dd></div>
+  </div>
+</div>
+
+<h2>5. 시스템 아키텍처 (Lesson 0002)</h2>
+
+<div class="arch">
+INPUT: {formulation_INCI%, product_category, use_scenario}
+   |
+   v
+[<span class="t1c">T1</span>] formulation_validator   <span class="c"># sum=100%, units, splits</span>
+[<span class="t2c">T2</span>] cosing_normalizer        <span class="c"># INCI → substance_id + CAS + Annex</span>
+[<span class="t1c">T1</span>] exposure_calculator      <span class="c"># A·C·F·DA·BW → SED per substance</span>
+[<span class="t2c">T2</span>] internal_data_fetcher    <span class="c"># R&D, stability, microbio</span>
+   |
+   v
+[<span class="t3c">T3</span>] tox_rag                   <span class="c"># SCCS Opinion + CIR + ECHA → NOAEL</span>
+       └─ <span class="t3c">evaluator</span>             <span class="c"># quote literal + unit + species check</span>
+   |
+   v
+[<span class="t1c">T1</span>] mos_calculator           <span class="c"># MoS = NOAEL/SED, flag &lt;100</span>
+   |
+   v
+[<span class="t4c">T4</span>] reasoning_generator      <span class="c"># B.3 per-substance + global</span>
+       └─ <span class="t4c">evaluator(rubric)</span>      <span class="c"># R1.1~R2.6</span>
+[<span class="t4c">T4</span>] conclusion_generator     <span class="c"># B.1 + B.2</span>
+   |
+   v
+[<span class="t5c">T5</span>] HITL gate               <span class="c"># SA review + sign B.4</span>
+   |
+   v
+OUTPUT: CPSR draft (JSON) + Word/PDF + audit log
+</div>
+
+<h2>6. Tier 2 — Substance Identity Hub (Lesson 0005)</h2>
+
+<table>
+  <tr><th>표기</th><th>예 (Niacinamide)</th></tr>
+  <tr><td>INCI canonical</td><td>Niacinamide</td></tr>
+  <tr><td>CAS</td><td>98-92-0</td></tr>
+  <tr><td>EC</td><td>202-713-4</td></tr>
+  <tr><td>한국명</td><td>나이아신아마이드</td></tr>
+  <tr><td>IUPAC</td><td>Pyridine-3-carboxamide</td></tr>
+  <tr><td>동의어</td><td>Nicotinamide, Vitamin B3</td></tr>
+</table>
+
+<p><strong>중심은 <code>substance_id</code> (내부 UUID).</strong> INCI는 변할 수 있어도 substance_id는 immutable. 모든 NOAEL·MoS·과거 CPSR 이력이 이 키로 묶임.</p>
+
+<p><strong>해결 chain:</strong> exact → synonym → fuzzy (≥0.95) → LLM propose (0.7, HITL).</p>
+
+<p><strong>처방 입력 검증 6단계:</strong> ① substance_id 해결 ② 농도 합 99.5~100.5% ③ (and)/+ 분할 ④ Annex II 금지 ⑤ Annex III/V/VI 한도 ⑥ 알레르겐 26+24 합산.</p>
+
+<h2>7. Tier 3 — SCCS Opinion 해부 (Lesson 0004)</h2>
+
+<table>
+  <tr><th>섹션</th><th>내용</th></tr>
+  <tr><td><strong>3.1.1</strong></td><td>CAS, EC, INCI — Tier 2 매칭</td></tr>
+  <tr><td><strong>3.3.4</strong></td><td>Dermal absorption → Tier 1 DA<sub>p</sub></td></tr>
+  <tr><td><strong>3.3.5</strong></td><td>⭐⭐ Repeated dose — NOAEL 본거지</td></tr>
+  <tr><td><strong>3.3.13</strong></td><td>⭐⭐⭐ Safety eval 표 — NOAEL+SED+MoS 한 표에</td></tr>
+  <tr><td><strong>4</strong></td><td>⭐⭐⭐ Conclusion verdict — 우리 B.1 모델</td></tr>
+</table>
+
+<p><strong>추출 4규칙:</strong> ① "Cite or refuse" ② "Choose conservative" (extract all → deterministic min) ③ "Species and route always" ④ "Units mg/kg bw/day".</p>
+
+<p><strong>Fallback chain:</strong> SCCS → CIR → ECHA → EFSA → HITL. confidence 등급 동반.</p>
+
+<h2>8. Tier 4 — Rubric (Lesson 0006)</h2>
+
+<table>
+  <tr><th>ID</th><th>항목</th><th>비고</th></tr>
+  <tr><td><strong>R1.1</strong></td><td>NOAEL 출처 명시</td><td>필수, literal</td></tr>
+  <tr><td><strong>R1.2</strong></td><td>NOAEL 수치·단위 일치</td><td>필수, 결정론 매치</td></tr>
+  <tr><td><strong>R1.3</strong></td><td>SED 가정 (A·F·DA·BW) 최소 3개</td><td>필수</td></tr>
+  <tr><td><strong>R1.4</strong></td><td>MoS + 임계 비교</td><td>필수</td></tr>
+  <tr><td><strong>R1.5</strong></td><td>대안 NOAEL cross-check</td><td>조건부</td></tr>
+  <tr><td><strong>R1.6</strong></td><td>데이터 갭 정직성</td><td>조건부</td></tr>
+  <tr><td><strong>R1.7</strong></td><td>UF 상향 정당화</td><td>조건부</td></tr>
+  <tr><td><strong>R1.8</strong></td><td>Boilerplate 감점 (6-gram &lt;80%)</td><td>감점</td></tr>
+  <tr><td><strong>R2.1</strong></td><td>조건성 ("under intended use")</td><td>필수</td></tr>
+  <tr><td><strong>R2.2</strong></td><td>Aggregate exposure 진술</td><td>필수</td></tr>
+  <tr><td><strong>R2.3</strong></td><td>민감군 진술</td><td>필수</td></tr>
+  <tr><td><strong>R2.4</strong></td><td>모든 성분 MoS 통과 확인</td><td>필수</td></tr>
+  <tr><td><strong>R2.5</strong></td><td>국소 안전성</td><td>필수</td></tr>
+  <tr><td><strong>R2.6</strong></td><td>SCCS 화법 verdict</td><td>필수</td></tr>
+</table>
+
+<div class="callout">
+  <strong>HITL 트리거 (P0):</strong> MoS&lt;임계 → generator 호출 X · NOAEL 출처 없음 → generator 호출 X.<br>
+  <strong>HITL 트리거 (P1):</strong> evaluator 3-retry 실패 · boilerplate 임계 초과 · 처방 변경 감지.
+</div>
+
+<h2>9. Acceptance KPI (Lesson 0006)</h2>
+
+<table>
+  <tr><th>지표</th><th>정의</th><th>목표</th></tr>
+  <tr><td>Modification Rate</td><td>SA 수정 문자 수 / 총 문자 수</td><td>≤ 5%</td></tr>
+  <tr><td>SA Approval Without Edits</td><td>수정 없이 서명 비율</td><td>≥ 70%</td></tr>
+  <tr><td>Section Rejection Rate</td><td>B.3/B.1 통째 재작성 비율</td><td>&lt; 5%</td></tr>
+  <tr><td>HITL Precision</td><td>호출 case 중 실제 정당</td><td>≥ 90%</td></tr>
+  <tr><td>HITL Recall</td><td>큰 수정 case 중 사전 호출</td><td>≥ 90%</td></tr>
+  <tr><td>Fact Fidelity</td><td>narrative 수치·출처 ↔ fact bundle 일치</td><td>= 100%</td></tr>
+</table>
+
+<h2>10. 경쟁 환경 요약 (RESOURCES.md 검증 결과)</h2>
+
+<table>
+  <tr><th>서비스</th><th>위치</th><th>우리와의 차이</th></tr>
+  <tr><td><strong>ToxTool/UDRD</strong></td><td>가장 직접 경쟁자. SCCS NoG 기반 + MoS 자동 + CPSR "minutes"</td><td>사내 R&D 직접 통합 X / acceptance KPI X / 사내 SA 화법 X</td></tr>
+  <tr><td><strong>Worldover</strong></td><td>광범위 enterprise compliance OS</td><td>다른 시장. Regulation alert 패턴 학습 가치.</td></tr>
+  <tr><td><strong>Phoenix</strong></td><td>순수 인간 컨설팅 £55~480/CPSR</td><td>ROI baseline. 기술 경쟁자 아님.</td></tr>
+  <tr><td><strong>Eldris/ChemComply</strong></td><td>RP-as-service 60분 인증서</td><td>우리 미션과 직교 (paperwork 자동화).</td></tr>
+</table>
+
+<div class="callout">
+  <strong>우리 차별화 3축:</strong> ① 사내 R&D/LIMS/처방 시스템 직접 통합 ② Acceptance rate KPI 기반 evaluator 루프 ③ 사내 SA의 historical reports를 ground truth로 한 화법 학습 — 이 세 가지는 외부 SaaS가 절대 따라올 수 없다.
+</div>
+
+<h2>11. 다음 빌드 체크리스트</h2>
+
+<ul class="checklist">
+  <li>자사 leave-on face cream 1제품 앵커 선정 (가급적 단순 처방)</li>
+  <li>해당 제품 INCI 처방표(%) + 사용 시나리오 확보</li>
+  <li>Substance Identity Hub 1차 적재 (사내 raw material master)</li>
+  <li>SCCS Opinion 1편 (예: phenoxyethanol) 수동 추출 → 첫 fact bundle fixture</li>
+  <li>Tier 1 unit test 묶음 (Lesson 0003의 5개 + SCCS worked example)</li>
+  <li>End-to-end MVP 파이프라인 코드 1차 (T2→T1→T3→T1→T4)</li>
+  <li>Historical CPSR 5건 역추출 → reference set + rubric R1.8 임계 튜닝</li>
+  <li>Shadow mode로 사내 SA에게 평가 의뢰</li>
+</ul>
+
+<h2>12. Lesson Index</h2>
+
+<div class="lesson-index">
+  <p><span class="num">0001</span> <a href="../lessons/0001-anatomy-of-cpsr.html">CPSR Annex I의 골격 — Part A·B</a></p>
+  <p><span class="num">0002</span> <a href="../lessons/0002-automation-tier-taxonomy.html">4-Tier 자동화 분류 (시스템 backbone)</a></p>
+  <p><span class="num">0003</span> <a href="../lessons/0003-tier1-exposure-and-mos.html">Tier 1 — 노출량·SED·MoS 결정론</a></p>
+  <p><span class="num">0004</span> <a href="../lessons/0004-tier3-sccs-opinion-rag.html">Tier 3 — SCCS Opinion 코퍼스 RAG</a></p>
+  <p><span class="num">0005</span> <a href="../lessons/0005-tier2-data-plumbing-and-inci.html">Tier 2 — 데이터 plumbing과 INCI</a></p>
+  <p><span class="num">0006</span> <a href="../lessons/0006-tier4-reasoning-and-evaluator.html">Tier 4 — Reasoning + Evaluator Rubric</a></p>
+</div>
+
+<div class="nav">
+  Glossary: <a href="glossary.html">용어집</a> ·
+  Mission: <a href="../MISSION.md">MISSION.md</a> ·
+  Resources: <a href="../RESOURCES.md">RESOURCES.md</a>
+</div>
+
+</body>
+</html>

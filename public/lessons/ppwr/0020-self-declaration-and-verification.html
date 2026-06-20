@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Lesson 0020 — 데이터로 보유 + EU는 어떻게 검증하나: 자기선언과 시장감시</title>
+<style>
+  :root {
+    --ink:#1a1a1a; --muted:#5a5a5a; --line:#d8d3c7;
+    --accent:#0369a1; --accent2:#15803d; --highlight:#f0f9ff;
+    --code-bg:#f3efe5; --quiz-bg:#f9f5ea;
+    --warn:#b45309; --good:#15803d; --bad:#b91c1c;
+  }
+  * { box-sizing:border-box; }
+  body { font-family:"Iowan Old Style","Georgia","Apple SD Gothic Neo","Noto Serif KR",serif; color:var(--ink); max-width:820px; margin:60px auto; padding:0 28px 80px; line-height:1.7; font-size:17px; background:#fefcf7; }
+  .meta { font-family:"SF Mono","Menlo",monospace; font-size:12px; letter-spacing:0.1em; color:var(--muted); text-transform:uppercase; margin-bottom:12px; }
+  .tier-tag { display:inline-block; background:var(--accent2); color:#fff; padding:3px 10px; border-radius:4px; font-family:"SF Mono","Menlo",monospace; font-size:11px; font-weight:600; letter-spacing:0.08em; margin-right:8px; }
+  h1 { font-size:27px; line-height:1.25; margin:0 0 8px; letter-spacing:-0.01em; }
+  .subtitle { color:var(--muted); font-style:italic; margin-bottom:36px; }
+  h2 { font-size:22px; margin:44px 0 12px; padding-bottom:6px; border-bottom:1px solid var(--line); }
+  h3 { font-size:18px; margin:30px 0 8px; color:var(--accent); }
+  p { margin:12px 0; }
+  ul, ol { padding-left:24px; } li { margin:6px 0; }
+  code { font-family:"SF Mono","Menlo",monospace; font-size:14px; background:var(--code-bg); padding:2px 6px; border-radius:3px; }
+  .callout { background:var(--highlight); border-left:4px solid var(--accent); padding:16px 20px; margin:24px 0; border-radius:0 6px 6px 0; }
+  .callout-warn { background:#fef7e6; border-left-color:var(--warn); }
+  .callout-bad { background:#fef2f2; border-left-color:var(--bad); }
+  .callout-good { background:#f0fdf4; border-left-color:var(--good); }
+  .callout .label { display:block; font-size:12px; text-transform:uppercase; letter-spacing:0.1em; color:var(--accent); margin-bottom:6px; font-weight:600; }
+  .callout-warn .label { color:var(--warn); } .callout-bad .label { color:var(--bad); } .callout-good .label { color:var(--good); }
+  table { width:100%; border-collapse:collapse; margin:20px 0; font-size:14px; }
+  th, td { text-align:left; padding:10px 12px; border-bottom:1px solid var(--line); vertical-align:top; }
+  th { background:var(--code-bg); font-weight:600; font-size:12px; text-transform:uppercase; letter-spacing:0.05em; }
+  .ok { color:var(--good); font-weight:700; } .down { color:var(--warn); font-weight:700; } .kill { color:var(--bad); font-weight:700; }
+  .layer { font-family:"SF Mono","Menlo",monospace; font-size:13px; background:var(--code-bg); padding:18px 22px; border-radius:8px; margin:20px 0; line-height:1.9; }
+  .tool { background:#fff; border:2px solid var(--accent2); border-radius:12px; padding:24px 26px; margin:28px 0; box-shadow:0 2px 12px rgba(0,0,0,0.04); }
+  .tool h3 { margin-top:0; color:var(--accent2); }
+  .tool select { font-family:inherit; font-size:15px; padding:8px 10px; border:1px solid var(--line); border-radius:6px; background:#fefcf7; color:var(--ink); width:100%; margin-top:6px; }
+  .tool-out { margin-top:18px; padding:16px 20px; border-radius:10px; background:var(--code-bg); display:none; }
+  .quiz { background:var(--quiz-bg); padding:28px 32px; margin:40px 0; border-radius:8px; }
+  .quiz h2 { border:none; margin-top:0; } .question { margin:24px 0; }
+  details { margin:8px 0; } details > summary { cursor:pointer; color:var(--accent); font-size:14px; user-select:none; list-style:revert; }
+  details[open] > summary { margin-bottom:8px; }
+  .answer { margin-top:8px; padding:12px 16px; background:#fff; border:1px dashed var(--line); border-radius:4px; }
+  .nav { margin-top:60px; padding-top:24px; border-top:1px solid var(--line); font-size:14px; color:var(--muted); }
+  .nav a { color:var(--accent); text-decoration:none; } .nav a:hover { text-decoration:underline; }
+  .cite { font-size:13px; color:var(--muted); } .cite a { color:var(--muted); text-decoration:underline; }
+  strong { font-weight:700; }
+  @media print { body { background:#fff; max-width:100%; margin:0; } .tool { break-inside:avoid; } }
+
+  .tracklink { background:#f0fdf4; border:1px solid #15803d; border-radius:10px; padding:12px 16px; margin:0 0 30px; font-size:13px; line-height:2.0; }
+  .tracklink b { color:#15803d; text-transform:uppercase; letter-spacing:0.08em; font-size:11px; display:block; margin-bottom:5px; }
+  .tracklink a { color:#0369a1; text-decoration:none; }
+  .tracklink a:hover { text-decoration:underline; }
+  .tracklink .cur { background:#15803d; color:#fff; padding:1px 8px; border-radius:4px; font-weight:700; }
+  .tracklink .sep { color:#cdd6c9; margin:0 2px; }
+</style>
+</head>
+<body>
+
+<div class="meta"><span class="tier-tag">PPWR · 패키징</span>Lesson 0020 · 약 35분 · 컴플라이언스 구조</div>
+<h1>데이터로 보유해도 되나 — 그리고 EU는 우리 값을 어떻게 검증하나</h1>
+<p class="subtitle">"부자재 자료를 증빙 문서 더미가 아니라 우리 데이터(DB)로 모아도 되나? 그리고 우리가 값을 임의로 적는 걸 EU가 무슨 수로 검증하나?" — 둘 다 PPWR이 <strong>자기선언(Module A)</strong>이라는 한 가지 사실에서 답이 나온다. 핵심은 "데이터는 자유, 단 임의가 아니라 <strong>증빙에 묶인</strong> 데이터"이고, EU는 <strong>사전 인증이 아니라 사후 시장감시</strong>로 검증한다.</p>
+
+<div class="tracklink">
+  <b>📦 PPWR 트랙 · 화장품 패키징 규제</b>
+  <a href="0011-ppwr-foundation.html">0011 토대</a> <span class="sep">·</span> <a href="0012-recyclability-grade-estimator.html">0012 등급추정</a> <span class="sep">·</span> <a href="0013-substances-and-pcr.html">0013 유해물질·PCR</a> <span class="sep">·</span> <a href="0014-rpet-pcr-sourcing-certification.html">0014 rPET조달</a> <span class="sep">·</span> <a href="0015-reduce-and-reuse.html">0015 감축·재사용</a> <span class="sep">·</span> <a href="0016-labelling-epr-doc.html">0016 라벨·EPR·DoC</a> <span class="sep">·</span> <a href="0017-korea-memberstates-roadmap.html">0017 실무로드맵</a> <span class="sep">·</span> <a href="0018-td-data-collection-bom.html">0018 부자재TD수집</a> <span class="sep">·</span> <a href="0019-component-master-architecture.html">0019 스케일수집</a> <span class="sep">·</span> <span class="cur">0020 자기선언·검증</span> <span class="sep">·</span> <a href="0021-screening-engine-and-portal.html">0021 스크리닝엔진</a> <span class="sep">·</span> <a href="../reference/packaging-materials.html">📋 매터리얼 지도</a>
+</div>
+
+<div class="callout">
+  <span class="label">이 레슨의 약속</span>
+  마치면 (1) TD를 <strong>데이터/DB로 보유해도 되는</strong> 근거와 한 가지 조건, (2) <strong>"임의로 적을 수 있는 값"은 없다</strong> — 값마다 증빙 또는 방법론이 뒤에 있어야 하는 이유, (3) EU의 <strong>ex-post 시장감시 5가지 검증 수단</strong>, (4) 하단 도구로 "이 값은 객관 증빙이 필요한가, 자기평가인가"를 분류한다.</p>
+</div>
+
+<h2>1. 두 질문을 분리하자</h2>
+<table>
+  <tr><th>질문</th><th>한 줄 답</th></tr>
+  <tr><td>(A) 문서 더미 말고 <strong>데이터로</strong> 모아도 되나?</td><td class="ok">된다. TD는 포맷 자유 — 요청 시 10일 내 문서로 낼 수 있으면 됨</td></tr>
+  <tr><td>(B) 우리가 적은 값을 EU가 어떻게 검증하나?</td><td class="down">사전 검문이 아니라 <strong>사후 시장감시</strong> — 그리고 값은 임의가 아니라 증빙에 묶임</td></tr>
+</table>
+
+<h2>2. (A) TD는 데이터로 보유해도 된다 — 단 두 레이어로</h2>
+<p>PPWR은 TD의 <strong>형식을 지정하지 않는다.</strong> Annex VII <em>내용</em>을 담기만 하면 PDF든 DB든 상관없다. 실무 표준은 오히려 <strong>구조화 데이터 + 요청 시 문서 생성</strong>(0019의 마스터에서 TD 자동조립). 단, 반드시 <strong>두 레이어</strong>로 본다:</p>
+<div class="layer">
+🗂️ <strong>데이터 레이어</strong> (당신 DB/마스터) — 인덱스·필드<br>
+&nbsp;&nbsp;&nbsp;&nbsp;예: <code>중금속_적합 = Y</code>, <code>PCR = 30%</code>, <code>재질 = PP H121</code><br>
+&nbsp;&nbsp;&nbsp;&nbsp;│ <span style="color:var(--muted)">각 필드는 아래 증빙을 <strong>가리킨다</strong> (대체하지 않는다)</span><br>
+📎 <strong>증빙 레이어</strong> — 실제 증거<br>
+&nbsp;&nbsp;&nbsp;&nbsp;예: EN 13695 시험서 ref#123 · 공급사 COC · rPET 인증서 · EuPIA 선언
+</div>
+<div class="callout callout-bad">
+  <span class="label">데이터 ≠ 증빙 — 필드는 포인터지 증거가 아니다</span>
+  <code>중금속_적합 = Y</code>라고 DB에 적는 것 자체는 아무 증명이 아니다. 그 필드가 <strong>실제 시험서·COC를 가리키고, 그 증빙을 보관</strong>하고 있어야 한다. 시장감시당국이 요청하는 건 당신의 "Y"가 아니라 <strong>그 뒤의 시험서</strong>다(10일 내). 데이터만 있고 증빙이 없으면 = TD가 빈 것.
+</div>
+
+<h2>3. (B) "임의로 적을 수 있는 값"은 없다 — 값의 두 종류</h2>
+<p>모든 TD 값은 둘 중 하나다. 어느 쪽도 "그냥 우리가 정한다"가 아니다.</p>
+<table>
+  <tr><th>종류</th><th>예</th><th>뒤에 있어야 하는 것</th><th>임의 지정?</th></tr>
+  <tr>
+    <td><strong>객관 증빙형</strong></td>
+    <td>중금속 적합·PCR%·재질·중량</td>
+    <td>시험서(EN 13695)·COC·공급사 선언·rPET 인증</td>
+    <td class="kill">불가 — 물리·공급망으로 검증됨</td>
+  </tr>
+  <tr>
+    <td><strong>자기 평가형</strong></td>
+    <td>재활용성 등급·최소화·재사용성</td>
+    <td>문서화된 <strong>방법론 + 근거</strong> (2028 위임법·조화표준 나오면 그 방법 강제)</td>
+    <td class="down">자기선언이나 근거 필수 — 감사자가 재현 가능해야</td>
+  </tr>
+</table>
+<div class="callout callout-warn">
+  <span class="label">CPSR 시스템과 같은 분할</span>
+  이건 당신 CPSR 미션의 <strong>deterministic(계산·data fetch) vs reasoning(rubric 평가)</strong> Tier 분할과 동형이다. 객관 증빙형 = 결정론(시험값·인증), 자기 평가형 = 추론(방법론 기반 판단). 둘 다 "임의"가 아니라 <strong>추적 가능한 근거</strong>를 요구한다.
+</div>
+
+<h2>4. EU는 어떻게 검증하나 — 사전 인증이 아니라 사후 시장감시</h2>
+<p>PPWR엔 <strong>출시 전 EU가 검사·승인하는 절차가 없다</strong>(Module A, 제38 — notified body 없음). 대신 <strong>판 뒤에(ex-post) 위험 기반으로</strong> 친다. 5가지 수단:</p>
+<table>
+  <tr><th>수단</th><th>내용</th></tr>
+  <tr><td>① 자기선언 + 자기책임</td><td>생산자가 DoC에 서명하고 <strong>전적 법적 책임</strong>. 비EU는 공인대리인(0016)</td></tr>
+  <tr><td>② 문서 제출 요구</td><td>시장감시당국 요청 시 <strong>10일 내 TD 전체</strong> 제출</td></tr>
+  <tr><td>③ 무작위·신고 기반 점검</td><td>random 샘플링, 소비자 불만, <strong>경쟁사 제보</strong>, 문서 검토</td></tr>
+  <tr><td>④ 독립 물리 시험</td><td>당국이 직접 제품을 <strong>실험실 시험</strong> — 선언이 거짓이면 제품이 배신</td></tr>
+  <tr><td>⑤ 공급망 감사 + 벌칙</td><td>COC가 실제 시험으로 추적되는지 감사. 허위 시 <strong>출시 금지·회수·행정 벌금(제68)</strong></td></tr>
+</table>
+<div class="callout callout-bad">
+  <span class="label">왜 "임의 지정"이 안 통하나 — 물리 제품이 ground truth</span>
+  중금속·재질·PCR은 <strong>제품을 시험하면 진실이 나온다.</strong> DB에 <code>중금속 OK</code>라 적어도 당국이 보틀을 ICP-MS로 돌리면 끝. PCR%도 마커·동위원소 추적·공급사 감사로 캔다. 즉 <strong>자기선언은 믿어주되, 거짓은 물리적으로 적발되고 무겁게 처벌</strong>된다 — "trust, but verify (ex-post)".
+</div>
+
+<h2>5. "임의 지정"을 막는 4중 가드레일</h2>
+<ol>
+  <li><strong>물질·PCR = 물리·공급망 검증 가능:</strong> 제품 시험·동위원소·감사로 거짓이 드러남.</li>
+  <li><strong>평가값 = 방법론 강제(2028~):</strong> 위임법·조화표준이 산정법을 정하면, 등급·최소화도 감사자가 같은 방법으로 재현. 자의적 등급 부여 불가.</li>
+  <li><strong>DoC 서명 = 법적 책임:</strong> 허위 선언은 제조자(또는 공인대리인) 개인·법인 책임. 면죄 없음.</li>
+  <li><strong>공급망 추적:</strong> COC는 실제 시험소·배치로 소급. 가짜 COC는 추적에서 끊긴다(0014).</li>
+</ol>
+
+<h2>6. ▶ "이 값, 임의로 적어도 되나?" 분류기</h2>
+<div class="tool">
+  <h3>🔎 TD 필드 검증 분류기</h3>
+  <select id="field" onchange="classifyField()">
+    <option value="">— TD 필드 선택 —</option>
+    <option value="metal">중금속 적합 (Pb·Cd·Hg·CrVI ≤100mg/kg)</option>
+    <option value="pcr">PCR 재생원료 함량 %</option>
+    <option value="material">부품 재질·수지 grade</option>
+    <option value="weight">부품 중량(g)</option>
+    <option value="grade">재활용성 등급 (A~E)</option>
+    <option value="minim">포장 최소화 평가</option>
+    <option value="reuse">재사용성 평가</option>
+  </select>
+  <div class="tool-out" id="fieldout"></div>
+</div>
+
+<h2>7. 그래서 실무 결론</h2>
+<ul>
+  <li><strong>데이터로 모아라(권장).</strong> 마스터 DB(0019)에 필드로 보유 + 요청 시 TD 문서 자동 생성.</li>
+  <li><strong>단 모든 필드는 증빙을 가리켜야 한다.</strong> 객관형은 시험서·COC 링크, 평가형은 방법론·근거 문서 링크.</li>
+  <li><strong>증빙 원본을 보관하라.</strong> 일회용 5년·재사용 10년(0016). 10일 룰에 대응.</li>
+  <li><strong>임의로 적지 마라.</strong> 물리 제품이 ground truth라 거짓은 적발되고 제68 벌칙·회수로 돌아온다.</li>
+</ul>
+
+<div class="quiz">
+<h2>되짚기 — 보지 말고 답하기</h2>
+<div class="question">
+  <strong>Q1.</strong> TD를 데이터(DB)로 보유해도 되는 근거와, 반드시 지켜야 하는 한 가지 조건은?
+  <details><summary>답 보기</summary>
+  <div class="answer">PPWR은 TD <strong>형식을 지정하지 않으므로</strong> DB로 보유 가능. 조건: 요청 시 <strong>10일 내 문서로 생성·제출</strong> 가능해야 하고, 각 필드가 <strong>실제 증빙(시험서·COC)을 가리키고 그 증빙을 보관</strong>해야 한다.</div>
+  </details>
+</div>
+<div class="question">
+  <strong>Q2.</strong> "데이터 ≠ 증빙"의 의미를 <code>중금속_적합=Y</code> 예로 설명하라.
+  <details><summary>답 보기</summary>
+  <div class="answer">DB에 Y라고 적는 것 자체는 증명이 아니다. 그 필드는 <strong>EN 13695 시험서·COC를 가리키는 포인터</strong>일 뿐. 당국이 요구하는 건 Y가 아니라 그 뒤의 시험서다. 증빙이 없으면 TD는 빈 것.</div>
+  </details>
+</div>
+<div class="question">
+  <strong>Q3.</strong> TD 값의 두 종류와, 각각 뒤에 있어야 하는 것은?
+  <details><summary>답 보기</summary>
+  <div class="answer"><strong>객관 증빙형</strong>(중금속·PCR·재질·중량) → 시험서·COC·인증. <strong>자기 평가형</strong>(재활용성 등급·최소화·재사용성) → 문서화된 방법론+근거(2028 위임법 나오면 그 방법 강제). 어느 쪽도 임의 아님.</div>
+  </details>
+</div>
+<div class="question">
+  <strong>Q4.</strong> PPWR이 사전 인증이 아니라는 것과, EU의 ex-post 검증 수단 3가지를 들라.
+  <details><summary>답 보기</summary>
+  <div class="answer">출시 전 EU 승인 절차 없음(Module A, notified body 없음). 사후 수단: <strong>10일 내 문서 제출 요구 · 무작위/신고 기반 점검 · 독립 물리 시험 · 공급망 감사 · 허위 시 벌칙(제68)</strong> 중 3가지.</div>
+  </details>
+</div>
+<div class="question">
+  <strong>Q5.</strong> 왜 중금속·PCR 값은 "임의로 적어도 안 들킨다"가 성립하지 않는가?
+  <details><summary>답 보기</summary>
+  <div class="answer"><strong>물리 제품이 ground truth</strong>이기 때문. 당국이 제품을 직접 시험(ICP-MS 등)하거나 PCR을 동위원소·공급망 감사로 추적하면 거짓이 드러난다. 자기선언은 믿어주되 거짓은 물리적으로 적발·처벌(trust but verify, ex-post).</div>
+  </details>
+</div>
+</div>
+
+<div class="callout">
+  <span class="label">📌 1차 출처</span>
+  <ul style="margin:8px 0 0;">
+    <li>PPWR 제38조(적합성 평가 Module A)·제68조(벌칙)·부속서 VII·VIII (<a href="https://eur-lex.europa.eu/eli/reg/2025/40/oj/eng" target="_blank">EUR-Lex</a>)</li>
+    <li><a href="https://www.tanso.de/en/blog/ppwr-declaration-of-conformity-and-technical-documentation-what-companies-must-submit-from-august-12-2026" target="_blank">Module A·10일 룰·자기책임 (Tanso)</a></li>
+    <li>관련 레슨: <a href="0016-labelling-epr-doc.html">0016 DoC/TD</a> · <a href="0018-td-data-collection-bom.html">0018</a> · <a href="0019-component-master-architecture.html">0019</a></li>
+  </ul>
+</div>
+
+<div class="callout callout-warn">
+  <span class="label">교사에게 질문</span>
+  예: "우리 마스터 DB에서 필드→증빙 링크를 어떤 스키마로 강제해?(증빙 없는 필드 = invalid)", "10일 룰에 대응하는 TD 자동생성+증빙 첨부 파이프라인 설계", "공급사 COC 진위(시험소 실재)를 어떻게 검증해?", "제68 벌금이 회원국별로 얼마나 차이나?" — 증빙-데이터 연결 구조와 감사 대응을 같이 설계합니다.
+</div>
+
+<div class="nav">
+  Track: PPWR · 패키징 ·
+  Previous: <a href="0019-component-master-architecture.html">0019 — 컴포넌트 마스터</a> ·
+  Related: <a href="0016-labelling-epr-doc.html">0016 DoC/TD</a> · <a href="0014-rpet-pcr-sourcing-certification.html">0014 공급사 검증</a> ·
+  Materials: <a href="../reference/packaging-materials.html">매터리얼 지도</a>
+</div>
+
+<script>
+function classifyField() {
+  var v = document.getElementById('field').value;
+  var out = document.getElementById('fieldout');
+  if(!v){ out.style.display='none'; return; }
+  var d = {
+    metal:    {type:'객관 증빙형', cls:'kill', ev:'EN 13695 시험서 또는 공급사 COC(EuPIA 등)', verify:'당국이 제품을 ICP-MS로 직접 시험 가능 → 거짓 즉시 적발', arb:'불가'},
+    pcr:      {type:'객관 증빙형', cls:'kill', ev:'rPET 인증(ISCC/EuCertPlast)·chain of custody(0014)', verify:'공급망 감사·동위원소/마커 추적', arb:'불가'},
+    material: {type:'객관 증빙형', cls:'kill', ev:'공급사 TDS·수지 grade 선언', verify:'제품 재질 분석(FTIR 등)·공급사 대조', arb:'불가'},
+    weight:   {type:'객관 증빙형', cls:'kill', ev:'실측·도면', verify:'제품 실측', arb:'불가 (단순 측정값)'},
+    grade:    {type:'자기 평가형', cls:'down', ev:'재활용성 평가 방법론+근거(RecyClass/위임법 2028)', verify:'감사자가 같은 방법론으로 재현·재계산', arb:'자기선언이나 방법론·근거 필수'},
+    minim:    {type:'자기 평가형', cls:'down', ev:'최소화 정성평가+기능 근거(제10)', verify:'기만설계(이중벽 등) 물리 확인 + 근거 검토', arb:'근거 문서 필수'},
+    reuse:    {type:'자기 평가형', cls:'down', ev:'재사용 시스템·위생·내구성 평가(제11)', verify:'시스템 증빙·순환횟수 데이터 검토', arb:'근거 문서 필수'}
+  };
+  var x = d[v];
+  out.innerHTML =
+    '<div><span class="'+x.cls+'" style="font-size:16px;">'+x.type+'</span></div>'+
+    '<p style="margin:10px 0 4px;"><strong>뒤에 있어야 할 증빙:</strong> '+x.ev+'</p>'+
+    '<p style="margin:4px 0;"><strong>EU 검증 방법:</strong> '+x.verify+'</p>'+
+    '<p style="margin:4px 0;"><strong>임의 지정:</strong> '+x.arb+'</p>';
+  out.style.display='block';
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Lesson 0015 — 감축·재사용: 위계의 진짜 1순위</title>
+<style>
+  :root {
+    --ink:#1a1a1a; --muted:#5a5a5a; --line:#d8d3c7;
+    --accent:#0369a1; --accent2:#15803d; --highlight:#f0f9ff;
+    --code-bg:#f3efe5; --quiz-bg:#f9f5ea;
+    --warn:#b45309; --good:#15803d; --bad:#b91c1c;
+  }
+  * { box-sizing:border-box; }
+  body { font-family:"Iowan Old Style","Georgia","Apple SD Gothic Neo","Noto Serif KR",serif; color:var(--ink); max-width:820px; margin:60px auto; padding:0 28px 80px; line-height:1.7; font-size:17px; background:#fefcf7; }
+  .meta { font-family:"SF Mono","Menlo",monospace; font-size:12px; letter-spacing:0.1em; color:var(--muted); text-transform:uppercase; margin-bottom:12px; }
+  .tier-tag { display:inline-block; background:var(--accent2); color:#fff; padding:3px 10px; border-radius:4px; font-family:"SF Mono","Menlo",monospace; font-size:11px; font-weight:600; letter-spacing:0.08em; margin-right:8px; }
+  h1 { font-size:30px; line-height:1.25; margin:0 0 8px; letter-spacing:-0.01em; }
+  .subtitle { color:var(--muted); font-style:italic; margin-bottom:36px; }
+  h2 { font-size:22px; margin:44px 0 12px; padding-bottom:6px; border-bottom:1px solid var(--line); }
+  h3 { font-size:18px; margin:30px 0 8px; color:var(--accent); }
+  p { margin:12px 0; }
+  ul, ol { padding-left:24px; } li { margin:6px 0; }
+  code { font-family:"SF Mono","Menlo",monospace; font-size:14px; background:var(--code-bg); padding:2px 6px; border-radius:3px; }
+  .callout { background:var(--highlight); border-left:4px solid var(--accent); padding:16px 20px; margin:24px 0; border-radius:0 6px 6px 0; }
+  .callout-warn { background:#fef7e6; border-left-color:var(--warn); }
+  .callout-bad { background:#fef2f2; border-left-color:var(--bad); }
+  .callout-good { background:#f0fdf4; border-left-color:var(--good); }
+  .callout .label { display:block; font-size:12px; text-transform:uppercase; letter-spacing:0.1em; color:var(--accent); margin-bottom:6px; font-weight:600; }
+  .callout-warn .label { color:var(--warn); } .callout-bad .label { color:var(--bad); } .callout-good .label { color:var(--good); }
+  table { width:100%; border-collapse:collapse; margin:20px 0; font-size:14px; }
+  th, td { text-align:left; padding:10px 12px; border-bottom:1px solid var(--line); vertical-align:top; }
+  th { background:var(--code-bg); font-weight:600; font-size:12px; text-transform:uppercase; letter-spacing:0.05em; }
+  .ok { color:var(--good); font-weight:700; } .down { color:var(--warn); font-weight:700; } .kill { color:var(--bad); font-weight:700; }
+  .scanner { background:#fff; border:2px solid var(--accent2); border-radius:12px; padding:24px 26px; margin:28px 0; box-shadow:0 2px 12px rgba(0,0,0,0.04); }
+  .scanner h3 { margin-top:0; color:var(--accent2); }
+  .chk-item { margin:12px 0; display:flex; gap:10px; align-items:flex-start; }
+  .chk-item input { margin-top:5px; transform:scale(1.25); }
+  .chk-item label { font-size:15px; }
+  .scan-btn { margin-top:14px; background:var(--accent2); color:#fff; border:none; padding:12px 22px; border-radius:8px; font-family:inherit; font-size:16px; font-weight:700; cursor:pointer; }
+  .scan-btn:hover { background:#166534; }
+  .scan-out { margin-top:20px; padding:18px 22px; border-radius:10px; background:var(--code-bg); display:none; }
+  .quiz { background:var(--quiz-bg); padding:28px 32px; margin:40px 0; border-radius:8px; }
+  .quiz h2 { border:none; margin-top:0; } .question { margin:24px 0; }
+  details { margin:8px 0; } details > summary { cursor:pointer; color:var(--accent); font-size:14px; user-select:none; list-style:revert; }
+  details[open] > summary { margin-bottom:8px; }
+  .answer { margin-top:8px; padding:12px 16px; background:#fff; border:1px dashed var(--line); border-radius:4px; }
+  .nav { margin-top:60px; padding-top:24px; border-top:1px solid var(--line); font-size:14px; color:var(--muted); }
+  .nav a { color:var(--accent); text-decoration:none; } .nav a:hover { text-decoration:underline; }
+  .cite { font-size:13px; color:var(--muted); } .cite a { color:var(--muted); text-decoration:underline; }
+  strong { font-weight:700; }
+  @media print { body { background:#fff; max-width:100%; margin:0; } .scanner { break-inside:avoid; } }
+
+  .tracklink { background:#f0fdf4; border:1px solid #15803d; border-radius:10px; padding:12px 16px; margin:0 0 30px; font-size:13px; line-height:2.0; }
+  .tracklink b { color:#15803d; text-transform:uppercase; letter-spacing:0.08em; font-size:11px; display:block; margin-bottom:5px; }
+  .tracklink a { color:#0369a1; text-decoration:none; }
+  .tracklink a:hover { text-decoration:underline; }
+  .tracklink .cur { background:#15803d; color:#fff; padding:1px 8px; border-radius:4px; font-weight:700; }
+  .tracklink .sep { color:#cdd6c9; margin:0 2px; }
+</style>
+</head>
+<body>
+
+<div class="meta"><span class="tier-tag">PPWR · 패키징</span>Lesson 0015 · 약 35분</div>
+<h1>감축·재사용 — 위계의 진짜 1순위</h1>
+<p class="subtitle">0012~0014는 전부 위계의 <strong>맨 아래(재활용)</strong>였다. 그런데 PPWR이 PPWD와 갈라진 핵심은 <strong>"재활용 잘하기" 위에 "애초에 줄이고(감축), 다시 쓰라(재사용)"를 더 높은 우선순위로 올린 것</strong>(0011). 이번엔 그 위쪽 — 제10·24·25(감축) + 제11·26~29(재사용). 화장품에선 <strong>호텔 어메니티 금지</strong>와 <strong>"커 보이게" 자 금지</strong>가 직격탄.</p>
+
+<div class="tracklink">
+  <b>📦 PPWR 트랙 · 화장품 패키징 규제</b>
+  <a href="0011-ppwr-foundation.html">0011 토대</a> <span class="sep">·</span> <a href="0012-recyclability-grade-estimator.html">0012 등급추정</a> <span class="sep">·</span> <a href="0013-substances-and-pcr.html">0013 유해물질·PCR</a> <span class="sep">·</span> <a href="0014-rpet-pcr-sourcing-certification.html">0014 rPET조달</a> <span class="sep">·</span> <span class="cur">0015 감축·재사용</span> <span class="sep">·</span> <a href="0016-labelling-epr-doc.html">0016 라벨·EPR·DoC</a> <span class="sep">·</span> <a href="0017-korea-memberstates-roadmap.html">0017 실무로드맵</a> <span class="sep">·</span> <a href="0018-td-data-collection-bom.html">0018 부자재TD수집</a> <span class="sep">·</span> <a href="0019-component-master-architecture.html">0019 스케일수집</a> <span class="sep">·</span> <a href="0020-self-declaration-and-verification.html">0020 자기선언·검증</a> <span class="sep">·</span> <a href="0021-screening-engine-and-portal.html">0021 스크리닝엔진</a> <span class="sep">·</span> <a href="../reference/packaging-materials.html">📋 매터리얼 지도</a>
+</div>
+
+<div class="callout">
+  <span class="label">이 레슨의 약속</span>
+  마치면 (1) 제10 <strong>포장 최소화 + 기만적 설계(이중벽·가짜 바닥) 금지</strong>, (2) 제24 <strong>빈 공간 ≤50%</strong>가 어디에 적용되고 어디엔 안 되는지, (3) 제25 <strong>부속서 V 금지 형식</strong> 중 화장품 직격(호텔 미니어처), (4) 제11·29 <strong>재사용·리필</strong> 방향을 알고, 하단 <strong>리스크 스캐너</strong>로 자사 SKU가 어느 조항에 걸리는지 짚는다.</p>
+</div>
+
+<h2>1. 위계 복귀 — 왜 감축이 재활용보다 위인가</h2>
+<p>0011의 척추를 다시 본다: <strong>감축 &gt; 재사용 &gt; 재활용</strong>. 재활용은 "버릴 때 잘 버려지게"지만, 감축은 "<strong>애초에 안 만들기</strong>"다. 만들지 않은 포장은 재활용할 필요도 없다 — 그래서 위계 최상단. PPWR은 이 우선순위를 <strong>법적 금지</strong>로 강제한다.</p>
+<table>
+  <tr><th>단계</th><th>조항</th><th>화장품 핵심</th></tr>
+  <tr><td class="kill">감축</td><td>제10(최소화), 제24(빈공간), 제25(형식금지)</td><td>호텔 어메니티 금지 · 커 보이는 자 금지 · 배송박스 빈공간</td></tr>
+  <tr><td class="down">재사용</td><td>제11(요건), 제26~29(시스템·리필·목표)</td><td>리필 스테이션 · 공병 회수 · B2B 운송 재사용</td></tr>
+</table>
+
+<h2>2. 제10조 — 포장 최소화 + 기만 설계 금지</h2>
+<p>2030년부터, 모든 포장은 <strong>기능(보호·위생·안전·정보 제공)에 필요한 최소 무게·부피</strong>로 설계돼야 한다. 그리고 결정적으로 — <strong>제품을 실제보다 커 보이게 하는 기만적 설계가 금지</strong>된다:</p>
+<ul>
+  <li><strong>이중벽(double walls)</strong> — 내용물보다 두꺼운 외벽으로 부피 부풀리기</li>
+  <li><strong>가짜 바닥(false bottoms)</strong> — 바닥을 올려 적게 든 걸 많아 보이게</li>
+  <li>기타 인위적으로 perceived volume을 키우는 요소 (과대 캡 등)</li>
+</ul>
+<div class="callout callout-bad">
+  <span class="label">화장품 직격 — 프리미엄 스킨케어 자의 단골 트릭</span>
+  고급 크림·세럼 자는 <strong>두꺼운 이중벽 + 묵직한 가짜 바닥</strong>으로 "꽉 찬 고급감"을 연출하는 게 관행이었다. 제10조는 이걸 <strong>정면으로 금지</strong>한다. 50ml 크림이 200ml처럼 보이는 자 = 2030년 시장 출시 위험. <strong>기술문서로 "이 무게·부피가 기능상 최소임"을 증명</strong>해야 한다.
+</div>
+<p class="cite">출처: <a href="https://www.lw.com/en/insights/european-packaging-and-packaging-waste-regulation-summary-of-provisions-and-new-guidance" target="_blank">PPWR 제10 (Latham)</a>, 대한화장품협회 PPWR 보고서.</p>
+
+<h2>3. 제24조 — 빈 공간 비율 ≤50% (적용 범위가 함정)</h2>
+<p>빈 공간(empty space)이 <strong>50%를 넘으면 안 된다.</strong> 단, <strong>어디에 적용되는지</strong>가 핵심:</p>
+<table>
+  <tr><th>적용 O</th><th>적용 X</th></tr>
+  <tr><td><strong>그룹 포장 · 운송 포장 · 이커머스(배송) 포장</strong></td><td>1차 판매 포장(제품 보틀·자 자체)</td></tr>
+</table>
+<p>즉 화장품 <strong>온라인 주문 배송박스</strong>가 직격 — 작은 세럼 하나를 큰 박스에 완충재로 채워 보내면 걸린다. 반면 제품 보틀 자체의 헤드스페이스는 제24가 아니라 <strong>제10(최소화)</strong> 영역. 빈 공간 산정 방법론 implementing act는 <strong>2028.2.12 이전</strong> 제정.</p>
+<div class="callout callout-warn">
+  <span class="label">제10 vs 제24 — 헷갈리지 말 것</span>
+  <strong>제24(빈공간 50%)</strong>는 그룹/운송/이커머스 한정. <strong>제10(최소화·기만금지)</strong>는 1차 판매 포장 포함 전체. 그래서 "두꺼운 크림 자"는 제10, "큰 배송박스"는 제24로 걸린다. 조항을 잘못 대면 대응도 틀린다.
+</div>
+
+<h2>4. 제25조 + 부속서 V — 특정 형식 자체 금지 (2030.1.1)</h2>
+<p>제25조는 등급·함량 문제가 아니라 <strong>형식 자체를 시장에서 퇴출</strong>한다. 부속서 V 목록은 2030년 1월 1일부터 출시 불가. 화장품 관련 핵심:</p>
+<table>
+  <tr><th>부속서 V 금지 형식</th><th>화장품 관련</th></tr>
+  <tr><td><strong>숙박업(호텔) 일회용 화장품·위생·세면용품</strong> (미니어처, ≤50ml 액체/≤100g)</td><td class="kill">● <strong>직격</strong> — 트래블킷·어메니티·호텔 납품 SKU</td></tr>
+  <tr><td>일회용 플라스틱 그룹(번들) 포장 — 묶음 판매 유도용</td><td class="down">△ 세트·기획 번들 플라스틱 포장</td></tr>
+  <tr><td>매우 가벼운 플라스틱 봉투(&lt;15µm)</td><td class="down">△ 매장 증정용 비닐</td></tr>
+  <tr><td>(기타: 1.5kg 미만 생과일·채소, 현장조리 식음료 등 — 화장품 무관)</td><td>—</td></tr>
+</table>
+<div class="callout callout-bad">
+  <span class="label">호텔 어메니티 = 비즈니스 모델 자체가 사라짐</span>
+  호텔 객실의 일회용 샴푸·바디로션 미니어처는 <strong>2030년부터 EU에서 전면 금지</strong>. 대안은 <strong>벽걸이 대용량 리필 디스펜서</strong>. 화장품사 입장에선 어메니티 OEM 사업의 SKU 구조를 통째로 바꿔야 한다 — 미니어처 납품 → 디스펜서+리필 벌크 공급으로.
+</div>
+<p class="cite">출처: <a href="https://www.europarl.europa.eu/doceo/document/E-10-2025-002490_EN.html" target="_blank">EU Parliament — 호텔 미니어처 금지</a>, <a href="https://www.lw.com/en/insights/european-packaging-and-packaging-waste-regulation-summary-of-provisions-and-new-guidance" target="_blank">Annex V 요약</a>.</p>
+
+<h2>5. 제11·26~29 — 재사용 가능 패키징과 리필</h2>
+<p><strong>제11조</strong>는 무엇이 "재사용 가능"으로 인정되는지 정의한다: 여러 번 사용, <strong>재사용 시스템에 편입</strong>, 위생 기준 충족, <strong>추적 가능</strong>, 최소 순환 횟수를 견디는 내구성. 단순히 "튼튼한 용기"가 아니라 <strong>회수·세척·재충전 시스템이 함께</strong> 있어야 한다.</p>
+<p><strong>제26~29조</strong>는 재사용 시스템 운영과 <strong>분야별 재사용 목표</strong>(제29)를 둔다. 화장품은 의무 재사용 목표의 핵심 타깃은 아니지만, 두 갈래가 직접 관련:</p>
+<ul>
+  <li><strong>리필(refill):</strong> 매장 리필 스테이션, 공병 회수 후 재충전 프로그램 (감축+재사용 동시)</li>
+  <li><strong>B2B 운송 재사용:</strong> 공장↔물류 간 재사용 운송 용기·팔레트 시스템</li>
+</ul>
+<div class="callout callout-good">
+  <span class="label">감축·재사용은 "규제 비용"이 아니라 브랜드 기회</span>
+  Henkel은 리필 바(Authentic Beauty Concept Refill Bar)를, 여러 브랜드가 공병 회수를 운영한다. 호텔 디스펜서 전환도 마찬가지 — 미니어처 금지는 위기지만, <strong>리필·대용량 시스템 선점</strong>은 친환경 브랜딩 + 원가 절감의 기회. 위계 상단일수록 비용이 아니라 모델 혁신의 영역.
+</div>
+
+<h2>6. 화장품 SKU별 영향 정리</h2>
+<table>
+  <tr><th>SKU 유형</th><th>걸리는 조항</th><th>대응</th></tr>
+  <tr><td>호텔/트래블 미니어처 어메니티</td><td class="kill">제25 (2030 금지)</td><td>리필 디스펜서·대용량 전환</td></tr>
+  <tr><td>이중벽·가짜바닥 프리미엄 자</td><td class="kill">제10 (기만 설계)</td><td>벽두께 축소, 기능 최소화 기술문서</td></tr>
+  <tr><td>이커머스 단품 배송</td><td class="down">제24 (빈공간 50%)</td><td>박스 사이즈 최적화, 완충재 감축</td></tr>
+  <tr><td>세트·기획 번들 플라스틱 포장</td><td class="down">제25 (그룹포장)</td><td>종이·단일재질 또는 번들 제거</td></tr>
+  <tr><td>일반 단품 보틀</td><td class="ok">제10 (최소화 일반의무)</td><td>헤드스페이스·과대캡 점검</td></tr>
+</table>
+
+<h2>7. ▶ 감축·재사용 리스크 스캐너</h2>
+<p>자사 SKU의 특성에 체크하고 스캔하면 걸리는 조항과 대응이 나온다.</p>
+<div class="scanner">
+  <h3>🚦 감축·재사용 리스크 스캐너</h3>
+  <div class="chk-item"><input type="checkbox" id="s1"><label for="s1">호텔/숙박·트래블용 <strong>일회용 미니어처</strong>(≤50ml/100g) 어메니티다</label></div>
+  <div class="chk-item"><input type="checkbox" id="s2"><label for="s2"><strong>이중벽·가짜 바닥·과대 캡</strong> 등으로 실제보다 커 보이는 구조다</label></div>
+  <div class="chk-item"><input type="checkbox" id="s3"><label for="s3"><strong>이커머스 단독 배송</strong>되며, 박스 대비 내용물이 작아 완충재가 많다</label></div>
+  <div class="chk-item"><input type="checkbox" id="s4"><label for="s4">묶음 판매 유도용 <strong>일회용 플라스틱 그룹/번들 포장</strong>이 있다</label></div>
+  <div class="chk-item"><input type="checkbox" id="s5"><label for="s5">리필·공병회수 등 <strong>재사용 시스템이 없는</strong> 순수 일회용 단품이다</label></div>
+  <button class="scan-btn" onclick="scanRisk()">스캔 →</button>
+  <div class="scan-out" id="scanout"></div>
+</div>
+
+<div class="quiz">
+<h2>되짚기 — 보지 말고 답하기</h2>
+<div class="question">
+  <strong>Q1.</strong> PPWR이 PPWD와 갈라진 핵심을 위계 관점에서 한 문장으로. 왜 감축이 재활용보다 위인가?
+  <details><summary>답 보기</summary>
+  <div class="answer">PPWR은 <strong>감축&gt;재사용&gt;재활용</strong> 위계에서 재활용 위주였던 PPWD와 달리 <strong>감축을 최상단</strong>으로 강제한다. 만들지 않은 포장은 재활용할 필요도 없으므로 감축이 더 근본적이다.</div>
+  </details>
+</div>
+<div class="question">
+  <strong>Q2.</strong> 제10조가 금지하는 "기만적 설계" 2가지를 들고, 화장품에서 왜 문제인지.
+  <details><summary>답 보기</summary>
+  <div class="answer"><strong>이중벽·가짜 바닥</strong>(+과대 캡). 프리미엄 크림·세럼 자가 두꺼운 벽·올린 바닥으로 적은 내용물을 커 보이게 하는 관행을 정면 금지 → 기능상 최소임을 기술문서로 증명해야 함.</div>
+  </details>
+</div>
+<div class="question">
+  <strong>Q3.</strong> 제24(빈공간 50%)는 어디에 적용되고 어디엔 안 되나? 화장품에서 걸리는 대표 케이스는?
+  <details><summary>답 보기</summary>
+  <div class="answer">적용 O: <strong>그룹·운송·이커머스 배송 포장</strong>. 적용 X: <strong>1차 판매 포장(제품 보틀·자 자체)</strong>. 화장품 직격 = 작은 단품을 큰 박스+완충재로 보내는 <strong>온라인 배송</strong>.</div>
+  </details>
+</div>
+<div class="question">
+  <strong>Q4.</strong> 제25조+부속서 V에서 화장품 비즈니스를 통째로 바꾸는 금지 형식과 그 대안은?
+  <details><summary>답 보기</summary>
+  <div class="answer"><strong>호텔/숙박용 일회용 미니어처 어메니티(≤50ml/100g)</strong>가 2030.1.1부터 금지. 대안: <strong>벽걸이 대용량 리필 디스펜서</strong> + 벌크 리필 공급으로 SKU 구조 전환.</div>
+  </details>
+</div>
+<div class="question">
+  <strong>Q5.</strong> 제11조에서 "재사용 가능 패키징"으로 인정받으려면 튼튼함 외에 무엇이 더 필요한가?
+  <details><summary>답 보기</summary>
+  <div class="answer">단순 내구성이 아니라 <strong>재사용 시스템에 편입</strong>(회수·세척·재충전)되고, <strong>위생 기준 충족 + 추적 가능 + 최소 순환 횟수</strong>를 견뎌야 인정. 즉 용기 단독이 아니라 시스템이 함께 있어야 한다.</div>
+  </details>
+</div>
+</div>
+
+<h2>다음 레슨 예고</h2>
+<p>위계 3단(감축·재사용·재활용)을 다 훑었다. 이제 이 모든 걸 <strong>증명하는 문서</strong>로 묶는다 — <strong>0016: 제12(라벨링) · 제44~47(EPR) · 적합성선언서(DoC)·기술문서(TD)</strong>. 0012~0015에서 모은 등급·시험성적서·PCR 인증·최소화 증빙이 전부 여기로 들어간다.</p>
+
+<div class="callout">
+  <span class="label">📌 1차 출처</span>
+  <ul style="margin:8px 0 0;">
+    <li><a href="https://eur-lex.europa.eu/eli/reg/2025/40/oj/eng" target="_blank">PPWR 제10·24·25·11 + 부속서 IV·V·VI (EUR-Lex)</a></li>
+    <li><a href="https://www.europarl.europa.eu/doceo/document/E-10-2025-002490_EN.html" target="_blank">EU Parliament — 호텔 미니어처 금지 Q&A</a> · <a href="https://www.lw.com/en/insights/european-packaging-and-packaging-waste-regulation-summary-of-provisions-and-new-guidance" target="_blank">Latham 조항 요약</a></li>
+    <li>대한화장품협회 PPWR 심층보고서 (<code>reference/</code>)</li>
+  </ul>
+</div>
+
+<div class="callout callout-warn">
+  <span class="label">교사에게 질문</span>
+  예: "우리 어메니티 OEM 매출 비중 큰데 리필 디스펜서 전환 로드맵 어떻게 짜?", "이 크림 자 벽두께가 기능상 최소임을 어떻게 기술문서로 증명해?", "리필 스테이션의 위생·안전 요건(제11)이 화장품에 구체적으로 뭐야?", "이커머스 빈공간 50% 산정에서 완충재는 빈공간이야 아니야?" — SKU 구조나 채널을 주시면 조항별 노출을 함께 진단합니다.
+</div>
+
+<div class="nav">
+  Track: PPWR · 패키징 ·
+  Previous: <a href="0014-rpet-pcr-sourcing-certification.html">0014 — rPET·PCR 조달·인증</a> ·
+  Next: 0016 — 라벨링·EPR·적합성선언(DoC/TD) <em>예정</em> ·
+  Materials: <a href="../reference/packaging-materials.html">포장재 매터리얼 지도</a> ·
+  Glossary: <a href="../reference/glossary.html">용어집</a>
+</div>
+
+<script>
+function scanRisk() {
+  var map = {
+    s1: {art:'제25조 + 부속서 V', risk:'kill', when:'2030.1.1 출시 금지', act:'벽걸이 대용량 리필 디스펜서 + 벌크 리필 공급으로 전환'},
+    s2: {art:'제10조 (기만적 설계)', risk:'kill', when:'2030 최소화 강제', act:'이중벽·가짜바닥·과대캡 제거, 기능상 최소임을 기술문서로 증명'},
+    s3: {art:'제24조 (빈공간 ≤50%)', risk:'down', when:'2030 (방법론 2028.2.12)', act:'배송박스 사이즈 최적화, 완충재 감축 (그룹/운송/이커머스 한정)'},
+    s4: {art:'제25조 (일회용 그룹포장)', risk:'down', when:'2030.1.1', act:'번들 플라스틱 제거 또는 종이·단일재질 전환'},
+    s5: {art:'제11·26~29 (재사용·리필)', risk:'info', when:'단계적', act:'리필 스테이션·공병 회수 등 재사용 시스템 도입 검토 (의무보다 기회)'}
+  };
+  var ids = ['s1','s2','s3','s4','s5'];
+  var hits = [];
+  ids.forEach(function(id){ if(document.getElementById(id).checked) hits.push(map[id]); });
+
+  var html;
+  if (!hits.length) {
+    html = '<p class="ok">✅ 선택된 리스크 없음. 단, 모든 포장은 제10 최소화 일반의무 대상이니 헤드스페이스·과대캡은 점검 권장.</p>';
+  } else {
+    var killN = hits.filter(function(h){return h.risk==='kill';}).length;
+    var head = killN>0
+      ? '<div><span class="kill" style="font-size:16px;">⛔ 출시 금지/강제 수준 리스크 '+killN+'건</span> — 2030 전 재설계 필수.</div>'
+      : '<div><span class="down" style="font-size:16px;">⚠️ 감축·재사용 대응 항목 '+hits.length+'건</span></div>';
+    html = head + '<table style="margin-top:12px;"><tr><th>조항</th><th>시점</th><th>대응</th></tr>';
+    hits.forEach(function(h){
+      var c = h.risk==='kill'?'kill':(h.risk==='down'?'down':'');
+      html += '<tr><td class="'+c+'">'+h.art+'</td><td>'+h.when+'</td><td>'+h.act+'</td></tr>';
+    });
+    html += '</table>';
+  }
+  var o = document.getElementById('scanout');
+  o.innerHTML = html; o.style.display='block';
+}
+</script>
+
+</body>
+</html>

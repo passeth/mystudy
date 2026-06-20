@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Lesson 0005 — Tier 2: 데이터 plumbing과 INCI 정규화의 함정</title>
+<style>
+  :root {
+    --ink: #1a1a1a;
+    --muted: #5a5a5a;
+    --line: #d8d3c7;
+    --accent: #0891b2;
+    --highlight: #ecfeff;
+    --code-bg: #f3efe5;
+    --quiz-bg: #f9f5ea;
+    --warn: #b45309;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Iowan Old Style", "Georgia", "Apple SD Gothic Neo", "Noto Serif KR", serif;
+    color: var(--ink);
+    max-width: 800px;
+    margin: 60px auto;
+    padding: 0 28px 80px;
+    line-height: 1.7;
+    font-size: 17px;
+    background: #fefcf7;
+  }
+  .meta {
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .tier-tag {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    padding: 3px 10px;
+    border-radius: 4px;
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    margin-right: 8px;
+  }
+  h1 {
+    font-size: 30px;
+    line-height: 1.25;
+    margin: 0 0 8px;
+    letter-spacing: -0.01em;
+  }
+  .subtitle { color: var(--muted); font-style: italic; margin-bottom: 36px; }
+  h2 {
+    font-size: 22px;
+    margin: 44px 0 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--line);
+  }
+  h3 { font-size: 18px; margin: 30px 0 8px; color: var(--accent); }
+  p { margin: 12px 0; }
+  ul, ol { padding-left: 24px; }
+  li { margin: 6px 0; }
+  code {
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 14px;
+    background: var(--code-bg);
+    padding: 2px 6px;
+    border-radius: 3px;
+  }
+  pre {
+    background: #1a1a1a;
+    color: #f0ebe0;
+    padding: 20px 24px;
+    border-radius: 8px;
+    overflow-x: auto;
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    margin: 20px 0;
+  }
+  pre .k { color: #c4b5fd; }
+  pre .s { color: #fcd34d; }
+  pre .n { color: #93c5fd; }
+  pre .c { color: #6b7280; font-style: italic; }
+  pre .f { color: #f9a8d4; }
+  pre .str { color: #67e8f9; }
+  .callout {
+    background: var(--highlight);
+    border-left: 4px solid var(--accent);
+    padding: 16px 20px;
+    margin: 24px 0;
+    border-radius: 0 6px 6px 0;
+  }
+  .callout-warn { background: #fef7e6; border-left-color: var(--warn); }
+  .callout .label {
+    display: block; font-size: 12px;
+    text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--accent); margin-bottom: 6px; font-weight: 600;
+  }
+  .callout-warn .label { color: var(--warn); }
+  table {
+    width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px;
+  }
+  th, td {
+    text-align: left; padding: 10px 12px;
+    border-bottom: 1px solid var(--line); vertical-align: top;
+  }
+  th {
+    background: var(--code-bg); font-weight: 600;
+    font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  td.tt { font-family: "SF Mono", "Menlo", monospace; font-size: 13px; }
+  .source-card {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 22px 26px;
+    margin: 20px 0;
+    border-left: 4px solid var(--accent);
+  }
+  .source-card h3 { margin: 0 0 10px; }
+  .source-card dl { margin: 12px 0 0; }
+  .source-card dt {
+    font-size: 11px; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--muted);
+    margin-top: 10px; font-weight: 600;
+  }
+  .source-card dd { margin: 3px 0 0; font-size: 15px; }
+  .quiz {
+    background: var(--quiz-bg);
+    padding: 28px 32px;
+    margin: 40px 0;
+    border-radius: 8px;
+  }
+  .quiz h2 { border: none; margin-top: 0; }
+  .question { margin: 24px 0; }
+  details { margin: 8px 0; }
+  details > summary {
+    cursor: pointer; color: var(--accent);
+    font-size: 14px; user-select: none;
+    list-style: revert;
+  }
+  details[open] > summary { margin-bottom: 8px; }
+  .answer {
+    margin-top: 8px; padding: 12px 16px;
+    background: #fff; border: 1px dashed var(--line);
+    border-radius: 4px;
+  }
+  .nav {
+    margin-top: 60px; padding-top: 24px;
+    border-top: 1px solid var(--line);
+    font-size: 14px; color: var(--muted);
+  }
+  .nav a { color: var(--accent); text-decoration: none; }
+  .nav a:hover { text-decoration: underline; }
+  .cite { font-size: 13px; color: var(--muted); }
+  .cite a { color: var(--muted); text-decoration: underline; }
+  @media print {
+    body { background: #fff; max-width: 100%; margin: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="meta"><span class="tier-tag">TIER 2</span>Lesson 0005 · 약 30분</div>
+<h1>데이터 plumbing과 INCI 정규화</h1>
+<p class="subtitle">상위 모든 tier의 GIGO를 결정한다. "garbage in, garbage out" — 95% acceptance는 입력 정규화 90%에서 절반이 결정난다.</p>
+
+<div class="callout">
+  <span class="label">이 레슨의 약속</span>
+  마치면 (1) CosIng·ECHA·IFRA·내부 R&D 4개 소스의 데이터 모델과 fetch 전략을 알고, (2) INCI 정규화의 7가지 실패 모드를 식별·방어하며, (3) Substance Identity Hub 패턴으로 모든 후속 tier가 같은 "성분 ID"를 가리키게 만든다. ToxTool이 90% 성분 커버한다는 표현 뒤에 숨은 노가다를 직접 본다.
+</div>
+
+<h2>1. 문제 정의 — 왜 plumbing이 이토록 어려운가</h2>
+
+<p>"Niacinamide 4%"는 입력이지만, 시스템 안에서는 다음 매핑을 모두 풀어야 한다:</p>
+
+<table>
+  <tr><th>표기</th><th>값</th><th>출처</th></tr>
+  <tr><td>INCI (EU/USA 표준)</td><td class="tt">Niacinamide</td><td>처방표</td></tr>
+  <tr><td>CAS Number</td><td class="tt">98-92-0</td><td>CosIng / ECHA</td></tr>
+  <tr><td>EC Number</td><td class="tt">202-713-4</td><td>ECHA</td></tr>
+  <tr><td>한국 표준명</td><td class="tt">나이아신아마이드</td><td>식약처 명명</td></tr>
+  <tr><td>화학명</td><td class="tt">Pyridine-3-carboxamide</td><td>IUPAC</td></tr>
+  <tr><td>흔한 이명</td><td class="tt">Nicotinamide, Vitamin B3, Nicotinic acid amide</td><td>일반</td></tr>
+  <tr><td>기능 (CosIng)</td><td class="tt">SMOOTHING, SKIN CONDITIONING</td><td>CosIng</td></tr>
+  <tr><td>EU Annex 상태</td><td class="tt">자유 사용 (regulated 아님)</td><td>CosIng + EU Reg Annex II~VI</td></tr>
+  <tr><td>REACH 등록</td><td class="tt">등록 substance</td><td>ECHA</td></tr>
+</table>
+
+<p>같은 분자에 8가지 표기가 있고, 처방표는 INCI만 들고 들어온다. 시스템은 이 INCI를 hash key로 8가지를 모두 조회·확정해야 한다. 그리고 이건 <strong>쉬운 경우</strong>다.</p>
+
+<h2>2. INCI 정규화의 7가지 실패 모드</h2>
+
+<table>
+  <tr><th>#</th><th>실패</th><th>예</th><th>방어</th></tr>
+  <tr><td>1</td><td><strong>대소문자·공백 변종</strong></td><td><code>"Niacinamide"</code> vs <code>"NIACINAMIDE"</code> vs <code>"niacinamide "</code> (trailing space)</td><td>강제 normalize: trim + Title Case 또는 lowercase canonical key</td></tr>
+  <tr><td>2</td><td><strong>구두점·기호 변종</strong></td><td><code>"Acrylates/C10-30 Alkyl Acrylate Crosspolymer"</code>의 <code>/</code>, <code>-</code>, 띄어쓰기</td><td>regex 정규화 사전 + 알려진 변종 매핑 테이블</td></tr>
+  <tr><td>3</td><td><strong>동의어·구명칭</strong></td><td><code>"Sodium PCA"</code> vs <code>"PCA Sodium"</code>, <code>"Tocopherol"</code> vs <code>"Vitamin E"</code> (라벨용은 INCI 강제)</td><td>synonym 사전 (CosIng "Other Names" 활용) + LLM fallback (확신도 표시)</td></tr>
+  <tr><td>4</td><td><strong>한국명·중문명</strong></td><td>처방표가 한국 표준명으로 작성된 경우 — <code>"나이아신아마이드"</code></td><td>한국 식약처 명명 ↔ INCI 매핑 테이블. 식약처 화장품 성분명 사전 참조.</td></tr>
+  <tr><td>5</td><td><strong>염·수화물·이성질체</strong></td><td><code>"Sodium Hyaluronate"</code>는 <code>"Hyaluronic Acid"</code>의 sodium salt — 평가 시 같은 toxicology를 쓰지만 분자량·노출량은 다름</td><td>"parent compound" 필드 + salt/hydrate flag. NOAEL은 parent에서 가져오되 SED는 실제 분자량으로 계산.</td></tr>
+  <tr><td>6</td><td><strong>혼합물·복합 성분</strong></td><td><code>"Phenoxyethanol (and) Ethylhexylglycerin"</code>처럼 복합 보존제 (벤더 제품) — 처방표에 한 줄로 표기되나 INCI는 2개</td><td>처방 입력 단계 검증: <code>(and)</code> 또는 <code>+</code> 토큰 발견 시 분할 강제. 비율 미정이면 HITL.</td></tr>
+  <tr><td>7</td><td><strong>알려지지 않은 신성분</strong></td><td><code>"Centella Asiatica Reservatrol Conjugate"</code>(가공) — CosIng·ECHA·CIR·SCCS 어디에도 없음</td><td>fallback chain 전부 실패 → HITL. <strong>침묵 fabrication 절대 금지.</strong></td></tr>
+</table>
+
+<div class="callout callout-warn">
+  <span class="label">CosIng 검색의 함정</span>
+  CosIng는 공식 API가 없다. UI 검색은 fuzzy하게 동작하지만, 시스템에서 자동화하려면 (a) 정기 dump 활용, (b) HTML 스크래핑, (c) 자체 사전 구축 중 선택. 공식 표기는 <strong>"하나의 INCI에 대응하는 CosIng 레코드는 하나"</strong>인데, 동의어 검색이 매우 관대해서 잘못된 entry를 끌어올 수 있다. <strong>fuzzy match는 confidence score를 강제하고 0.95 미만은 HITL.</strong>
+</div>
+
+<h2>3. 주요 데이터 소스 4개</h2>
+
+<div class="source-card">
+  <h3>① CosIng — EU 화장품 성분 데이터베이스</h3>
+  <dl>
+    <dt>제공 데이터</dt>
+    <dd>INCI 정규명, 기능(SMOOTHING·HUMECTANT 등), CAS/EC, EU Reg Annex II~VI 등재 여부, 제한 조건(농도·라벨), "Other Names" 동의어</dd>
+    <dt>API</dt>
+    <dd><strong>공식 API 없음</strong>. 공개 검색 UI만. 자동화 옵션: (1) HTML scraping (rate-limit 주의), (2) EU OpenData portal에서 dump 받기, (3) 사내 캐시 사전 구축</dd>
+    <dt>갱신 빈도</dt>
+    <dd>EU Reg 개정 시 (실무상 분기~반기). 변경 감지가 regulation alert의 핵심.</dd>
+    <dt>활용 우선순위</dt>
+    <dd><strong>1순위</strong>. INCI normalization, Annex 제약, 기능 라벨 모두 여기서.</dd>
+    <dt>실패 패턴</dt>
+    <dd>"INCI 정확히 일치하지 않으면 0건" → fuzzy match 자체 구현 필요. nano 표기(예: "Titanium Dioxide (nano)") 별도 entry.</dd>
+  </dl>
+</div>
+
+<div class="source-card">
+  <h3>② ECHA REACH — 화학물질 등록 DB</h3>
+  <dl>
+    <dt>제공 데이터</dt>
+    <dd>등록 substance의 정체(CAS/EC/IUPAC), 물리화학적 특성, 독성 데이터 요약(NOAEL, LD50, irritation, sensitisation), classification & labelling</dd>
+    <dt>API</dt>
+    <dd>OData API + bulk export 제공 (<a href="https://echa.europa.eu/information-on-chemicals">echa.europa.eu</a>). 일부 detail은 robot policy 확인 필요. <strong>화장품 컨텍스트가 아니라 화학물질 컨텍스트</strong> — 노출 시나리오는 본인이 매핑.</dd>
+    <dt>활용 우선순위</dt>
+    <dd>SCCS Opinion 없는 성분의 NOAEL fallback 1순위. CAS-key로 정확 매칭.</dd>
+    <dt>실패 패턴</dt>
+    <dd>(1) 화장품 노출(dermal)과 REACH 시험(주로 oral) 경로 차이 → SCCS NoG 12판 §3-6.X에 따라 보정. (2) 같은 substance에 여러 dossier가 있을 수 있음 → 최신·가장 완전한 것 선택.</dd>
+  </dl>
+</div>
+
+<div class="source-card">
+  <h3>③ IFRA Standards — 향료 알레르겐·한도</h3>
+  <dl>
+    <dt>제공 데이터</dt>
+    <dd>49 IFRA Standards (Prohibition, Restriction, Specification). 알레르겐 24+ + EU Reg 알레르겐 26종. 제품 카테고리(IFRA 11 카테고리)별 최대 사용량.</dd>
+    <dt>API</dt>
+    <dd>공식 API 없음. PDF·Excel 다운로드 + 라이브러리 멤버십. <strong>라이선스 주의</strong> — 사내 사용은 가능하지만 redistribution 제한.</dd>
+    <dt>활용 우선순위</dt>
+    <dd>처방에 fragrance 또는 essential oil이 있으면 필수. leave-on 카테고리(IFRA 5A·5B 등)와 처방의 사용량 비교.</dd>
+    <dt>실패 패턴</dt>
+    <dd>"Parfum" 한 줄에 수십 개 향료 성분 → 향료 제조사의 알레르겐 declaration 별도 fetch (XML/PDF 형식). EU Reg 26 declared allergens는 라벨 의무이므로 합산이 0.01% leave-on / 0.1% rinse-off 임계 초과 여부 별도 계산.</dd>
+  </dl>
+</div>
+
+<div class="source-card">
+  <h3>④ 내부 R&D / Formulation / LIMS</h3>
+  <dl>
+    <dt>제공 데이터</dt>
+    <dd>처방표(INCI %, 벤더 raw material code, 함량 tolerance), 안정성 시험 결과(가속·장기), 미생물 challenge test 결과, HRIPT/임상 결과, 부작용 보고(이미 시판된 경우)</dd>
+    <dt>API</dt>
+    <dd>회사마다 다름 — ERP/PLM/LIMS의 SQL 직접 접근 또는 export 파일. <strong>이 매핑이 in-house 시스템의 최대 강점</strong>. 외부 SaaS(ToxTool·Worldover)는 이 데이터에 직접 접근 못한다.</dd>
+    <dt>활용 우선순위</dt>
+    <dd>CPSR Part A.2·A.3·A.4·A.9·A.10의 거의 전부. <strong>외부 데이터 위에 사내 데이터를 덮어쓰지 않음</strong> — 같은 처방의 안정성은 사내 데이터가 정답.</dd>
+    <dt>실패 패턴</dt>
+    <dd>(1) 처방 변경 → CPSR 자동 재생성 트리거 없음(처방 시스템과 CPSR 시스템 연결이 안 됨). (2) HRIPT 결과가 PDF 스캔으로만 존재 → OCR + 구조화. (3) 시판 부작용 데이터의 RA 보고 의무(SUE)와 일반 UE 구분.</dd>
+  </dl>
+</div>
+
+<h2>4. Substance Identity Hub — 통합 패턴</h2>
+
+<p>네 소스에서 들어오는 데이터를 어떻게 한 줄로 묶는가. <strong>중심에 INCI를 두면 안 된다</strong> (변종이 너무 많다). 중심은 <code>substance_id</code> (내부 UUID):</p>
+
+<pre><span class="k">from</span> pydantic <span class="k">import</span> BaseModel
+<span class="k">from</span> typing <span class="k">import</span> Literal, Optional
+
+<span class="k">class</span> <span class="n">SubstanceIdentity</span>(BaseModel):
+    substance_id: str  <span class="c"># 내부 UUID — 절대 변하지 않음</span>
+    inci_canonical: str  <span class="c"># CosIng 기준 정규 INCI</span>
+    inci_synonyms: list[str]  <span class="c"># 모든 알려진 변종(키 검색용)</span>
+    cas: Optional[str]
+    ec: Optional[str]
+    korean_name: Optional[str]
+    iupac_name: Optional[str]
+    parent_compound_id: Optional[str] = <span class="n">None</span>  <span class="c"># 염·수화물의 모분자</span>
+
+<span class="k">class</span> <span class="n">CosingRecord</span>(BaseModel):
+    substance_id: str  <span class="c"># FK</span>
+    functions: list[str]
+    annex_ii_listed: bool  <span class="c"># 금지</span>
+    annex_iii_restrictions: list[Restriction] = []  <span class="c"># 제한</span>
+    annex_iv_color: Optional[ColorAnnex] = <span class="n">None</span>
+    annex_v_preservative: Optional[PreservativeAnnex] = <span class="n">None</span>
+    annex_vi_uv_filter: Optional[UvFilterAnnex] = <span class="n">None</span>
+    last_fetched: datetime  <span class="c"># 캐시 freshness</span>
+
+<span class="k">class</span> <span class="n">EchaRecord</span>(BaseModel):
+    substance_id: str  <span class="c"># FK</span>
+    dossier_url: str
+    physchem: PhysChemProperties
+    tox_summary: ToxSummary  <span class="c"># NOAEL·LD50 등</span>
+
+<span class="k">class</span> <span class="n">InternalRdRecord</span>(BaseModel):
+    substance_id: str  <span class="c"># FK</span>
+    raw_material_code: str  <span class="c"># 사내 코드</span>
+    vendor: str
+    purity_spec: str
+    impurity_data: Optional[ImpurityData] = <span class="n">None</span>
+
+<span class="c"># 검색은 inci_canonical 또는 inci_synonyms 어디로 들어와도 같은 substance_id로 귀결</span>
+<span class="k">def</span> <span class="n">resolve_substance</span>(raw_inci: str) -> tuple[SubstanceIdentity, float]:
+    <span class="str">"""Returns (identity, confidence)."""</span>
+    normalized = normalize(raw_inci)  <span class="c"># trim, case, punct</span>
+    <span class="k">if</span> hit := exact_match(normalized):
+        <span class="k">return</span> hit, <span class="s">1.0</span>
+    <span class="k">if</span> hit := synonym_lookup(normalized):
+        <span class="k">return</span> hit, <span class="s">0.99</span>
+    <span class="k">if</span> hit := fuzzy_match(normalized, threshold=<span class="s">0.95</span>):
+        <span class="k">return</span> hit, hit.score
+    <span class="c"># LLM fallback — 알려진 변종/오타 추정</span>
+    <span class="k">if</span> hit := llm_propose(normalized):
+        <span class="k">return</span> hit, <span class="s">0.7</span>  <span class="c"># 자동 통과 X — HITL 검토</span>
+    <span class="k">raise</span> SubstanceNotResolvedError(normalized)
+</pre>
+
+<div class="callout">
+  <span class="label">왜 substance_id가 중심인가</span>
+  CosIng가 INCI 표기를 바꿔도(예: "Glycerin" → "Glycerine" 표준화), 내부 substance_id는 안 변한다. 모든 후속 데이터(NOAEL extraction 결과, MoS 계산 결과, 과거 CPSR 작성 이력)가 substance_id로 묶여있어 INCI 변경에 무너지지 않는다. <strong>외부 ID(INCI)는 변할 수 있다 — 내부 ID는 immutable.</strong>
+</div>
+
+<h2>5. 캐싱·freshness·regulation alert</h2>
+
+<p>네 소스는 갱신 빈도가 다르다. 캐시 전략을 각각:</p>
+
+<table>
+  <tr><th>소스</th><th>TTL</th><th>알림 트리거</th></tr>
+  <tr><td>CosIng (Annex 변경)</td><td>1주</td><td>"기존 자유 사용 → Annex III 제한 추가" 발생 시 <strong>해당 성분 사용 중인 모든 제품의 CPSR 재평가</strong> 알림. Worldover의 핵심 가치 패턴.</td></tr>
+  <tr><td>ECHA REACH</td><td>1개월</td><td>NOAEL revision은 매우 드물지만 발생 시 영향 큼. 변경 감지 → MoS 재계산 큐.</td></tr>
+  <tr><td>IFRA Standards</td><td>매 amendment 발표 시</td><td>amendment 발표 → 알레르겐·한도 변경 → 향료 함유 제품 일괄 재평가.</td></tr>
+  <tr><td>내부 R&D</td><td>실시간 (이벤트)</td><td>처방 변경 → CPSR 즉시 dirty 표시 → SA 재검토 queue.</td></tr>
+</table>
+
+<div class="callout">
+  <span class="label">"variant invalidation"의 마법</span>
+  Substance Identity Hub가 잘 만들어져 있으면, "phenoxyethanol Annex V 농도 한도가 1.0% → 0.7%로 강화"라는 단일 이벤트가 (a) 어느 성분이 영향받는지, (b) 어느 제품이 영향받는지, (c) 어느 CPSR이 dirty인지를 한 쿼리로 답한다. 사내 도구의 가장 가치 있는 자동화.
+</div>
+
+<h2>6. 처방 입력 검증 — 마지막 방어선</h2>
+
+<p>Tier 2의 입구에서 시스템이 강제해야 할 검증:</p>
+
+<pre><span class="k">def</span> <span class="n">validate_formulation</span>(formulation: <span class="n">list</span>[FormulationLine]) -> ValidationReport:
+    issues = []
+
+    <span class="c"># 1. 모든 INCI가 substance_id로 resolve되는가</span>
+    <span class="k">for</span> line <span class="k">in</span> formulation:
+        identity, conf = resolve_substance(line.raw_inci)
+        <span class="k">if</span> conf &lt; <span class="s">0.95</span>:
+            issues.append(LowConfidenceSubstance(line, conf))
+
+    <span class="c"># 2. 농도 합 ≈ 100%</span>
+    total = sum(line.concentration_pct <span class="k">for</span> line <span class="k">in</span> formulation)
+    <span class="k">if</span> <span class="k">not</span> (<span class="s">99.5</span> &lt;= total &lt;= <span class="s">100.5</span>):
+        issues.append(ConcentrationSumOutOfRange(total))
+
+    <span class="c"># 3. "(and)" 또는 "+" 토큰 발견 시 분할 강제</span>
+    <span class="k">for</span> line <span class="k">in</span> formulation:
+        <span class="k">if</span> <span class="s">"(and)"</span> <span class="k">in</span> line.raw_inci <span class="k">or</span> re.search(<span class="s">r"\s\+\s"</span>, line.raw_inci):
+            issues.append(MultiSubstanceLineNeedsSplit(line))
+
+    <span class="c"># 4. Annex II(금지) 성분 사용 시 즉시 fail</span>
+    <span class="k">for</span> line <span class="k">in</span> formulation:
+        identity, _ = resolve_substance(line.raw_inci)
+        <span class="k">if</span> cosing_get(identity.substance_id).annex_ii_listed:
+            issues.append(ProhibitedSubstance(identity))
+
+    <span class="c"># 5. Annex III/V/VI 제한 농도 초과</span>
+    <span class="k">for</span> line <span class="k">in</span> formulation:
+        identity, _ = resolve_substance(line.raw_inci)
+        cos = cosing_get(identity.substance_id)
+        <span class="k">if</span> over_limit(line.concentration_pct, cos):
+            issues.append(ConcentrationOverAnnexLimit(line, cos))
+
+    <span class="c"># 6. 알레르겐 26 / 24 합산 한도</span>
+    allergen_sum = sum_allergens(formulation)
+    <span class="k">if</span> allergen_sum &gt; <span class="s">0.001</span>:  <span class="c"># 0.1% 또는 leave-on 0.001%</span>
+        issues.append(AllergenLabelingRequired(allergen_sum))
+
+    <span class="k">return</span> ValidationReport(issues=issues)
+</pre>
+
+<p>이 6개가 통과되어야 Tier 1·3·4로 진입. <strong>입력 검증이 95% acceptance의 가장 큰 단일 lever.</strong> SA가 검토 단계에서 "이거 농도 합이 안 맞는데?"를 발견하면 그 시점부터 시스템 신뢰가 0이 된다.</p>
+
+<h2>7. Quiz — 4문항</h2>
+
+<div class="quiz">
+
+<div class="question">
+  <p><strong>Q1.</strong> 처방표의 한 줄이 <code>"Sodium Hyaluronate"</code>이다. NOAEL은 SCCS Opinion의 <code>"Hyaluronic Acid"</code> entry에서 가져왔다. MoS 계산 시 두 분자의 분자량 차이(~22 Da)를 어떻게 처리할까?</p>
+  <details>
+    <summary>답 보기</summary>
+    <div class="answer">
+      두 가지 옵션. <strong>(a) 분자량 비율 보정</strong>: parent 분자(Hyaluronic Acid)의 NOAEL을 그대로 사용하되, salt 형태의 실제 노출량을 분자량 비율로 보정. Hyaluronic Acid MW vs Sodium Hyaluronate MW의 비율로 SED를 보정해 "유리 산 기준" SED 산출. 보정 인자가 작은 분자(~3%)면 보통 무시 가능 — 명시는 함. <strong>(b) 보수적 접근</strong>: parent NOAEL 그대로 + salt 분자량 보정 안 함 — 결과적으로 약간 보수적 (SED 조금 과대평가). 큰 차이 없으면 권장.<br>
+      <strong>중요한 건 시스템이 parent-salt 관계를 알고 있고 narrative에 명시</strong>한다는 것. SA가 "왜 Sodium Hyaluronate에 Hyaluronic Acid NOAEL을 썼나"를 보고서에서 찾을 수 있어야 함. Substance Identity Hub의 <code>parent_compound_id</code> 필드가 이걸 가능하게 한다.
+    </div>
+  </details>
+</div>
+
+<div class="question">
+  <p><strong>Q2.</strong> CosIng 검색에서 <code>"Glycerin"</code>을 입력했더니 (a) <code>"Glycerin"</code>과 (b) <code>"Glycereth-26"</code> 두 entry가 fuzzy hit으로 떴다. confidence는 (a) 0.97, (b) 0.93. 시스템은 어떻게 행동해야 하는가?</p>
+  <details>
+    <summary>답 보기</summary>
+    <div class="answer">
+      <strong>(a)를 선택 + 사용자에게 확정 알림 또는 silent log</strong>. 임계 0.95 위는 자동 통과지만, 0.97과 0.93 사이가 좁고 둘 다 hit이므로 <strong>second-best의 정체를 audit log에 남긴다</strong>. 동시에 (a)와 (b)의 INCI 표기가 완전히 다른 분자(glycerin은 모노머, glycereth-26은 PEG 유도체)임을 인지 — 단순 substring 유사도가 아니라 화학 동일성이 기준이어야 한다.<br>
+      방어 강화: fuzzy match에 <strong>"CAS 일치"를 우선 룰로</strong>. CAS가 함께 있으면 fuzzy match를 건너뛰고 exact CAS lookup. 처방표가 CAS 없이 INCI만 들고 오면 fuzzy 위험 영역. → R&D에 "CAS 병기" 요청을 plumbing 1차 개선과제로.
+    </div>
+  </details>
+</div>
+
+<div class="question">
+  <p><strong>Q3.</strong> 매월 CosIng 동기화를 돌리는데, 어느 날 <code>"Methylisothiazolinone"</code>의 Annex V 한도가 0.01% → 0.0015% (leave-on)로 강화되었다. 시스템은 다음 액션을 자동으로 트리거해야 한다. 무엇무엇인가?</p>
+  <details>
+    <summary>답 보기</summary>
+    <div class="answer">
+      ① <strong>영향 제품 식별</strong>: <code>WHERE formulation contains substance_id(MIT)</code> 쿼리 → leave-on 제품 중 농도 ≥ 0.0015% 모두 list. 결과 표를 SA·RA에 알림. ② <strong>해당 CPSR을 "dirty" 표시</strong>: 자동 재평가 큐에 등록 (수동 처리 우선순위 P0). ③ <strong>처방 변경 제안</strong>: Tier 1로 SED 재계산, MoS 재계산, MoS &lt; 100 또는 농도 한도 위반 case는 자동 분리. ④ <strong>regulation change log</strong>: amendment URL, 적용일, 유예기간 기록 — Tier 4 reasoning이 narrative에 그대로 인용. ⑤ <strong>경쟁사·시장 모니터링</strong>: 같은 변경에 다른 제조사가 어떻게 대응했는지 추적 (선택).<br>
+      이 5단계가 외부 SaaS가 못 하는 영역 — 우리 사내 데이터에 직접 붙어있기 때문에 가능. Worldover가 그들의 "alert" 가치로 마케팅하는 그 자리.
+    </div>
+  </details>
+</div>
+
+<div class="question">
+  <p><strong>Q4.</strong> R&D에서 새 처방표를 던졌는데, 한 줄에 <code>"Centella Asiatica Reservatrol Conjugate"</code>가 있다. CosIng·ECHA·CIR·SCCS 어디에도 없다. 시스템은 어디서 멈춰야 하며, SA에게 무엇을 전달해야 하는가?</p>
+  <details>
+    <summary>답 보기</summary>
+    <div class="answer">
+      <strong>Tier 2 입력 검증 단계에서 즉시 중단</strong>. 진행 X. SA에게 전달할 payload:<br>
+      - 처방 line + raw INCI<br>
+      - 시도한 fallback chain: CosIng (miss), ECHA (miss), CIR (miss), SCCS Opinion search (miss), EFSA (miss), PubChem CAS 추정 (miss)<br>
+      - 추측: "구조상 Centella 추출 + 레스베라트롤 컨주게이트로 보임. 모분자(레스베라트롤)의 NOAEL은 EFSA에 있음. SA 판단: (a) read-across로 모분자 NOAEL 적용 정당화 가능한가?, (b) 자체 시험 필요한가?, (c) 처방 교체?"<br>
+      - SA 결정 기록 슬롯<br>
+      <strong>이 흐름 자체가 시스템의 가치 — "모르겠다"를 명시적·구조적으로 노출</strong>. 자동 추측·생성 절대 금지. SA의 결정이 다시 시스템 학습 데이터로 흡수되어 다음 신성분 case에 활용.
+    </div>
+  </details>
+</div>
+
+</div>
+
+<h2>8. 다음 단계</h2>
+
+<ul>
+  <li><strong>Lesson 0006 (이미 작성됨)</strong>: Tier 4 reasoning generator + evaluator rubric — acceptance 95%의 격전지.</li>
+  <li>병행 build task: 자사 R&D의 raw material master data를 export → Substance Identity Hub 1차 적재. INCI ↔ 사내 코드 매핑 완성도 측정 (목표 99%+).</li>
+</ul>
+
+<div class="callout">
+  <span class="label">교사에게 질문</span>
+  "한국 식약처 명명 ↔ INCI 매핑 사전이 공개되어 있는가?", "CosIng dump의 갱신 latency vs UI 검색의 latency 차이?", "IFRA Standards 라이선스가 사내 시스템 사용에 충분한가, 별도 corporate 멤버십이 필요한가?" — 답에 따라 다음 plumbing 작업 우선순위가 갈립니다.
+</div>
+
+<div class="nav">
+  Previous: <a href="0004-tier3-sccs-opinion-rag.html">0004 — Tier 3: SCCS Opinion RAG</a> ·
+  Next: <a href="0006-tier4-reasoning-and-evaluator.html">0006 — Tier 4: Reasoning + Evaluator</a> ·
+  Glossary: <a href="../reference/glossary.html">용어집</a>
+</div>
+
+</body>
+</html>

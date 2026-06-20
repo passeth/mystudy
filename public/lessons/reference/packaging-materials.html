@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>레퍼런스 — 화장품 포장재 매터리얼·종류 지도</title>
+<style>
+  :root {
+    --ink:#1a1a1a; --muted:#5a5a5a; --line:#d8d3c7;
+    --accent:#0369a1; --accent2:#15803d; --highlight:#f0f9ff;
+    --code-bg:#f3efe5; --float:#dbeafe; --sink:#fde2e2;
+    --warn:#b45309; --good:#15803d; --bad:#b91c1c;
+  }
+  * { box-sizing:border-box; }
+  body { font-family:"Iowan Old Style","Georgia","Apple SD Gothic Neo","Noto Serif KR",serif; color:var(--ink); max-width:880px; margin:50px auto; padding:0 28px 80px; line-height:1.65; font-size:16px; background:#fefcf7; }
+  .meta { font-family:"SF Mono","Menlo",monospace; font-size:12px; letter-spacing:0.1em; color:var(--muted); text-transform:uppercase; margin-bottom:10px; }
+  .ref-tag { display:inline-block; background:#7c3aed; color:#fff; padding:3px 10px; border-radius:4px; font-family:"SF Mono","Menlo",monospace; font-size:11px; font-weight:600; letter-spacing:0.08em; margin-right:8px; }
+  h1 { font-size:28px; line-height:1.25; margin:0 0 8px; letter-spacing:-0.01em; }
+  .subtitle { color:var(--muted); font-style:italic; margin-bottom:30px; }
+  h2 { font-size:21px; margin:40px 0 12px; padding-bottom:6px; border-bottom:2px solid var(--accent2); }
+  h3 { font-size:17px; margin:26px 0 8px; color:var(--accent); }
+  p { margin:10px 0; }
+  ul, ol { padding-left:22px; } li { margin:4px 0; }
+  code { font-family:"SF Mono","Menlo",monospace; font-size:13px; background:var(--code-bg); padding:2px 6px; border-radius:3px; }
+  table { width:100%; border-collapse:collapse; margin:16px 0; font-size:13.5px; }
+  th, td { text-align:left; padding:8px 10px; border-bottom:1px solid var(--line); vertical-align:top; }
+  th { background:var(--code-bg); font-weight:600; font-size:11.5px; text-transform:uppercase; letter-spacing:0.04em; position:sticky; }
+  tr.float td { background:rgba(219,234,254,0.4); }
+  tr.sink td { background:rgba(253,226,226,0.35); }
+  .pill { display:inline-block; font-family:"SF Mono",monospace; font-size:11px; font-weight:700; padding:2px 8px; border-radius:20px; }
+  .p-float { background:#1d4ed8; color:#fff; } .p-sink { background:#b91c1c; color:#fff; } .p-na { background:#6b7280; color:#fff; }
+  .p-good { background:#15803d; color:#fff; } .p-mid { background:#ca8a04; color:#fff; } .p-bad { background:#b91c1c; color:#fff; }
+  .callout { background:var(--highlight); border-left:4px solid var(--accent); padding:14px 18px; margin:20px 0; border-radius:0 6px 6px 0; }
+  .callout-warn { background:#fef7e6; border-left-color:var(--warn); }
+  .callout-good { background:#f0fdf4; border-left-color:var(--good); }
+  .callout-bad { background:#fef2f2; border-left-color:var(--bad); }
+  .callout .label { display:block; font-size:11.5px; text-transform:uppercase; letter-spacing:0.1em; color:var(--accent); margin-bottom:5px; font-weight:600; }
+  .callout-warn .label { color:var(--warn); } .callout-good .label { color:var(--good); } .callout-bad .label { color:var(--bad); }
+  .tank { display:flex; gap:16px; flex-wrap:wrap; margin:18px 0; }
+  .tank-col { flex:1; min-width:240px; border:1px solid var(--line); border-radius:10px; overflow:hidden; }
+  .tank-col h4 { margin:0; padding:10px 14px; font-size:14px; }
+  .tank-float h4 { background:var(--float); } .tank-sink h4 { background:var(--sink); }
+  .tank-col ul { margin:10px 14px; font-size:14px; }
+  .toc { columns:2; font-size:14px; background:var(--code-bg); padding:14px 22px; border-radius:8px; }
+  .toc a { color:var(--accent); text-decoration:none; }
+  .nav { margin-top:50px; padding-top:20px; border-top:1px solid var(--line); font-size:13px; color:var(--muted); }
+  .nav a { color:var(--accent); text-decoration:none; }
+  .cite { font-size:12.5px; color:var(--muted); } .cite a { color:var(--muted); text-decoration:underline; }
+  strong { font-weight:700; }
+  @media print { body { background:#fff; max-width:100%; margin:0; font-size:12px; } h2 { break-after:avoid; } table { break-inside:auto; } tr { break-inside:avoid; } }
+
+  .tracklink { background:#f0fdf4; border:1px solid #15803d; border-radius:10px; padding:12px 16px; margin:0 0 30px; font-size:13px; line-height:2.0; }
+  .tracklink b { color:#15803d; text-transform:uppercase; letter-spacing:0.08em; font-size:11px; display:block; margin-bottom:5px; }
+  .tracklink a { color:#0369a1; text-decoration:none; }
+  .tracklink a:hover { text-decoration:underline; }
+  .tracklink .cur { background:#15803d; color:#fff; padding:1px 8px; border-radius:4px; font-weight:700; }
+  .tracklink .sep { color:#cdd6c9; margin:0 2px; }
+</style>
+</head>
+<body>
+
+<div class="meta"><span class="ref-tag">REFERENCE · PPWR 트랙</span>포장재 매터리얼 지도 · v1</div>
+<h1>화장품 포장재 매터리얼·종류 지도</h1>
+<p class="subtitle">PPWR 등급·재활용 스트림을 이해하려면 먼저 "무엇으로 만들어졌나"를 알아야 한다. ① 매터리얼의 종류·스펙·특성, ② 포장재 종류별로 어떤 매터리얼이 쓰이는지 — 두 축으로 정리한 빠른 참조 카드. 인쇄용.</p>
+
+<div class="tracklink">
+  <b>📦 PPWR 트랙 · 화장품 패키징 규제</b>
+  <a href="../lessons/0011-ppwr-foundation.html">0011 토대</a> <span class="sep">·</span> <a href="../lessons/0012-recyclability-grade-estimator.html">0012 등급추정</a> <span class="sep">·</span> <a href="../lessons/0013-substances-and-pcr.html">0013 유해물질·PCR</a> <span class="sep">·</span> <a href="../lessons/0014-rpet-pcr-sourcing-certification.html">0014 rPET조달</a> <span class="sep">·</span> <a href="../lessons/0015-reduce-and-reuse.html">0015 감축·재사용</a> <span class="sep">·</span> <a href="../lessons/0016-labelling-epr-doc.html">0016 라벨·EPR·DoC</a> <span class="sep">·</span> <a href="../lessons/0017-korea-memberstates-roadmap.html">0017 실무로드맵</a> <span class="sep">·</span> <a href="../lessons/0018-td-data-collection-bom.html">0018 부자재TD수집</a> <span class="sep">·</span> <a href="../lessons/0019-component-master-architecture.html">0019 스케일수집</a> <span class="sep">·</span> <a href="../lessons/0020-self-declaration-and-verification.html">0020 자기선언·검증</a> <span class="sep">·</span> <a href="../lessons/0021-screening-engine-and-portal.html">0021 스크리닝엔진</a> <span class="sep">·</span> <span class="cur">📋 매터리얼 지도</span>
+</div>
+
+<div class="toc">
+  <strong>목차</strong><br>
+  0. <a href="#sep">밀도 분리 — 이 한 장이 핵심</a><br>
+  1. <a href="#mat">매터리얼 종류 (플라스틱)</a><br>
+  1b. <a href="#nonplastic">매터리얼 종류 (비플라스틱)</a><br>
+  2. <a href="#types">포장재 종류별 매터리얼 매핑</a><br>
+  3. <a href="#ppwr">PPWR 관점 요약 — 무엇을 고를까</a><br>
+  4. <a href="#abbr">약어 글로서리</a>
+</div>
+
+<h2 id="sep">0. 밀도 분리 — 이 한 장이 핵심</h2>
+<p>재활용 공정의 핵심 분리 단계는 <strong>물에 뜨느냐 가라앉느냐(float/sink)</strong>다. 물의 밀도 = <strong>1.0 g/cm³</strong>. 이보다 가벼우면 뜨고, 무거우면 가라앉는다. PET 보틀을 잘게 분쇄해 물탱크에 넣으면 — <strong>PET 조각은 가라앉고, PP·PE 캡 조각은 뜬다</strong> → 자동 분리. 이게 "왜 캡을 PP·PE로 하면 좋은가"의 물리적 이유.</p>
+
+<div class="tank">
+  <div class="tank-col tank-float">
+    <h4>🟦 뜬다 (＜1.0) — 폴리올레핀</h4>
+    <ul>
+      <li><strong>PP</strong> 0.90–0.91</li>
+      <li><strong>LDPE</strong> 0.92–0.94</li>
+      <li><strong>HDPE</strong> 0.95–0.96</li>
+    </ul>
+    <p style="margin:8px 14px; font-size:13px; color:var(--muted);">캡·펌프 몸체·일부 튜브. PET 스트림에서 자연 분리됨.</p>
+  </div>
+  <div class="tank-col tank-sink">
+    <h4>🟥 가라앉는다 (＞1.0)</h4>
+    <ul>
+      <li><strong>PS</strong> 1.04–1.07 · <strong>ABS/SAN</strong> ~1.05</li>
+      <li><strong>PMMA(아크릴)</strong> 1.18 · <strong>PLA</strong> ~1.24</li>
+      <li><strong>PETG</strong> ~1.27 · <strong>PET</strong> 1.38–1.39</li>
+      <li><strong>PVC</strong> 1.16–1.45</li>
+    </ul>
+    <p style="margin:8px 14px; font-size:13px; color:var(--muted);">PET와 같이 가라앉는 것(PVC·PLA·PETG)은 <strong>PET 재생원료를 오염</strong>시킨다.</p>
+  </div>
+</div>
+<div class="callout callout-bad">
+  <span class="label">가장 위험한 함정 — "PET처럼 생겼지만 PET가 아닌 것"</span>
+  <strong>PETG·PVC·PLA</strong>는 투명해서 PET 보틀처럼 보이지만, 밀도가 PET와 비슷해 <strong>sink-float에서 분리되지 않고 PET 스트림에 섞여 재생원료 품질을 망친다.</strong> 특히 <strong>PETG 전면 슬리브·PVC 라벨</strong>이 PET 보틀에 붙으면 보틀 전체가 오염원으로 분류될 수 있다 → 0012의 "즉사" 원인.
+</div>
+<p class="cite">밀도 출처: <a href="https://amesweb.info/Materials/Density-of-Plastics.aspx" target="_blank">AmesWeb</a>, <a href="https://www.specialchem.com/plastics/guide/density" target="_blank">SpecialChem</a>. 분리 원리: <a href="https://plasticsrecycling.org/apr-design-hub/apr-design-guide/pet-rigid/" target="_blank">APR Design Guide</a>.</p>
+
+<h2 id="mat">1. 매터리얼 종류 (플라스틱)</h2>
+<p>행 색: <span class="pill p-float">FLOAT</span> 뜸 · <span class="pill p-sink">SINK</span> 가라앉음. 재활용성은 <strong>EU 회수 스트림 성숙도</strong> 기준.</p>
+<table>
+  <tr>
+    <th>재질 (수지코드)</th><th>밀도 g/cm³</th><th>float/sink</th><th>투명성</th><th>특성</th><th>재활용 스트림</th><th>화장품 용도</th>
+  </tr>
+  <tr class="float">
+    <td><strong>PP</strong> 폴리프로필렌 (5)</td><td>0.90–0.91</td><td><span class="pill p-float">FLOAT</span></td><td>반투명~불투명</td><td>내열·내약품·힌지(접힘) 우수, 가벼움</td><td><span class="pill p-mid">성장중</span></td><td>캡·플립캡, 에어리스 내부, 컴팩트, 립밤, 자</td>
+  </tr>
+  <tr class="float">
+    <td><strong>HDPE</strong> 고밀도PE (2)</td><td>0.95–0.96</td><td><span class="pill p-float">FLOAT</span></td><td>불투명</td><td>단단·견고, UV 차단(불투명)</td><td><span class="pill p-good">성숙</span></td><td>로션·바디·선크림·데오 보틀, 튜브</td>
+  </tr>
+  <tr class="float">
+    <td><strong>LDPE</strong> 저밀도PE (4)</td><td>0.92–0.94</td><td><span class="pill p-float">FLOAT</span></td><td>반투명</td><td>유연·말랑(스퀴즈)</td><td><span class="pill p-mid">제한적</span></td><td>튜브(스퀴즈), 연질 보틀, 필름</td>
+  </tr>
+  <tr class="sink">
+    <td><strong>PET</strong> 폴리에스터 (1)</td><td>1.38–1.39</td><td><span class="pill p-sink">SINK</span></td><td>고투명</td><td>고투명·경량·내용물 보호, rPET 풍부</td><td><span class="pill p-good">가장 성숙</span></td><td>스킨케어·헤어·세럼 보틀, 자, 튜브</td>
+  </tr>
+  <tr class="sink">
+    <td><strong>PETG</strong> 글리콜변성PET</td><td>~1.27</td><td><span class="pill p-sink">SINK</span></td><td>고투명</td><td>PET보다 강인·내충격, 두꺼운 성형</td><td><span class="pill p-bad">PET 오염원</span></td><td>두꺼운 고급 용기, 에어리스 외통, 슬리브</td>
+  </tr>
+  <tr class="sink">
+    <td><strong>PMMA</strong> 아크릴</td><td>1.18</td><td><span class="pill p-sink">SINK</span></td><td>유리급 투명</td><td>고급감·유리 같은 광택, 단 깨지기 쉽고 내약품 약함</td><td><span class="pill p-bad">비주류</span></td><td>프리미엄 자·세럼 외통, 향수, 캡</td>
+  </tr>
+  <tr class="sink">
+    <td><strong>PS</strong> 폴리스티렌 (6)</td><td>1.04–1.07</td><td><span class="pill p-sink">SINK</span></td><td>투명~불투명</td><td>저렴·강성, 부서지기 쉬움</td><td><span class="pill p-bad">빈약</span></td><td>일부 캡·컴팩트(감소 추세)</td>
+  </tr>
+  <tr class="sink">
+    <td><strong>ABS / SAN(AS)</strong></td><td>~1.04–1.08</td><td><span class="pill p-sink">SINK</span></td><td>ABS 불투명 / SAN 투명</td><td>강성·광택, 도금·증착 베이스</td><td><span class="pill p-bad">비주류</span></td><td>컴팩트, 캡, 펌프 외장, 향수 캡</td>
+  </tr>
+  <tr class="sink">
+    <td><strong>PVC</strong> 폴리염화비닐 (3)</td><td>1.16–1.45</td><td><span class="pill p-sink">SINK</span></td><td>투명 가능</td><td>가공 쉬움, 그러나 염소 함유</td><td><span class="pill p-bad">재활용 독</span></td><td>(지양) 일부 슬리브·연질 — <strong>PPWR/재활용상 회피</strong></td>
+  </tr>
+  <tr class="sink">
+    <td><strong>PLA</strong> 폴리락타이드</td><td>~1.24</td><td><span class="pill p-sink">SINK</span></td><td>투명</td><td>바이오기반·산업 퇴비화</td><td><span class="pill p-bad">PET 오염원</span></td><td>친환경 소구 용기 — 단 PET 스트림 오염, PPWR PCR 면제(퇴비화)</td>
+  </tr>
+</table>
+<div class="callout callout-warn">
+  <span class="label">"불투명 = 재활용 감점"의 이유</span>
+  HDPE·PP는 불투명이라 UV를 막아 선크림·로션에 좋지만, <strong>흰색 불투명(TiO₂)</strong>은 재생 시 탁도를 만들어 재생원료 가치를 낮춘다. <strong>검정(카본블랙)</strong>은 NIR 미검출로 아예 선별 실패(0012). 즉 색은 마케팅과 재활용성이 충돌하는 대표 지점.
+</div>
+<p class="cite">출처: <a href="https://www.uzonepackaging.com/plastic-cosmetic-packaging-material-pet-vs-hdpe-vs-pp-vs-acrylic/" target="_blank">PET/HDPE/PP/Acrylic 비교</a>, <a href="https://www.visonpack.com/blog/what-is-the-difference-between-pp-pet-petg/" target="_blank">PP/PET/PETG</a>, APR Design Guide.</p>
+
+<h2 id="nonplastic">1b. 매터리얼 종류 (비플라스틱)</h2>
+<table>
+  <tr><th>재질</th><th>밀도 g/cm³</th><th>특성</th><th>재활용</th><th>화장품 용도</th></tr>
+  <tr><td><strong>유리(Glass)</strong></td><td>~2.4–2.5</td><td>불활성·고급감·완전 배리어, 무겁고 깨짐</td><td><span class="pill p-good">무한·별도 스트림</span></td><td>프리미엄 세럼·향수·앰플·크림 자</td></tr>
+  <tr><td><strong>알루미늄</strong></td><td>2.70</td><td>경량 금속·완전 차단·고급</td><td><span class="pill p-good">고가치·별도</span></td><td>에어로졸, 튜브, 캡, 모노 알루미늄 보틀</td></tr>
+  <tr><td><strong>주석도금강판(Tinplate)</strong></td><td>~7.8</td><td>강성·차단</td><td><span class="pill p-good">자성 분리 용이</span></td><td>에어로졸 캔, 틴 케이스</td></tr>
+  <tr><td><strong>종이·판지(Paper/Board)</strong></td><td>—</td><td>인쇄성·친환경 소구, 습기 약함</td><td><span class="pill p-good">별도 스트림</span></td><td>단상자(카톤), 라벨, 종이 튜브/용기</td></tr>
+  <tr><td><strong>실리콘·고무</strong></td><td>~1.1–1.5</td><td>탄성·밀폐</td><td><span class="pill p-bad">비재활용</span></td><td>드로퍼 벌브, 개스킷, 퍼프</td></tr>
+</table>
+<div class="callout callout-good">
+  <span class="label">모노 vs 멀티 — 단 하나의 규칙</span>
+  재활용성은 결국 <strong>"한 제품이 한 재질(mono-material, 한 폴리머 ≥90%)이냐"</strong>로 수렴한다(RecyClass). 유리·알루미늄·모노PE는 단일 스트림으로 깨끗이 가지만, <strong>여러 재질이 분리 안 되게 결합된 것</strong>(라미네이트 튜브, 금속스프링 펌프, 도금 컴팩트)은 거의 재활용 불가.
+</div>
+
+<h2 id="types">2. 포장재 종류별 매터리얼 매핑</h2>
+<p>각 포장 형태가 어떤 재질로 만들어지고, 어디서 재활용성이 깨지는지.</p>
+
+<h3>① 보틀 (Bottle)</h3>
+<table>
+  <tr><th>흔한 재질</th><th>재활용성</th><th>메모</th></tr>
+  <tr><td>PET(투명 스킨/헤어) · HDPE(불투명 로션/선) · PP · 유리(프리미엄)</td><td><span class="pill p-good">PET/HDPE 양호</span></td><td>본체는 대체로 깨끗. 등급은 <strong>캡·펌프·라벨</strong>에서 결판(0012).</td></tr>
+</table>
+
+<h3>② 자 (Jar)</h3>
+<table>
+  <tr><th>흔한 재질</th><th>재활용성</th><th>메모</th></tr>
+  <tr><td>PMMA/아크릴(고급 광택) · PP(실용) · 유리 · PET</td><td><span class="pill p-mid">이중벽 주의</span></td><td><strong>더블월(외통+내통) 자</strong>는 두 재질이 분리 안 되면 감점. PP 모노 자가 재활용 유리.</td></tr>
+</table>
+
+<h3>③ 튜브 (Tube)</h3>
+<table>
+  <tr><th>흔한 재질</th><th>재활용성</th><th>메모</th></tr>
+  <tr><td>LDPE(스퀴즈) · HDPE/PP(경질) · <strong>라미네이트(PE/AL/PET 다층)</strong></td><td><span class="pill p-bad">라미네이트=불가</span></td><td>배리어용 다층 라미네이트 튜브가 다수 → 재활용 난제. <strong>모노-PE 튜브</strong>로 전환이 업계 흐름.</td></tr>
+</table>
+
+<h3>④ 에어리스 (Airless Bottle/Pump)</h3>
+<table>
+  <tr><th>흔한 재질</th><th>재활용성</th><th>메모</th></tr>
+  <tr><td>외통 PETG·PMMA(투명) + 내부 PP 피스톤 + 스프링</td><td><span class="pill p-bad">멀티재질</span></td><td>여러 재질 결합 → 분해 안 되면 감점. <strong>RecyClass 검증 airless PET류</strong>가 해법.</td></tr>
+</table>
+
+<h3>⑤ 펌프 / 디스펜서 (Pump)</h3>
+<table>
+  <tr><th>흔한 재질</th><th>재활용성</th><th>메모</th></tr>
+  <tr><td>PP 몸체 + <strong>금속 스프링</strong> + 다양한 부품</td><td><span class="pill p-bad">즉사 1순위</span></td><td>금속 검출 시 전체 반려. <strong>모노-PP/스프링리스 펌프</strong>가 핵심 개선. (단 제7 PCR에선 5%미만 면제 — 0013 "펌프의 역설")</td></tr>
+</table>
+
+<h3>⑥ 캡 / 클로저 (Cap/Closure)</h3>
+<table>
+  <tr><th>흔한 재질</th><th>재활용성</th><th>메모</th></tr>
+  <tr><td><strong>PP·HDPE(뜸 → 분리됨)</strong> · (지양) PET·금속 캡</td><td><span class="pill p-good">PP/PE 양호</span></td><td>본체 PET와 밀도 분리되는 PP/PE가 정답. 금속·PVC 캡은 오염원.</td></tr>
+</table>
+
+<h3>⑦ 드로퍼 (Dropper)</h3>
+<table>
+  <tr><th>흔한 재질</th><th>재활용성</th><th>메모</th></tr>
+  <tr><td>유리 피펫 + 고무/실리콘 벌브 + PP/PCTA 칼라</td><td><span class="pill p-bad">멀티재질</span></td><td>3재질 결합 → 분해 전엔 재활용 난제. 세럼 고급 소구의 대가.</td></tr>
+</table>
+
+<h3>⑧ 컴팩트 / 팬 (Compact)</h3>
+<table>
+  <tr><th>흔한 재질</th><th>재활용성</th><th>메모</th></tr>
+  <tr><td>ABS·SAN·PP·PMMA + 금속 팬 + 거울 + 자석</td><td><span class="pill p-bad">복합</span></td><td>메이크업의 대표 재활용 난제. 리필 가능 구조(리필 팬 교체)가 감축·재사용 대안.</td></tr>
+</table>
+
+<h3>⑨ 라벨 / 슬리브 (Label/Sleeve)</h3>
+<table>
+  <tr><th>흔한 재질</th><th>재활용성</th><th>메모</th></tr>
+  <tr><td><strong>PP/PE 필름(wash-off, 뜸)</strong> · 종이 · PET-G 슬리브 · <strong>PVC 슬리브</strong></td><td><span class="pill p-bad">전면 슬리브 위험</span></td><td>전면 슬리브가 본체 NIR을 가리면 즉사. PVC·검정 슬리브 회피. wash-off PO 라벨이 안전.</td></tr>
+</table>
+
+<h3>⑩ 사쉐 / 파우치 · 단상자 · 에어로졸</h3>
+<table>
+  <tr><th>형태</th><th>흔한 재질</th><th>재활용성</th></tr>
+  <tr><td>사쉐·파우치</td><td>PET/AL/PE 다층 라미네이트</td><td><span class="pill p-bad">불가(다층)</span></td></tr>
+  <tr><td>단상자(카톤)</td><td>판지(paperboard)</td><td><span class="pill p-good">종이 스트림</span></td></tr>
+  <tr><td>에어로졸</td><td>알루미늄·주석도금강판</td><td><span class="pill p-good">금속 스트림</span></td></tr>
+</table>
+
+<h2 id="ppwr">3. PPWR 관점 요약 — 무엇을 고를까</h2>
+<table>
+  <tr><th>선택</th><th class="" >재활용 유리</th><th>피해야 할 것</th></tr>
+  <tr><td>본체</td><td>투명 PET, 불투명 HDPE, PP (모노)</td><td>PETG·PVC·PLA(투명하지만 PET 오염), 카본블랙</td></tr>
+  <tr><td>캡·펌프</td><td>PP·HDPE(뜸), 스프링리스/모노 펌프</td><td>금속 스프링, PVC·금속 캡</td></tr>
+  <tr><td>라벨</td><td>wash-off PP/PE 필름, 부분 라벨</td><td>전면 슬리브(특히 PVC·PETG·검정)</td></tr>
+  <tr><td>튜브</td><td>모노-PE 튜브</td><td>PE/AL/PET 라미네이트</td></tr>
+  <tr><td>구조 원칙</td><td><strong>모노재질(한 폴리머 ≥90%) + 분리 용이</strong></td><td>분해 안 되는 멀티재질 결합</td></tr>
+</table>
+<div class="callout">
+  <span class="label">한 문장 요약</span>
+  <strong>"투명 PET(또는 모노 HDPE/PP) 본체 + 뜨는 PP/PE 캡 + wash-off 부분 라벨 + 금속·PVC·카본블랙 제로"</strong> = PPWR 재활용성의 정답 골격. 나머지는 이 골격에서의 타협 비용을 따지는 일.
+</div>
+
+<h2 id="abbr">4. 약어 글로서리</h2>
+<table>
+  <tr><th>약어</th><th>풀이</th><th>비고</th></tr>
+  <tr><td>PET</td><td>Polyethylene Terephthalate</td><td>수지코드 1, 투명 보틀 표준, SINK</td></tr>
+  <tr><td>PETG</td><td>Glycol-modified PET</td><td>PET 스트림 오염원, SINK</td></tr>
+  <tr><td>HDPE / LDPE</td><td>High/Low Density Polyethylene</td><td>코드 2/4, FLOAT</td></tr>
+  <tr><td>PP</td><td>Polypropylene</td><td>코드 5, 캡·펌프, FLOAT</td></tr>
+  <tr><td>PS</td><td>Polystyrene</td><td>코드 6, 재활용 빈약</td></tr>
+  <tr><td>PVC</td><td>Polyvinyl Chloride</td><td>코드 3, 재활용 독·회피</td></tr>
+  <tr><td>PMMA</td><td>Poly(methyl methacrylate) = 아크릴</td><td>프리미엄, 비주류 재활용</td></tr>
+  <tr><td>ABS / SAN(AS)</td><td>Acrylonitrile Butadiene Styrene / Styrene Acrylonitrile</td><td>컴팩트·캡</td></tr>
+  <tr><td>PLA</td><td>Polylactic Acid</td><td>바이오·퇴비화, PET 오염원</td></tr>
+  <tr><td>PCR / PIR</td><td>Post-Consumer / Post-Industrial Recycled</td><td>PPWR은 PCR만 인정(0013·0014)</td></tr>
+  <tr><td>NIR</td><td>Near-Infrared (근적외선 선별)</td><td>카본블랙 미검출 → 즉사</td></tr>
+  <tr><td>float/sink</td><td>밀도 분리 (물 1.0 기준)</td><td>＜1.0 뜸 / ＞1.0 가라앉음</td></tr>
+</table>
+
+<div class="nav">
+  관련 레슨: <a href="../lessons/0012-recyclability-grade-estimator.html">0012 등급 추정기</a> ·
+  <a href="../lessons/0013-substances-and-pcr.html">0013 유해물질·PCR</a> ·
+  <a href="../lessons/0014-rpet-pcr-sourcing-certification.html">0014 rPET 조달·인증</a> ·
+  용어집: <a href="glossary.html">glossary.html</a>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Lesson 0006 — Tier 4: Reasoning Generator와 Evaluator Rubric</title>
+<style>
+  :root {
+    --ink: #1a1a1a;
+    --muted: #5a5a5a;
+    --line: #d8d3c7;
+    --accent: #be185d;
+    --highlight: #fdf2f8;
+    --code-bg: #f3efe5;
+    --quiz-bg: #f9f5ea;
+    --warn: #b45309;
+    --good: #15803d;
+    --bad: #b91c1c;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Iowan Old Style", "Georgia", "Apple SD Gothic Neo", "Noto Serif KR", serif;
+    color: var(--ink);
+    max-width: 800px;
+    margin: 60px auto;
+    padding: 0 28px 80px;
+    line-height: 1.7;
+    font-size: 17px;
+    background: #fefcf7;
+  }
+  .meta {
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .tier-tag {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    padding: 3px 10px;
+    border-radius: 4px;
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    margin-right: 8px;
+  }
+  h1 {
+    font-size: 30px;
+    line-height: 1.25;
+    margin: 0 0 8px;
+    letter-spacing: -0.01em;
+  }
+  .subtitle { color: var(--muted); font-style: italic; margin-bottom: 36px; }
+  h2 {
+    font-size: 22px;
+    margin: 44px 0 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--line);
+  }
+  h3 { font-size: 18px; margin: 30px 0 8px; color: var(--accent); }
+  p { margin: 12px 0; }
+  ul, ol { padding-left: 24px; }
+  li { margin: 6px 0; }
+  code {
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 14px;
+    background: var(--code-bg);
+    padding: 2px 6px;
+    border-radius: 3px;
+  }
+  pre {
+    background: #1a1a1a;
+    color: #f0ebe0;
+    padding: 20px 24px;
+    border-radius: 8px;
+    overflow-x: auto;
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    margin: 20px 0;
+  }
+  pre .k { color: #c4b5fd; }
+  pre .s { color: #fcd34d; }
+  pre .n { color: #93c5fd; }
+  pre .c { color: #6b7280; font-style: italic; }
+  pre .f { color: #f9a8d4; }
+  pre .str { color: #67e8f9; }
+  .callout {
+    background: var(--highlight);
+    border-left: 4px solid var(--accent);
+    padding: 16px 20px;
+    margin: 24px 0;
+    border-radius: 0 6px 6px 0;
+  }
+  .callout-warn { background: #fef7e6; border-left-color: var(--warn); }
+  .callout .label {
+    display: block; font-size: 12px;
+    text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--accent); margin-bottom: 6px; font-weight: 600;
+  }
+  .callout-warn .label { color: var(--warn); }
+  table {
+    width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px;
+  }
+  th, td {
+    text-align: left; padding: 10px 12px;
+    border-bottom: 1px solid var(--line); vertical-align: top;
+  }
+  th {
+    background: var(--code-bg); font-weight: 600;
+    font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  .rubric-row {
+    display: grid;
+    grid-template-columns: 90px 1fr 80px;
+    gap: 12px;
+    padding: 14px 18px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    margin: 8px 0;
+    background: #fff;
+  }
+  .rubric-id {
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 13px;
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .rubric-desc { font-size: 14px; }
+  .rubric-weight {
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 13px;
+    text-align: right;
+    color: var(--muted);
+  }
+  .compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 24px 0;
+  }
+  .compare > div {
+    padding: 18px 22px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    background: #fff;
+    font-size: 14px;
+    line-height: 1.55;
+  }
+  .compare .good {
+    border-left: 4px solid var(--good);
+  }
+  .compare .bad {
+    border-left: 4px solid var(--bad);
+  }
+  .compare h4 {
+    margin: 0 0 8px;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .compare .good h4 { color: var(--good); }
+  .compare .bad h4 { color: var(--bad); }
+  .quiz {
+    background: var(--quiz-bg);
+    padding: 28px 32px;
+    margin: 40px 0;
+    border-radius: 8px;
+  }
+  .quiz h2 { border: none; margin-top: 0; }
+  .question { margin: 24px 0; }
+  details { margin: 8px 0; }
+  details > summary {
+    cursor: pointer; color: var(--accent);
+    font-size: 14px; user-select: none;
+    list-style: revert;
+  }
+  details[open] > summary { margin-bottom: 8px; }
+  .answer {
+    margin-top: 8px; padding: 12px 16px;
+    background: #fff; border: 1px dashed var(--line);
+    border-radius: 4px;
+  }
+  .nav {
+    margin-top: 60px; padding-top: 24px;
+    border-top: 1px solid var(--line);
+    font-size: 14px; color: var(--muted);
+  }
+  .nav a { color: var(--accent); text-decoration: none; }
+  .nav a:hover { text-decoration: underline; }
+  .cite { font-size: 13px; color: var(--muted); }
+  .cite a { color: var(--muted); text-decoration: underline; }
+  @media print {
+    body { background: #fff; max-width: 100%; margin: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="meta"><span class="tier-tag">TIER 4</span>Lesson 0006 · 약 40분</div>
+<h1>Reasoning Generator와 Evaluator Rubric</h1>
+<p class="subtitle">B.3 Reasoning과 B.1 Conclusion. acceptance 95%의 격전지. Tier 1·2·3가 모은 사실 위에 SCCS NoG 화법으로 narrative를 짜고, 별도 evaluator가 채점한다.</p>
+
+<div class="callout">
+  <span class="label">이 레슨의 약속</span>
+  마치면 (1) B.3 narrative의 "좋은 글"과 "기계가 쓴 글"의 차이를 6가지 축으로 식별하고, (2) SCCS NoG 12판 §3-6/§3-7에서 도출한 정량 rubric을 머릿속에 박으며, (3) Generator-Evaluator-Refiner 루프와 HITL 게이트 임계를 설계할 수 있다. 이게 안 되면 Tier 1·2·3가 아무리 정확해도 acceptance는 안 나온다.
+</div>
+
+<h2>1. 무엇이 "좋은 B.3"인가 — SA가 찾는 6축</h2>
+
+<p>인증 SA가 외부 위탁 받은 CPSR을 검토할 때 5초 내에 "기계가 썼다"고 판단하는 신호 6가지. 이것이 우리 rubric의 시작점:</p>
+
+<table>
+  <tr><th>축</th><th>좋은 글의 특징</th><th>기계 글의 특징</th></tr>
+  <tr><td><strong>1. 보수성(Conservatism)</strong></td><td>여러 NOAEL 후보 중 왜 이걸 골랐는지 명시. "가장 보수적"이라고 말하지 않고 <em>왜</em>가 드러남.</td><td>"NOAEL was determined to be X" — 출처·근거 없음.</td></tr>
+  <tr><td><strong>2. 가정의 명시(Assumption transparency)</strong></td><td>DA% default 50% 사용, BW 60kg, aggregate 가정 안 함 등 모든 가정이 본문에 들어감.</td><td>가정 묻혀있고 결론만 등장.</td></tr>
+  <tr><td><strong>3. 갭 인정(Gap honesty)</strong></td><td>"SCCS Opinion 부재로 EFSA-derived NOAEL 사용; 경구 → dermal 보정 적용" 같이 약점을 먼저 말함.</td><td>갭이 침묵 — SA가 검토하다가 발견 → 신뢰 0.</td></tr>
+  <tr><td><strong>4. 민감군 고려</strong></td><td>임산부·영유아·민감 피부 → 노출 제한이나 라벨 경고 권장 여부 명시.</td><td>"safe for general population" 한 줄.</td></tr>
+  <tr><td><strong>5. SCCS 화법 일관</strong></td><td>"MoS calculated to be X, which exceeds the threshold of 100, indicating an adequate margin of safety." — SCCS Opinion 표현 그대로.</td><td>"This ingredient is safe." — 평가 보고서 어휘가 아님.</td></tr>
+  <tr><td><strong>6. 결론의 조건성</strong></td><td>"Safe under the intended use of leave-on face cream at 4% concentration, BW 60kg, daily application." — 조건이 명시.</td><td>"Safe." 무조건적 결론.</td></tr>
+</table>
+
+<div class="callout">
+  <span class="label">Boilerplate가 가장 큰 적</span>
+  처방 30개 성분에 모두 동일한 4문장 템플릿이 반복되면 SA가 그냥 거부한다. <strong>같은 구조여도 성분별 사실(NOAEL 값, 출처, MoS, 가정)이 본문 흐름에 자연스럽게 들어가야 한다.</strong> "fill-in-the-blank" 티가 나면 사망.
+</div>
+
+<h2>2. Generator의 입력 — Tier 1·2·3 산출물의 fact bundle</h2>
+
+<p>Generator가 받는 건 자유 텍스트가 아닌 <strong>structured fact bundle</strong>. LLM이 사실을 만들 여지가 없도록.</p>
+
+<pre><span class="k">class</span> <span class="n">SubstanceFactBundle</span>(BaseModel):
+    <span class="str">"""Tier 1·2·3 결과를 한 단위로 묶은 입력. Tier 4는 이걸 받아 narrative만 짠다."""</span>
+
+    <span class="c"># Tier 2 (Substance Identity)</span>
+    inci_canonical: str
+    cas: <span class="n">Optional</span>[str]
+    cosing_functions: <span class="n">list</span>[str]
+    annex_restrictions: <span class="n">list</span>[Restriction]
+
+    <span class="c"># Tier 1 (Exposure)</span>
+    concentration_pct: float
+    sed_mg_per_kg_day: float
+    sed_assumptions: SedAssumptions  <span class="c"># A, F, DA%, BW + 출처</span>
+
+    <span class="c"># Tier 3 (Toxicology)</span>
+    noael_chosen: NoaelRecord  <span class="c"># 보수성·품질 가중치로 선정된 1개</span>
+    noael_alternatives: <span class="n">list</span>[NoaelRecord]  <span class="c"># 다른 후보들 — narrative에 cross-check 노출</span>
+    data_source_confidence: <span class="n">Literal</span>[<span class="s">"high"</span>, <span class="s">"medium"</span>, <span class="s">"low"</span>]
+    data_gap_notes: <span class="n">list</span>[str]  <span class="c"># 갭 명시</span>
+
+    <span class="c"># Tier 1 (Risk)</span>
+    mos: float
+    additional_uf_applied: float  <span class="c"># 데이터 갭 시 1.0 초과</span>
+    mos_threshold: float  <span class="c"># 100 * additional_uf</span>
+
+    <span class="c"># Cross-cutting</span>
+    aggregate_exposure_concern: <span class="n">bool</span>
+    sensitive_population_notes: <span class="n">list</span>[str]
+    regulatory_constraints: <span class="n">list</span>[str]  <span class="c"># Annex III/V/VI 조건</span>
+</pre>
+
+<p>이 bundle이 들어오면 narrative는 <strong>이미 90% 결정</strong>되어 있다. LLM은 사실을 합쳐 문장으로 만들 뿐.</p>
+
+<h2>3. SCCS NoG 12판 기반 정량 Rubric</h2>
+
+<p>Evaluator가 점수를 매기는 기준. 모든 항목은 <strong>"본문에서 literal 검사 가능"</strong>해야 한다. "잘 썼는가" 같은 모호한 기준 금지.</p>
+
+<h3>3.1 Per-substance Reasoning Rubric (성분별 평가)</h3>
+
+<div class="rubric-row">
+  <div class="rubric-id">R1.1</div>
+  <div class="rubric-desc"><strong>NOAEL 출처 명시</strong>: 본문에 "SCCS Opinion SCCS/XXXX/YY" 또는 "CIR Final Report (YYYY)" 등 출처 ID literal 등장.</div>
+  <div class="rubric-weight">필수</div>
+</div>
+<div class="rubric-row">
+  <div class="rubric-id">R1.2</div>
+  <div class="rubric-desc"><strong>NOAEL 수치·단위 일치</strong>: 본문 수치가 fact bundle의 <code>noael_chosen.value</code>와 일치 (±0% 허용). 단위가 "mg/kg bw/day" literal 포함.</div>
+  <div class="rubric-weight">필수</div>
+</div>
+<div class="rubric-row">
+  <div class="rubric-id">R1.3</div>
+  <div class="rubric-desc"><strong>SED 가정 노출</strong>: A, F, DA%, BW 네 값 중 최소 3개가 본문에 literal 등장.</div>
+  <div class="rubric-weight">필수</div>
+</div>
+<div class="rubric-row">
+  <div class="rubric-id">R1.4</div>
+  <div class="rubric-desc"><strong>MoS 수치 + 임계 비교</strong>: "MoS = X" + "exceeds/below the threshold of 100" 또는 등가 표현 본문 등장.</div>
+  <div class="rubric-weight">필수</div>
+</div>
+<div class="rubric-row">
+  <div class="rubric-id">R1.5</div>
+  <div class="rubric-desc"><strong>대안 NOAEL 언급</strong>: <code>noael_alternatives</code>가 비어있지 않으면 본문에 cross-check 문장 1개 이상. 예: "A higher NOAEL of Y from rat 28-day was also reported but the sub-chronic value was chosen as conservative."</div>
+  <div class="rubric-weight">조건부</div>
+</div>
+<div class="rubric-row">
+  <div class="rubric-id">R1.6</div>
+  <div class="rubric-desc"><strong>데이터 갭 정직성</strong>: <code>data_gap_notes</code>의 각 항목이 본문에 명시. 침묵 시 0점.</div>
+  <div class="rubric-weight">조건부</div>
+</div>
+<div class="rubric-row">
+  <div class="rubric-id">R1.7</div>
+  <div class="rubric-desc"><strong>UF 상향 정당화</strong>: <code>additional_uf_applied > 1.0</code>이면 본문에 이유 명시 ("due to limited sub-chronic data" 등).</div>
+  <div class="rubric-weight">조건부</div>
+</div>
+<div class="rubric-row">
+  <div class="rubric-id">R1.8</div>
+  <div class="rubric-desc"><strong>Boilerplate 감지</strong>: 같은 CPSR 내 다른 성분 reasoning과 6-gram 중복률 ≥ 80%면 감점.</div>
+  <div class="rubric-weight">감점</div>
+</div>
+
+<h3>3.2 Whole-product Conclusion Rubric (B.1 결론)</h3>
+
+<div class="rubric-row">
+  <div class="rubric-id">R2.1</div>
+  <div class="rubric-desc"><strong>조건성 명시</strong>: "under the intended use" + 사용 조건(체류 부위, 빈도, 농도) 본문 등장.</div>
+  <div class="rubric-weight">필수</div>
+</div>
+<div class="rubric-row">
+  <div class="rubric-id">R2.2</div>
+  <div class="rubric-desc"><strong>Aggregate exposure 진술</strong>: 동일 성분이 다른 제품에도 들어있을 가능성에 대한 평가 1문장 이상.</div>
+  <div class="rubric-weight">필수</div>
+</div>
+<div class="rubric-row">
+  <div class="rubric-id">R2.3</div>
+  <div class="rubric-desc"><strong>민감군 진술</strong>: <code>sensitive_population_notes</code> 비어있지 않으면 본문에 진술. 비어있어도 "no specific sensitive-population restriction identified" 같이 명시.</div>
+  <div class="rubric-weight">필수</div>
+</div>
+<div class="rubric-row">
+  <div class="rubric-id">R2.4</div>
+  <div class="rubric-desc"><strong>모든 성분 MoS 통과 확인</strong>: 처방 내 N개 성분 중 MoS ≥ 임계 통과 수 = N이면 "all substances meet the threshold". 미통과 있으면 즉시 not safe.</div>
+  <div class="rubric-weight">필수</div>
+</div>
+<div class="rubric-row">
+  <div class="rubric-id">R2.5</div>
+  <div class="rubric-desc"><strong>국소 안전성</strong>: irritation·sensitisation·photo 평가 한 줄 이상. fact bundle에 데이터 없으면 "no data identified, recommend HRIPT" 명시.</div>
+  <div class="rubric-weight">필수</div>
+</div>
+<div class="rubric-row">
+  <div class="rubric-id">R2.6</div>
+  <div class="rubric-desc"><strong>SCCS 화법 일관</strong>: 결론 문장이 SCCS Opinion §4의 verdict 어휘(safe / safe with conditions / not safe) 중 정확히 하나 포함.</div>
+  <div class="rubric-weight">필수</div>
+</div>
+
+<p class="cite">출처: SCCS Notes of Guidance 12th Revision (SCCS/1647/22, 2023) §3-6 (Margin of Safety calculation), §3-7 (Sensitive groups·aggregate exposure), §3-2 (Conclusion 화법). 실제 시스템 구현 시 원문 항목별로 anchor 박제.</p>
+
+<h2>4. Generator → Evaluator → Refiner 루프</h2>
+
+<pre><span class="k">def</span> <span class="n">generate_reasoning_per_substance</span>(
+    bundle: SubstanceFactBundle,
+    max_iters: <span class="n">int</span> = <span class="s">3</span>
+) -> ReasoningOutput:
+
+    <span class="k">for</span> attempt <span class="k">in</span> <span class="n">range</span>(max_iters):
+        narrative = generator_llm(
+            system=SCCS_NOG_STYLE_GUIDE,
+            facts=bundle,
+            previous_violations=last_violations <span class="k">if</span> attempt &gt; <span class="s">0</span> <span class="k">else</span> [],
+        )
+
+        violations = evaluate_rubric(narrative, bundle, RUBRIC_PER_SUBSTANCE)
+
+        <span class="k">if</span> all_required_pass(violations) <span class="k">and</span> total_score(violations) &gt;= <span class="s">0.90</span>:
+            <span class="k">return</span> ReasoningOutput(
+                narrative=narrative,
+                score=total_score(violations),
+                violations=violations,
+                attempts=attempt + <span class="s">1</span>,
+            )
+
+        last_violations = violations
+
+    <span class="c"># 3회 안에 통과 못함 → HITL</span>
+    <span class="k">return</span> ReasoningOutput(
+        narrative=narrative,
+        score=total_score(violations),
+        violations=violations,
+        attempts=max_iters,
+        hitl_required=<span class="n">True</span>,
+        hitl_payload=<span class="s">"Evaluator failed after 3 attempts. SA review required."</span>,
+    )
+</pre>
+
+<div class="callout">
+  <span class="label">Generator와 Evaluator를 같은 모델로 쓰지 마라 (가능하면)</span>
+  같은 LLM·같은 prompt 패턴이 generator·evaluator를 모두 하면 같은 종류의 실수를 같은 방향으로 자기검증 통과시킨다. 가능하면 (a) 다른 family 모델, (b) 같은 모델이라도 system prompt를 완전히 다르게 (evaluator는 "엄격한 SA 검토자" 페르소나로), (c) 결정적 규칙(literal match)으로 가능한 부분은 LLM 안 쓰고 코드로 처리. 우리 rubric의 R1.1·R1.2·R1.3·R1.4·R1.8·R2.4·R2.6는 모두 코드로 구현 가능 — LLM 없이 채점한다.
+</div>
+
+<h2>5. Worked Example — Niacinamide 4% Face Cream</h2>
+
+<p>Lesson 0003의 worked example을 받아 narrative를 생성한 결과 두 가지:</p>
+
+<div class="compare">
+  <div class="bad">
+    <h4>❌ 기계 글 (rubric 실패)</h4>
+    Niacinamide is an ingredient used at 4% concentration. It is considered safe based on toxicological data. The Margin of Safety has been calculated and exceeds the acceptable threshold. The use is safe for consumers.
+  </div>
+  <div class="good">
+    <h4>✓ 합격 narrative (rubric 통과)</h4>
+    Niacinamide (CAS 98-92-0) is used at 4% in this leave-on face cream. SED was calculated as 0.51 mg/kg bw/day using the SCCS NoG 12th Revision default assumptions (A = 1.54 g/day for face cream, F = 1.0, DA% = 50% default, BW = 60 kg). The NOAEL of 900 mg/kg bw/day was derived from EFSA Scientific Opinion (EFSA Journal 2014;12(7):3759) due to the absence of a dedicated SCCS Opinion for this substance; a 28-day rat oral study supporting this value has been cross-checked against CIR (2005). The resulting MoS of 1755 substantially exceeds the threshold of 100, indicating an adequate margin of safety. Aggregate exposure was considered: niacinamide is commonly co-formulated in toners and serums; assuming concurrent use, aggregate SED could increase ~7-fold (cf. Q3 in Lesson 0003), yet MoS remains well above 100. No specific sensitive-population restriction is identified at this concentration. Local tolerability is supported by published HRIPT data and the company's in-house patch test (Ref: internal R&D 2025-INT-038).
+  </div>
+</div>
+
+<p>두 글의 차이를 rubric 8개 축에서 명시적으로 보자:</p>
+
+<table>
+  <tr><th>Rubric</th><th>❌ 왼쪽</th><th>✓ 오른쪽</th></tr>
+  <tr><td>R1.1 NOAEL 출처</td><td>없음</td><td>EFSA Journal 2014;12(7):3759, CIR 2005</td></tr>
+  <tr><td>R1.2 NOAEL 수치·단위</td><td>없음</td><td>900 mg/kg bw/day</td></tr>
+  <tr><td>R1.3 SED 가정</td><td>없음</td><td>A=1.54, F=1.0, DA%=50%, BW=60kg 전부</td></tr>
+  <tr><td>R1.4 MoS + 임계</td><td>모호</td><td>1755, exceeds threshold of 100</td></tr>
+  <tr><td>R1.5 대안 NOAEL</td><td>없음</td><td>CIR 대조</td></tr>
+  <tr><td>R1.6 갭 정직성</td><td>없음</td><td>SCCS Opinion 부재 명시</td></tr>
+  <tr><td>R2.2 Aggregate</td><td>없음</td><td>토너·세럼 동시 사용, MoS 유지 명시</td></tr>
+  <tr><td>R2.5 국소 안전성</td><td>없음</td><td>HRIPT 인용</td></tr>
+</table>
+
+<h2>6. HITL 게이트 — 언제 사람을 부르는가</h2>
+
+<table>
+  <tr><th>트리거</th><th>심각도</th><th>액션</th></tr>
+  <tr><td>MoS &lt; 임계 (100 × UF)</td><td>P0</td><td>generator 호출 자체 X. fact bundle 단계에서 즉시 HITL. SA에게 "처방 변경 / 농도 조정 / read-across 정당화 / 자체 시험" 4개 선택지 제시.</td></tr>
+  <tr><td>NOAEL 출처 없음 (Tier 3 fallback 모두 실패)</td><td>P0</td><td>generator 호출 X. SA에게 read-across·QSAR·TTC 검토 요청.</td></tr>
+  <tr><td>Evaluator 3회 retry 실패</td><td>P1</td><td>현재 best narrative + violation list를 SA에게 전달. SA가 직접 수정 또는 prompt 보강.</td></tr>
+  <tr><td>Boilerplate 감지 (R1.8 임계 초과)</td><td>P1</td><td>generator에게 "diverse phrasing" 강화 prompt로 재호출 1회. 그래도 실패 시 SA.</td></tr>
+  <tr><td>Confidence "low" (Tier 3)</td><td>P2</td><td>narrative 생성은 하되 "low confidence" 라벨 + SA 검토 권장 표시.</td></tr>
+  <tr><td>처방 변경 감지 (Tier 2 알림)</td><td>P1</td><td>기존 CPSR을 "dirty" 표시. 자동 재생성하지 않고 SA 큐에 추가 — 처방 변경의 의도(맛/향/안정성)에 대한 RA 판단이 먼저 필요.</td></tr>
+</table>
+
+<h2>7. Acceptance Rate 측정 — 95%의 KPI 정의</h2>
+
+<p>"acceptance rate 95%"를 측정 가능한 형태로 분해:</p>
+
+<table>
+  <tr><th>지표</th><th>정의</th><th>목표</th></tr>
+  <tr><td><strong>Modification Rate</strong></td><td>SA가 draft 받은 후 본문에서 수정한 문자 수 / 총 문자 수 (diff 기반)</td><td>≤ 5%</td></tr>
+  <tr><td><strong>SA Approval Without Edits</strong></td><td>"수정 없이 그대로 서명" 비율</td><td>≥ 70% (장기)</td></tr>
+  <tr><td><strong>Section Rejection Rate</strong></td><td>B.3 / B.1 섹션을 통째로 다시 쓴 비율</td><td>&lt; 5%</td></tr>
+  <tr><td><strong>HITL Trigger Precision</strong></td><td>시스템이 HITL 호출한 case 중 실제로 사람 개입이 정당한 비율</td><td>≥ 90%</td></tr>
+  <tr><td><strong>HITL Trigger Recall</strong></td><td>SA가 실제로 큰 수정한 case 중 시스템이 사전에 HITL을 호출한 비율</td><td>≥ 90%</td></tr>
+  <tr><td><strong>Fact Fidelity</strong></td><td>narrative에 등장한 수치·출처가 fact bundle과 일치하는 비율</td><td>= 100% (rubric R1.2로 자동 강제)</td></tr>
+</table>
+
+<div class="callout callout-warn">
+  <span class="label">"Acceptance" 측정의 함정</span>
+  SA가 정직하게 평가해야 한다. 시스템 사용을 강요받는 상황이면 "그대로 서명"이 늘어나는 척만 할 수 있다. <strong>shadow mode</strong> 권장: 일정 기간 SA는 자기 방식대로 작성하고, 시스템도 병행 생성. 두 결과를 사후 비교하여 "내가 쓰는 거랑 얼마나 다른가?"를 SA가 평가. 이게 진짜 acceptance.
+</div>
+
+<h2>8. Reference set — 학습·평가용 데이터셋</h2>
+
+<p>Acceptance 측정과 모델 개선은 reference set에 의존:</p>
+
+<ol>
+  <li><strong>Historical CPSR (사내, 과거 5년치)</strong> — 같은 SA가 작성한 보고서들. 이게 ground truth.</li>
+  <li><strong>각 historical CPSR의 fact bundle을 역추출</strong> — 처방·SED·NOAEL을 PDF에서 거꾸로 뽑아 입력 데이터로 만든다. 이 작업이 reference set 구축의 80% 노동.</li>
+  <li><strong>generator를 reference set에 돌려 narrative 생성</strong> → 원본과 비교 (rouge·diff·rubric).</li>
+  <li><strong>실패 패턴을 prompt에 흡수</strong> — "이 SA가 즐겨 쓰는 표현" "회사 화법" "예외 패턴" 등을 system prompt에 박는다.</li>
+  <li><strong>"우리 회사 화법"을 별도 reference 카드로</strong> — 다음 generator 호출의 style anchor.</li>
+</ol>
+
+<div class="callout">
+  <span class="label">"우리 SA가 쓰는 글" → "AI가 쓰는 글"</span>
+  Acceptance 95%의 정체는 결국 <strong>한 사람의 화법을 모사</strong>하는 것에 가깝다. 사내 SA 1명의 historical reports 50건이 ToxTool 같은 외부 SaaS의 generic SCCS-style보다 강력하다. <strong>이게 사내 도구의 모트(moat).</strong>
+</div>
+
+<h2>9. Quiz — 4문항</h2>
+
+<div class="quiz">
+
+<div class="question">
+  <p><strong>Q1.</strong> Generator가 niacinamide MoS = 1755를 narrative에 "1,755"로 출력했다 (콤마 포함). Evaluator의 R1.4가 literal match로 "1755"를 찾는다면 fail 처리할 것이다. 어떻게 설계해야 하는가?</p>
+  <details>
+    <summary>답 보기</summary>
+    <div class="answer">
+      <strong>Evaluator의 numeric match는 normalize 후 비교</strong>. 비교 전에 양쪽에서 콤마·공백·소수점 trailing zero 제거 후 float 변환. 또한 ± 허용 오차 설정 (예: 0.1%). MoS 1755 vs 1,755 vs 1,755.0은 모두 같음. 단위 문자열은 literal로 비교(원본 PDF 표기를 유지하기 위해). 더 강한 방어: rubric을 <strong>코드에서 직접 구현</strong>(LLM evaluator가 아니라). 정확한 비교는 결정론 코드의 일.
+    </div>
+  </details>
+</div>
+
+<div class="question">
+  <p><strong>Q2.</strong> 한 처방에 niacinamide·glycerin·butylene glycol 3개의 humectant가 들어있다. 셋 모두 MoS &gt; 1000으로 안전. Generator가 셋 모두에 거의 동일한 문구로 narrative를 썼다. R1.8 boilerplate 감지가 점수를 깎는다. 이 깎이는 게 맞는 행동인가?</p>
+  <details>
+    <summary>답 보기</summary>
+    <div class="answer">
+      <strong>맞다 — 하지만 미묘하다.</strong> 셋 모두 안전 결론은 같지만, NOAEL 값, 출처, SED 값, dermal absorption 데이터 가용성, 임상 history는 모두 다르다. 좋은 narrative는 그 차이를 본문에 반영한다 — "Niacinamide NOAEL from EFSA 2014; Glycerin NOAEL from CIR 2014; Butylene Glycol NOAEL from CIR 2008." 6-gram 중복이 높아지면 그 차이가 반영 안 됐다는 신호다. Refiner는 "각 성분의 고유 출처·수치를 본문에 포함하라" prompt로 재호출. <strong>boilerplate 점수가 차감되는 것은 SA가 본능적으로 거부할 글을 잡아낸다는 의미.</strong>
+    </div>
+  </details>
+</div>
+
+<div class="question">
+  <p><strong>Q3.</strong> 한 성분의 MoS = 95 (임계 100 미달). Generator는 무엇을 하지 말아야 하나? 시스템 전체는 어떻게 행동해야 하나?</p>
+  <details>
+    <summary>답 보기</summary>
+    <div class="answer">
+      <strong>Generator는 narrative를 만들지 않는다 — 호출 자체 금지.</strong> 95 &lt; 100을 알면서 generator를 부르면 "MoS가 임계에 가깝지만 추가 considerations로 안전" 같은 유혹 narrative를 만들 위험이 있다. 시스템은 <strong>fact bundle 검증 단계에서 즉시 HITL</strong>로 라우팅. SA에게 다음 4개 선택지 제시: ① 농도 인하 (예: 4% → 3%로 SED 감소), ② 처방 교체, ③ 종-종 specific UF 재검토 (예: 인간 PBPK 데이터로 default 100 UF가 과보수임을 정당화), ④ 자체 시험으로 더 정밀한 NOAEL 확보. <strong>모든 선택을 SA가 결정 → 시스템 audit log에 결정 근거 기록 → 다음 case의 예시로 학습.</strong> AI가 95를 100으로 만드는 일은 절대 X.
+    </div>
+  </details>
+</div>
+
+<div class="question">
+  <p><strong>Q4.</strong> 사내 SA가 historical CPSR을 검토해보니 "MoS exceeds threshold of 100, indicating adequate margin of safety" 같은 SCCS 화법은 거의 안 쓰고, 본인 표현으로 "안전여유가 충분히 확보된 것으로 판단됨"이라고 한국어로 쓴다. Generator의 style guide는 어디로 가야 하는가?</p>
+  <details>
+    <summary>답 보기</summary>
+    <div class="answer">
+      <strong>SA의 화법을 따른다.</strong> SCCS 화법은 EU CPSR 외부 제출용일 때만 필수 — 사내 검토용 draft는 SA가 쓰던 표현이 acceptance를 올린다. Style guide를 <strong>두 모드로 분기</strong>: (1) "Internal/Korean mode" — SA historical reports 기반 한국어 화법, (2) "EU-submission mode" — SCCS NoG 영문 화법. fact bundle은 둘 다 동일, narrative generator의 system prompt만 갈아끼움. <strong>같은 fact bundle에서 두 mode 출력을 동시 생성</strong>해 SA가 비교·확정 가능하게. 이건 외부 SaaS가 절대 따라 할 수 없는 차별화 — historical reports를 외부 서비스가 못 본다.
+    </div>
+  </details>
+</div>
+
+</div>
+
+<h2>10. 다음 단계 — 4-tier 완주 후</h2>
+
+<p>이로써 Tier 1·2·3·4 깊이 파기가 끝났다. 시스템 backbone은 그려졌다.</p>
+
+<ul>
+  <li><strong>Lesson 0007 후보</strong>: <strong>End-to-end MVP build</strong>. Niacinamide 4% face cream 단일 제품으로 Tier 1→2→3→4 전체 파이프라인을 코드로 1차 구현. 결과 narrative를 사내 SA 1명이 평가.</li>
+  <li><strong>Lesson 0008 후보</strong>: <strong>Reference set 구축</strong>. Historical CPSR 5건을 역추출해 fact bundle + narrative pair 만들기. rubric R1.8 boilerplate 임계 튜닝.</li>
+  <li><strong>Lesson 0009 후보</strong>: <strong>Tier 5 HITL 워크플로우 UI 설계</strong>. SA가 어디서 어떻게 결정을 입력하고, 결정이 시스템에 어떻게 흡수되는지.</li>
+  <li><strong>Lesson 0010 후보</strong>: <strong>Sunscreen·UV filter 확장</strong>. nano material + 광독성 평가의 추가 복잡성.</li>
+</ul>
+
+<div class="callout">
+  <span class="label">교사에게 질문</span>
+  "사내 SA가 한국어로 쓴 historical reports는 몇 건 정도 확보 가능한가?", "Generator를 OpenAI/Anthropic API로 운영할 때 사내 처방 데이터 외부 전송 정책은?", "Acceptance 측정에서 shadow mode 도입 가능한가, 아니면 처음부터 SA 검토 기반으로 가나?" — 답에 따라 Lesson 0007부터의 build 순서가 정해집니다.
+</div>
+
+<div class="nav">
+  Previous: <a href="0005-tier2-data-plumbing-and-inci.html">0005 — Tier 2: Data Plumbing</a> ·
+  Next: 미정 (End-to-end MVP / Reference set / HITL UI / Sunscreen 확장 중 선택) ·
+  Glossary: <a href="../reference/glossary.html">용어집</a>
+</div>
+
+</body>
+</html>

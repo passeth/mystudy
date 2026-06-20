@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Lesson 0003 — Tier 1: 노출량·SED·MoS 계산의 결정론적 핵심</title>
+<style>
+  :root {
+    --ink: #1a1a1a;
+    --muted: #5a5a5a;
+    --line: #d8d3c7;
+    --accent: #2563eb;
+    --highlight: #eef4ff;
+    --code-bg: #f3efe5;
+    --quiz-bg: #f9f5ea;
+    --warn: #b45309;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Iowan Old Style", "Georgia", "Apple SD Gothic Neo", "Noto Serif KR", serif;
+    color: var(--ink);
+    max-width: 800px;
+    margin: 60px auto;
+    padding: 0 28px 80px;
+    line-height: 1.7;
+    font-size: 17px;
+    background: #fefcf7;
+  }
+  .meta {
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .tier-tag {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    padding: 3px 10px;
+    border-radius: 4px;
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    margin-right: 8px;
+  }
+  h1 {
+    font-size: 30px;
+    line-height: 1.25;
+    margin: 0 0 8px;
+    letter-spacing: -0.01em;
+  }
+  .subtitle { color: var(--muted); font-style: italic; margin-bottom: 36px; }
+  h2 {
+    font-size: 22px;
+    margin: 44px 0 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--line);
+  }
+  h3 { font-size: 18px; margin: 30px 0 8px; color: var(--accent); }
+  p { margin: 12px 0; }
+  ul, ol { padding-left: 24px; }
+  li { margin: 6px 0; }
+  code {
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 14px;
+    background: var(--code-bg);
+    padding: 2px 6px;
+    border-radius: 3px;
+  }
+  pre {
+    background: #1a1a1a;
+    color: #f0ebe0;
+    padding: 20px 24px;
+    border-radius: 8px;
+    overflow-x: auto;
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    margin: 20px 0;
+  }
+  pre .k { color: #c4b5fd; }
+  pre .s { color: #fcd34d; }
+  pre .n { color: #93c5fd; }
+  pre .c { color: #6b7280; font-style: italic; }
+  pre .f { color: #f9a8d4; }
+  .formula {
+    background: #fff;
+    border: 2px solid var(--accent);
+    padding: 20px 28px;
+    border-radius: 8px;
+    margin: 24px 0;
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 15px;
+    text-align: center;
+  }
+  .formula .var { color: var(--accent); font-weight: 600; }
+  .callout {
+    background: var(--highlight);
+    border-left: 4px solid var(--accent);
+    padding: 16px 20px;
+    margin: 24px 0;
+    border-radius: 0 6px 6px 0;
+  }
+  .callout-warn { background: #fef7e6; border-left-color: var(--warn); }
+  .callout .label {
+    display: block; font-size: 12px;
+    text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--accent); margin-bottom: 6px; font-weight: 600;
+  }
+  .callout-warn .label { color: var(--warn); }
+  table {
+    width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px;
+  }
+  th, td {
+    text-align: left; padding: 10px 12px;
+    border-bottom: 1px solid var(--line); vertical-align: top;
+  }
+  th {
+    background: var(--code-bg); font-weight: 600;
+    font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  td.num { font-family: "SF Mono", "Menlo", monospace; text-align: right; }
+  .worked {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 22px 26px;
+    margin: 24px 0;
+  }
+  .worked h3 { margin-top: 0; }
+  .worked .step {
+    border-left: 3px solid var(--accent);
+    padding: 8px 0 8px 16px;
+    margin: 14px 0;
+    font-size: 15px;
+  }
+  .worked .step .label {
+    font-size: 11px; text-transform: uppercase;
+    color: var(--accent); letter-spacing: 0.1em; font-weight: 600;
+  }
+  .quiz {
+    background: var(--quiz-bg);
+    padding: 28px 32px;
+    margin: 40px 0;
+    border-radius: 8px;
+  }
+  .quiz h2 { border: none; margin-top: 0; }
+  .question { margin: 24px 0; }
+  details { margin: 8px 0; }
+  details > summary {
+    cursor: pointer; color: var(--accent);
+    font-size: 14px; user-select: none;
+    list-style: revert;
+  }
+  details[open] > summary { margin-bottom: 8px; }
+  .answer {
+    margin-top: 8px; padding: 12px 16px;
+    background: #fff; border: 1px dashed var(--line);
+    border-radius: 4px;
+  }
+  .nav {
+    margin-top: 60px; padding-top: 24px;
+    border-top: 1px solid var(--line);
+    font-size: 14px; color: var(--muted);
+  }
+  .nav a { color: var(--accent); text-decoration: none; }
+  .nav a:hover { text-decoration: underline; }
+  .cite { font-size: 13px; color: var(--muted); }
+  .cite a { color: var(--muted); text-decoration: underline; }
+  @media print {
+    body { background: #fff; max-width: 100%; margin: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="meta"><span class="tier-tag">TIER 1</span>Lesson 0003 · 약 35분</div>
+<h1>노출량·SED·MoS의 결정론적 핵심</h1>
+<p class="subtitle">LLM이 절대 손대면 안 되는 수학. unit test로 100% 박제하고, 모든 후속 추론의 발판이 되는 영역.</p>
+
+<div class="callout">
+  <span class="label">이 레슨의 약속</span>
+  마치면 (1) SED·MoS 공식과 모든 변수를 외워서 화이트보드에 그릴 수 있고, (2) leave-on face cream 처방의 niacinamide MoS를 실제로 계산해 100 임계와 비교할 수 있으며, (3) 시스템에 박을 함수 시그니처와 unit test 묶음을 설계할 수 있다. ToxTool이 자동화하는 그 계산을 직접 처음부터 다시 구현한다.
+</div>
+
+<h2>1. 마스터 공식 두 개</h2>
+
+<div class="formula">
+  <strong>SED</strong> &nbsp;=&nbsp;
+  <span class="var">A</span> × <span class="var">C</span> × <span class="var">F</span> × <span class="var">DA<sub>p</sub></span>
+  &nbsp;/&nbsp; <span class="var">BW</span>
+</div>
+
+<div class="formula" style="border-color: var(--warn);">
+  <strong>MoS</strong> &nbsp;=&nbsp;
+  <span class="var">NOAEL</span> / <span class="var">SED</span>
+  &nbsp;≥&nbsp; <strong>100</strong>
+</div>
+
+<table>
+  <tr><th>기호</th><th>의미</th><th>단위</th><th>비고</th></tr>
+  <tr><td>SED</td><td>Systemic Exposure Dosage</td><td>mg/kg bw/day</td><td>각 성분 단위 일일 전신 노출량</td></tr>
+  <tr><td>A</td><td>일일 제품 적용량 (RfE)</td><td>g/day</td><td>SCCS NoG 12판 Table 1의 카테고리 기본값</td></tr>
+  <tr><td>C</td><td>처방 내 성분 농도</td><td>g/g (= % ÷ 100)</td><td>%를 그대로 쓰면 100배 오류</td></tr>
+  <tr><td>F</td><td>Retention factor</td><td>무차원</td><td>Leave-on = 1.0, Rinse-off ≪ 1</td></tr>
+  <tr><td>DA<sub>p</sub></td><td>Dermal absorption</td><td>fraction (0~1)</td><td>측정값 없으면 default 50% = 0.5 (SCCS NoG 12 §3-6.3)</td></tr>
+  <tr><td>BW</td><td>Body weight</td><td>kg</td><td>성인 default 60 kg (SCCS NoG 12)</td></tr>
+  <tr><td>NOAEL</td><td>No Observed Adverse Effect Level</td><td>mg/kg bw/day</td><td>주로 90일 경구 반복투여 시험. Tier 3에서 추출.</td></tr>
+  <tr><td>MoS</td><td>Margin of Safety</td><td>무차원</td><td>임계 ≥ 100 (= 종간차 10 × 개체차 10)</td></tr>
+</table>
+
+<p class="cite">출처: SCCS Notes of Guidance 12th Revision (SCCS/1647/22, 2023), Chapter 3-6. <strong>실제 시스템에 박을 때는 원문 PDF에서 본인이 한 번 더 확인.</strong> 본 레슨은 학습용.</p>
+
+<h2>2. 단위 함정 — 시스템 무너뜨리는 0순위 위험</h2>
+
+<p>Tier 1은 "쉬워서" 무시하기 쉽지만 실패 모드 90%가 단위에서 나온다.</p>
+
+<div class="callout callout-warn">
+  <span class="label">단위 5종 세트</span>
+  <ul style="margin: 8px 0 0;">
+    <li><strong>% vs fraction</strong>: 4% niacinamide = 0.04 g/g. 4 그대로 쓰면 100배 폭증.</li>
+    <li><strong>g vs mg</strong>: A는 g/day, SED는 mg/kg bw/day. 마지막에 ×1000 필요.</li>
+    <li><strong>retention 0 vs 1</strong>: rinse-off에 1.0을 적용하면 SED 10~100배 폭증, MoS 100배 폭감.</li>
+    <li><strong>DA% vs DA fraction</strong>: 50%로 쓸지 0.5로 쓸지 일관되게.</li>
+    <li><strong>NOAEL 종 차이</strong>: rat NOAEL을 ×UF=1로 인간 적용 금지. 종간차 10이 default UF에 이미 들어가 있음 (그래서 MoS ≥ 100).</li>
+  </ul>
+</div>
+
+<h2>3. SCCS NoG의 RfE 카테고리 (leave-on 위주)</h2>
+
+<p>아래 값은 SCCS NoG 12판이 정의하는 표준 적용량. <strong>시스템 구축 시 원문 Table에서 본인이 추출·검증해 입력</strong>하라. 본 레슨에는 학습용으로 일부만:</p>
+
+<table>
+  <tr><th>제품 카테고리</th><th>일일 적용량 A (g/day)</th><th>F</th><th>비고</th></tr>
+  <tr><td>Face cream (day)</td><td class="num">1.54</td><td class="num">1.0</td><td>본 미션 주력 — leave-on</td></tr>
+  <tr><td>Body lotion</td><td class="num">7.82</td><td class="num">1.0</td><td>면적 큼 → A 큼</td></tr>
+  <tr><td>Hand cream</td><td class="num">2.16</td><td class="num">1.0</td><td>—</td></tr>
+  <tr><td>Eye cream</td><td class="num">0.02</td><td class="num">1.0</td><td>매우 작음. 그러나 도포부위 점막 인접 — 평가 시 별도 고려.</td></tr>
+  <tr><td>Liquid foundation</td><td class="num">0.51</td><td class="num">1.0</td><td>—</td></tr>
+  <tr><td>Shampoo (rinse-off)</td><td class="num">10.46</td><td class="num">0.01</td><td>F가 100배 작음</td></tr>
+</table>
+
+<p class="cite">SCCS NoG 12판 §3-6.2 / Table 1 부근. 정확한 표는 원문 확인 — 본 레슨의 값은 학습용 reference.</p>
+
+<h2>4. Worked Example — Niacinamide 4% in face cream</h2>
+
+<div class="worked">
+  <h3>설정</h3>
+  <p>자사 leave-on face cream에 <strong>Niacinamide</strong>(나이아신아마이드, INCI: Niacinamide) <strong>4%</strong> 처방. 성인 daily 사용 가정.</p>
+
+  <div class="step">
+    <span class="label">Step 1 — 입력값 정리</span><br>
+    A = 1.54 g/day (face cream day, SCCS Table)<br>
+    C = 0.04 (4% → fraction)<br>
+    F = 1.0 (leave-on)<br>
+    DA<sub>p</sub> = ? — niacinamide의 dermal absorption은 측정값이 있는가? SCCS Opinion 또는 CIR 확인. 측정값 없으면 default 0.5.<br>
+    BW = 60 kg
+  </div>
+
+  <div class="step">
+    <span class="label">Step 2 — SED 계산 (default DA 가정)</span><br>
+    SED = 1.54 × 0.04 × 1.0 × 0.5 / 60<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = 0.0308 / 60<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ≈ <strong>0.000513 g/kg bw/day = 0.513 mg/kg bw/day</strong>
+  </div>
+
+  <div class="step">
+    <span class="label">Step 3 — NOAEL 조회 (Tier 3 호출)</span><br>
+    Tier 3 RAG에게 "Niacinamide NOAEL repeated dose"로 질의 → CIR 또는 EFSA 데이터. Niacinamide는 비타민 B3로 EFSA에서 ADI 가까운 데이터 있음.<br>
+    가정: NOAEL ≈ <strong>900 mg/kg bw/day</strong> (학습용 예시값, 실제는 RAG가 출처 anchor와 함께 제공해야 함).
+  </div>
+
+  <div class="step">
+    <span class="label">Step 4 — MoS 계산</span><br>
+    MoS = 900 / 0.513 ≈ <strong>1755</strong>. <br>
+    1755 ≫ 100 → <strong>안전 (큰 여유)</strong>. 4% 농도는 충분히 보수적.
+  </div>
+
+  <div class="step">
+    <span class="label">Step 5 — Aggregate exposure 점검</span><br>
+    같은 사용자가 niacinamide 함유 토너+세럼+크림+자외선차단제를 같이 쓸 가능성? SCCS NoG 12판은 aggregate exposure 평가 권장. 합산 SED ≪ NOAEL 인지 별도 확인. 단일 제품 MoS가 1755여도 aggregate에서 100 미달이면 안전하지 않다.
+  </div>
+</div>
+
+<div class="callout">
+  <span class="label">왜 LLM 금지인가</span>
+  위 계산은 7~10번의 곱·나누기다. 일반 LLM은 다단계 산술에서 무작위 오류를 낸다. 더 심각한 건 <strong>오류를 정성적 narrative로 그럴듯하게 가린다</strong>는 점. "MoS 175 (safe)" — 한 자리 빠뜨려도 자기검증 못함. SED·MoS·aggregate는 100% deterministic 함수, unit test로 SCCS NoG 예시를 박제.
+</div>
+
+<h2>5. 구현 — 함수 시그니처와 unit test 묶음</h2>
+
+<pre><span class="c"># Tier 1 core — pure functions, no LLM</span>
+
+<span class="k">from</span> dataclasses <span class="k">import</span> dataclass
+
+<span class="f">@dataclass(frozen=True)</span>
+<span class="k">class</span> <span class="n">Ingredient</span>:
+    inci: str
+    concentration_pct: float  <span class="c"># 4% → 4.0 (not 0.04)</span>
+    dermal_absorption_pct: float | None  <span class="c"># None → use default</span>
+
+<span class="f">@dataclass(frozen=True)</span>
+<span class="k">class</span> <span class="n">ExposureInputs</span>:
+    daily_amount_g: float       <span class="c"># A (SCCS RfE)</span>
+    retention_factor: float     <span class="c"># F: 1.0 leave-on, &lt;1 rinse-off</span>
+    body_weight_kg: float = <span class="s">60.0</span>
+
+DEFAULT_DA_PCT = <span class="s">50.0</span>  <span class="c"># SCCS NoG 12 §3-6.3</span>
+MOS_THRESHOLD = <span class="s">100.0</span>
+
+<span class="k">def</span> <span class="n">compute_sed</span>(ing: Ingredient, exp: ExposureInputs) -> float:
+    <span class="s">"""Returns SED in mg/kg bw/day. Pure, deterministic, unit-tested."""</span>
+    da = ing.dermal_absorption_pct <span class="k">if</span> ing.dermal_absorption_pct <span class="k">is not</span> <span class="n">None</span> <span class="k">else</span> DEFAULT_DA_PCT
+    sed_g = (exp.daily_amount_g
+             * (ing.concentration_pct / <span class="s">100.0</span>)
+             * exp.retention_factor
+             * (da / <span class="s">100.0</span>)
+             / exp.body_weight_kg)
+    <span class="k">return</span> sed_g * <span class="s">1000.0</span>  <span class="c"># g/kg → mg/kg</span>
+
+<span class="k">def</span> <span class="n">compute_mos</span>(noael_mg_per_kg_day: float, sed_mg_per_kg_day: float) -> float:
+    <span class="k">if</span> sed_mg_per_kg_day &lt;= <span class="s">0</span>:
+        <span class="k">raise</span> ValueError(<span class="s">"SED must be positive"</span>)
+    <span class="k">return</span> noael_mg_per_kg_day / sed_mg_per_kg_day
+
+<span class="k">def</span> <span class="n">is_safe</span>(mos: float, additional_uf: float = <span class="s">1.0</span>) -> bool:
+    <span class="k">return</span> mos &gt;= MOS_THRESHOLD * additional_uf  <span class="c"># 데이터 갭 시 UF 상향</span>
+</pre>
+
+<p>핵심 테스트 묶음 (이 다섯 개가 통과 안 하면 시스템 출하 금지):</p>
+
+<pre><span class="k">def</span> <span class="n">test_niacinamide_facecream_baseline</span>():
+    <span class="c"># 위 worked example을 박제</span>
+    ing = Ingredient(<span class="s">"Niacinamide"</span>, <span class="s">4.0</span>, dermal_absorption_pct=<span class="n">None</span>)
+    exp = ExposureInputs(daily_amount_g=<span class="s">1.54</span>, retention_factor=<span class="s">1.0</span>)
+    sed = compute_sed(ing, exp)
+    <span class="k">assert</span> <span class="s">0.51</span> &lt; sed &lt; <span class="s">0.52</span>  <span class="c"># mg/kg bw/day</span>
+
+<span class="k">def</span> <span class="n">test_rinseoff_retention_reduces_sed_100x</span>():
+    base = ExposureInputs(<span class="s">1.0</span>, retention_factor=<span class="s">1.0</span>)
+    rinse = ExposureInputs(<span class="s">1.0</span>, retention_factor=<span class="s">0.01</span>)
+    ing = Ingredient(<span class="s">"X"</span>, <span class="s">1.0</span>, <span class="s">100.0</span>)
+    <span class="k">assert</span> compute_sed(ing, base) == <span class="s">100</span> * compute_sed(ing, rinse)
+
+<span class="k">def</span> <span class="n">test_percent_not_fraction_input</span>():
+    <span class="c"># 4 (% 의미) vs 0.04 입력 혼동 방지 — 4를 넣었을 때 결과가 "그럴듯하게 큰" 값으로 가는지 명시 검증</span>
+    ing = Ingredient(<span class="s">"X"</span>, concentration_pct=<span class="s">4.0</span>, dermal_absorption_pct=<span class="s">50.0</span>)
+    exp = ExposureInputs(<span class="s">1.54</span>, <span class="s">1.0</span>)
+    <span class="k">assert</span> <span class="s">0.5</span> &lt; compute_sed(ing, exp) &lt; <span class="s">0.6</span>  <span class="c"># 0.04를 잘못 넣었으면 1/100 작은 값 나옴 → 즉시 실패</span>
+
+<span class="k">def</span> <span class="n">test_mos_threshold_exact_100</span>():
+    <span class="k">assert</span> is_safe(<span class="s">100.0</span>) <span class="k">is</span> <span class="n">True</span>
+    <span class="k">assert</span> is_safe(<span class="s">99.9</span>) <span class="k">is</span> <span class="n">False</span>
+
+<span class="k">def</span> <span class="n">test_additional_uf_raises_threshold</span>():
+    <span class="c"># 데이터 갭(예: 단기 시험만 있음)에서 UF=3 추가 → 임계 300</span>
+    <span class="k">assert</span> is_safe(<span class="s">300.0</span>, additional_uf=<span class="s">3.0</span>) <span class="k">is</span> <span class="n">True</span>
+    <span class="k">assert</span> is_safe(<span class="s">299.0</span>, additional_uf=<span class="s">3.0</span>) <span class="k">is</span> <span class="n">False</span>
+</pre>
+
+<div class="callout">
+  <span class="label">SCCS 예시값을 박제하라</span>
+  SCCS NoG 12판 본문에는 worked example이 여럿 들어있다. 그 전부를 unit test로 박아두면 향후 코드 리팩토링·라이브러리 교체에도 SCCS 정합성이 깨지지 않는다. 이게 "95% acceptance"의 출발선.
+</div>
+
+<h2>6. Aggregate exposure — Tier 1의 두 번째 층</h2>
+
+<p>한 사용자가 동일 성분(예: phenoxyethanol 보존제)을 함유한 여러 제품(클렌저+토너+세럼+크림+자외선차단제)을 동시 사용. SCCS NoG 12판이 강조하는 평가:</p>
+
+<div class="formula">
+  <strong>SED<sub>aggregate</sub></strong> &nbsp;=&nbsp; Σ <span class="var">SED<sub>i</sub></span>
+  &nbsp;&nbsp;over all products containing the substance
+</div>
+
+<p>구현은 사실상 같은 함수의 합산이다. <strong>다만 시스템 설계 시 입력 모델이 "단일 제품" 모드와 "사용자 시나리오(여러 제품 묶음)" 모드를 모두 받아야 한다.</strong> SA는 양쪽 결과를 모두 본다.</p>
+
+<h2>7. Quiz — 계산 손에 익히기 (4문항)</h2>
+
+<div class="quiz">
+
+<div class="question">
+  <p><strong>Q1.</strong> Face cream에 salicylic acid <strong>1.5%</strong>. dermal absorption은 측정값 없음(default 적용). SED는?</p>
+  <details>
+    <summary>답 보기</summary>
+    <div class="answer">
+      SED = 1.54 × (1.5/100) × 1.0 × (50/100) / 60 = 0.000193 g/kg/day = <strong>0.193 mg/kg bw/day</strong>.<br>
+      체크: 농도가 niacinamide(4%) 대비 ~1/2.7 → SED도 ~1/2.7 (0.513 → 0.193). 단위 일관.
+    </div>
+  </details>
+</div>
+
+<div class="question">
+  <p><strong>Q2.</strong> 같은 salicylic acid의 NOAEL이 SCCS Opinion에서 50 mg/kg bw/day로 추출됐다. MoS는? 안전한가?</p>
+  <details>
+    <summary>답 보기</summary>
+    <div class="answer">
+      MoS = 50 / 0.193 ≈ <strong>259</strong>. 259 > 100 → <strong>안전</strong> (default UF 기준). 단, salicylic acid는 SCCS Opinion에 leave-on 농도 한도가 별도 존재하는 성분이므로 (예: 0.5% 또는 라벨 경고 조건부) — <strong>MoS 외 농도 한도 규제도 별도 검증해야 한다</strong>. Tier 1 결과만으로 안전 결론 X.
+    </div>
+  </details>
+</div>
+
+<div class="question">
+  <p><strong>Q3.</strong> 같은 사용자가 niacinamide 4% 함유 토너(A=7.5 g/day, F=1.0), 세럼(A=1.4, F=1.0), 크림(A=1.54, F=1.0)을 모두 매일 사용. niacinamide aggregate SED는?</p>
+  <details>
+    <summary>답 보기</summary>
+    <div class="answer">
+      각 제품 SED (DA=50% default):<br>
+      토너: 7.5 × 0.04 × 1.0 × 0.5 / 60 = 0.0025 g/kg/day = 2.5 mg/kg/day<br>
+      세럼: 1.4 × 0.04 × 1.0 × 0.5 / 60 = 0.000467 g/kg/day = 0.467 mg/kg/day<br>
+      크림: 1.54 × 0.04 × 1.0 × 0.5 / 60 = 0.000513 g/kg/day = 0.513 mg/kg/day<br>
+      Aggregate SED ≈ <strong>3.48 mg/kg bw/day</strong>. 단일 크림 SED(0.513)의 약 6.8배. MoS = 900 / 3.48 ≈ <strong>259</strong>. 여전히 100 초과지만 단일 제품 1755 대비 7배 작아짐. <strong>aggregate 평가가 왜 결정적인지의 모범 예.</strong>
+    </div>
+  </details>
+</div>
+
+<div class="question">
+  <p><strong>Q4.</strong> 시스템 구현 시 누군가 "농도를 % 그대로(예: 4) 받자"고 제안한다. 함수 시그니처를 어떻게 설계해 % 오용을 막을 것인가? 한 가지 방어 + 한 가지 fail-fast 패턴.</p>
+  <details>
+    <summary>답 보기</summary>
+    <div class="answer">
+      <strong>방어 1 (타입 분리)</strong>: <code>Percentage</code> 또는 <code>Fraction</code> 같은 newtype/branded type을 만들고 <code>concentration_pct: Percentage</code>처럼 표시. mypy/Pyright에서 float 직접 대입 거부.<br>
+      <strong>fail-fast 1 (런타임 검증)</strong>: <code>__post_init__</code>에서 <code>0 ≤ concentration_pct ≤ 100</code> 강제. 추가로 <strong>합계 검증</strong>: 한 처방의 모든 ingredient.concentration_pct 합 ≈ 100 (±0.5%) 검증, 미달 시 raise. 처방 합이 안 맞는데 SED 계산이 통과하는 가장 흔한 silent failure를 차단.<br>
+      극단적이지만 가치 있음: <strong>SCCS NoG worked example의 결과값과 매칭하는 acceptance test</strong>를 CI에 박제. 단위·공식 어디든 깨지면 즉시 빨갛게.
+    </div>
+  </details>
+</div>
+
+</div>
+
+<h2>8. 다음 단계</h2>
+
+<p>Tier 1은 끝났다 (실전 시스템에서는 이 위에 UF 확장·민감군·dermal absorption 측정 데이터 통합 등이 붙지만, 핵심 결정론은 위에서 완결).</p>
+
+<ul>
+  <li>다음 lesson: <strong>Tier 3 — SCCS Opinion PDF 코퍼스 구조</strong>. NOAEL 분자가 어디서 오는지의 RAG 설계.</li>
+  <li>병행 task: 자사 face cream 1제품의 처방(INCI %)을 받아 위 함수에 넣고 모든 성분의 SED를 1차 산출. NOAEL 자리는 일단 placeholder. → ground truth dataset의 baseline.</li>
+</ul>
+
+<div class="callout">
+  <span class="label">교사에게 질문</span>
+  "Eye area 제품의 점막 노출은 RfE에 안 들어오는데 어떻게 평가하나?", "Dermal absorption 측정값이 50%보다 낮은 경우 시스템이 자동으로 더 보수적 default를 적용해야 하나?", "SCCS NoG 12판 worked example 어디부터 unit test로 박을 것인가?" — 답변에 따라 다음 lesson 깊이가 조정됩니다.
+</div>
+
+<div class="nav">
+  Previous: <a href="0002-automation-tier-taxonomy.html">0002 — 4-Tier 분류</a> ·
+  Next: <a href="0004-tier3-sccs-opinion-rag.html">0004 — Tier 3: SCCS Opinion RAG</a> ·
+  Glossary: <a href="../reference/glossary.html">용어집</a>
+</div>
+
+</body>
+</html>

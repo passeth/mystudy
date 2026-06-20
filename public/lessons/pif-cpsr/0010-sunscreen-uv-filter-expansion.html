@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Lesson 0010 — Sunscreen·UV Filter 확장: Nano + Photo Toxicity의 추가 복잡성</title>
+<style>
+  :root {
+    --ink: #1a1a1a;
+    --muted: #5a5a5a;
+    --line: #d8d3c7;
+    --accent: #0369a1;
+    --highlight: #f0f9ff;
+    --code-bg: #f3efe5;
+    --quiz-bg: #f9f5ea;
+    --warn: #b45309;
+    --good: #15803d;
+    --bad: #b91c1c;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Iowan Old Style", "Georgia", "Apple SD Gothic Neo", "Noto Serif KR", serif;
+    color: var(--ink);
+    max-width: 820px;
+    margin: 60px auto;
+    padding: 0 28px 80px;
+    line-height: 1.7;
+    font-size: 17px;
+    background: #fefcf7;
+  }
+  .meta {
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .tier-tag {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    padding: 3px 10px;
+    border-radius: 4px;
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    margin-right: 8px;
+  }
+  h1 {
+    font-size: 30px;
+    line-height: 1.25;
+    margin: 0 0 8px;
+    letter-spacing: -0.01em;
+  }
+  .subtitle { color: var(--muted); font-style: italic; margin-bottom: 36px; }
+  h2 {
+    font-size: 22px;
+    margin: 44px 0 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--line);
+  }
+  h3 { font-size: 18px; margin: 30px 0 8px; color: var(--accent); }
+  p { margin: 12px 0; }
+  ul, ol { padding-left: 24px; }
+  li { margin: 6px 0; }
+  code {
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 14px;
+    background: var(--code-bg);
+    padding: 2px 6px;
+    border-radius: 3px;
+  }
+  pre {
+    background: #1a1a1a;
+    color: #f0ebe0;
+    padding: 20px 24px;
+    border-radius: 8px;
+    overflow-x: auto;
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    margin: 20px 0;
+  }
+  pre .k { color: #c4b5fd; }
+  pre .s { color: #fcd34d; }
+  pre .n { color: #93c5fd; }
+  pre .c { color: #6b7280; font-style: italic; }
+  pre .str { color: #67e8f9; }
+  .callout {
+    background: var(--highlight);
+    border-left: 4px solid var(--accent);
+    padding: 16px 20px;
+    margin: 24px 0;
+    border-radius: 0 6px 6px 0;
+  }
+  .callout-warn { background: #fef7e6; border-left-color: var(--warn); }
+  .callout-bad { background: #fef2f2; border-left-color: var(--bad); }
+  .callout .label {
+    display: block; font-size: 12px;
+    text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--accent); margin-bottom: 6px; font-weight: 600;
+  }
+  .callout-warn .label { color: var(--warn); }
+  .callout-bad .label { color: var(--bad); }
+  table {
+    width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px;
+  }
+  th, td {
+    text-align: left; padding: 10px 12px;
+    border-bottom: 1px solid var(--line); vertical-align: top;
+  }
+  th {
+    background: var(--code-bg); font-weight: 600;
+    font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  .quiz {
+    background: var(--quiz-bg);
+    padding: 28px 32px;
+    margin: 40px 0;
+    border-radius: 8px;
+  }
+  .quiz h2 { border: none; margin-top: 0; }
+  .question { margin: 24px 0; }
+  details { margin: 8px 0; }
+  details > summary {
+    cursor: pointer; color: var(--accent);
+    font-size: 14px; user-select: none;
+    list-style: revert;
+  }
+  details[open] > summary { margin-bottom: 8px; }
+  .answer {
+    margin-top: 8px; padding: 12px 16px;
+    background: #fff; border: 1px dashed var(--line);
+    border-radius: 4px;
+  }
+  .nav {
+    margin-top: 60px; padding-top: 24px;
+    border-top: 1px solid var(--line);
+    font-size: 14px; color: var(--muted);
+  }
+  .nav a { color: var(--accent); text-decoration: none; }
+  .nav a:hover { text-decoration: underline; }
+  .cite { font-size: 13px; color: var(--muted); }
+  .cite a { color: var(--muted); text-decoration: underline; }
+  @media print {
+    body { background: #fff; max-width: 100%; margin: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="meta"><span class="tier-tag">SUNSCREEN</span>Lesson 0010 · 약 40분</div>
+<h1>Sunscreen·UV Filter 확장 — Nano + Photo Toxicity의 추가 복잡성</h1>
+<p class="subtitle">Niacinamide cream까지의 모든 도메인은 sunscreen 앞에서 다시 짜야 한다. UV filter는 (1) Positive list 강제, (2) Nano material 별도 의무, (3) Photo toxicity·photostability 평가, (4) SPF·UVA-PF 효능 표시 검증. 4개 축 각각이 별도 sub-pipeline.</p>
+
+<div class="callout">
+  <span class="label">이 레슨의 약속</span>
+  마치면 (1) UV filter의 Annex VI Positive list 강제가 시스템 architecture에 무엇을 추가하는지, (2) Nano TiO₂·Nano ZnO에 EU Reg Art.16 별도 의무가 어떻게 작용하는지, (3) Photo toxicity(MPE·PIF·UVA-induced)·photostability 평가가 fact bundle에 추가되는 fields, (4) SPF·UVA-PF·broad-spectrum claim 검증의 시스템 위치. <strong>Leave-on 스킨케어와 같은 prompt·rubric으로 sunscreen을 처리하면 즉시 SA가 거부한다.</strong>
+</div>
+
+<h2>1. 무엇이 다른가 — 4축 추가 의무</h2>
+
+<table>
+  <tr><th>축</th><th>Leave-on 스킨케어</th><th>Sunscreen 추가</th></tr>
+  <tr><td>1. 성분 list</td><td>Annex III (제한 사용 성분) 체크</td><td><strong>Annex VI (UV filter Positive list)</strong> 강제 — list 밖 UV filter는 사용 불가</td></tr>
+  <tr><td>2. Nano 의무</td><td>Annex III·VI에 nano 별도 entry</td><td><strong>EU Reg Art.16 통보</strong> + nano-specific SCCS Opinion + CPNP notification 6개월 전</td></tr>
+  <tr><td>3. 노출·MoS</td><td>SED·MoS·threshold 100</td><td>+ <strong>photo-induced toxicity</strong> (MPE - Minimal Phototoxic Effect, PIF - Photo-Irritation Factor) + <strong>photostability</strong> 평가</td></tr>
+  <tr><td>4. 효능 표시</td><td>실증 없는 한 claim X</td><td><strong>SPF·UVA-PF·broad-spectrum·water-resistant</strong> 각각 ISO test로 실증 의무</td></tr>
+</table>
+
+<div class="callout callout-bad">
+  <span class="label">Sunscreen 진입 = 별도 시스템 모듈 4개 추가</span>
+  Niacinamide cream 시스템을 그대로 sunscreen에 돌리면 SA가 4축 모두에서 갭을 지적한다. 새 모듈: <strong>M9 Annex VI Positive Check / M10 Nano Form Detection / M11 Photo Tox Engine / M12 SPF Claim Validator</strong>. 각각 결정론·LLM·HITL 분할이 다시 필요하다. 이 레슨은 sunscreen MVP를 새 미션으로 다룬다 — niacinamide MVP의 확장이 아니라 별도 phase.
+</div>
+
+<h2>2. Annex VI Positive List — 추가 검증 1</h2>
+
+<p>Annex III (제한 성분)와 달리 Annex VI는 <strong>positive list</strong>: 화장품에 UV filter로 사용 가능한 성분만 명시되어 있고, list 밖은 금지. 2026년 6월 기준 약 29개 entry (몇몇은 동일 화학물질의 nano vs non-nano 분리).</p>
+
+<table>
+  <tr><th>대표 UV filter</th><th>Annex VI entry</th><th>최대 농도</th><th>Nano-form 별도 entry</th></tr>
+  <tr><td>Octocrylene</td><td>X1</td><td>10% (acid·ester 합)</td><td>—</td></tr>
+  <tr><td>Ethylhexyl Methoxycinnamate</td><td>X2</td><td>10%</td><td>—</td></tr>
+  <tr><td>Titanium Dioxide (non-nano)</td><td>X3</td><td>25%</td><td>—</td></tr>
+  <tr><td><strong>Titanium Dioxide (nano)</strong></td><td>X3a</td><td>25% (특정 coating 제한)</td><td>O — coating·primary size·purity 명시</td></tr>
+  <tr><td>Zinc Oxide (non-nano)</td><td>X4</td><td>25%</td><td>—</td></tr>
+  <tr><td><strong>Zinc Oxide (nano)</strong></td><td>X4a</td><td>25% (특정 coating)</td><td>O</td></tr>
+  <tr><td>Avobenzone (Butyl Methoxydibenzoylmethane)</td><td>X5</td><td>5%</td><td>—</td></tr>
+  <tr><td>Tinosorb S (Bis-Ethylhexyloxyphenol Methoxyphenyl Triazine)</td><td>X6</td><td>10%</td><td>—</td></tr>
+  <tr><td>Tinosorb M (Methylene Bis-Benzotriazolyl Tetramethylbutylphenol)</td><td>X7</td><td>10%</td><td>O (nano-only entry)</td></tr>
+</table>
+
+<p class="cite">출처: EU Reg 1223/2009 Annex VI (last consolidated 2023, 새 entry 추가 빈번 — CosIng 실시간 조회 필수).</p>
+
+<h3>2.1 M9 Annex VI Positive Check — 시스템 모듈</h3>
+
+<pre><span class="k">def</span> <span class="n">check_annex_vi_compliance</span>(formula: <span class="n">list</span>[FormulaRow]) -> AnnexViReport:
+    <span class="str">"""처방의 UV filter가 Annex VI Positive list에 있는가 검증."""</span>
+    violations = []
+    uv_filters_in_formula = [
+        r <span class="k">for</span> r <span class="k">in</span> formula
+        <span class="k">if</span> r.cosing_functions <span class="k">and</span> <span class="s">"uv_filter"</span> <span class="k">in</span> r.cosing_functions
+    ]
+
+    <span class="k">for</span> uv <span class="k">in</span> uv_filters_in_formula:
+        annex_vi = cosing.lookup_annex_vi(uv.inci, uv.nano_form)
+
+        <span class="k">if</span> annex_vi <span class="k">is</span> <span class="n">None</span>:
+            violations.append((
+                <span class="s">"NOT_LISTED"</span>,
+                f<span class="s">"{uv.inci}{'  (nano)' if uv.nano_form else ''} not in Annex VI Positive list"</span>,
+            ))
+            <span class="k">continue</span>
+
+        <span class="k">if</span> uv.pct &gt; annex_vi.max_pct:
+            violations.append((
+                <span class="s">"OVER_LIMIT"</span>,
+                f<span class="s">"{uv.inci} at {uv.pct}% exceeds Annex VI {annex_vi.max_pct}%"</span>,
+            ))
+
+        <span class="k">for</span> cond <span class="k">in</span> annex_vi.conditions:
+            <span class="k">if</span> <span class="k">not</span> <span class="n">satisfies</span>(formula, cond):
+                violations.append((<span class="s">"CONDITION"</span>, f<span class="s">"{uv.inci}: {cond.description}"</span>))
+
+    <span class="k">return</span> AnnexViReport(violations=violations, hitl_required=<span class="n">bool</span>(violations))
+</pre>
+
+<div class="callout">
+  <span class="label">"UV filter가 아닌 성분이 UV blocking 효과를 낸다"의 함정</span>
+  Iron oxide는 UV filter로 Annex VI에 없지만 자외선 차단 효과가 있어 tinted sunscreen에 자주 사용. 이 경우 (a) <strong>유효 성분으로 표시 X</strong>, (b) iron oxide는 colorant Annex IV로 별도 처리. 시스템에서 "UV filter 후보지만 Annex VI에 없는 성분"이 발견되면 generator에게 "이 성분을 SPF 기여 항으로 묘사 X" 가드 주입. 잘못된 묘사는 false claim → 규제 risk.
+</div>
+
+<h2>3. Nano Material — EU Reg Art.16 별도 의무</h2>
+
+<p>EU Reg 1223/2009 Art.16: nano material 함유 화장품은 <strong>출시 6개월 전 CPNP nano notification</strong>. CPSR에는 별도 nano section.</p>
+
+<h3>3.1 Nano의 정의 (Reg 1223/2009 Art.2)</h3>
+
+<p>"이용자 친화적으로 변형된 정의" — 다음 3 조건 모두 충족 시 nano:</p>
+
+<ul>
+  <li>의도적으로 제조됨 (insoluble or biopersistent)</li>
+  <li>1~100 nm 크기의 입자를 포함</li>
+  <li>외부 또는 내부 표면적 비율이 일정 기준 초과 (구체 수치는 EC Recommendation 2011/696/EU)</li>
+</ul>
+
+<h3>3.2 시스템에 필요한 추가 fact</h3>
+
+<pre><span class="k">class</span> <span class="n">NanoMaterialFact</span>(BaseModel):
+    inci: str
+    is_nano: <span class="n">bool</span>
+    primary_particle_size_nm: <span class="n">Optional</span>[<span class="n">tuple</span>[float, float]]  <span class="c"># (D50, D90)</span>
+    crystalline_form: <span class="n">Optional</span>[str]  <span class="c"># "rutile", "anatase"</span>
+    surface_coating: <span class="n">list</span>[str]            <span class="c"># SCCS가 검증한 coating 만 허용</span>
+    coating_pct_w_w: <span class="n">Optional</span>[float]
+    purity_pct: <span class="n">Optional</span>[float]
+    aggregate_state_data: <span class="n">Optional</span>[<span class="n">dict</span>]  <span class="c"># aggregation 정도</span>
+    biopersistence_data: <span class="n">Optional</span>[<span class="n">dict</span>]
+    sccs_opinion_id: str                       <span class="c"># SCCS opinion for this specific nano form</span>
+    coa_ref: str                               <span class="c"># 사내 incoming COA</span>
+
+<span class="c"># Nano formula row는 일반 FormulaRow에 nano fact 첨부</span>
+<span class="k">class</span> <span class="n">FormulaRow</span>(BaseModel):
+    inci: str
+    pct: float
+    nano: <span class="n">Optional</span>[NanoMaterialFact] = <span class="n">None</span>  <span class="c"># None이면 non-nano</span>
+</pre>
+
+<h3>3.3 M10 Nano Form Detection</h3>
+
+<table>
+  <tr><th>입력 신호</th><th>Detection</th><th>Action</th></tr>
+  <tr><td>INCI 이름에 "(nano)" 명시</td><td>자명</td><td><code>FormulaRow.nano</code> 채움 필수, COA 매칭</td></tr>
+  <tr><td>원료 supplier COA에 입자 크기 D50 ≤ 100nm</td><td>nano 의심</td><td>SA 확인 trigger</td></tr>
+  <tr><td>코팅 polymer 표기 (예: "TiO₂ stearate-coated")</td><td>nano 가능성 ↑</td><td>SA 확인 trigger</td></tr>
+  <tr><td>제품 marketing 'transparent / sheer' + 무기 UV filter</td><td>nano 가능성 매우 ↑</td><td>SA 확인 + R&D 확인</td></tr>
+  <tr><td>"Non-nano" 표기 + COA D50 &gt; 100nm</td><td>non-nano 확정</td><td>일반 처리</td></tr>
+</table>
+
+<div class="callout callout-warn">
+  <span class="label">"Nano인지 아닌지 모름"이 가장 위험한 상태</span>
+  COA에 입자 크기 데이터가 없는 원료는 nano 여부 불명. <strong>"불명" = sunscreen MVP에서 즉시 P0 HITL</strong>. R&D에 COA 보강 요청 또는 supplier에 입자 크기 측정 의뢰. <strong>"non-nano로 가정" 절대 금지</strong> — 사후 nano로 밝혀지면 CPNP notification 누락 + Art.16 위반 → 시장 회수.
+</div>
+
+<h3>3.4 Nano 정당화 narrative — 추가 섹션</h3>
+
+<p>Nano 함유 CPSR은 B.3에 <strong>nano-specific subsection</strong>이 들어간다:</p>
+
+<pre>B.3.X Nano Material Safety Assessment — Titanium Dioxide (nano)
+
+본 제형에 사용된 Titanium Dioxide (nano)는 다음 조건을 충족한다:
+
+1. SCCS Opinion 부합: SCCS/1583/17 (TiO₂ nano in sunscreen) §5 결론에 따라
+   본 입자 사양은 안전한 사용 범위 (rutile crystalline, ≥99% purity,
+   alumina/silica coating, D50 30-50nm)를 충족한다.
+
+2. Annex VI Entry X3a 부합: 25% 한도, coating 종류 명시 (alumina, silica,
+   stearic acid 등 SCCS 인정 list 내).
+
+3. CPNP Notification: 2025-12-15 EU notification 완료 (notification ID:
+   CPNP-2026-XXX), 출시 6개월 전 의무 이행.
+
+4. Aggregate vs Primary: 본 제형 내 dispersion 안정성 시험 (사내 R&D
+   2025-INT-052) 결과, aggregate 형태가 우세하여 primary nano particle
+   노출은 제한적임.
+
+5. Inhalation 위험 회피: 본 제품은 cream 제형 (spray 아님). SCCS 견해에
+   따라 inhalation route 비고려.
+
+광 안전성: SCCS Opinion에 따라 본 nano TiO₂ coating은 photoreactive
+species 생성을 억제한다. 사내 photostability 시험에서 4시간 일광 노출 후
+SPF 잔존율 ≥ 90% 확인 (사내 R&D 2025-INT-053).
+</pre>
+
+<p>이 narrative의 모든 사실은 fact bundle의 NanoMaterialFact + 사내 R&D Report에서 온다. LLM은 묶기만 한다.</p>
+
+<h2>4. Photo Toxicity — Tier 3 확장</h2>
+
+<p>일반 toxicity 위에 <strong>UV·HEV 광 노출 시 추가 위험</strong> 평가. UV filter 자체가 광흡수 분자이기 때문.</p>
+
+<h3>4.1 핵심 평가 항목</h3>
+
+<table>
+  <tr><th>항목</th><th>설명</th><th>test method</th></tr>
+  <tr><td><strong>Photo-irritation (PIF)</strong></td><td>UV 노출 시 자극 강화 여부</td><td>OECD TG 432 (3T3 NRU phototoxicity test, in vitro)</td></tr>
+  <tr><td><strong>Photo-sensitisation</strong></td><td>UV 노출 시 알레르기 유발 여부</td><td>현재 validated in vitro test 부재 → in vivo data 의존</td></tr>
+  <tr><td><strong>Photo-genotoxicity</strong></td><td>UV 노출 시 DNA 손상 여부</td><td>OECD TG 487 in vitro + photo</td></tr>
+  <tr><td><strong>Photostability</strong></td><td>UV 노출 시 UV filter 분해 → 효능 저하 + 분해산물 독성</td><td>ISO 24443 in vitro photostability + HPLC degradation</td></tr>
+  <tr><td><strong>Photoreactive species</strong></td><td>UV filter가 ROS·singlet oxygen 생성 여부</td><td>EPR spectroscopy, fluorescent probes</td></tr>
+</table>
+
+<p class="cite">출처: SCCS Notes of Guidance 12th Rev §3-4.13 (phototoxicity·photogenotoxicity), §3-9 (sunscreen-specific testing). Nano 관련: SCCS/1538/14 (general nano), SCCS/1583/17 (nano TiO₂ in sunscreen), SCCS/1625/20 (nano ZnO in sunscreen).</p>
+
+<h3>4.2 M11 Photo Tox Engine</h3>
+
+<p>일반 ToxFetcher와 분리된 sub-module. UV filter 성분에 대해서만 호출:</p>
+
+<pre><span class="k">class</span> <span class="n">PhotoToxFact</span>(BaseModel):
+    inci: str
+    pif_3t3_nru: <span class="n">Optional</span>[float]  <span class="c"># PIF &gt; 2 = phototoxic concern</span>
+    pif_source: <span class="n">Optional</span>[str]
+    photo_sensitisation_evidence: <span class="n">Literal</span>[<span class="s">"none"</span>, <span class="s">"clinical_reports"</span>,
+                                          <span class="s">"in_vivo_studies"</span>, <span class="s">"unknown"</span>]
+    photostability_pct_retention: <span class="n">Optional</span>[float]  <span class="c"># 일정 시간 UV 후 잔존율</span>
+    photostability_test_ref: <span class="n">Optional</span>[str]
+    degradation_products: <span class="n">list</span>[str]               <span class="c"># 분해산물 list</span>
+    degradation_tox_assessed: <span class="n">bool</span>                  <span class="c"># 분해산물 독성 평가 여부</span>
+    sccs_photo_opinion_id: <span class="n">Optional</span>[str]
+
+<span class="k">def</span> <span class="n">assess_photo_safety</span>(uv_filter: FormulaRow) -> PhotoToxFact:
+    <span class="c"># 1. SCCS Opinion에서 photo 데이터 추출</span>
+    sccs = sccs_corpus.lookup(uv_filter.inci, section=<span class="s">"photo"</span>)
+    <span class="c"># 2. 사내 photostability ISO 24443 결과 매칭</span>
+    iso = internal_lab.lookup_iso_24443(uv_filter.inci, formula_id)
+    <span class="c"># 3. 분해산물 list 추출</span>
+    products = sccs.degradation_products <span class="k">if</span> sccs <span class="k">else</span> []
+    <span class="c"># 4. 분해산물 자체 NOAEL 평가</span>
+    products_tox_ok = <span class="n">all</span>(
+        tox_corpus.has_assessment(p) <span class="k">for</span> p <span class="k">in</span> products
+    )
+    <span class="k">return</span> PhotoToxFact(...)
+</pre>
+
+<h3>4.3 Octocrylene 사례 — Benzophenone 분해</h3>
+
+<p>2021~2023 EU에서 Octocrylene이 시간·UV 노출 시 <strong>Benzophenone</strong>으로 분해 → Benzophenone이 발암 우려 (NTP 2021 분류). SCCS는 그러나 SCCS/1647/22에서 검토 후 일정 농도 이하 OK로 결론. 시스템 시사점:</p>
+
+<ul>
+  <li>UV filter의 <strong>분해산물 list</strong>를 fact bundle에 의무 포함.</li>
+  <li>분해산물 각각의 NOAEL·발암성 평가가 fact_completeness에 들어감.</li>
+  <li>SCCS Opinion의 최신 결론(분해산물 포함 결론)을 narrative에 명시.</li>
+  <li>SCCS Opinion이 1년 이내에 갱신된 UV filter는 <strong>"최신 opinion review status"</strong> 라벨 — generator가 무시하지 못하게.</li>
+</ul>
+
+<div class="callout">
+  <span class="label">시스템은 SCCS Opinion 갱신을 어떻게 알 수 있는가</span>
+  SCCS Opinion 페이지에 RSS 또는 publication date 메타. 주 1회 cron으로 corpus rebuild. UV filter 관련 opinion이 갱신되면 <strong>해당 성분을 사용한 모든 SKU에 "dirty" 라벨</strong> → SA 큐에 알림. Lesson 0006 Section 6의 trigger 표 + Worldover 같은 enterprise tool의 "regulation change alert"를 우리 시스템 안에 압축.
+</div>
+
+<h2>5. SPF·UVA-PF Claim Validation — M12</h2>
+
+<p>Sunscreen은 효능 claim이 강제 규제 대상. CPSR Part A.5·B.1에 efficacy data 인용 필수.</p>
+
+<table>
+  <tr><th>Claim</th><th>실증 방법</th><th>표시 의무</th></tr>
+  <tr><td>SPF (Sun Protection Factor)</td><td>ISO 24444 in vivo human</td><td>SPF 카테고리 표기 ("Low 6-14", "Medium 15-29", "High 30-50", "Very High 50+")</td></tr>
+  <tr><td>UVA-PF (UVA Protection Factor)</td><td>ISO 24443 in vitro</td><td>UVA-PF ≥ SPF/3 (EU 권고)</td></tr>
+  <tr><td>"Broad spectrum" 또는 EU "UVA" circle logo</td><td>UVA-PF ≥ SPF/3</td><td>circle UVA 로고 또는 동등</td></tr>
+  <tr><td>"Water-resistant"</td><td>COLIPA / FDA water-resistant test</td><td>"40 min" 또는 "80 min" 명시</td></tr>
+  <tr><td>"Reef-safe"</td><td>법적 정의 없음 (지역마다 다름)</td><td><strong>generator에서 사용 금지 룰</strong></td></tr>
+</table>
+
+<pre><span class="k">def</span> <span class="n">validate_spf_claims</span>(claims: ProductClaims, efficacy_data: EfficacyData) -> ClaimReport:
+    violations = []
+    <span class="k">if</span> claims.spf <span class="k">is not</span> <span class="n">None</span>:
+        <span class="k">if</span> <span class="k">not</span> efficacy_data.iso_24444_report:
+            violations.append((<span class="s">"NO_ISO_24444"</span>, <span class="s">"SPF claimed without in vivo data"</span>))
+        <span class="k">elif</span> <span class="n">abs</span>(claims.spf - efficacy_data.iso_24444_report.measured_spf) &gt; <span class="s">5</span>:
+            violations.append((<span class="s">"SPF_MISMATCH"</span>, <span class="s">"Claimed SPF vs measured deviation"</span>))
+
+    <span class="k">if</span> claims.broad_spectrum:
+        ratio = efficacy_data.uva_pf / efficacy_data.spf
+        <span class="k">if</span> ratio &lt; <span class="s">1</span>/<span class="s">3</span>:
+            violations.append((<span class="s">"UVA_RATIO"</span>, f<span class="s">"UVA-PF/SPF = {ratio:.2f} &lt; 1/3"</span>))
+
+    <span class="k">if</span> claims.water_resistant <span class="k">and not</span> efficacy_data.water_resistant_minutes:
+        violations.append((<span class="s">"NO_WATER_RESIST_DATA"</span>, ...))
+
+    <span class="k">if</span> <span class="s">"reef safe"</span> <span class="k">in</span> claims.free_text_claims.lower():
+        violations.append((<span class="s">"REEF_SAFE_UNDEFINED"</span>, <span class="s">"reef-safe lacks legal definition"</span>))
+
+    <span class="k">return</span> ClaimReport(violations=violations, hitl_required=<span class="n">bool</span>(violations))
+</pre>
+
+<h2>6. Sunscreen MVP Pipeline — 통합</h2>
+
+<table>
+  <tr><th>모듈</th><th>역할</th><th>Niacinamide MVP 대비 차이</th></tr>
+  <tr><td>M1 Formula Loader</td><td>YAML 처방 + nano metadata</td><td>FormulaRow.nano 필드, COA 참조 강제</td></tr>
+  <tr><td>M2 INCI Normalizer</td><td>INCI ↔ CosIng functions</td><td>+ Annex VI mapping</td></tr>
+  <tr><td>M3 Exposure Engine</td><td>SED·MoS</td><td>+ <strong>sunscreen-specific A=18g/day (전신)</strong>, F=1.0, BW=60kg</td></tr>
+  <tr><td>M4 Tox Fetcher</td><td>NOAEL·dermal absorption</td><td>+ photo·degradation 데이터 동시 추출</td></tr>
+  <tr><td>M5 Fact Bundler</td><td>통합</td><td>+ NanoMaterialFact·PhotoToxFact 첨부</td></tr>
+  <tr><td>M6 Generator</td><td>narrative 생성</td><td>+ <strong>nano subsection</strong>·<strong>photo safety paragraph</strong>·<strong>claim validation paragraph</strong> 의무</td></tr>
+  <tr><td>M7 Evaluator</td><td>rubric</td><td>+ R3.x 시리즈 (sunscreen-specific rubric)</td></tr>
+  <tr><td>M8 Renderer</td><td>docx</td><td>+ B.3 nano subsection 템플릿</td></tr>
+  <tr><td><strong>M9 Annex VI Check</strong></td><td><strong>신규</strong></td><td>positive list 강제</td></tr>
+  <tr><td><strong>M10 Nano Detection</strong></td><td><strong>신규</strong></td><td>nano 여부 결정·CPNP notification 추적</td></tr>
+  <tr><td><strong>M11 Photo Tox Engine</strong></td><td><strong>신규</strong></td><td>PIF·photostability·degradation</td></tr>
+  <tr><td><strong>M12 SPF Claim Validator</strong></td><td><strong>신규</strong></td><td>ISO 24444·24443·water-resistant 검증</td></tr>
+</table>
+
+<h3>6.1 Sunscreen Application Amount (A)</h3>
+
+<p>Leave-on face cream A=1.54 g/day 대신 sunscreen은 전신 적용:</p>
+
+<table>
+  <tr><th>제품</th><th>A (g/day)</th><th>F</th><th>SCCS NoG ref</th></tr>
+  <tr><td>Face cream (leave-on)</td><td>1.54</td><td>1.0</td><td>§3-6.4 Table 4</td></tr>
+  <tr><td>Body lotion</td><td>7.82</td><td>1.0</td><td>§3-6.4 Table 4</td></tr>
+  <tr><td><strong>Sunscreen (전신)</strong></td><td><strong>18.0</strong> (성인 7.5 mg/cm² × 24000 cm²/1000)</td><td>1.0</td><td>§3-9 sunscreen-specific</td></tr>
+  <tr><td>Lip balm</td><td>0.057</td><td>1.0</td><td>§3-6.4</td></tr>
+</table>
+
+<p>SED 식: <code>SED = A × F × (pct/100) × 1000 × (DA%/100) / BW</code>. Sunscreen은 A가 face cream의 ~12배 → 같은 농도여도 SED 12배 → MoS 1/12. <strong>임계 100을 통과하려면 NOAEL이 12배 더 높거나 농도가 12배 낮아야 한다.</strong> 이게 UV filter가 NOAEL 수천 mg/kg bw/day인 성분만 commercially viable한 이유.</p>
+
+<h2>7. Sunscreen Reasoning Rubric — R3.x 시리즈</h2>
+
+<div style="font-size: 14px;">
+  <table>
+    <tr><th>ID</th><th>설명</th><th>가중치</th></tr>
+    <tr><td>R3.1</td><td>Annex VI entry ID 명시 (예: "Annex VI/27" 또는 entry X3a)</td><td>필수</td></tr>
+    <tr><td>R3.2</td><td>Sunscreen-specific application amount A=18 g/day 본문 등장</td><td>필수</td></tr>
+    <tr><td>R3.3</td><td>Nano 여부 명시 ("non-nano" or "nano" 본문 literal)</td><td>필수</td></tr>
+    <tr><td>R3.4</td><td>Nano인 경우: primary size·coating·purity·CPNP notification ID 본문 등장</td><td>조건부</td></tr>
+    <tr><td>R3.5</td><td>Photostability 평가 1문장 이상 (잔존율% + 측정 ref)</td><td>필수</td></tr>
+    <tr><td>R3.6</td><td>주요 분해산물 list + 각각의 tox 평가 진술</td><td>필수</td></tr>
+    <tr><td>R3.7</td><td>SPF·UVA-PF·broad-spectrum claim 각각 실증 인용 (ISO 24444·24443)</td><td>필수</td></tr>
+    <tr><td>R3.8</td><td>"reef-safe" 등 정의 없는 claim 미사용</td><td>감점</td></tr>
+    <tr><td>R3.9</td><td>Spray 제형인 경우 inhalation 위험 평가 추가 진술</td><td>조건부</td></tr>
+    <tr><td>R3.10</td><td>전신 노출 가정의 보수성 명시 ("worst case full body coverage")</td><td>필수</td></tr>
+  </table>
+</div>
+
+<h2>8. HITL Trigger — Sunscreen 전용</h2>
+
+<table>
+  <tr><th>트리거</th><th>심각도</th><th>액션</th></tr>
+  <tr><td>Annex VI에 없는 UV filter 사용</td><td>P0</td><td>generator 호출 X. SA에게 "처방 변경 필수, 대안 UV filter list 제시"</td></tr>
+  <tr><td>Annex VI 한도 초과</td><td>P0</td><td>generator 호출 X. SA에게 "농도 인하 또는 제조사 정정"</td></tr>
+  <tr><td>Nano 여부 불명 (COA에 입자 크기 데이터 없음)</td><td>P0</td><td>SA + R&D 알림. COA 보강 또는 입자 크기 측정</td></tr>
+  <tr><td>Nano 함유 + CPNP notification 미완료</td><td>P0</td><td>SA에게 "출시 6개월 전 notification 필요" 알림</td></tr>
+  <tr><td>UV filter 분해산물 NOAEL 없음</td><td>P1</td><td>read-across 또는 자체 시험 검토</td></tr>
+  <tr><td>Photostability &lt; 80% 잔존율</td><td>P1</td><td>처방 안정화제 검토 R&D 의뢰</td></tr>
+  <tr><td>SPF claim vs ISO 24444 데이터 불일치 (±5 초과)</td><td>P0</td><td>claim 정정 또는 재측정</td></tr>
+  <tr><td>UVA-PF/SPF &lt; 1/3 + broad-spectrum claim</td><td>P0</td><td>claim 삭제 또는 처방 강화</td></tr>
+</table>
+
+<h2>9. CPNP Nano Notification 자동화 — out of scope (in v1)</h2>
+
+<p>CPNP nano notification 자체는 EC 공식 portal에 6개월 전 사람이 직접 입력. 시스템이 자동 제출하지 X (현재 API 없음). 시스템이 도울 수 있는 것:</p>
+
+<ul>
+  <li>Notification 입력에 필요한 모든 fact 정리 (primary size, coating, purity, COA, SCCS opinion ref).</li>
+  <li>Notification deadline 추적 ("출시 예정일 - 6개월" alert).</li>
+  <li>제출 완료 후 notification ID 저장 → 모든 CPSR에 자동 inject.</li>
+  <li>Notification 제출 정보를 사내 dashboard에 일원화.</li>
+</ul>
+
+<h2>10. Sunscreen 첫 처방 — anchor sample</h2>
+
+<pre><span class="c"># formulas/anchor-sunscreen-spf30.yaml</span>
+product:
+  name: <span class="s">"Anchor Mineral Sunscreen SPF 30"</span>
+  category: <span class="s">"sunscreen / leave-on body"</span>
+  intended_use:
+    application_site: <span class="s">"face + body"</span>
+    leave_on: <span class="k">true</span>
+    daily_frequency_per_day: <span class="s">2</span>
+    target_user: <span class="s">"adult, general population"</span>
+
+claims:
+  spf: <span class="s">30</span>
+  uva_pf: <span class="s">12</span>           <span class="c"># UVA-PF/SPF = 12/30 = 0.40 &gt; 1/3 ✓</span>
+  broad_spectrum: <span class="k">true</span>
+  water_resistant_minutes: <span class="s">40</span>
+
+formula:
+  - inci: <span class="s">"Aqua"</span>
+    pct: <span class="s">45.0</span>
+  - inci: <span class="s">"Titanium Dioxide (nano)"</span>
+    pct: <span class="s">12.0</span>
+    nano:
+      is_nano: <span class="k">true</span>
+      primary_particle_size_nm: [<span class="s">30</span>, <span class="s">50</span>]
+      crystalline_form: <span class="s">"rutile"</span>
+      surface_coating: [<span class="s">"alumina"</span>, <span class="s">"stearic_acid"</span>]
+      coating_pct_w_w: <span class="s">5.0</span>
+      purity_pct: <span class="s">99.5</span>
+      sccs_opinion_id: <span class="s">"SCCS/1583/17"</span>
+      coa_ref: <span class="s">"COA-2026-TiO2-014"</span>
+  - inci: <span class="s">"Zinc Oxide (non-nano)"</span>
+    pct: <span class="s">10.0</span>
+  - inci: <span class="s">"Caprylic/Capric Triglyceride"</span>
+    pct: <span class="s">15.0</span>
+  <span class="c"># ... 추가 emollient·emulsifier·stabilizer</span>
+
+scenario:
+  bw_kg: <span class="s">60</span>
+  a_g_per_day: <span class="s">18.0</span>  <span class="c"># sunscreen-specific</span>
+  retention_factor: <span class="s">1.0</span>
+  da_pct_default: <span class="s">50</span>  <span class="c"># TiO2 nano는 사실 거의 0%지만 default 적용 후 narrative에서 보정</span>
+</pre>
+
+<div class="callout">
+  <span class="label">Mineral vs Chemical — 가장 안전한 첫 anchor</span>
+  Mineral (TiO₂ + ZnO) sunscreen은 chemical UV filter (Octocrylene·Avobenzone)보다 (a) photostability 우수, (b) 분해산물 risk 낮음, (c) SCCS Opinion이 명확. <strong>Sunscreen MVP의 첫 anchor는 mineral.</strong> Chemical은 v2 — 분해산물 추적·photostability 시험 데이터 누적 후.
+</div>
+
+<h2>11. Niacinamide → Sunscreen 확장의 시간 비용</h2>
+
+<table>
+  <tr><th>활동</th><th>예상 기간</th></tr>
+  <tr><td>M9 Annex VI Check 구현 + Annex VI 데이터 fetch</td><td>1주</td></tr>
+  <tr><td>M10 Nano Detection + NanoMaterialFact schema</td><td>1주</td></tr>
+  <tr><td>M11 Photo Tox Engine + SCCS nano opinions 5건 RAG</td><td>2주</td></tr>
+  <tr><td>M12 SPF Claim Validator + ISO test integration</td><td>1주</td></tr>
+  <tr><td>Generator·Evaluator R3.x rubric 추가 + style anchor 갱신</td><td>1주</td></tr>
+  <tr><td>Sunscreen Reference Set 첫 3건</td><td>3주</td></tr>
+  <tr><td><strong>합계</strong></td><td><strong>약 9주 (sunscreen MVP, niacinamide MVP의 ~2배)</strong></td></tr>
+</table>
+
+<h2>12. Quiz — 5문항</h2>
+
+<div class="quiz">
+
+<div class="question">
+  <p><strong>Q1.</strong> Niacinamide cream의 SED·MoS 임계 100 통과 패턴이 sunscreen에 그대로 적용 가능한가? Mineral TiO₂ (nano) 12%가 sunscreen에 들어있을 때 단순 MoS 계산이 의미 있는가?</p>
+  <details>
+    <summary>답 보기</summary>
+    <div class="answer">
+      <strong>부분적으로만 의미 있다.</strong> Nano TiO₂는 dermal absorption이 극히 낮다 (SCCS/1583/17: intact skin 통과 본질적으로 X — < 0.0001%). 즉 default DA% 50% 적용은 과보수적이며 SED를 ~5000배 부풀린다. (a) <strong>SCCS-specific DA% 사용</strong>: nano TiO₂는 0.01% 이하로 SCCS opinion이 명시. fact bundle의 da_pct는 SCCS opinion 값 사용 (default 아님). (b) <strong>그래도 SED·MoS 계산 자체는 수행</strong>: 형식적 무결성 + audit trail. (c) <strong>narrative에 "DA% 0.01% (SCCS/1583/17 §4)" 명시</strong>: SA가 default 적용을 안 한 이유를 보여줌. (d) <strong>진짜 평가</strong>는 inhalation (spray 제형이면 P0) + photoreactivity (coating 검증) + aggregate exposure. <strong>Nano sunscreen의 risk는 systemic toxicity가 아니라 photoreactive ROS·inhalation route.</strong>
+    </div>
+  </details>
+</div>
+
+<div class="question">
+  <p><strong>Q2.</strong> 사내 R&D가 새 처방의 COA에 "TiO₂ D50 = 110nm"으로 기재했다. 정의상 1~100nm 입자 포함 시 nano인데 D50이 110nm이면 입자의 절반 이상이 100nm 초과다. 그래도 nano로 처리해야 하는가?</p>
+  <details>
+    <summary>답 보기</summary>
+    <div class="answer">
+      <strong>D50만으로 결정 불가 — D10 또는 분포 확인 필수.</strong> EU 정의는 "1~100nm 입자를 포함" — 개수 분포 기준. D50=110nm여도 D10이 60nm면 입자의 10% 이상이 100nm 이하 → <strong>nano로 분류</strong>. EC Recommendation 2011/696/EU는 "입자수의 50% 이상이 1~100nm" 기준을 제시하지만 화장품 Reg 1223/2009 정의는 더 광범. 시스템 처리: (a) <strong>COA에 D10·D50·D90 모두 의무</strong>. D10 데이터 없음 → P0 HITL. (b) <strong>R&D에 입자 size distribution 전체 요청</strong>. (c) <strong>의심스러우면 nano로 처리</strong>: CPNP notification 추가 작업이 시장 회수보다 압도적으로 저렴. (d) <strong>SA + R&D 합의 후 결정</strong>을 audit log에 기록. <strong>"D50만 봤다"는 audit 시 결함.</strong>
+    </div>
+  </details>
+</div>
+
+<div class="question">
+  <p><strong>Q3.</strong> 시스템이 SCCS Opinion update를 주 1회 확인한다. 한 sunscreen SKU에 사용된 UV filter A의 SCCS Opinion이 갱신됐고 새 결론은 "기존 농도 한도 5% → 3%로 인하" 권고다. 현 처방은 4%다. 시스템은 무엇을 해야 하는가?</p>
+  <details>
+    <summary>답 보기</summary>
+    <div class="answer">
+      <strong>5단계 자동 처리.</strong> (1) <strong>SKU에 "regulatory_dirty" 라벨</strong>: 새 SCCS Opinion 적용 시점부터 기존 CPSR이 outdated. (2) <strong>SA P0 알림</strong>: 슬랙 + 이메일. "UV filter A의 SCCS Opinion 갱신. 권고 한도 3%, 현 처방 4%. CPSR 재평가 필요." (3) <strong>처방 검토 단계 자동 시작 X</strong>: 5%에서 3%로의 변경은 R&D·marketing·supply chain에 영향. SA가 "재평가 진행" 결정한 후에만 자동 재계산. (4) <strong>대안 정보 제공</strong>: 시스템이 "다른 SKU 5건이 같은 UV filter 사용" + "4%에서 3%로 인하 시 SPF 영향 추정 (ISO 24443 in vitro 사전 검토 가능)" 표 제공. (5) <strong>EU 시행일 추적</strong>: SCCS Opinion이 EU Reg 개정으로 법제화되는 시점 (보통 12~24개월). 그 전까지 현 처방 합법, 그러나 새 처방·revision은 이미 신 기준 따라야. SA에게 timeline 명시. <strong>시스템 가치 = SA가 SCCS 변경을 놓치지 않게 하는 것</strong>; ToxTool 같은 외부 도구는 "사내 SKU 영향 분석"이 약함.
+    </div>
+  </details>
+</div>
+
+<div class="question">
+  <p><strong>Q4.</strong> Sunscreen narrative에 "Reef-safe, marine-friendly formulation"이라는 marketing claim이 들어왔다. R3.8 룰은 이를 감점 처리한다. 시스템은 generator에게 어떻게 가드를 박는가? 결정은 누가 하는가?</p>
+  <details>
+    <summary>답 보기</summary>
+    <div class="answer">
+      <strong>3단계 가드.</strong> (1) <strong>Claim Validator (M12)</strong>: free-text claims에서 "reef-safe" 또는 동등 표현 detection. legally undefined 용어 list에 매칭 (현재 hawaii·일부 카리브 지역 외엔 법적 정의 없음). (2) <strong>Generator system prompt에 명시 가드</strong>: "다음 claim들은 EU/한국/TFDA 법적 정의가 없으므로 narrative·결론에 사용 금지: 'reef-safe', 'marine-friendly', 'ocean-safe', 'biodegradable' (조건부)." Generator가 marketing brief를 받더라도 narrative에 옮기지 않음. (3) <strong>HITL trigger</strong>: claim list에 정의 없는 표현이 marketing에서 왔다면 SA + marketing 합의 큐. SA가 "marketing이 자기 책임으로 외부 표기, CPSR에는 제외" 결정 시 narrative에서 제외. 또는 "지역별 검토" 결정 시 hawaii용 별도 SKU 분리. <strong>결정은 SA가 marketing과 합의 후 audit log에 기록.</strong> 시스템이 marketing의 자기 결정을 거부하지 X — 단 CPSR(법적 문서)에 들어가지 않음을 보장. <strong>marketing claim ≠ regulatory claim</strong>의 분리가 명확.
+    </div>
+  </details>
+</div>
+
+<div class="question">
+  <p><strong>Q5.</strong> Niacinamide leave-on MVP의 generator system prompt를 그대로 sunscreen에 사용하면 어떤 실패가 나는가? 적어도 5개 나열.</p>
+  <details>
+    <summary>답 보기</summary>
+    <div class="answer">
+      <strong>5+ 실패.</strong> (1) <strong>A=1.54 g/day 가정 적용</strong>: sunscreen은 18 g/day. SED 12배 과소평가 → MoS 12배 과대평가 → 실제 위험한 농도가 안전으로 분류. (2) <strong>Nano subsection 생성 X</strong>: 일반 leave-on prompt는 nano를 모름. R3.3 fail. (3) <strong>Annex VI 인용 안 함</strong>: 일반 leave-on은 Annex III·V·VI를 모두 같이 처리. UV filter의 positive list 의무가 본문에 안 들어감. R3.1 fail. (4) <strong>Photostability·degradation 진술 X</strong>: 일반 toxicity narrative만 생성. R3.5·R3.6 fail. (5) <strong>SPF claim validation 누락</strong>: claim 진술이 있어도 ISO 24444 인용이 없음. R3.7 fail. (6) <strong>"reef-safe" 같은 marketing claim 본문 침투</strong>: 가드가 없으므로 LLM이 마케팅 표현 자유 사용. R3.8 fail. (7) <strong>Application amount 본문 미노출</strong>: face cream A=1.54는 자명해 생략 가능하나 sunscreen A=18 g/day는 본문 의무. R3.2 fail. <strong>해결: sunscreen 전용 system prompt + R3 rubric. 같은 generator 모델이라도 prompt만 갈아끼우면 충분 — 다른 LLM 필요 X.</strong>
+    </div>
+  </details>
+</div>
+
+</div>
+
+<h2>13. 다음 단계 (이 미션의 범위 너머)</h2>
+
+<ul>
+  <li><strong>Chemical UV filter 확장</strong>: Octocrylene·Avobenzone·Ensulizole 등. 분해산물 추적 + photostability 시험 데이터 누적이 전제.</li>
+  <li><strong>Tinted sunscreen</strong>: Iron oxide·Mica 등 colorant Annex IV 평가 분기. UV blocking 효과 misrepresentation 가드.</li>
+  <li><strong>Spray sunscreen</strong>: inhalation route 별도 평가. SCCS Opinion 별도 검토.</li>
+  <li><strong>Korean MFDS 기능성 화장품 자외선차단</strong>: EU와 별도 기능성 심사 process. KFDA-specific 화법 anchor 필요. (현 미션 out of scope, NOTES.md 항목)</li>
+  <li><strong>Taiwan TFDA sunscreen</strong>: positive list 차이, nano 등록 의무 별도. TFDA PIF 중문 가이드라인 정독 (NOTES.md 항목).</li>
+</ul>
+
+<div class="callout">
+  <span class="label">교사에게 질문</span>
+  "자사 sunscreen 제품 (mineral·chemical 비율)이 현재 portfolio에서 차지하는 비중과 향후 확장 계획은?", "Nano TiO₂·Nano ZnO 원료의 COA가 입자 size distribution까지 포함하는가, 아니면 D50만 있는가?", "ISO 24444 SPF in vivo 시험은 사내 또는 외부 (TUV·SGS·CTC 등) 어디서 수행하는가? data 접근성은?" — 답에 따라 sunscreen MVP의 진입 시기·범위가 정해집니다.
+</div>
+
+<div class="nav">
+  Previous: <a href="0009-hitl-workflow-ui.html">0009 — HITL Workflow UI 설계</a> ·
+  Next: 미정 (Chemical UV filter / Tinted / Spray / Korea·TFDA 분기 중 선택) ·
+  Glossary: <a href="../reference/glossary.html">용어집</a>
+</div>
+
+</body>
+</html>

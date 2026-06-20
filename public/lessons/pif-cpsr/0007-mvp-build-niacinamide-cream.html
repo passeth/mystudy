@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Lesson 0007 — End-to-end MVP: Niacinamide 4% Face Cream 1차 파이프라인</title>
+<style>
+  :root {
+    --ink: #1a1a1a;
+    --muted: #5a5a5a;
+    --line: #d8d3c7;
+    --accent: #0f766e;
+    --highlight: #ecfdf5;
+    --code-bg: #f3efe5;
+    --quiz-bg: #f9f5ea;
+    --warn: #b45309;
+    --good: #15803d;
+    --bad: #b91c1c;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Iowan Old Style", "Georgia", "Apple SD Gothic Neo", "Noto Serif KR", serif;
+    color: var(--ink);
+    max-width: 820px;
+    margin: 60px auto;
+    padding: 0 28px 80px;
+    line-height: 1.7;
+    font-size: 17px;
+    background: #fefcf7;
+  }
+  .meta {
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .tier-tag {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    padding: 3px 10px;
+    border-radius: 4px;
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    margin-right: 8px;
+  }
+  h1 {
+    font-size: 30px;
+    line-height: 1.25;
+    margin: 0 0 8px;
+    letter-spacing: -0.01em;
+  }
+  .subtitle { color: var(--muted); font-style: italic; margin-bottom: 36px; }
+  h2 {
+    font-size: 22px;
+    margin: 44px 0 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--line);
+  }
+  h3 { font-size: 18px; margin: 30px 0 8px; color: var(--accent); }
+  p { margin: 12px 0; }
+  ul, ol { padding-left: 24px; }
+  li { margin: 6px 0; }
+  code {
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 14px;
+    background: var(--code-bg);
+    padding: 2px 6px;
+    border-radius: 3px;
+  }
+  pre {
+    background: #1a1a1a;
+    color: #f0ebe0;
+    padding: 20px 24px;
+    border-radius: 8px;
+    overflow-x: auto;
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    margin: 20px 0;
+  }
+  pre .k { color: #c4b5fd; }
+  pre .s { color: #fcd34d; }
+  pre .n { color: #93c5fd; }
+  pre .c { color: #6b7280; font-style: italic; }
+  pre .str { color: #67e8f9; }
+  .callout {
+    background: var(--highlight);
+    border-left: 4px solid var(--accent);
+    padding: 16px 20px;
+    margin: 24px 0;
+    border-radius: 0 6px 6px 0;
+  }
+  .callout-warn { background: #fef7e6; border-left-color: var(--warn); }
+  .callout .label {
+    display: block; font-size: 12px;
+    text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--accent); margin-bottom: 6px; font-weight: 600;
+  }
+  .callout-warn .label { color: var(--warn); }
+  table {
+    width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px;
+  }
+  th, td {
+    text-align: left; padding: 10px 12px;
+    border-bottom: 1px solid var(--line); vertical-align: top;
+  }
+  th {
+    background: var(--code-bg); font-weight: 600;
+    font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  .flow {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    margin: 24px 0;
+    font-size: 13px;
+  }
+  .flow > div {
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 12px 10px;
+    background: #fff;
+    text-align: center;
+  }
+  .flow .head {
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 11px;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .quiz {
+    background: var(--quiz-bg);
+    padding: 28px 32px;
+    margin: 40px 0;
+    border-radius: 8px;
+  }
+  .quiz h2 { border: none; margin-top: 0; }
+  .question { margin: 24px 0; }
+  details { margin: 8px 0; }
+  details > summary {
+    cursor: pointer; color: var(--accent);
+    font-size: 14px; user-select: none;
+    list-style: revert;
+  }
+  details[open] > summary { margin-bottom: 8px; }
+  .answer {
+    margin-top: 8px; padding: 12px 16px;
+    background: #fff; border: 1px dashed var(--line);
+    border-radius: 4px;
+  }
+  .nav {
+    margin-top: 60px; padding-top: 24px;
+    border-top: 1px solid var(--line);
+    font-size: 14px; color: var(--muted);
+  }
+  .nav a { color: var(--accent); text-decoration: none; }
+  .nav a:hover { text-decoration: underline; }
+  .cite { font-size: 13px; color: var(--muted); }
+  .cite a { color: var(--muted); text-decoration: underline; }
+  @media print {
+    body { background: #fff; max-width: 100%; margin: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="meta"><span class="tier-tag">MVP BUILD</span>Lesson 0007 · 약 40분</div>
+<h1>End-to-end MVP — Niacinamide 4% Face Cream으로 4-Tier 첫 관통</h1>
+<p class="subtitle">Tier 1·2·3·4를 각자 깊이 판 이후, 한 제품으로 처음부터 끝까지 연결한다. 목적은 "예쁜 시스템"이 아니라 <em>가장 짧은 거리로 첫 SA 검토 sample을 산출</em>하는 것.</p>
+
+<div class="callout">
+  <span class="label">이 레슨의 약속</span>
+  마치면 (1) 8개 모듈로 분해된 MVP 아키텍처를 손에 쥐고, (2) 어떤 부분을 LLM·결정론·HITL로 가를지가 명확하며, (3) 첫 주에 만들 minimum surface와 두 번째 주에 추가할 surface를 분리할 수 있다. 가장 큰 함정은 "전부 한 번에"다. <strong>SA 검토 1건이 끝까지 나가는 가장 얇은 슬라이스</strong>가 목표.
+</div>
+
+<h2>1. MVP 범위 — "끝까지" 가는 가장 얇은 슬라이스</h2>
+
+<p>End-to-end MVP의 정의: <strong>한 처방을 입력하면 한 PDF가 나오는 한 줄 파이프라인</strong>. Acceptance 측정·refiner 루프·HITL UI는 다 v2다.</p>
+
+<table>
+  <tr><th></th><th>v1 (MVP, 이번 레슨)</th><th>v2 (다음 단계)</th></tr>
+  <tr><td>입력</td><td>YAML 처방 1개 + 사용 시나리오 hard-code</td><td>사내 처방 DB API</td></tr>
+  <tr><td>Tier 1</td><td>SED·MoS deterministic 계산 (Python)</td><td>aggregate exposure</td></tr>
+  <tr><td>Tier 2</td><td>INCI normalizer (CSV 룩업 1개)</td><td>CosIng API 연동, Annex 검사</td></tr>
+  <tr><td>Tier 3</td><td>SCCS Opinion 5건 + EFSA 1건 RAG (수동 PDF 5건만)</td><td>SCCS·CIR 전수 코퍼스</td></tr>
+  <tr><td>Tier 4</td><td>generator 1회 호출, evaluator 코드 rubric만 (LLM evaluator X)</td><td>refiner 루프, LLM evaluator</td></tr>
+  <tr><td>HITL</td><td>MoS &lt; 100이면 stderr에 print, 종료</td><td>웹 UI, SA queue</td></tr>
+  <tr><td>출력</td><td>Word docx + JSON</td><td>PDF + audit log + diff viewer</td></tr>
+</table>
+
+<div class="callout callout-warn">
+  <span class="label">MVP의 적 — perfectionism</span>
+  앵커 제품 1개 + SCCS Opinion 5건만으로 시작. niacinamide는 SCCS Opinion이 <em>없다</em> — 일부러 골랐다. 갭 처리(EFSA·CIR fallback)가 day-1부터 강제된다. Glycerin·Phenoxyethanol·Butylene Glycol·Tocopherol·Sodium Hyaluronate처럼 SCCS Opinion이 있거나 매우 친숙한 5개로만 처방을 짜라. 30개 짜리 실제 처방은 MVP 끝나고.
+</div>
+
+<h2>2. 아키텍처 — 8개 모듈</h2>
+
+<div class="flow">
+  <div><div class="head">M1</div>Formula Loader</div>
+  <div><div class="head">M2</div>INCI Normalizer</div>
+  <div><div class="head">M3</div>Exposure Engine</div>
+  <div><div class="head">M4</div>Tox Fetcher (RAG)</div>
+  <div><div class="head">M5</div>Fact Bundler</div>
+</div>
+<div class="flow">
+  <div><div class="head">M6</div>Generator (LLM)</div>
+  <div><div class="head">M7</div>Evaluator (code)</div>
+  <div><div class="head">M8</div>Renderer (docx)</div>
+  <div></div>
+  <div></div>
+</div>
+
+<p>각 모듈의 "결정론 / LLM / HITL" 분할:</p>
+
+<table>
+  <tr><th>모듈</th><th>역할</th><th>구현</th><th>실패 시</th></tr>
+  <tr><td>M1 Formula Loader</td><td>YAML 처방 → 메모리 객체. % 합 = 100±1 검증.</td><td>결정론 (pydantic)</td><td>처방 reject, SA에게 반환</td></tr>
+  <tr><td>M2 INCI Normalizer</td><td>입력 INCI → canonical INCI + CAS + functions</td><td>결정론 (CSV 룩업, 추후 CosIng)</td><td>알 수 없는 INCI → HITL "이 성분 ID를 확정해라"</td></tr>
+  <tr><td>M3 Exposure Engine</td><td>SED·MoS 계산 (Lesson 0003)</td><td>결정론 (Python 수식)</td><td>MoS &lt; 임계 → HITL P0</td></tr>
+  <tr><td>M4 Tox Fetcher (RAG)</td><td>NOAEL·dermal absorption·gap notes 추출</td><td>LLM (claim extraction + citation anchoring)</td><td>0건 → confidence "low" 라벨</td></tr>
+  <tr><td>M5 Fact Bundler</td><td>1~4 출력을 <code>SubstanceFactBundle</code>로 통합</td><td>결정론 (pydantic)</td><td>schema validation fail → 모듈 출력 검증 필요</td></tr>
+  <tr><td>M6 Generator</td><td>narrative 생성</td><td>LLM (Anthropic Claude 추천 — citation 안정)</td><td>API error → 재시도, max 3</td></tr>
+  <tr><td>M7 Evaluator</td><td>rubric 점수 (코드 rubric only, MVP에서)</td><td>결정론 (Python)</td><td>R1.1~R1.7 fail → "fail report" 첨부, 그래도 docx는 생성 (MVP)</td></tr>
+  <tr><td>M8 Renderer</td><td>Annex I Part A + B 양식 docx</td><td>결정론 (python-docx, jinja2 템플릿)</td><td>template 누락 섹션 → 빈 칸으로 출력 + warning</td></tr>
+</table>
+
+<h2>3. 첫 처방 — YAML 1장</h2>
+
+<pre><span class="c"># formulas/anchor-niacinamide-cream.yaml</span>
+product:
+  name: <span class="s">"Anchor Test Niacinamide Face Cream"</span>
+  category: <span class="s">"leave-on / face cream"</span>
+  intended_use:
+    application_site: face
+    leave_on: <span class="k">true</span>
+    daily_frequency_per_day: <span class="s">2</span>
+    target_user: <span class="s">"adult, general population"</span>
+
+formula:  <span class="c"># % w/w, sum ≈ 100</span>
+  - inci: <span class="s">"Aqua"</span>
+    pct: <span class="s">70.5</span>
+  - inci: <span class="s">"Niacinamide"</span>
+    pct: <span class="s">4.0</span>
+  - inci: <span class="s">"Glycerin"</span>
+    pct: <span class="s">6.0</span>
+  - inci: <span class="s">"Butylene Glycol"</span>
+    pct: <span class="s">5.0</span>
+  - inci: <span class="s">"Caprylic/Capric Triglyceride"</span>
+    pct: <span class="s">8.0</span>
+  - inci: <span class="s">"Cetearyl Alcohol"</span>
+    pct: <span class="s">3.0</span>
+  - inci: <span class="s">"Tocopherol"</span>
+    pct: <span class="s">0.3</span>
+  - inci: <span class="s">"Sodium Hyaluronate"</span>
+    pct: <span class="s">0.2</span>
+  - inci: <span class="s">"Phenoxyethanol"</span>
+    pct: <span class="s">0.8</span>
+  - inci: <span class="s">"Ethylhexylglycerin"</span>
+    pct: <span class="s">0.2</span>
+  - inci: <span class="s">"Sodium Hydroxide"</span>  <span class="c"># pH 조절</span>
+    pct: <span class="s">0.05</span>
+  - inci: <span class="s">"Carbomer"</span>
+    pct: <span class="s">0.4</span>
+  - inci: <span class="s">"Disodium EDTA"</span>
+    pct: <span class="s">0.05</span>
+  - inci: <span class="s">"Parfum"</span>
+    pct: <span class="s">0.5</span>
+  <span class="c"># sum = 99.0 → 1.0 buffer for QS</span>
+
+scenario:
+  bw_kg: <span class="s">60</span>
+  a_g_per_day: <span class="s">1.54</span>  <span class="c"># SCCS NoG default for face cream</span>
+  retention_factor: <span class="s">1.0</span>
+  da_pct_default: <span class="s">50</span>  <span class="c"># SCCS NoG default if no data</span>
+</pre>
+
+<div class="callout">
+  <span class="label">14개 성분 중 LLM 부담</span>
+  <strong>Aqua / Sodium Hydroxide / Disodium EDTA</strong>는 toxicological assessment 통상 제외 ("considered safe under the conditions of use"). MVP에서 이걸 자동 skip하는 <code>safe_list.csv</code>를 두 시간 안에 만들면 LLM 호출이 14→11회로 즉시 30% 감소. <strong>Parfum</strong>은 IFRA 별도 처리 — MVP에서는 "Out of scope, IFRA Certificate of Compliance 첨부 전제" 한 줄로 처리.
+</div>
+
+<h2>4. Exposure Engine (M3) — 코드</h2>
+
+<pre><span class="k">from</span> <span class="n">dataclasses</span> <span class="k">import</span> dataclass
+
+<span class="n">@dataclass</span>
+<span class="k">class</span> <span class="n">ExposureInput</span>:
+    pct: float          <span class="c"># 처방 % w/w</span>
+    a_g_per_day: float  <span class="c"># 일일 application amount (g/day)</span>
+    f_retention: float  <span class="c"># retention factor</span>
+    da_pct: float       <span class="c"># dermal absorption %</span>
+    bw_kg: float
+
+<span class="k">def</span> <span class="n">compute_sed</span>(x: ExposureInput) -> float:
+    <span class="str">"""SED (mg/kg bw/day) per SCCS NoG 12th Rev §3-6.
+
+    SED = (A * F * C * DA% / 100) / BW
+    where C = pct/100 * 1000 (mg of substance per g of product)
+    Combined: SED = A * F * (pct/100) * 1000 * (da_pct/100) / bw_kg
+    """</span>
+    <span class="k">return</span> (x.a_g_per_day * x.f_retention
+            * (x.pct / <span class="s">100.0</span>) * <span class="s">1000.0</span>
+            * (x.da_pct / <span class="s">100.0</span>)) / x.bw_kg
+
+<span class="k">def</span> <span class="n">compute_mos</span>(noael_mg_per_kg_day: float, sed: float) -> float:
+    <span class="str">"""MoS = NOAEL / SED. SCCS NoG threshold = 100."""</span>
+    <span class="k">return</span> noael_mg_per_kg_day / sed
+</pre>
+
+<p>이 코드의 모든 출력은 <strong>결정론적</strong>이다. LLM은 이 숫자를 만들지 않는다. narrative에 이 숫자가 들어갈 때 evaluator R1.2·R1.4가 literal match로 검증한다.</p>
+
+<h2>5. Tox Fetcher (M4) — RAG 최소 구성</h2>
+
+<p>MVP에서는 PDF 5건만 손으로 받아 메모리 벡터스토어에 적재. 호화 ASCII가 아닌 PDF text + page anchor가 핵심:</p>
+
+<pre><span class="k">from</span> <span class="n">pydantic</span> <span class="k">import</span> BaseModel, Field
+
+<span class="k">class</span> <span class="n">NoaelClaim</span>(BaseModel):
+    value: float = Field(<span class="n">description</span>=<span class="s">"NOAEL value in mg/kg bw/day"</span>)
+    unit: str = Field(<span class="n">default</span>=<span class="s">"mg/kg bw/day"</span>)
+    species: str
+    duration_days: <span class="n">int</span> | <span class="n">None</span>
+    study_design: str  <span class="c"># 'oral_28d', 'oral_90d', 'derm_28d', etc.</span>
+    source_id: str     <span class="c"># 'SCCS/1647/22' or 'EFSA Journal 2014;12(7):3759'</span>
+    page_anchor: str   <span class="c"># 'p.42 §4.3.2'</span>
+
+<span class="k">class</span> <span class="n">DermalAbsorptionClaim</span>(BaseModel):
+    da_pct: float
+    method: str        <span class="c"># 'OECD 428 in vitro', 'in vivo rat', etc.</span>
+    source_id: str
+    page_anchor: str
+
+<span class="k">class</span> <span class="n">ToxFetchOutput</span>(BaseModel):
+    inci: str
+    noaels: <span class="n">list</span>[NoaelClaim]
+    dermal: <span class="n">list</span>[DermalAbsorptionClaim]
+    confidence: <span class="n">Literal</span>[<span class="s">"high"</span>, <span class="s">"medium"</span>, <span class="s">"low"</span>]
+    gap_notes: <span class="n">list</span>[str]
+</pre>
+
+<p>Claude API 호출 시 <strong>tool_use</strong>로 위 schema를 강제하고, system prompt에 박을 가드레일:</p>
+
+<pre>You extract toxicological claims from cosmetic safety documents.
+ABSOLUTE RULES:
+1. Only extract claims that are LITERALLY present in the provided text.
+2. Every claim MUST include source_id and page_anchor. If you cannot
+   identify a page or section, do NOT emit the claim.
+3. Do NOT compute, infer, or convert units. Emit what is written.
+4. If no NOAEL is found, return empty list and add gap_notes.
+5. NEVER invent SCCS Opinion numbers.
+</pre>
+
+<div class="callout">
+  <span class="label">Niacinamide MVP 노트</span>
+  Niacinamide는 SCCS Opinion이 없다 → fallback 체인: EFSA Scientific Opinion (Vitamin B3 / niacinamide, EFSA Journal 2014;12(7):3759) → 경구 NOAEL 900 mg/kg bw/day → CIR (2005) 대조. <strong>경구→피부 route extrapolation은 MVP에서 자동 안 한다.</strong> 그저 narrative에 "경구 NOAEL을 보수적으로 그대로 사용했다"를 명시. 진짜 PBPK conversion은 v3 이후.
+</div>
+
+<h2>6. Generator (M6) — 한 호출당 한 성분</h2>
+
+<p>MVP에서 절대 하지 말 것: "이 처방 전체 narrative를 한 번에 써줘". 한 호출 한 성분, 14개 호출. 이유: (a) <strong>diff·rerun이 쉽다</strong> — 한 성분만 실패하면 그것만 재호출, (b) <strong>boilerplate 감지가 쉽다</strong> — 호출이 독립이면 LLM이 의도적으로 다양화하지 않는 한 문체 중복이 자연스럽게 드러난다, (c) <strong>비용·레이트리밋이 예측 가능</strong>하다.</p>
+
+<pre><span class="k">def</span> <span class="n">generate_substance_narrative</span>(bundle: SubstanceFactBundle) -> str:
+    response = anthropic.messages.create(
+        model=<span class="s">"claude-opus-4-7"</span>,
+        max_tokens=<span class="s">1200</span>,
+        system=SCCS_INTERNAL_KOREAN_STYLE,  <span class="c"># Lesson 0006 Q4 mode</span>
+        messages=[{
+            <span class="s">"role"</span>: <span class="s">"user"</span>,
+            <span class="s">"content"</span>: <span class="n">build_user_prompt</span>(bundle),
+        }],
+    )
+    <span class="k">return</span> response.content[<span class="s">0</span>].text
+
+<span class="k">def</span> <span class="n">build_user_prompt</span>(b: SubstanceFactBundle) -> str:
+    <span class="k">return</span> <span class="n">textwrap</span>.dedent(f<span class="s">"""
+    아래 fact bundle을 바탕으로 CPSR Part B.3 Reasoning 1개 성분 narrative를 작성하라.
+
+    [성분 ID]
+    INCI: {b.inci_canonical}
+    CAS: {b.cas or '미확인'}
+
+    [노출]
+    농도: {b.concentration_pct}%
+    SED: {b.sed_mg_per_kg_day} mg/kg bw/day
+    가정: A={b.sed_assumptions.a}, F={b.sed_assumptions.f},
+         DA%={b.sed_assumptions.da_pct}%, BW={b.sed_assumptions.bw_kg}kg
+
+    [독성]
+    NOAEL: {b.noael_chosen.value} {b.noael_chosen.unit}
+    출처: {b.noael_chosen.source_id} ({b.noael_chosen.page_anchor})
+    Confidence: {b.data_source_confidence}
+    Gap notes: {b.data_gap_notes or '없음'}
+
+    [위험]
+    MoS: {b.mos}
+    임계: {b.mos_threshold} (additional UF: {b.additional_uf_applied})
+
+    제약: 본문에 위 수치와 출처를 모두 literal로 포함. 숫자를 변경 X.
+    "[성분]은 안전하다" 식 단정 X. "조건 하에서 안전 여유가 확보되었다" 화법.
+    """</span>)
+</pre>
+
+<h2>7. Evaluator (M7) — 코드 rubric만</h2>
+
+<p>Lesson 0006의 rubric 중 <strong>코드로 가능한 것</strong>만 MVP에 구현. LLM evaluator는 v2.</p>
+
+<pre><span class="k">def</span> <span class="n">evaluate_per_substance</span>(narrative: str, b: SubstanceFactBundle) -> EvalReport:
+    violations = []
+
+    <span class="c"># R1.1 NOAEL source ID literal</span>
+    <span class="k">if</span> b.noael_chosen.source_id <span class="k">not in</span> narrative:
+        violations.append((<span class="s">"R1.1"</span>, <span class="s">"NOAEL source_id missing"</span>))
+
+    <span class="c"># R1.2 NOAEL value (normalize comma + float compare)</span>
+    <span class="k">if</span> <span class="k">not</span> <span class="n">contains_number</span>(narrative, b.noael_chosen.value, tol=<span class="s">0.001</span>):
+        violations.append((<span class="s">"R1.2"</span>, <span class="s">"NOAEL value not literal"</span>))
+
+    <span class="c"># R1.3 SED assumptions: at least 3 of A/F/DA/BW</span>
+    sed_a = b.sed_assumptions
+    hits = <span class="n">sum</span>([
+        <span class="n">contains_number</span>(narrative, sed_a.a, tol=<span class="s">0.01</span>),
+        <span class="n">contains_number</span>(narrative, sed_a.f, tol=<span class="s">0.001</span>),
+        <span class="n">contains_number</span>(narrative, sed_a.da_pct, tol=<span class="s">0.1</span>),
+        <span class="n">contains_number</span>(narrative, sed_a.bw_kg, tol=<span class="s">0.1</span>),
+    ])
+    <span class="k">if</span> hits &lt; <span class="s">3</span>:
+        violations.append((<span class="s">"R1.3"</span>, f<span class="s">"only {hits}/4 SED inputs surfaced"</span>))
+
+    <span class="c"># R1.4 MoS value + threshold word</span>
+    <span class="k">if</span> <span class="k">not</span> <span class="n">contains_number</span>(narrative, b.mos, tol=<span class="s">0.1</span>):
+        violations.append((<span class="s">"R1.4a"</span>, <span class="s">"MoS not literal"</span>))
+    <span class="k">if</span> <span class="k">not</span> <span class="n">any</span>(w <span class="k">in</span> narrative <span class="k">for</span> w <span class="k">in</span> [<span class="s">"임계"</span>, <span class="s">"threshold"</span>, <span class="s">"100"</span>]):
+        violations.append((<span class="s">"R1.4b"</span>, <span class="s">"threshold not mentioned"</span>))
+
+    <span class="c"># R1.6 gap honesty</span>
+    <span class="k">for</span> note <span class="k">in</span> b.data_gap_notes:
+        keyword = <span class="n">extract_keyword</span>(note)  <span class="c"># e.g. "SCCS Opinion 부재"</span>
+        <span class="k">if</span> keyword <span class="k">not in</span> narrative:
+            violations.append((<span class="s">"R1.6"</span>, f<span class="s">"gap not surfaced: {note}"</span>))
+
+    score = <span class="n">max</span>(<span class="s">0.0</span>, <span class="s">1.0</span> - <span class="s">0.1</span> * <span class="n">len</span>(violations))
+    <span class="k">return</span> EvalReport(score=score, violations=violations, narrative=narrative)
+</pre>
+
+<h2>8. Renderer (M8) — Annex I 양식</h2>
+
+<p>jinja2 + python-docx로 충분. MVP 템플릿은 EU Reg 1223/2009 Annex I Part A 10개 섹션 + Part B 4개 섹션 골격만:</p>
+
+<table>
+  <tr><th>섹션</th><th>MVP 채움 전략</th></tr>
+  <tr><td>A.1 정량·정성 조성</td><td>YAML formula 그대로</td></tr>
+  <tr><td>A.2 물리화학 특성·안정성</td><td>placeholder ("내부 R&D 시험성적서 ref" 칸만)</td></tr>
+  <tr><td>A.3 미생물 품질</td><td>placeholder ("Challenge test ref" 칸만)</td></tr>
+  <tr><td>A.4 불순물·미량·포장 영향</td><td>placeholder</td></tr>
+  <tr><td>A.5 일반 사용 및 노출</td><td>scenario 섹션에서 자동 채움</td></tr>
+  <tr><td>A.6 성분 노출</td><td>M3 Exposure Engine 출력 표</td></tr>
+  <tr><td>A.7 성분의 독성 프로필</td><td>M4 Tox Fetcher 출력 표</td></tr>
+  <tr><td>A.8 불리한 영향·중대한 불리한 영향</td><td>placeholder</td></tr>
+  <tr><td>A.9 제품 정보</td><td>YAML product 섹션</td></tr>
+  <tr><td><strong>B.1 평가 결론</strong></td><td>generator 호출 1회 (whole-product)</td></tr>
+  <tr><td>B.2 라벨 경고·사용 지시</td><td>placeholder</td></tr>
+  <tr><td><strong>B.3 reasoning</strong></td><td>generator 호출 N회 (per-substance) + 1회 (whole-product synthesis)</td></tr>
+  <tr><td>B.4 평가자 자격·승인</td><td><strong>비워둔다.</strong> SA가 서명하는 면. 자동 채움 절대 X.</td></tr>
+</table>
+
+<div class="callout callout-warn">
+  <span class="label">B.4를 채우지 마라</span>
+  법적 책임은 영구히 사람 SA에 있다 (MISSION.md). draft docx에 B.4 페이지를 미리 채우면 — 누군가가 그대로 인쇄해 서명할 때 — 시스템이 자격 검증을 했다는 오해가 생긴다. <strong>B.4는 빈 페이지로 출력하되 "이 페이지는 인증 SA가 수기로 작성·서명한다" 워터마크.</strong>
+</div>
+
+<h2>9. 디렉터리 구조</h2>
+
+<pre>cpsr-mvp/
+├── formulas/
+│   └── anchor-niacinamide-cream.yaml
+├── corpus/
+│   ├── sccs/
+│   │   ├── SCCS_1647_22_NoG_12th.pdf
+│   │   ├── SCCS_phenoxyethanol_opinion.pdf
+│   │   └── ...
+│   ├── efsa/
+│   │   └── EFSA_2014_niacinamide.pdf
+│   └── cir/
+│       └── CIR_butylene_glycol_2008.pdf
+├── reference/
+│   ├── inci_canonical.csv         <span class="c"># INCI ↔ CAS ↔ CosIng functions</span>
+│   ├── safe_list.csv              <span class="c"># skip-tox list (Aqua, NaOH, EDTA, ...)</span>
+│   └── sccs_nog_style_internal.md <span class="c"># Korean style anchor</span>
+├── src/
+│   ├── m1_loader.py
+│   ├── m2_normalizer.py
+│   ├── m3_exposure.py
+│   ├── m4_tox_fetcher.py
+│   ├── m5_bundler.py
+│   ├── m6_generator.py
+│   ├── m7_evaluator.py
+│   ├── m8_renderer.py
+│   └── pipeline.py        <span class="c"># entry: cpsr-mvp run formulas/...yaml</span>
+├── output/
+│   └── 2026-06-15_anchor-niacinamide-cream/
+│       ├── facts.json
+│       ├── narratives.json
+│       ├── eval_report.json
+│       └── draft.docx
+└── tests/
+    ├── test_m3_sed_known_values.py   <span class="c"># SCCS Opinion 검증 처방으로 SED 재현</span>
+    └── test_m7_rubric.py
+</pre>
+
+<h2>10. 첫 주 — 무엇을 만들고 무엇을 비울 것인가</h2>
+
+<table>
+  <tr><th>Day</th><th>만든다</th><th>비운다 / 미룬다</th></tr>
+  <tr><td>1</td><td>YAML 처방 + Pydantic 모델 + M1·M3 코드 + M3 unit test</td><td>UI, DB, API</td></tr>
+  <tr><td>2</td><td>SCCS NoG PDF + EFSA niacinamide PDF text 추출 + 메모리 벡터스토어 (chromadb 또는 lancedb)</td><td>CosIng API, IFRA</td></tr>
+  <tr><td>3</td><td>M4 tox_fetcher 1성분 (niacinamide) end-to-end. tool_use + page anchor 강제. Hand-eval 결과.</td><td>나머지 13개 성분</td></tr>
+  <tr><td>4</td><td>M5 bundler + M6 generator 1성분. 처음 narrative를 직접 읽고 SA 화법 system prompt 1차 작성.</td><td>refiner loop</td></tr>
+  <tr><td>5</td><td>M7 evaluator 코드 rubric R1.1~R1.4·R1.6. 통과·실패 표.</td><td>R1.5·R1.7·R1.8 (LLM/통계 필요)</td></tr>
+  <tr><td>6</td><td>M8 renderer 골격. docx 1장 산출. <strong>SA에게 보낸다.</strong></td><td>완벽 양식, PDF 변환</td></tr>
+  <tr><td>7</td><td>SA 피드백 1차 반영 (style·구조). 첫 retro.</td><td>나머지 모든 것</td></tr>
+</table>
+
+<div class="callout">
+  <span class="label">SA 첫 검토의 의미</span>
+  Day 6의 docx는 <strong>완성도 30%</strong>다. 그래도 SA에게 보낸다. 목적은 "이걸 90%로 어떻게 끌어올리는가"가 아니라 "<em>이 사람이 신뢰할 만한 시스템의 모양을 짚어주는</em> 첫 데이터를 받는 것"이다. v1을 90%까지 혼자 끌고 가는 솔로 메이커가 가장 흔히 실패한다. SA의 5분이 솔로 메이커의 한 주를 절약한다.
+</div>
+
+<h2>11. 위험과 회피</h2>
+
+<table>
+  <tr><th>위험</th><th>발현 형태</th><th>회피</th></tr>
+  <tr><td>RAG가 page anchor 없이 NOAEL 토출</td><td>narrative에 "according to SCCS Opinion"만 나옴, ID 없음</td><td>schema에 page_anchor required. anchor 없으면 emit 자체 거부 (M4 단계).</td></tr>
+  <tr><td>LLM이 수치 변형 (900 → 900.0 → "approximately 900")</td><td>R1.2 fail</td><td>system prompt에 "numbers verbatim". evaluator는 normalize 비교 (Lesson 0006 Q1).</td></tr>
+  <tr><td>14성분 호출 비용 폭주</td><td>한 처방 $5+ → 100건이면 $500+/월</td><td>safe_list로 즉시 -30%. v2에서 prompt caching·batch API 도입.</td></tr>
+  <tr><td>경구→피부 NOAEL 변환 무지</td><td>"oral 900 mg/kg bw/day를 그대로 dermal MoS에 사용" 인식 부재 → SA 검토 시 즉시 거부</td><td>narrative에 "경구 NOAEL을 보수적으로 그대로 사용" 명시. v2에서 oral-to-dermal correction (예: 100% bioavailability assumption) 옵션화.</td></tr>
+  <tr><td>처방 외부 전송 정책 미확인</td><td>사내 처방을 외부 API로 보냈는데 사후 적발</td><td>코드 작성 전 정책 확인. 미확인 시 Anthropic <code>bedrock</code>·<code>vertex</code> private deployment 또는 사내 LLM 사용.</td></tr>
+</table>
+
+<h2>12. v1 완료 정의 (Done의 정의)</h2>
+
+<ol>
+  <li>처방 YAML 1개 → <code>output/.../draft.docx</code> 1개 생성 (manual gate 없이).</li>
+  <li>모든 성분의 SED·MoS가 deterministic + traceable (가정 표 docx에 동봉).</li>
+  <li>narrative에 등장한 모든 수치는 fact bundle의 수치와 100% 일치 (M7 R1.2 fail = 0).</li>
+  <li>MoS &lt; 100인 성분이 있을 경우 generator 호출 없이 HITL 메시지 + 종료.</li>
+  <li>사내 SA 1명이 draft를 5분 읽고 "전체 형식·논조에 대한 first impression"을 글로 남김.</li>
+</ol>
+
+<p>이 5개를 통과하면 v1 끝. acceptance rate는 v1에서 측정하지 않는다 — 측정은 reference set이 있어야 가능 (Lesson 0008).</p>
+
+<h2>13. Quiz — 4문항</h2>
+
+<div class="quiz">
+
+<div class="question">
+  <p><strong>Q1.</strong> 처방의 <code>Aqua 70.5% + ... + Disodium EDTA 0.05%</code> 14개 성분에 대해 M4 tox_fetcher를 14회 호출하려는 계획이다. 이게 왜 잘못된 자원 배분인가? 어떤 처리가 더 합리적인가?</p>
+  <details>
+    <summary>답 보기</summary>
+    <div class="answer">
+      Aqua·Sodium Hydroxide·Disodium EDTA는 CPSR 관행상 "considered safe under conditions of use"로 별도 NOAEL/MoS 분석 없이 처리한다. <strong>tox 분석이 불필요한 성분은 <code>safe_list.csv</code>에 명시</strong>하고 M4 호출 자체를 건너뛴다. 즉시 14→11회로 줄어든다. <strong>Parfum</strong>은 IFRA Certificate of Compliance + 26 declared allergens 별도 라벨 의무 — MVP에서는 "out of scope, IFRA CoC 첨부 전제" 한 줄로 처리하고 자동 호출 X. 결과적으로 LLM 호출은 10건 이내. 모든 화장품 시스템은 <strong>"평가할 성분"과 "관행상 평가 면제 성분"의 구분</strong>이 day-1 자산이다 — 이 list는 사내 SA로부터 받는 첫 번째 ground truth.
+    </div>
+  </details>
+</div>
+
+<div class="question">
+  <p><strong>Q2.</strong> Niacinamide는 SCCS Opinion이 없어 EFSA의 경구 NOAEL 900 mg/kg bw/day를 사용했다. 이 값을 dermal exposure 기반 MoS 계산에 그대로 적용하는 것이 보수적인가, 과소평가인가?</p>
+  <details>
+    <summary>답 보기</summary>
+    <div class="answer">
+      <strong>대체로 보수적이다 — 하지만 모든 경우에 옳지는 않다.</strong> SCCS NoG는 dermal route 데이터가 없을 때 경구 NOAEL을 사용 가능하다고 명시하나, dermal absorption(DA%)을 통한 보정이 전제다. niacinamide의 경구 흡수율은 거의 100%(고bioavailability vitamin)이므로 경구 NOAEL을 systemic NOAEL로 간주할 수 있다. dermal 흡수율이 50% default라면 dermal exposure는 경구보다 노출이 낮으므로 같은 NOAEL 비교는 보수적이다. 그러나 경구 흡수율이 낮은 성분(예: 일부 polymer)은 경구 NOAEL이 systemic NOAEL을 과소평가 → dermal MoS를 부풀린다. <strong>MVP에서는 "경구→피부 그대로 사용" 보수적 가정으로 시작하되, narrative에 "extrapolation 미실시, 보수적 가정" 명시</strong>. v3에서 (a) systemic bioavailability factor (SCCS NoG §3-6.4) 또는 (b) PBPK modeling으로 route correction 도입.
+    </div>
+  </details>
+</div>
+
+<div class="question">
+  <p><strong>Q3.</strong> Day 6에 SA에게 draft를 보내는 게 너무 이르다고 느낀다. "성분 14개 중 8개만 narrative 있고, A.2·A.3·A.8은 placeholder다. SA가 형편없다고 생각할 것 같다." 이 우려에 어떻게 대처할 것인가?</p>
+  <details>
+    <summary>답 보기</summary>
+    <div class="answer">
+      <strong>대처하지 마라 — 그대로 보내라.</strong> 단, 이메일에 "<em>이건 v1, 30% 완성도, 목적은 형식·논조 first impression. 빠진 섹션은 의도된 것, 채울 계획은 보유. 5~10분 정도만 읽고 '시스템이 잘못 향하고 있는 부분'만 짚어달라.</em>"를 명시. <strong>완벽주의는 솔로 메이커의 핵심 적</strong>이다. SA가 "narrative 화법이 사내 표현과 다르다"를 day 7에 짚어주면 v2 전체 generator system prompt가 정확한 방향으로 간다. 90%로 끌어올린 뒤 받는 같은 피드백은 한 달 늦다. 더 작은 우려: SA가 화났다? <strong>SA의 시간을 가치 있게 쓰는 책임은 당신에게 있다 — 5분 검토 + "이 방향이 맞다/틀리다" 코멘트만 요청하라.</strong> 30분 짜리 라인 by 라인 review는 v2 이후.
+    </div>
+  </details>
+</div>
+
+<div class="question">
+  <p><strong>Q4.</strong> M6 generator를 호출할 때 사내 처방 데이터(자사 INCI %)를 Anthropic API로 그대로 전송할 것인가? 어떤 옵션이 있는가?</p>
+  <details>
+    <summary>답 보기</summary>
+    <div class="answer">
+      <strong>법무·정보보안 정책 확인이 코드 작성보다 먼저다.</strong> 옵션: (1) <strong>OpenAI/Anthropic public API + 0-day retention + 학습 opt-out</strong> — 가장 간단, 정책이 허용하면 v1에 적합. 단 처방 % 자체는 영업비밀이라 거부될 가능성 높음. (2) <strong>AWS Bedrock의 Anthropic Claude</strong> — VPC 내 호출, 회사 AWS 계정에 격리, 가장 흔한 enterprise 정답. (3) <strong>Google Vertex AI의 Anthropic Claude</strong> — 회사 GCP 사용 시. (4) <strong>Azure OpenAI</strong> — Anthropic 대신 GPT-4 사용해야 함. (5) <strong>처방 abstraction</strong> — INCI 이름과 농도를 generator에 보내고 "실제 제품명·브랜드"는 마스킹. 가장 보수적. (6) <strong>온프레미스 LLM</strong> — Llama·Qwen 등 self-hosted. CPSR 작성 품질에서는 v3 이후 검토. <strong>MVP는 (2) Bedrock + (5) abstraction</strong> 조합이 권장. 결정은 RA·법무·정보보안 합의 후 NOTES.md에 기록.
+    </div>
+  </details>
+</div>
+
+</div>
+
+<h2>14. 다음 단계</h2>
+
+<ul>
+  <li>v1 draft 산출 → 사내 SA 1명에게 first impression 받기 → <strong>Lesson 0008 reference set 구축</strong>으로 이행.</li>
+  <li>Reference set 구축이 acceptance 측정의 전제. v1 산출물은 그 자체로 reference set의 첫 데이터 포인트가 된다.</li>
+  <li>병행: <strong>HITL UI 설계 (Lesson 0009)</strong>는 reference set 5건이 모이면 시작. UI 없이도 5건은 CLI + email로 운영 가능.</li>
+</ul>
+
+<div class="callout">
+  <span class="label">교사에게 질문</span>
+  "사내 R&D / LIMS에서 자사 처방을 YAML로 받을 수 있는가 (수기 YAML 작성 vs DB 자동 추출)?", "Anchor 제품으로 niacinamide cream 외에 더 단순한 후보 (토너·에센스)가 있는가?", "MVP의 첫 SA 검토를 누가 (몇 명) 받을 수 있는가?" — 답에 따라 v1의 자원 배분이 정해집니다.
+</div>
+
+<div class="nav">
+  Previous: <a href="0006-tier4-reasoning-and-evaluator.html">0006 — Tier 4: Reasoning & Evaluator</a> ·
+  Next: <a href="0008-reference-set-construction.html">0008 — Reference Set 구축</a> ·
+  Glossary: <a href="../reference/glossary.html">용어집</a>
+</div>
+
+</body>
+</html>

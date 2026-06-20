@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Lesson 0002 — CPSR 자동화의 4-Tier 분류 (시스템 Backbone)</title>
+<style>
+  :root {
+    --ink: #1a1a1a;
+    --muted: #5a5a5a;
+    --line: #d8d3c7;
+    --accent: #7a3b2e;
+    --highlight: #fbf6ec;
+    --code-bg: #f3efe5;
+    --quiz-bg: #f9f5ea;
+    --warn: #b45309;
+    --t1: #2563eb;
+    --t2: #0891b2;
+    --t3: #7c3aed;
+    --t4: #be185d;
+    --t5: #b45309;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Iowan Old Style", "Georgia", "Apple SD Gothic Neo", "Noto Serif KR", serif;
+    color: var(--ink);
+    max-width: 800px;
+    margin: 60px auto;
+    padding: 0 28px 80px;
+    line-height: 1.7;
+    font-size: 17px;
+    background: #fefcf7;
+  }
+  .meta {
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  h1 {
+    font-size: 30px;
+    line-height: 1.25;
+    margin: 0 0 8px;
+    letter-spacing: -0.01em;
+  }
+  .subtitle { color: var(--muted); font-style: italic; margin-bottom: 36px; }
+  h2 {
+    font-size: 22px;
+    margin: 44px 0 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--line);
+  }
+  h3 { font-size: 18px; margin: 30px 0 8px; color: var(--accent); }
+  p { margin: 12px 0; }
+  ul, ol { padding-left: 24px; }
+  li { margin: 6px 0; }
+  code {
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 14px;
+    background: var(--code-bg);
+    padding: 2px 6px;
+    border-radius: 3px;
+  }
+  .callout {
+    background: var(--highlight);
+    border-left: 4px solid var(--accent);
+    padding: 16px 20px;
+    margin: 24px 0;
+    border-radius: 0 6px 6px 0;
+  }
+  .callout-warn { background: #fef7e6; border-left-color: var(--warn); }
+  .callout .label {
+    display: block; font-size: 12px;
+    text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--accent); margin-bottom: 6px; font-weight: 600;
+  }
+  .callout-warn .label { color: var(--warn); }
+  table {
+    width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px;
+  }
+  th, td {
+    text-align: left; padding: 10px 12px;
+    border-bottom: 1px solid var(--line); vertical-align: top;
+  }
+  th {
+    background: var(--code-bg); font-weight: 600;
+    font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  .tier-card {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 22px 26px;
+    margin: 20px 0;
+    background: #fff;
+    border-left-width: 6px;
+  }
+  .tier-card.t1 { border-left-color: var(--t1); }
+  .tier-card.t2 { border-left-color: var(--t2); }
+  .tier-card.t3 { border-left-color: var(--t3); }
+  .tier-card.t4 { border-left-color: var(--t4); }
+  .tier-card.t5 { border-left-color: var(--t5); }
+  .tier-header {
+    display: flex; align-items: baseline; gap: 12px;
+    margin-bottom: 6px;
+  }
+  .tier-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 4px;
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: #fff;
+  }
+  .t1 .tier-badge { background: var(--t1); }
+  .t2 .tier-badge { background: var(--t2); }
+  .t3 .tier-badge { background: var(--t3); }
+  .t4 .tier-badge { background: var(--t4); }
+  .t5 .tier-badge { background: var(--t5); }
+  .tier-name { font-size: 19px; font-weight: 600; }
+  .tier-card dl { margin: 12px 0 0; }
+  .tier-card dt {
+    font-size: 12px; text-transform: uppercase;
+    letter-spacing: 0.06em; color: var(--muted);
+    margin-top: 12px; font-weight: 600;
+  }
+  .tier-card dd { margin: 4px 0 0 0; }
+  .quiz {
+    background: var(--quiz-bg);
+    padding: 28px 32px;
+    margin: 40px 0;
+    border-radius: 8px;
+  }
+  .quiz h2 { border: none; margin-top: 0; }
+  .question { margin: 24px 0; }
+  details { margin: 8px 0; }
+  details > summary {
+    cursor: pointer; color: var(--accent);
+    font-size: 14px; user-select: none;
+  }
+  details[open] > summary { margin-bottom: 8px; }
+  .answer {
+    margin-top: 8px; padding: 12px 16px;
+    background: #fff; border: 1px dashed var(--line);
+    border-radius: 4px;
+  }
+  .nav {
+    margin-top: 60px; padding-top: 24px;
+    border-top: 1px solid var(--line);
+    font-size: 14px; color: var(--muted);
+  }
+  .nav a { color: var(--accent); text-decoration: none; }
+  .nav a:hover { text-decoration: underline; }
+  .cite { font-size: 13px; color: var(--muted); }
+  .cite a { color: var(--muted); text-decoration: underline; }
+  .arch {
+    background: #1a1a1a;
+    color: #f0ebe0;
+    padding: 22px 26px;
+    border-radius: 8px;
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    overflow-x: auto;
+    margin: 24px 0;
+  }
+  .arch .t1c { color: #93c5fd; }
+  .arch .t2c { color: #67e8f9; }
+  .arch .t3c { color: #c4b5fd; }
+  .arch .t4c { color: #f9a8d4; }
+  .arch .t5c { color: #fcd34d; }
+  .arch .comment { color: #6b7280; }
+  @media print {
+    body { background: #fff; max-width: 100%; margin: 0; }
+    .answer { display: block !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="meta">Lesson 0002 · 약 30분</div>
+<h1>4-Tier 자동화 분류</h1>
+<p class="subtitle">CPSR의 모든 섹션은 다섯 가지 자동화 등급 중 하나로 분류된다. 이 분류가 시스템 전체의 backbone이다.</p>
+
+<div class="callout">
+  <span class="label">이 레슨의 약속</span>
+  레슨을 마치면 (1) 5개 tier의 정의·예시·실패 모드를 외우고, (2) CPSR Annex I의 모든 섹션을 tier로 분류할 수 있으며, (3) 시스템 아키텍처에서 "어디서 LLM을 쓰고 어디서 안 쓰는가"의 판단 기준이 명확해진다.
+</div>
+
+<h2>1. 왜 분류가 backbone인가</h2>
+
+<p>CPSR을 LLM 하나로 한 번에 쓰게 하면 95% acceptance rate는 불가능하다. 이유는 명확하다:</p>
+
+<ul>
+  <li><strong>계산 영역 (SED·MoS)</strong>에서 LLM은 산수 오류를 낸다. 0% 허용.</li>
+  <li><strong>인용 영역 (NOAEL)</strong>에서 LLM은 fabrication한다. 추적 가능한 grounding 없으면 SA가 거부.</li>
+  <li><strong>판단 영역 (B.3 Reasoning)</strong>에서 LLM은 가치 있는 일을 한다. 하지만 rubric 평가 없으면 일관성 없음.</li>
+  <li><strong>책임 영역 (B.4 서명)</strong>은 법적으로 사람만 가능.</li>
+</ul>
+
+<p>같은 도구로 다른 문제를 풀면 안 된다. <strong>섹션마다 적합한 tier로 라우팅</strong>해야 한다. 그 라우팅 테이블이 곧 자동화 분류다.</p>
+
+<h2>2. 다섯 가지 Tier</h2>
+
+<div class="tier-card t1">
+  <div class="tier-header">
+    <span class="tier-badge">TIER 1</span>
+    <span class="tier-name">Deterministic Compute</span>
+  </div>
+  <p>입력이 정해지면 출력이 수식으로 결정. LLM 사용 금지. unit test 100% 커버.</p>
+  <dl>
+    <dt>예시 (CPSR)</dt>
+    <dd>SED 계산, MoS 계산, retention factor 곱셈, 단위 변환, 농도 합계 100% 검증, aggregate exposure 합산</dd>
+    <dt>구현</dt>
+    <dd>순수 함수, Python/TypeScript module. <code>compute_sed(amount, concentration, da_pct, retention, bw) -> float</code></dd>
+    <dt>실패 모드</dt>
+    <dd>입력 단위 혼동(mg vs μg, % vs ppm), retention factor 잘못 매핑, 체중 기본값(60kg) 미명시. <strong>입력 검증 레이어가 진짜 위험.</strong></dd>
+    <dt>검증</dt>
+    <dd>SCCS NoG 12판 부록의 example calculation을 unit test로 박제</dd>
+  </dl>
+</div>
+
+<div class="tier-card t2">
+  <div class="tier-header">
+    <span class="tier-badge">TIER 2</span>
+    <span class="tier-name">Structured Data Retrieval</span>
+  </div>
+  <p>외부의 구조화된 데이터를 그대로 가져옴. LLM 불필요. API/DB 쿼리.</p>
+  <dl>
+    <dt>예시 (CPSR)</dt>
+    <dd>CosIng에서 INCI 정규화·기능·EU Annex 상태 조회, ECHA REACH 등록 substance ID 매핑, CAS·EC 번호 lookup, 사내 R&D DB에서 처방·안정성 데이터 fetch</dd>
+    <dt>구현</dt>
+    <dd>API client, 캐시 레이어, 정규화 스키마. <strong>CosIng은 공식 API 없음</strong> → 정기 dump 활용 또는 scraping (사내용은 회색지대, 외부용은 라이선스 확인).</dd>
+    <dt>실패 모드</dt>
+    <dd>INCI 표기 변종(소문자·trailing space·동의어), 비활성 INCI(폐기), regional naming(예: Korea 표준명 ≠ INCI), CAS multi-mapping</dd>
+    <dt>검증</dt>
+    <dd>known-good fixture 100개로 정규화 정확도 측정. 임계 미달 시 Tier 3로 escalate.</dd>
+  </dl>
+</div>
+
+<div class="tier-card t3">
+  <div class="tier-header">
+    <span class="tier-badge">TIER 3</span>
+    <span class="tier-name">LLM Extraction with Grounding (RAG)</span>
+  </div>
+  <p>비구조화 1차 자료(PDF·HTML)에서 LLM이 사실을 추출. 출처 anchor 강제. fabrication 0% 목표.</p>
+  <dl>
+    <dt>예시 (CPSR)</dt>
+    <dd>SCCS Opinion PDF에서 성분 NOAEL/SED 한계/MoS·결론 추출, CIR final report에서 권장 최대 농도 추출, REACH dossier PDF에서 acute/repeated dose 데이터 추출, IFRA Standards에서 향료 카테고리별 한도 추출</dd>
+    <dt>구현</dt>
+    <dd>구조화 출력(JSON schema with citation field). 인용에 <strong>문서 ID + 페이지/문단 anchor + 원문 quote</strong> 필수. 추출 후 quote가 원문에 literal match하는지 검증.</dd>
+    <dt>실패 모드</dt>
+    <dd>(a) Fabrication: 원문에 없는 NOAEL을 그럴듯하게 만들어냄. (b) 단위 변환 오류: mg/kg/day vs μg/kg/day. (c) 종 오인: rat NOAEL을 human에 그대로 적용. (d) 다중 시험 중 보수적 값을 안 고름.</dd>
+    <dt>검증</dt>
+    <dd>quote literal match + 별도 evaluator agent의 "이 NOAEL이 이 문서에 실제로 있는가" 재확인 + 단위 일치 룰. 정합성 < 95%면 HITL.</dd>
+  </dl>
+</div>
+
+<div class="tier-card t4">
+  <div class="tier-header">
+    <span class="tier-badge">TIER 4</span>
+    <span class="tier-name">LLM Reasoning with Rubric Evaluation</span>
+  </div>
+  <p>Tier 1~3의 결과를 받아 LLM이 narrative reasoning을 생성. 별도 evaluator가 rubric으로 채점. acceptance 95%의 핵심 격전지.</p>
+  <dl>
+    <dt>예시 (CPSR)</dt>
+    <dd><strong>B.3 Reasoning</strong>(각 성분의 MoS 평가, 상호작용, 데이터 갭 정당화), <strong>B.1 Conclusion</strong>(전체 안전성 결론), A.4 불순물 평가 narrative, A.8 toxicological profile 요약</dd>
+    <dt>구현</dt>
+    <dd>Generator agent + Evaluator agent. Generator는 Tier 1~3 결과를 system prompt에 주입, SCCS NoG 12판의 §3-6/§3-7 평가 흐름을 rubric으로 사용. Evaluator는 rubric 점수 + 발견된 결함 목록 산출. 임계 미달 시 retry 또는 HITL.</dd>
+    <dt>실패 모드</dt>
+    <dd>(a) Boilerplate화: 모든 성분에 동일 문구 → 평가자 거부. (b) MoS < 100인데 "safe" 결론. (c) 데이터 갭을 침묵하고 넘어감. (d) 종간차·민감군(임산부·영아) 미고려. (e) SCCS NoG 표현·용어와 어긋남.</dd>
+    <dt>검증</dt>
+    <dd>Rubric 정량 점수 + 실제 SA의 historical reports로 만든 reference set 대비 ROUGE/사실일치도 + spot human review.</dd>
+  </dl>
+</div>
+
+<div class="tier-card t5">
+  <div class="tier-header">
+    <span class="tier-badge">TIER 5 / HITL</span>
+    <span class="tier-name">Human-in-the-Loop (필수 사람)</span>
+  </div>
+  <p>법적·과학적 이유로 사람이 반드시 개입. 자동화 절대 불가 영역.</p>
+  <dl>
+    <dt>예시 (CPSR)</dt>
+    <dd><strong>B.4 자격자 서명·승인</strong>(EU Reg Art. 10 자격 요구), Tier 3에서 데이터 갭 감지 시 SA 호출, Tier 4 evaluator 점수 미달 시 SA 호출, 신규 성분(SCCS Opinion·CIR·ECHA 모두 데이터 없음) 처리, 회사 정책 결정(예: MoS = 80인 성분을 농도 조정할지 처방 교체할지)</dd>
+    <dt>구현</dt>
+    <dd>워크플로우 게이트 + 알림(slack·email·내부 도구). SA가 결정 → 결정 로그 → 시스템이 학습 데이터로 흡수.</dd>
+    <dt>실패 모드</dt>
+    <dd>(a) Tier 4에서 silent failure → HITL 호출 누락. (b) SA 결정이 시스템에 피드백 안 됨 → 다음 제품에 동일 갭 반복.</dd>
+    <dt>검증</dt>
+    <dd>HITL 트리거 false negative rate를 명시적 메트릭으로 추적. 시스템이 "안 부른" 케이스 중 사후 SA가 손댄 비율.</dd>
+  </dl>
+</div>
+
+<h2>3. CPSR Annex I 섹션 → Tier 매핑 (초안)</h2>
+
+<table>
+  <tr><th>섹션</th><th>주요 Tier</th><th>비고</th></tr>
+  <tr><td><strong>A.1</strong> Composition (INCI %)</td><td>T1 + T2</td><td>입력 검증 + CosIng 정규화. 처방표 자체는 사람 입력(R&D 제공).</td></tr>
+  <tr><td><strong>A.2</strong> Physico-chem & stability</td><td>T2 + T4</td><td>실험실 데이터 fetch(T2) + 의미 해석(T4).</td></tr>
+  <tr><td><strong>A.3</strong> Microbiological quality</td><td>T2 + T4</td><td>Challenge test 결과 + ISO 11930 적합성 판단.</td></tr>
+  <tr><td><strong>A.4</strong> Impurities & packaging</td><td>T2 + T3 + T4</td><td>중금속 한도 비교(T2), 용기 이행물질 자료 추출(T3), 종합 평가(T4).</td></tr>
+  <tr><td><strong>A.5</strong> Normal & foreseeable use</td><td>T1 + T4</td><td>SCCS NoG Table 1 mapping + 사용 시나리오 narrative.</td></tr>
+  <tr><td><strong>A.6</strong> Product exposure</td><td>T1</td><td>전적으로 deterministic. 카테고리·체중·빈도 → mg/kg bw/day.</td></tr>
+  <tr><td><strong>A.7</strong> Substance exposure (SED)</td><td>T1</td><td>T1.dermal absorption 기본값(50%) 사용 시 명시. 측정값 있으면 T3로 추출.</td></tr>
+  <tr><td><strong>A.8</strong> Toxicological profile</td><td>T3 + T4</td><td>RAG로 NOAEL 추출, 종합 narrative 생성. <strong>핵심 위험 영역.</strong></td></tr>
+  <tr><td><strong>A.9</strong> Undesirable effects</td><td>T2 + T5</td><td>사내 CRM/QA 시스템 fetch. 신제품이면 N/A.</td></tr>
+  <tr><td><strong>A.10</strong> Other info</td><td>T2 + T4</td><td>HRIPT·임상 데이터 통합.</td></tr>
+  <tr><td><strong>B.1</strong> Conclusion</td><td>T4 + T5</td><td>LLM 초안, SA 최종 확정.</td></tr>
+  <tr><td><strong>B.2</strong> Labelled warnings</td><td>T2 + T4</td><td>Annex III/IV/V/VI 의무 표시 rule lookup + 추가 경고 판단.</td></tr>
+  <tr><td><strong>B.3</strong> Reasoning</td><td>T4</td><td>분량이 가장 크고 가장 어려움. evaluator rubric 필수.</td></tr>
+  <tr><td><strong>B.4</strong> Assessor credentials</td><td>T5</td><td>영구히 사람.</td></tr>
+</table>
+
+<div class="callout callout-warn">
+  <span class="label">설계 함정</span>
+  T3·T4를 한 LLM 호출로 묶지 마라. T3는 "사실 추출"이고 T4는 "판단". 묶으면 fabricated NOAEL 위에 reasoning이 쌓여 acceptance rate가 무너진다. T3 결과는 evaluator로 검증 후 structured fact로 T4에 전달한다.
+</div>
+
+<h2>4. 시스템 아키텍처 스케치</h2>
+
+<div class="arch">
+<span class="comment"># CPSR Agent System — Tier-routed pipeline</span>
+
+INPUT: {formulation_INCI%, product_category, use_scenario}
+   |
+   v
+[<span class="t1c">T1</span>] formulation_validator  <span class="comment"># sum=100%, ranges, units</span>
+[<span class="t2c">T2</span>] cosing_normalizer       <span class="comment"># INCI → canonical + CAS + EU annex</span>
+[<span class="t1c">T1</span>] exposure_calculator     <span class="comment"># RfE * concentration → SED per substance</span>
+[<span class="t2c">T2</span>] internal_data_fetcher   <span class="comment"># R&D, stability, microbio, undesired effects</span>
+   |
+   v
+[<span class="t3c">T3</span>] tox_rag                  <span class="comment"># SCCS Opinion + CIR + ECHA → NOAEL per substance</span>
+       └─ <span class="t3c">evaluator</span>            <span class="comment"># quote literal match, unit check, species check</span>
+   |
+   v
+[<span class="t1c">T1</span>] mos_calculator          <span class="comment"># MoS = NOAEL / SED, flag &lt;100</span>
+   |
+   v
+[<span class="t4c">T4</span>] reasoning_generator     <span class="comment"># B.3 narrative, per-substance + global</span>
+       └─ <span class="t4c">evaluator(rubric)</span>     <span class="comment"># SCCS NoG-derived rubric</span>
+[<span class="t4c">T4</span>] conclusion_generator    <span class="comment"># B.1 + B.2 warnings</span>
+   |
+   v
+[<span class="t5c">T5</span>] HITL gate              <span class="comment"># SA review + sign B.4</span>
+   |
+   v
+OUTPUT: CPSR draft (JSON) + Word/PDF render + audit log
+</div>
+
+<p class="cite">SCCS NoG 12판 §3-6의 평가 흐름과 정확히 일치하게 단계 순서를 잡았다. 검토 시 SA가 따라가는 사고 흐름과 1:1 대응.</p>
+
+<h2>5. Quiz — Tier 분류 연습 (4문항)</h2>
+
+<div class="quiz">
+
+<div class="question">
+  <p><strong>Q1.</strong> "처방의 페녹시에탄올 0.8%가 EU Annex V (preservatives)에 등재된 보존제 한도 1.0% 이내인지 자동 확인" — 어느 tier?</p>
+  <details>
+    <summary>답 보기</summary>
+    <div class="answer">
+      <strong>T1 (deterministic compute) + T2 (structured retrieval)</strong>. T2가 Annex V에서 페녹시에탄올 한도(1.0%)를 fetch, T1이 0.8 ≤ 1.0 비교. LLM 불필요. unit test로 100% 커버 가능.
+    </div>
+  </details>
+</div>
+
+<div class="question">
+  <p><strong>Q2.</strong> "처방의 신규 식물추출물(SCCS Opinion·CIR·ECHA 모두 데이터 없음)에 대한 안전성 판단" — 어느 tier?</p>
+  <details>
+    <summary>답 보기</summary>
+    <div class="answer">
+      <strong>T5 (HITL)</strong>. 이건 시스템이 "처리"하면 안 된다. T3 RAG가 "데이터 없음" 응답 → 시스템이 SA 호출 → SA가 (a) read-across·QSAR로 정당화, (b) 농도 제한, (c) 처방 교체, (d) 자체 시험 발주 중 선택. 시스템은 결정을 학습 데이터로 흡수.
+    </div>
+  </details>
+</div>
+
+<div class="question">
+  <p><strong>Q3.</strong> "Niacinamide 4% 처방의 MoS 계산"에서 NOAEL 부분과 SED 부분은 각각 어느 tier로 나뉘나?</p>
+  <details>
+    <summary>답 보기</summary>
+    <div class="answer">
+      <strong>NOAEL: T3</strong> (SCCS·CIR Opinion PDF에서 RAG로 추출 + quote anchor + 단위/종 검증). <strong>SED: T1</strong> (face cream RfE 1.54 g/day × 4% × dermal absorption × 1.0 retention / 60kg). <strong>MoS = NOAEL ÷ SED: T1</strong> (순수 산수). 결과의 narrative 해석 한 줄: T4. 한 번의 산출에 T1·T3·T4가 모두 들어간다 — tier 라우팅이 왜 backbone인지의 모범 예.
+    </div>
+  </details>
+</div>
+
+<div class="question">
+  <p><strong>Q4.</strong> Tier 4 reasoning_generator가 "이 제품은 안전합니다"라는 결론을 95% 일관되게 내려도 acceptance가 안 나오는 이유 두 가지를 들어라.</p>
+  <details>
+    <summary>답 보기</summary>
+    <div class="answer">
+      (1) <strong>Boilerplate 문제</strong> — 모든 성분에 같은 문구가 반복되면 SA가 "기계가 썼다"는 신호로 인식하고 신뢰를 잃는다. acceptance는 "그대로 쓸 만하다"는 판단인데, 동일 문구로 50개 성분을 처리한 보고서는 누구라도 손대고 싶어진다. (2) <strong>침묵의 갭</strong> — 데이터 없는 성분, MoS &lt; 100인 성분, 민감군 고려를 언급 없이 넘어가면 SA가 검토 단계에서 발견하고 큰 폭으로 수정한다. rubric에 "갭·예외·민감군 명시"를 평가 항목으로 박는 이유.
+    </div>
+  </details>
+</div>
+
+</div>
+
+<h2>6. 다음 단계</h2>
+
+<p>이 backbone을 확보했으니, 다음 두 갈래 중 하나:</p>
+
+<ol>
+  <li><strong>Tier 1 깊이 파기 — 노출량·MoS 계산 공식 마스터</strong>. SED·MoS·retention factor·RfE·체중 기본값을 SCCS NoG 12판 §3-6에서 정확히 박제. unit test 묶음 설계의 baseline.</li>
+  <li><strong>Tier 3 깊이 파기 — SCCS Opinion 코퍼스 구조 분석</strong>. Opinion PDF의 일관 구조(요약·NOAEL·MoS·결론 섹션)를 파악해 RAG schema·prompt를 설계하기 위한 기반.</li>
+</ol>
+
+<div class="callout">
+  <span class="label">교사에게 질문</span>
+  "T2에서 CosIng API 없는 문제는 어떻게 우회하나?", "T3 evaluator가 quote literal match를 강제할 때 PDF OCR 텍스트와 원문 문자 차이는?", "T4 rubric의 SCCS NoG 발췌는 어디까지 정량 추출 가능한가?" — 이런 실무 질문은 다음 lesson을 보다 정확히 만든다.
+</div>
+
+<div class="nav">
+  Previous: <a href="0001-anatomy-of-cpsr.html">0001 — CPSR Anatomy</a> ·
+  Next: <a href="0003-tier1-exposure-and-mos.html">0003 — Tier 1: SED/MoS 계산</a> ·
+  Then: <a href="0004-tier3-sccs-opinion-rag.html">0004 — Tier 3: SCCS Opinion RAG</a> ·
+  Glossary: <a href="../reference/glossary.html">용어집</a> ·
+  Mission: <a href="../MISSION.md">MISSION.md</a>
+</div>
+
+</body>
+</html>

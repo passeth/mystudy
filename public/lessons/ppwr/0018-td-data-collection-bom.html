@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Lesson 0018 — 부자재 리스트의 모든 칸을 Annex VII로 정당화하기</title>
+<style>
+  :root {
+    --ink:#1a1a1a; --muted:#5a5a5a; --line:#d8d3c7;
+    --accent:#0369a1; --accent2:#15803d; --highlight:#f0f9ff;
+    --code-bg:#f3efe5; --quiz-bg:#f9f5ea;
+    --warn:#b45309; --good:#15803d; --bad:#b91c1c;
+  }
+  * { box-sizing:border-box; }
+  body { font-family:"Iowan Old Style","Georgia","Apple SD Gothic Neo","Noto Serif KR",serif; color:var(--ink); max-width:820px; margin:60px auto; padding:0 28px 80px; line-height:1.7; font-size:17px; background:#fefcf7; }
+  .meta { font-family:"SF Mono","Menlo",monospace; font-size:12px; letter-spacing:0.1em; color:var(--muted); text-transform:uppercase; margin-bottom:12px; }
+  .tier-tag { display:inline-block; background:var(--accent2); color:#fff; padding:3px 10px; border-radius:4px; font-family:"SF Mono","Menlo",monospace; font-size:11px; font-weight:600; letter-spacing:0.08em; margin-right:8px; }
+  h1 { font-size:28px; line-height:1.25; margin:0 0 8px; letter-spacing:-0.01em; }
+  .subtitle { color:var(--muted); font-style:italic; margin-bottom:36px; }
+  h2 { font-size:22px; margin:44px 0 12px; padding-bottom:6px; border-bottom:1px solid var(--line); }
+  h3 { font-size:18px; margin:30px 0 8px; color:var(--accent); }
+  p { margin:12px 0; }
+  ul, ol { padding-left:24px; } li { margin:6px 0; }
+  code { font-family:"SF Mono","Menlo",monospace; font-size:14px; background:var(--code-bg); padding:2px 6px; border-radius:3px; }
+  .callout { background:var(--highlight); border-left:4px solid var(--accent); padding:16px 20px; margin:24px 0; border-radius:0 6px 6px 0; }
+  .callout-warn { background:#fef7e6; border-left-color:var(--warn); }
+  .callout-bad { background:#fef2f2; border-left-color:var(--bad); }
+  .callout-good { background:#f0fdf4; border-left-color:var(--good); }
+  .callout .label { display:block; font-size:12px; text-transform:uppercase; letter-spacing:0.1em; color:var(--accent); margin-bottom:6px; font-weight:600; }
+  .callout-warn .label { color:var(--warn); } .callout-bad .label { color:var(--bad); } .callout-good .label { color:var(--good); }
+  table { width:100%; border-collapse:collapse; margin:20px 0; font-size:13.5px; }
+  th, td { text-align:left; padding:9px 11px; border-bottom:1px solid var(--line); vertical-align:top; }
+  th { background:var(--code-bg); font-weight:600; font-size:11.5px; text-transform:uppercase; letter-spacing:0.04em; }
+  .ok { color:var(--good); font-weight:700; } .down { color:var(--warn); font-weight:700; } .kill { color:var(--bad); font-weight:700; }
+  .must { background:#15803d; color:#fff; } .cond { background:#ca8a04; color:#fff; } .aux { background:#6b7280; color:#fff; }
+  .pill { display:inline-block; font-size:11px; font-weight:700; padding:2px 8px; border-radius:20px; }
+  .explorer { background:#fff; border:2px solid var(--accent2); border-radius:12px; padding:24px 26px; margin:28px 0; box-shadow:0 2px 12px rgba(0,0,0,0.04); }
+  .explorer h3 { margin-top:0; color:var(--accent2); }
+  .explorer select { font-family:inherit; font-size:15px; padding:8px 10px; border:1px solid var(--line); border-radius:6px; background:#fefcf7; color:var(--ink); width:100%; margin-top:6px; }
+  .exp-out { margin-top:18px; padding:16px 20px; border-radius:10px; background:var(--code-bg); display:none; }
+  .anx { font-family:"SF Mono","Menlo",monospace; font-size:13px; background:var(--code-bg); padding:16px 20px; border-radius:8px; margin:18px 0; line-height:1.9; }
+  .quiz { background:var(--quiz-bg); padding:28px 32px; margin:40px 0; border-radius:8px; }
+  .quiz h2 { border:none; margin-top:0; } .question { margin:24px 0; }
+  details { margin:8px 0; } details > summary { cursor:pointer; color:var(--accent); font-size:14px; user-select:none; list-style:revert; }
+  details[open] > summary { margin-bottom:8px; }
+  .answer { margin-top:8px; padding:12px 16px; background:#fff; border:1px dashed var(--line); border-radius:4px; }
+  .nav { margin-top:60px; padding-top:24px; border-top:1px solid var(--line); font-size:14px; color:var(--muted); }
+  .nav a { color:var(--accent); text-decoration:none; } .nav a:hover { text-decoration:underline; }
+  .cite { font-size:13px; color:var(--muted); } .cite a { color:var(--muted); text-decoration:underline; }
+  strong { font-weight:700; }
+  @media print { body { background:#fff; max-width:100%; margin:0; } .explorer { break-inside:avoid; } }
+
+  .tracklink { background:#f0fdf4; border:1px solid #15803d; border-radius:10px; padding:12px 16px; margin:0 0 30px; font-size:13px; line-height:2.0; }
+  .tracklink b { color:#15803d; text-transform:uppercase; letter-spacing:0.08em; font-size:11px; display:block; margin-bottom:5px; }
+  .tracklink a { color:#0369a1; text-decoration:none; }
+  .tracklink a:hover { text-decoration:underline; }
+  .tracklink .cur { background:#15803d; color:#fff; padding:1px 8px; border-radius:4px; font-weight:700; }
+  .tracklink .sep { color:#cdd6c9; margin:0 2px; }
+</style>
+</head>
+<body>
+
+<div class="meta"><span class="tier-tag">PPWR · 패키징</span>Lesson 0018 · 약 35분 · 실무 적용 (0016 연장)</div>
+<h1>부자재 리스트의 모든 칸을 Annex VII로 정당화하기</h1>
+<p class="subtitle">"부자재 리스트에 재질·착색·중량·코팅·잉크·COC까지 다 적으라는데, 이게 다 필요한가?" — 그렇다. 그리고 그 근거는 자의적 요구가 아니라 <strong>PPWR 부속서 VII(기술문서 TD)가 글자 그대로 요구하는 항목</strong>들이다. 이 레슨은 실제 공급사 양식의 모든 칸을 Annex VII 조문으로 하나씩 되짚어, "왜 모으는가"를 법적 근거로 설명한다.</p>
+
+<div class="tracklink">
+  <b>📦 PPWR 트랙 · 화장품 패키징 규제</b>
+  <a href="0011-ppwr-foundation.html">0011 토대</a> <span class="sep">·</span> <a href="0012-recyclability-grade-estimator.html">0012 등급추정</a> <span class="sep">·</span> <a href="0013-substances-and-pcr.html">0013 유해물질·PCR</a> <span class="sep">·</span> <a href="0014-rpet-pcr-sourcing-certification.html">0014 rPET조달</a> <span class="sep">·</span> <a href="0015-reduce-and-reuse.html">0015 감축·재사용</a> <span class="sep">·</span> <a href="0016-labelling-epr-doc.html">0016 라벨·EPR·DoC</a> <span class="sep">·</span> <a href="0017-korea-memberstates-roadmap.html">0017 실무로드맵</a> <span class="sep">·</span> <span class="cur">0018 부자재TD수집</span> <span class="sep">·</span> <a href="0019-component-master-architecture.html">0019 스케일수집</a> <span class="sep">·</span> <a href="0020-self-declaration-and-verification.html">0020 자기선언·검증</a> <span class="sep">·</span> <a href="0021-screening-engine-and-portal.html">0021 스크리닝엔진</a> <span class="sep">·</span> <a href="../reference/packaging-materials.html">📋 매터리얼 지도</a>
+</div>
+
+<div class="callout">
+  <span class="label">이 레슨의 약속</span>
+  마치면 (1) <strong>Annex VII이 요구하는 7개 항목</strong>을 알고, (2) 부자재 양식의 각 칸이 <strong>그 중 어디서 나오는지</strong> 짚고, (3) <strong>"왜 부품 단위로 분해하고 색·코팅·잉크까지 모으나"</strong>를 조문으로 답하며, (4) 어떤 칸이 무조건 필수이고 어떤 칸이 조건부인지 구분한다. 0016의 TD 피라미드를 <strong>실제 수집 양식</strong>으로 내려보낸다.</p>
+</div>
+
+<h2>1. 큰 그림 — 부자재 리스트 = TD의 바닥돌 수집기</h2>
+<p>0016에서 본 문서 피라미드를 다시 보자. 부자재 리스트는 그 <strong>맨 아래 raw data를 모으는 양식</strong>이다.</p>
+<div class="anx">
+📜 DoC (Annex VIII) — 서명·선언<br>
+▲<br>
+📁 <strong>TD (Annex VII)</strong> — 재질구성·평가·시험보고서<br>
+▲<br>
+📋 <strong>부자재 리스트</strong> ← <span style="color:var(--muted)">바로 이 양식이 TD의 입력 데이터를 수집</span>
+</div>
+<p>그래서 양식의 칸이 많아 보이는 건 과한 게 아니라, <strong>Annex VII이 요구하는 증빙을 빠짐없이 담으려면 그만큼 필요</strong>하기 때문이다. 칸을 줄이면 TD가 비고, TD가 비면 DoC에 서명할 수 없다(0016).</p>
+
+<h2>2. Annex VII이 법적으로 요구하는 7가지</h2>
+<p>PPWR 적합성 평가는 <strong>Module A 내부생산관리</strong>(제38조)로 하고, 그 기술문서(Annex VII)는 <strong>최소한</strong> 다음을 담아야 한다:</p>
+<table>
+  <tr><th>#</th><th>Annex VII 요구 항목</th><th>관련 조항</th></tr>
+  <tr><td>1</td><td>포장의 일반 설명 및 사용 용도</td><td>—</td></tr>
+  <tr><td>2</td><td>설계·구조 도면 + <strong>부품/레이어 구성도</strong></td><td>—</td></tr>
+  <tr><td>3</td><td><strong>모든 부품의 재질 구성</strong>(material composition of all components)</td><td>—</td></tr>
+  <tr><td>4</td><td>적용한 조화 표준 목록</td><td>—</td></tr>
+  <tr><td>5</td><td><strong>재활용성·최소화·재사용성 정성 평가</strong></td><td>제6·10·11</td></tr>
+  <tr><td>6</td><td><strong>재생원료(PCR) 함량 산정 결과</strong></td><td>제7</td></tr>
+  <tr><td>7</td><td><strong>우려물질 관련 시험 보고서·증빙</strong></td><td>제5</td></tr>
+</table>
+<div class="callout callout-warn">
+  <span class="label">10일 룰 — 왜 미리 다 모아야 하나</span>
+  EU 시장감시당국이 요청하면 <strong>10일 안에 기술문서 전체를 제출</strong>해야 한다. 그때 공급사에 "COC 좀 주세요" 하면 늦는다. 부자재 리스트로 <strong>평상시에 미리 모아두는</strong> 이유.
+</div>
+<p class="cite">출처: PPWR 부속서 VII·VIII·제38조, <a href="https://www.tanso.de/en/blog/ppwr-declaration-of-conformity-and-technical-documentation-what-companies-must-submit-from-august-12-2026" target="_blank">TD/DoC 구성 (Tanso)</a>.</p>
+
+<h2>3. 양식의 모든 칸 ↔ Annex VII 매핑</h2>
+<p>실제 부자재 양식(Re&amp;J PPWR 부자재 리스트)의 각 칸을 Annex VII 항목으로 되짚는다. <span class="pill must">필수</span> 무조건 · <span class="pill cond">조건부</span> 후가공/착색 있는 부품만 · <span class="pill aux">보조</span></p>
+<table>
+  <tr><th>양식 칸</th><th>Annex VII 근거</th><th>왜 (없으면 뭐가 막히나)</th><th>필수도</th></tr>
+  <tr><td>제품명·용기타입</td><td>#1 일반 설명</td><td>TD 식별·DoC #4·5 포장 식별</td><td><span class="pill must">필수</span></td></tr>
+  <tr><td>계층(1차/2차/운송)</td><td>#1 + 적용범위</td><td>층마다 적용 조항이 다름(제24·25, 접촉민감 분류)</td><td><span class="pill must">필수</span></td></tr>
+  <tr><td><strong>부품명</strong>(부품 단위 분해)</td><td>#2 부품 구성도 + #3</td><td>재활용성은 부품별 평가(0012)·5%면제 판정(0013)</td><td><span class="pill must">필수</span></td></tr>
+  <tr><td><strong>재질</strong></td><td><strong>#3 모든 부품 재질구성</strong></td><td>재활용 스트림·밀도분리·PCR 대상 결정. Annex VII 직접 명시</td><td><span class="pill must">필수</span></td></tr>
+  <tr><td>수지 Grade/공급사</td><td>#3 정밀 + #7 추적</td><td>정확한 폴리머 식별 + COC·시험성적서 받아낼 출처(0014)</td><td><span class="pill must">필수</span></td></tr>
+  <tr><td><strong>착색·색상</strong></td><td>#5 재활용성 평가(제6)</td><td>카본블랙=NIR 선별실패(즉사)·불투명=감점(0012). 색이 등급을 좌우</td><td><span class="pill must">필수</span></td></tr>
+  <tr><td>중량(g)</td><td>#6 PCR 산정(제7) + #5 최소화(제10)</td><td>PCR %는 무게 기준 + 5%미만 부품 면제 판정</td><td><span class="pill must">필수</span></td></tr>
+  <tr><td>내용물 접촉 Y/N</td><td>#5·#7 분류</td><td>접촉민감 여부 → PCR 기준(PET30/50)·물질규제 강도</td><td><span class="pill must">필수</span></td></tr>
+  <tr><td>후가공(코팅/N도 인쇄)</td><td>#5 재활용성 + #7</td><td>코팅·잉크=오염회피 요소(0012 4요소)·물질 경로</td><td><span class="pill must">필수</span></td></tr>
+  <tr><td>코팅제·인쇄잉크 정보</td><td>#7 우려물질 증빙(제5)</td><td>잉크·코팅이 중금속·PFAS 주 유입경로</td><td><span class="pill cond">조건부</span></td></tr>
+  <tr><td><strong>염료별 COC(중금속 4종)</strong></td><td><strong>#7 시험보고서(제5)</strong></td><td>중금속 100mg/kg 적합의 <strong>결정적 증빙</strong>. 없으면 DoC 서명 불가</td><td><span class="pill must">필수</span></td></tr>
+  <tr><td>용기 제조사·연락처</td><td>DoC #2 제조자 + 추적</td><td>제조자 정보(DoC 필수)·누락 COC 추적</td><td><span class="pill must">필수</span></td></tr>
+  <tr><td>사진(Image)</td><td>#1·#2 설명·도면 보조</td><td>설계 설명 보강(법문 필수는 아님)</td><td><span class="pill aux">보조</span></td></tr>
+</table>
+<div class="callout callout-good">
+  <span class="label">핵심 — 양식은 자의적이지 않다</span>
+  거의 모든 칸이 Annex VII의 <strong>#3(재질구성)·#5(재활용성 평가)·#6(PCR 산정)·#7(우려물질 시험)</strong> 중 하나로 곧장 매핑된다. "이건 왜 적나?" 싶은 칸이 있으면 이 네 항목 중 무엇을 위한 것인지 물으면 답이 나온다.
+</div>
+
+<h2>4. 왜 "부품 단위로" 분해하나 — 조문이 시키는 일</h2>
+<p>Annex VII #3은 "포장의 재질"이 아니라 <strong>"모든 부품(components)의 재질 구성"</strong>이라고 쓴다. 즉 <strong>부품 분해는 법문에서 직접 나온다.</strong> 거기에 우리가 배운 두 이유가 겹친다:</p>
+<ul>
+  <li><strong>재활용성은 부품별 평가(0012):</strong> JAR(PP)·CAP(PP)·Sealer(PS)·Seal(PE)가 각각 다른 스트림·밀도. 통으로 "PP 용기"라 적으면 PS sealer의 오염이 안 보인다.</li>
+  <li><strong>제7 5% 면제는 부품 무게로 판정(0013 펌프의 역설):</strong> 부품별 중량이 없으면 어떤 부품이 PCR 의무에서 빠지는지 계산 불가.</li>
+</ul>
+<p class="cite">작성 예의 OMNI 제품처럼 JAR/CAP/Spatula/Pressure sealer/Container Seal/Single Box를 행마다 분해하는 게 정확히 이 #3 요구를 충족하는 형태.</p>
+
+<h2>5. 왜 "색·코팅·잉크·COC"까지 — 두 조문의 교차점</h2>
+<table>
+  <tr><th>양식 칸</th><th>Annex VII 경로 ①: #5 재활용성(제6)</th><th>Annex VII 경로 ②: #7 우려물질(제5)</th></tr>
+  <tr><td>착색·색상</td><td>카본블랙→선별 실패, 불투명→감점 (0012)</td><td>안료가 중금속 운반 가능</td></tr>
+  <tr><td>코팅제</td><td>코팅→재활용 오염·해체 저해</td><td>코팅에 PFAS·중금속 가능</td></tr>
+  <tr><td>인쇄잉크</td><td>잉크→de-inking 부담·오염</td><td>잉크가 중금속의 주 유입경로</td></tr>
+  <tr><td><strong>염료 COC(중금속)</strong></td><td>—</td><td><strong>제5 100mg/kg 적합의 시험 증빙 그 자체</strong></td></tr>
+</table>
+<div class="callout callout-bad">
+  <span class="label">착색·색상을 "디자인 정보"로 가볍게 보지 말 것</span>
+  이 칸은 두 조문(제6 재활용성 + 제5 물질)에 동시에 걸리는 <strong>이중 부담 항목</strong>이다. 마케팅용 색 정보가 아니라 <strong>등급(0012)과 적합 증빙(제5)을 동시에 결정</strong>한다. 그래서 무조건 필수.
+</div>
+<div class="callout callout-warn">
+  <span class="label">화장품이라 PFAS보다 중금속 — 양식이 맞게 설계됨</span>
+  PFAS 한계값은 식품접촉 한정이라 화장품 패키징엔 직접 적용 안 된다(0013). 그래서 COC 칸이 <strong>PFAS가 아니라 중금속 4종(Pb·Cd·Hg·Cr)</strong>으로 잡혀 있는 건 화장품용으로 정확한 설계다. (단 코팅·잉크의 PFAS는 우려물질 최소화·바이어 요구 차원에서 여전히 확인 권장.)
+</div>
+
+<h2>6. ▶ "이 칸은 왜 필요?" 탐색기</h2>
+<p>양식의 칸을 고르면 Annex VII 근거·관련 조항·없을 때 막히는 것을 보여준다.</p>
+<div class="explorer">
+  <h3>🔍 부자재 양식 칸 → Annex VII 근거 탐색기</h3>
+  <select id="field" onchange="explain()">
+    <option value="">— 칸 선택 —</option>
+    <option value="layer">계층(1차/2차/운송)</option>
+    <option value="comp">부품명(부품 분해)</option>
+    <option value="mat">재질</option>
+    <option value="grade">수지 Grade/공급사</option>
+    <option value="color">착색·색상</option>
+    <option value="weight">중량(g)</option>
+    <option value="contact">내용물 접촉 Y/N</option>
+    <option value="finish">후가공(코팅/인쇄)</option>
+    <option value="ink">코팅제·인쇄잉크 정보</option>
+    <option value="coc">염료별 COC(중금속)</option>
+  </select>
+  <div class="exp-out" id="expout"></div>
+</div>
+
+<div class="quiz">
+<h2>되짚기 — 보지 말고 답하기</h2>
+<div class="question">
+  <strong>Q1.</strong> Annex VII이 "포장의 재질"이 아니라 어떻게 표현하기에 부품 단위 분해가 강제되는가?
+  <details><summary>답 보기</summary>
+  <div class="answer">"<strong>모든 부품(components)의 재질 구성</strong>(material composition of all components)"이라고 명시 → 부품 단위 분해가 법문에서 직접 나온다. + 재활용성은 부품별 평가(0012), 5% 면제는 부품 무게 판정(0013).</div>
+  </details>
+</div>
+<div class="question">
+  <strong>Q2.</strong> 착색·색상 칸이 "이중 부담 항목"인 이유를, 걸리는 두 조항으로 설명하라.
+  <details><summary>답 보기</summary>
+  <div class="answer"><strong>제6 재활용성(#5)</strong>: 카본블랙=NIR 선별실패, 불투명=감점으로 등급을 좌우. <strong>제5 우려물질(#7)</strong>: 안료가 중금속을 운반할 수 있어 시험 대상. 한 칸이 두 조문에 동시에 걸린다.</div>
+  </details>
+</div>
+<div class="question">
+  <strong>Q3.</strong> 염료별 COC(중금속) 칸이 Annex VII의 어느 항목이며, 없으면 무엇이 막히나?
+  <details><summary>답 보기</summary>
+  <div class="answer">Annex VII <strong>#7 우려물질 관련 시험 보고서·증빙</strong>(제5). 중금속 4종 100mg/kg 적합의 결정적 증빙이라, 없으면 TD가 비고 <strong>DoC에 서명할 수 없다</strong>(0016).</div>
+  </details>
+</div>
+<div class="question">
+  <strong>Q4.</strong> 코팅·잉크 상세 정보가 "조건부"인 이유와, 그래도 빠짐없이 받아야 하는 부품은?
+  <details><summary>답 보기</summary>
+  <div class="answer">무착색·무후가공 부품엔 N/A('무')라 조건부. 단 <strong>후가공(코팅·인쇄)이 있거나 착색된 부품</strong>은 재활용성(#5)·우려물질(#7) 양쪽 때문에 반드시 받아야 한다. 예: 4도 인쇄 단상자.</div>
+  </details>
+</div>
+<div class="question">
+  <strong>Q5.</strong> 시장감시당국 대응 측면에서 부자재 리스트를 평상시에 모아둬야 하는 이유는?
+  <details><summary>답 보기</summary>
+  <div class="answer">요청 시 <strong>10일 내 기술문서 전체 제출</strong> 의무. 그때 공급사에 COC를 요청하면 늦으므로, 평상시에 부자재 리스트로 미리 수집·보관(일회용 5년/재사용 10년)해야 한다.</div>
+  </details>
+</div>
+</div>
+
+<h2>다음 단계</h2>
+<p>이제 부자재 리스트의 모든 칸을 "왜 모으는가"로 설명할 수 있다. 다음은 실전 — <strong>작성 예의 실제 5개 부품을 0012 추정기로 채점</strong>해 이 데이터가 어떤 등급·TD로 이어지는지 보거나, <strong>이 매핑을 인쇄용 reference 카드</strong>로 굳히는 것.</p>
+
+<div class="callout">
+  <span class="label">📌 1차 출처</span>
+  <ul style="margin:8px 0 0;">
+    <li><a href="https://eur-lex.europa.eu/eli/reg/2025/40/oj/eng" target="_blank">PPWR 부속서 VII·VIII + 제38조 (EUR-Lex)</a></li>
+    <li><a href="https://www.tanso.de/en/blog/ppwr-declaration-of-conformity-and-technical-documentation-what-companies-must-submit-from-august-12-2026" target="_blank">TD(Annex VII)·DoC(Annex VIII) 구성 (Tanso)</a></li>
+    <li><a href="0016-labelling-epr-doc.html">0016 — DoC/TD 구조</a> · <a href="../reference/packaging-materials.html">매터리얼 지도</a></li>
+  </ul>
+</div>
+
+<div class="callout callout-warn">
+  <span class="label">교사에게 질문</span>
+  예: "작성 예 OMNI 5부품을 0012 추정기로 같이 채점하자", "공급사가 COC를 '있다'고만 하고 실물을 안 주는데 어떻게 압박해?", "단상자 4도 인쇄 잉크의 중금속은 인쇄소·잉크사 중 누구한테 COC를 받아?", "Grade(H121 등)만으로 식품접촉·재활용 적합을 알 수 있어?" — 실제 양식을 주시면 칸별로 채워가며 TD를 함께 조립합니다.
+</div>
+
+<div class="nav">
+  Track: PPWR · 패키징 ·
+  Previous: <a href="0017-korea-memberstates-roadmap.html">0017 — 실무 로드맵</a> ·
+  Related: <a href="0016-labelling-epr-doc.html">0016 라벨·EPR·DoC</a> ·
+  Materials: <a href="../reference/packaging-materials.html">매터리얼 지도</a> ·
+  Glossary: <a href="../reference/glossary.html">용어집</a>
+</div>
+
+<script>
+function explain() {
+  var v = document.getElementById('field').value;
+  var out = document.getElementById('expout');
+  if (!v) { out.style.display='none'; return; }
+  var d = {
+    layer:  {anx:'#1 일반 설명 + 적용범위', art:'제24·25, 접촉민감', why:'1차/2차/운송에 따라 적용 조항이 다름(빈공간·형식금지·PCR 기준). 분류가 틀리면 규제 적용 자체가 틀림.', lvl:'필수'},
+    comp:   {anx:'#2 부품 구성도 + #3 재질구성', art:'제6·제7', why:'재활용성은 부품별 평가(0012), 5%면제는 부품 무게 판정(0013). 통으로 적으면 오염 부품이 안 보임.', lvl:'필수'},
+    mat:    {anx:'#3 모든 부품 재질구성(법문 직접)', art:'제6·제7', why:'재활용 스트림·밀도분리·PCR 대상 결정. Annex VII이 명시적으로 요구하는 핵심.', lvl:'필수'},
+    grade:  {anx:'#3 정밀 식별 + #7 추적', art:'제5·제7', why:'정확한 폴리머·식품접촉 적합 식별 + COC·시험성적서를 받아낼 공급사 출처(0014).', lvl:'필수'},
+    color:  {anx:'#5 재활용성 평가 + #7 물질', art:'제6 + 제5', why:'이중 부담. 카본블랙=NIR 선별실패(즉사)·불투명=감점(0012) + 안료가 중금속 운반.', lvl:'필수'},
+    weight: {anx:'#6 PCR 산정 + #5 최소화', art:'제7·제10', why:'PCR %는 무게 기준 + 5%미만 부품 면제 판정. 무게 없으면 PCR 계산 불가.', lvl:'필수'},
+    contact:{anx:'#5·#7 분류 기준', art:'제5·제7', why:'접촉민감 여부가 PCR 기준(PET30/50)과 물질규제 강도를 가른다(0011·0013).', lvl:'필수'},
+    finish: {anx:'#5 재활용성 + #7 물질', art:'제6·제5', why:'코팅·인쇄가 재활용 오염(0012 4요소)·물질 유입 경로. 유무 자체가 평가 입력.', lvl:'필수'},
+    ink:    {anx:'#7 우려물질 증빙', art:'제5', why:'잉크·코팅이 중금속·PFAS 주 유입경로. 단 후가공/착색 있는 부품에만 해당(무착색=N/A).', lvl:'조건부'},
+    coc:    {anx:'#7 시험 보고서·증빙', art:'제5', why:'중금속 4종 100mg/kg 적합의 결정적 증빙. 없으면 TD가 비고 DoC 서명 불가(0016).', lvl:'필수'}
+  };
+  var x = d[v];
+  var cls = x.lvl==='필수'?'must':(x.lvl==='조건부'?'cond':'aux');
+  out.innerHTML =
+    '<div><span class="pill '+cls+'">'+x.lvl+'</span></div>'+
+    '<p style="margin:10px 0 4px;"><strong>Annex VII 근거:</strong> '+x.anx+'</p>'+
+    '<p style="margin:4px 0;"><strong>관련 조항:</strong> '+x.art+'</p>'+
+    '<p style="margin:4px 0;"><strong>없으면:</strong> '+x.why+'</p>';
+  out.style.display='block';
+}
+</script>
+
+</body>
+</html>

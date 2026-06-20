@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Lesson 0004 — Tier 3: SCCS Opinion 코퍼스의 해부와 grounded extraction</title>
+<style>
+  :root {
+    --ink: #1a1a1a;
+    --muted: #5a5a5a;
+    --line: #d8d3c7;
+    --accent: #7c3aed;
+    --highlight: #f4eeff;
+    --code-bg: #f3efe5;
+    --quiz-bg: #f9f5ea;
+    --warn: #b45309;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Iowan Old Style", "Georgia", "Apple SD Gothic Neo", "Noto Serif KR", serif;
+    color: var(--ink);
+    max-width: 800px;
+    margin: 60px auto;
+    padding: 0 28px 80px;
+    line-height: 1.7;
+    font-size: 17px;
+    background: #fefcf7;
+  }
+  .meta {
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .tier-tag {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    padding: 3px 10px;
+    border-radius: 4px;
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    margin-right: 8px;
+  }
+  h1 {
+    font-size: 30px;
+    line-height: 1.25;
+    margin: 0 0 8px;
+    letter-spacing: -0.01em;
+  }
+  .subtitle { color: var(--muted); font-style: italic; margin-bottom: 36px; }
+  h2 {
+    font-size: 22px;
+    margin: 44px 0 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--line);
+  }
+  h3 { font-size: 18px; margin: 30px 0 8px; color: var(--accent); }
+  p { margin: 12px 0; }
+  ul, ol { padding-left: 24px; }
+  li { margin: 6px 0; }
+  code {
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 14px;
+    background: var(--code-bg);
+    padding: 2px 6px;
+    border-radius: 3px;
+  }
+  pre {
+    background: #1a1a1a;
+    color: #f0ebe0;
+    padding: 20px 24px;
+    border-radius: 8px;
+    overflow-x: auto;
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    margin: 20px 0;
+  }
+  pre .k { color: #c4b5fd; }
+  pre .s { color: #fcd34d; }
+  pre .n { color: #93c5fd; }
+  pre .c { color: #6b7280; font-style: italic; }
+  pre .f { color: #f9a8d4; }
+  pre .str { color: #67e8f9; }
+  .callout {
+    background: var(--highlight);
+    border-left: 4px solid var(--accent);
+    padding: 16px 20px;
+    margin: 24px 0;
+    border-radius: 0 6px 6px 0;
+  }
+  .callout-warn { background: #fef7e6; border-left-color: var(--warn); }
+  .callout .label {
+    display: block; font-size: 12px;
+    text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--accent); margin-bottom: 6px; font-weight: 600;
+  }
+  .callout-warn .label { color: var(--warn); }
+  table {
+    width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px;
+  }
+  th, td {
+    text-align: left; padding: 10px 12px;
+    border-bottom: 1px solid var(--line); vertical-align: top;
+  }
+  th {
+    background: var(--code-bg); font-weight: 600;
+    font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  td.tt {
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 13px;
+  }
+  .opinion-anatomy {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 22px 26px;
+    margin: 24px 0;
+  }
+  .opinion-anatomy .sec {
+    border-left: 3px solid var(--line);
+    padding: 6px 0 6px 14px;
+    margin: 6px 0;
+    font-size: 14px;
+  }
+  .opinion-anatomy .sec.gold {
+    border-left-color: var(--accent);
+    background: var(--highlight);
+    padding: 8px 0 8px 14px;
+    font-weight: 500;
+  }
+  .opinion-anatomy .sec .num {
+    font-family: "SF Mono", "Menlo", monospace;
+    color: var(--accent);
+    margin-right: 8px;
+    font-weight: 600;
+  }
+  .opinion-anatomy .sec .note {
+    color: var(--muted);
+    font-size: 12px;
+    margin-left: 8px;
+    font-style: italic;
+  }
+  .quiz {
+    background: var(--quiz-bg);
+    padding: 28px 32px;
+    margin: 40px 0;
+    border-radius: 8px;
+  }
+  .quiz h2 { border: none; margin-top: 0; }
+  .question { margin: 24px 0; }
+  details { margin: 8px 0; }
+  details > summary {
+    cursor: pointer; color: var(--accent);
+    font-size: 14px; user-select: none;
+    list-style: revert;
+  }
+  details[open] > summary { margin-bottom: 8px; }
+  .answer {
+    margin-top: 8px; padding: 12px 16px;
+    background: #fff; border: 1px dashed var(--line);
+    border-radius: 4px;
+  }
+  .nav {
+    margin-top: 60px; padding-top: 24px;
+    border-top: 1px solid var(--line);
+    font-size: 14px; color: var(--muted);
+  }
+  .nav a { color: var(--accent); text-decoration: none; }
+  .nav a:hover { text-decoration: underline; }
+  .cite { font-size: 13px; color: var(--muted); }
+  .cite a { color: var(--muted); text-decoration: underline; }
+  .quote {
+    background: #fbf6ec;
+    border-left: 3px solid var(--muted);
+    padding: 10px 16px;
+    margin: 12px 0;
+    font-style: italic;
+    font-size: 14px;
+  }
+  @media print {
+    body { background: #fff; max-width: 100%; margin: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="meta"><span class="tier-tag">TIER 3</span>Lesson 0004 · 약 35분</div>
+<h1>SCCS Opinion 코퍼스의 해부</h1>
+<p class="subtitle">NOAEL과 SCCS 결론을 1차 자료에서 fabrication 0%로 추출하는 RAG 설계. Tier 4 reasoning이 신뢰할 수 있는 ground truth를 만든다.</p>
+
+<div class="callout">
+  <span class="label">이 레슨의 약속</span>
+  마치면 (1) SCCS Opinion 한 편의 표준 섹션 구조를 외워서 NOAEL이 어디에 있는지 5초 내 짚고, (2) Pydantic 스키마와 prompt 전략을 머릿속에 갖추며, (3) 일반 RAG가 화장품 평가에서 실패하는 4가지 모드와 그 방어 패턴을 안다. ToxTool이 in silico로 우회하는 그 자리에 우리는 grounded extraction을 박는다.
+</div>
+
+<h2>1. 왜 일반 RAG로는 안 되는가</h2>
+
+<p>일반 RAG(chunk → embed → top-k retrieve → LLM answer)는 화장품 안전성 자료에서 다음 4가지 실패가 나온다:</p>
+
+<table>
+  <tr><th>실패 모드</th><th>왜 일어나나</th><th>SA가 보는 결과</th></tr>
+  <tr><td><strong>Fabricated NOAEL</strong></td><td>LLM이 chunk 사이의 빈자리를 "그럴듯한" 숫자로 채움. RAG context에 없는 NOAEL을 만들어냄.</td><td>인용 따라 들어갔는데 원문에 없는 숫자 → 신뢰 0.</td></tr>
+  <tr><td><strong>잘못된 종 적용</strong></td><td>rat 시험 NOAEL인데 종 정보 없이 출력 → "human NOAEL"로 해석.</td><td>MoS 계산 자체가 무효.</td></tr>
+  <tr><td><strong>단위 혼동</strong></td><td>mg/kg bw/day vs μg/kg bw/day. PDF 본문에 단위가 "그림 캡션"이나 "주석"에 있고 본 문장에는 숫자만.</td><td>1000배 차이 → MoS 100 vs 0.1.</td></tr>
+  <tr><td><strong>보수 값 선택 실패</strong></td><td>한 성분에 여러 시험·여러 NOAEL이 보고됨. 가장 보수적(=낮은) 값을 골라야 하는데 LLM이 평균 또는 가장 그럴듯한 값을 고름.</td><td>SA 검토 시 "왜 이 NOAEL을 골랐나" 질문 → 답 못함 → 거부.</td></tr>
+</table>
+
+<div class="callout callout-warn">
+  <span class="label">설계 원칙</span>
+  Tier 3는 <strong>사실 추출(extraction)</strong>만 한다. 해석·종합·결론은 Tier 4. 추출의 모든 사실에는 <strong>출처 anchor(문서 ID + 페이지/문단 + literal quote)</strong>가 강제. quote가 원문에 literal match 안 하면 evaluator가 거부.
+</div>
+
+<h2>2. SCCS Opinion의 표준 해부</h2>
+
+<p>SCCS Opinion은 1970년대부터 ~50년간 일관된 템플릿을 유지해왔다. 모든 Opinion이 거의 동일한 섹션 번호를 가지며, 이것이 RAG schema 설계의 가장 큰 자산이다.</p>
+
+<div class="opinion-anatomy">
+  <h3>전형적 Opinion 구조 (요약)</h3>
+  <div class="sec"><span class="num">1.</span> Background <span class="note">집행위원회 mandate 배경</span></div>
+  <div class="sec"><span class="num">2.</span> Terms of reference <span class="note">집행위가 SCCS에 묻는 정확한 질문</span></div>
+  <div class="sec"><span class="num">3.</span> Opinion <span class="note">평가 본체 (이하 모든 sub-section)</span></div>
+  <div class="sec"><span class="num">3.1</span> Chemical and Physical Specifications <span class="note">물질 정체</span></div>
+  <div class="sec gold"><span class="num">3.1.1</span> Chemical identity <span class="note">CAS, EC, INCI, structural formula — Tier 2 lookup 필수 매칭</span></div>
+  <div class="sec"><span class="num">3.2</span> Function and uses</div>
+  <div class="sec"><span class="num">3.3</span> Toxicological Evaluation <span class="note">⭐ Tier 3 추출의 메인 사냥터</span></div>
+  <div class="sec"><span class="num">3.3.1</span> Acute toxicity</div>
+  <div class="sec"><span class="num">3.3.2</span> Irritation and corrosivity</div>
+  <div class="sec"><span class="num">3.3.3</span> Skin sensitisation</div>
+  <div class="sec"><span class="num">3.3.4</span> Dermal / percutaneous absorption <span class="note">⭐ DA<sub>p</sub> 추출 → Tier 1로 feed</span></div>
+  <div class="sec gold"><span class="num">3.3.5</span> Repeated dose toxicity <span class="note">⭐⭐ NOAEL의 본거지 (90일·sub-chronic)</span></div>
+  <div class="sec"><span class="num">3.3.6</span> Mutagenicity / Genotoxicity <span class="note">양성이면 사실상 사용 불가 — 결정적 게이트</span></div>
+  <div class="sec"><span class="num">3.3.7</span> Carcinogenicity</div>
+  <div class="sec"><span class="num">3.3.8</span> Reproductive toxicity</div>
+  <div class="sec"><span class="num">3.3.9</span> Toxicokinetics</div>
+  <div class="sec"><span class="num">3.3.10</span> Photo-induced toxicity <span class="note">UV filter, 향료에서 중요</span></div>
+  <div class="sec"><span class="num">3.3.11</span> Human data <span class="note">HRIPT, 임상</span></div>
+  <div class="sec"><span class="num">3.3.12</span> Special investigations</div>
+  <div class="sec gold"><span class="num">3.3.13</span> Safety evaluation (incl. calculation of MoS) <span class="note">⭐⭐⭐ NOAEL + SED + MoS가 한 표에. SCCS의 모범 계산이 그대로 박혀있음.</span></div>
+  <div class="sec"><span class="num">3.3.14</span> Discussion</div>
+  <div class="sec gold"><span class="num">4.</span> Conclusion <span class="note">⭐⭐⭐ SCCS의 최종 의견 한 문장. 우리 Tier 4 결론이 모방해야 할 화법.</span></div>
+  <div class="sec"><span class="num">5.</span> Minority opinion</div>
+  <div class="sec"><span class="num">6.</span> References <span class="note">독성 시험 원문 추적 단서</span></div>
+</div>
+
+<p class="cite">SCCS Notes of Guidance 12판 §3-2/§3-3에 Opinion 구조와 평가 흐름이 정리됨. 실제 Opinion 예: <a href="https://health.ec.europa.eu/scientific-committees/scientific-committee-consumer-safety-sccs/sccs-opinions_en">SCCS Opinions index</a> (PDF 다수 공개).</p>
+
+<div class="callout">
+  <span class="label">전략적 통찰</span>
+  <strong>§3.3.13 "Safety evaluation"</strong>은 한 표에 NOAEL, SED, MoS가 SCCS의 가정값과 함께 나란히 적혀있다. 단일 섹션 추출만으로 NOAEL + SCCS가 사용한 SED 가정 + 결과 MoS 세 가지를 모두 ground truth로 확보할 수 있다. <strong>이 표를 정확히 파싱하는 것이 Tier 3의 highest-value target.</strong>
+</div>
+
+<h2>3. 추출 schema — 구조화 출력 강제</h2>
+
+<p>Tier 3의 단일 호출이 반환해야 하는 구조. LLM이 자유 텍스트로 NOAEL을 쓰게 두면 안 된다. <strong>schema에 anchor 필드를 강제</strong>:</p>
+
+<pre><span class="k">from</span> pydantic <span class="k">import</span> BaseModel, Field
+<span class="k">from</span> typing <span class="k">import</span> Literal, Optional
+
+<span class="k">class</span> <span class="n">Citation</span>(BaseModel):
+    <span class="str">"""모든 추출 사실에 부착되는 출처 anchor."""</span>
+    document_id: str = Field(..., description=<span class="s">"SCCS Opinion ID, e.g., SCCS/1631/21"</span>)
+    section: str = Field(..., description=<span class="s">"e.g., '3.3.5' or '3.3.13'"</span>)
+    page: int
+    quote: str = Field(..., description=<span class="s">"original PDF text, literal — must match exactly"</span>)
+
+<span class="k">class</span> <span class="n">NoaelRecord</span>(BaseModel):
+    <span class="str">"""한 시험에서 추출된 NOAEL. 한 성분에 여러 개 있을 수 있음."""</span>
+    value_mg_per_kg_day: float
+    species: Literal[<span class="s">"rat"</span>, <span class="s">"mouse"</span>, <span class="s">"rabbit"</span>, <span class="s">"dog"</span>, <span class="s">"human"</span>, <span class="s">"other"</span>]
+    species_other: Optional[str] = <span class="n">None</span>
+    study_type: Literal[
+        <span class="s">"acute"</span>, <span class="s">"sub_acute_28d"</span>, <span class="s">"sub_chronic_90d"</span>,
+        <span class="s">"chronic"</span>, <span class="s">"reproductive"</span>, <span class="s">"developmental"</span>, <span class="s">"other"</span>
+    ]
+    route: Literal[<span class="s">"oral"</span>, <span class="s">"dermal"</span>, <span class="s">"inhalation"</span>, <span class="s">"other"</span>]
+    oecd_test_guideline: Optional[str] = <span class="n">None</span>  <span class="c"># e.g. "OECD TG 408"</span>
+    citation: Citation
+
+<span class="k">class</span> <span class="n">DermalAbsorptionRecord</span>(BaseModel):
+    value_pct: float  <span class="c"># SCCS가 사용한 DA% — Tier 1로 feed</span>
+    measurement_method: Literal[<span class="s">"in_vitro_oecd428"</span>, <span class="s">"default"</span>, <span class="s">"other"</span>]
+    citation: Citation
+
+<span class="k">class</span> <span class="n">SccsSafetyEvaluation</span>(BaseModel):
+    <span class="str">"""§3.3.13 표를 그대로 옮긴 구조 — SCCS의 worked example."""</span>
+    noael_used_mg_per_kg_day: float
+    sed_used_mg_per_kg_day: float
+    mos_computed: float
+    sccs_assumptions: dict  <span class="c"># {amount_g_day, conc_pct, F, DA_pct, BW_kg}</span>
+    citation: Citation
+
+<span class="k">class</span> <span class="n">SccsOpinionFinalConclusion</span>(BaseModel):
+    <span class="str">"""§4 — SCCS의 최종 의견. Tier 4가 우리 B.1 결론 작성 시 참조."""</span>
+    verdict: Literal[<span class="s">"safe"</span>, <span class="s">"safe_with_conditions"</span>, <span class="s">"not_safe"</span>, <span class="s">"insufficient_data"</span>]
+    max_concentration_pct: Optional[float] = <span class="n">None</span>
+    use_restrictions: list[str] = []
+    citation: Citation
+
+<span class="k">class</span> <span class="n">SccsOpinionExtraction</span>(BaseModel):
+    inci: str
+    cas: Optional[str] = <span class="n">None</span>
+    opinion_id: str
+    opinion_date: str  <span class="c"># YYYY-MM-DD</span>
+    noaels: list[NoaelRecord]
+    dermal_absorption: Optional[DermalAbsorptionRecord] = <span class="n">None</span>
+    sccs_safety_evaluation: Optional[SccsSafetyEvaluation] = <span class="n">None</span>
+    final_conclusion: SccsOpinionFinalConclusion
+</pre>
+
+<p>이 schema의 두 가지 핵심:</p>
+<ul>
+  <li><strong>Citation 강제</strong>: 모든 numeric value 옆에 quote가 박혀있어야 함. 후처리 evaluator가 quote ∈ source PDF text를 literal match 검사.</li>
+  <li><strong>Literal type 강제</strong>: species·route·study_type 같은 핵심 카테고리는 free string 금지. LLM이 "rats (Wistar)" 같이 쓰면 enum 위반 → 재시도.</li>
+</ul>
+
+<h2>4. Extraction prompt — 핵심 4규칙</h2>
+
+<p>System prompt에 박는 4가지. (사용자가 prompt engineering 능숙하므로 패턴만):</p>
+
+<ol>
+  <li><strong>"Cite or refuse"</strong> — quote 필드가 비어있으면 그 record 자체를 출력하지 마라. 빈 값을 만들어 채우는 것보다 누락이 낫다.</li>
+  <li><strong>"Choose conservative"</strong> — 한 성분에 여러 NOAEL이 있으면 모두 추출한 뒤 별도 함수가 가장 낮은 값을 고른다. LLM에게 "고르라"고 시키지 마라.</li>
+  <li><strong>"Species and route always"</strong> — species나 route가 PDF에 명시 안 되면 그 record를 버려라. 추정 금지.</li>
+  <li><strong>"Units in your output are mg/kg bw/day"</strong> — 원문에 다른 단위면 변환 후 단위 변환 그 자체를 quote에 명시("converted from 5 μg/kg/day = 0.005 mg/kg/day").</li>
+</ol>
+
+<div class="callout">
+  <span class="label">Two-pass extraction</span>
+  Pass 1: 섹션별로 chunk → 각 chunk에서 raw record 추출. Pass 2: 같은 성분의 모든 raw record를 LLM에게 다시 보여주며 "가장 보수적 NOAEL과 그 이유를 골라라" — 이 단계가 reasoning이라 Tier 4지만, 결정 자체는 deterministic rule(min)로 검증 가능. LLM은 "왜 그게 가장 보수적인가" narrative만 만든다.
+</div>
+
+<h2>5. 일반 RAG와 다른 점 — Evaluator pattern</h2>
+
+<p>추출 후 즉시 별도 evaluator agent를 띄운다. 이게 fabrication을 잡는 결정타:</p>
+
+<pre><span class="k">def</span> <span class="n">verify_extraction</span>(
+    extraction: SccsOpinionExtraction,
+    source_pdf_text: str
+) -> list[Violation]:
+    violations = []
+    <span class="k">for</span> rec <span class="k">in</span> extraction.noaels:
+        <span class="c"># 규칙 1: quote가 원문에 실제로 있는가</span>
+        <span class="k">if</span> rec.citation.quote <span class="k">not in</span> source_pdf_text:
+            violations.append(Violation(<span class="s">"quote_not_in_source"</span>, rec))
+        <span class="c"># 규칙 2: 출력된 값이 quote에 실제로 등장하는가</span>
+        <span class="k">if</span> str(rec.value_mg_per_kg_day) <span class="k">not in</span> rec.citation.quote <span class="k">and</span> \
+           str(<span class="n">int</span>(rec.value_mg_per_kg_day)) <span class="k">not in</span> rec.citation.quote:
+            violations.append(Violation(<span class="s">"value_not_in_quote"</span>, rec))
+        <span class="c"># 규칙 3: species 단어가 quote 또는 인접 문맥에 있는가</span>
+        <span class="k">if</span> rec.species <span class="k">not in</span> rec.citation.quote.lower():
+            violations.append(Violation(<span class="s">"species_unverified"</span>, rec))
+    <span class="k">return</span> violations
+</pre>
+
+<p>violations가 비어있지 않으면: <strong>(a) 재시도</strong> 또는 <strong>(b) HITL 트리거</strong>. 임계는 운영하며 조정.</p>
+
+<div class="callout callout-warn">
+  <span class="label">단위 변환 함정</span>
+  PDF에서 "5 mg/kg/day"가 그대로 추출되면 quote에 "5"가 있어 검증 통과. 하지만 원문이 "5 μg/kg/day"였다면? evaluator가 단위 토큰 자체를 quote에 강제 포함시키는 추가 룰이 필요. 모든 numeric record의 quote에 단위 토큰이 literal로 들어가지 않으면 reject.
+</div>
+
+<h2>6. PDF 처리 파이프라인 — 코퍼스 구축</h2>
+
+<p>SCCS Opinion은 PDF로만 배포된다. 자동화의 1차 작업:</p>
+
+<table>
+  <tr><th>단계</th><th>도구·전략</th><th>주의</th></tr>
+  <tr><td>1. 수집</td><td>SCCS Opinions index 크롤링 → 모든 PDF + 메타데이터(opinion_id, 성분, 발행일)</td><td>EU 공공문서 → 라이선스는 일반적으로 자유. 단, 사내 한정 사용을 명시.</td></tr>
+  <tr><td>2. 파싱</td><td>네이티브 텍스트 추출 시도 (pdfplumber/pymupdf) → OCR fallback (Tesseract, AWS Textract). 표는 별도 추출(camelot 또는 LLM 시각 추출).</td><td>구버전 Opinion은 스캔 PDF — OCR 필수. 표 인식이 §3.3.13 추출의 success/fail를 가른다.</td></tr>
+  <tr><td>3. 섹션 분할</td><td>위 anatomy의 번호 패턴(<code>^3\.3\.5\s+Repeated dose</code>)으로 정규식 분할 → 섹션별 store.</td><td>일부 Opinion은 번호 폰트가 다름·OCR 오류 → 정규식 다중 패턴 + LLM fallback.</td></tr>
+  <tr><td>4. 청크·임베딩</td><td>섹션 단위 청크 (작게는 paragraph) → 임베딩. 메타데이터: opinion_id, section_id, page.</td><td>화학명 임베딩 품질이 일반 임베딩 모델에서 약함 — 화학·생물 도메인 모델 고려 (BiomedBERT, MatSciBERT 등).</td></tr>
+  <tr><td>5. 검색 전략</td><td>일반 vector search 단독 X. <strong>"성분 + 섹션 번호"로 필터링 후 벡터 검색</strong>. NOAEL 찾을 때 §3.3.5만 검색.</td><td>섹션 인식이 RAG 정확도 1순위 lever.</td></tr>
+  <tr><td>6. 캐싱</td><td>한 번 추출한 성분의 결과는 캐시. SCCS Opinion은 갱신 빈도 낮음 (Opinion 자체가 immutable).</td><td>제품 라인 전체에서 같은 성분 반복 평가 — 캐시가 비용·시간 절반 이상 절감.</td></tr>
+</table>
+
+<h2>7. CIR·ECHA·EFSA로의 확장</h2>
+
+<p>SCCS Opinion이 없는 성분은 CIR(Cosmetic Ingredient Review) 또는 ECHA REACH dossier로 fallback. 각자 다른 구조:</p>
+
+<ul>
+  <li><strong>CIR Final Report</strong>: SCCS와 유사한 구조지만 섹션 번호 체계 다름. "Summary of Safety Assessment" 표가 NOAEL의 메인. 미국 단위(주로 mg/kg/day) 사용.</li>
+  <li><strong>ECHA REACH dossier</strong>: 화학물질 관점. cosmetic context가 약하지만 NOAEL·LD50 데이터는 풍부. "Endpoint summary" 섹션 중점.</li>
+  <li><strong>EFSA Scientific Opinion</strong>: 식품 첨가물·향료. 경구 NOAEL이 풍부. <strong>경구 NOAEL을 dermal 평가에 쓸 때는 흡수율 보정 필요</strong> (SCCS NoG 12판이 명시).</li>
+</ul>
+
+<p>스키마는 source별 별도 클래스 + 통합 view. SCCS를 최우선 신뢰, 다음 CIR, 다음 ECHA, 그 다음 EFSA 순서로 fallback chain을 명시적으로 구성.</p>
+
+<h2>8. 사용자 처방으로 가는 통합 흐름</h2>
+
+<p>처방의 한 성분이 들어왔을 때 Tier 3가 거쳐가는 의사결정:</p>
+
+<pre><span class="c"># Tier 3 orchestration (pseudocode)</span>
+
+<span class="k">def</span> <span class="n">get_noael_for_substance</span>(inci: str) -> NoaelDecision:
+    <span class="c"># 1. 캐시 확인</span>
+    cached = cache.get(inci)
+    <span class="k">if</span> cached <span class="k">and</span> <span class="k">not</span> cached.stale: <span class="k">return</span> cached
+
+    <span class="c"># 2. SCCS Opinion 우선</span>
+    sccs_opinion = sccs_corpus.find(inci)
+    <span class="k">if</span> sccs_opinion:
+        extracted = extract_with_llm(sccs_opinion, schema=SccsOpinionExtraction)
+        violations = verify_extraction(extracted, sccs_opinion.text)
+        <span class="k">if</span> <span class="k">not</span> violations:
+            chosen = pick_most_conservative(extracted.noaels)
+            <span class="k">return</span> NoaelDecision(chosen, source=<span class="s">"SCCS"</span>, confidence=<span class="s">"high"</span>)
+
+    <span class="c"># 3. CIR fallback</span>
+    cir = cir_corpus.find(inci)
+    <span class="k">if</span> cir:
+        <span class="c"># 동일 패턴, CIR 스키마로</span>
+        ...
+
+    <span class="c"># 4. 모두 실패 → Tier 5 HITL</span>
+    <span class="k">return</span> NoaelDecision(<span class="n">None</span>, source=<span class="s">"hitl_required"</span>, confidence=<span class="s">"none"</span>,
+                         hitl_payload=<span class="s">"No SCCS/CIR/ECHA/EFSA NOAEL found for "</span> + inci)
+</pre>
+
+<p>이 함수의 출력이 Tier 1 <code>compute_mos</code>의 <code>noael_mg_per_kg_day</code> 입력이 된다. <strong>모든 NOAEL은 출처와 confidence 등급을 들고 다닌다.</strong> Tier 4 reasoning이 "confidence: high (SCCS Opinion §3.3.13)"를 narrative에 그대로 박는다 — SA 검토 시 즉시 검증 가능.</p>
+
+<h2>9. Quiz — 4문항</h2>
+
+<div class="quiz">
+
+<div class="question">
+  <p><strong>Q1.</strong> SCCS Opinion에서 한 성분에 다음 NOAEL 후보가 나왔다: (A) rat 90-day oral 100 mg/kg/day, (B) dog 28-day oral 50 mg/kg/day, (C) rabbit dermal 200 mg/kg/day. MoS 계산에 어느 것을 쓰는가? 이유?</p>
+  <details>
+    <summary>답 보기</summary>
+    <div class="answer">
+      가장 보수적(=낮은) 값 = <strong>(B) 50 mg/kg/day</strong>. 그러나 study_type이 28일(sub-acute) — 정상 평가에서 sub-chronic(90일) 데이터가 선호된다. 따라서 실제 의사결정은 두 단계:<br>
+      ① 모든 record를 추출 (LLM은 고르지 않음)<br>
+      ② deterministic rule: "study quality" 가중치 (chronic > sub-chronic > sub-acute > acute) × "보수성" → 점수화. 단순 min이 아니다. 시스템에 <strong>study_type weighting table</strong>이 별도 있어야 한다.<br>
+      답: 보수성만 보면 (B), 데이터 품질 가중치까지 보면 (A)가 baseline + (B)를 cross-check로 명시. 시스템은 두 가지 모두 narrative에 노출.
+    </div>
+  </details>
+</div>
+
+<div class="question">
+  <p><strong>Q2.</strong> LLM이 NOAEL = 75 mg/kg/day를 출력하면서 quote는 "The Panel concluded a NOAEL of 75 mg/kg bw/day"라고 채웠다. 그런데 원문 PDF에는 "75 mg/kg bw/d"로만 쓰여있다 (bw/d vs bw/day). evaluator가 reject하는가? 어떻게 다룰까?</p>
+  <details>
+    <summary>답 보기</summary>
+    <div class="answer">
+      <strong>Reject 한다 — naive literal match면.</strong> SCCS PDF는 "bw/d" "bw/day" "body weight/day" 등 표기 변종이 다수. 따라서 evaluator는 두 가지 중 하나:<br>
+      ① <strong>관대 normalization</strong>: quote를 비교 전에 단위 동의어 사전(bw/d ↔ bw/day) 적용. 단, 동의어 사전이 정확해야 함.<br>
+      ② <strong>"인근 ±N 토큰" match</strong>: literal match는 강제하되 ±N 토큰 거리 허용. <br>
+      추천: ②와 함께 <strong>quote 안에 unit 토큰을 반드시 포함</strong> (mg/kg, kg/d 등 단위 부품). 단위 자체가 quote에 있으면 동의어 변환 위험이 적다. 부분 일치(70%+) 시 통과, 미달 시 HITL.
+    </div>
+  </details>
+</div>
+
+<div class="question">
+  <p><strong>Q3.</strong> 성분 INCI가 "Niacinamide"인데 SCCS Opinion에는 발견되지 않는다 (실제로 niacinamide는 SCCS Opinion이 없는 흔한 성분이다 — 비타민 B3로 EFSA·CIR 데이터가 풍부). 시스템은 어떻게 행동해야 하는가? 그리고 Tier 4 reasoning은 이 사실을 어떻게 노출해야 하는가?</p>
+  <details>
+    <summary>답 보기</summary>
+    <div class="answer">
+      Tier 3는 fallback chain을 따라간다: SCCS → CIR → ECHA → EFSA. niacinamide는 EFSA에서 비타민으로 ADI 데이터 가져온 뒤 confidence를 "medium (EFSA-derived, dietary context)"로 기록. <strong>Tier 4 reasoning은 narrative에 명시적으로 표기</strong>: "NOAEL은 SCCS Opinion 부재로 EFSA Scientific Opinion(reference link)에서 도출. 경구 NOAEL을 dermal exposure 평가에 적용 시 SCCS NoG 12판 §3-6.X에 따라 흡수율 보정 적용했음을 명시." → 이 narrative가 SA 검토를 통과시킨다. <strong>침묵의 fallback이 acceptance를 가장 많이 깎는다</strong> (Lesson 0002 Quiz 4와 연결).
+    </div>
+  </details>
+</div>
+
+<div class="question">
+  <p><strong>Q4.</strong> 코퍼스 구축 시 §3.3.13 표가 OCR로 깨져 NOAEL 컬럼과 SED 컬럼이 한 줄로 합쳐졌다. LLM extraction이 NOAEL/SED를 혼동할 위험이 크다. 두 가지 방어 전략을 제시하라.</p>
+  <details>
+    <summary>답 보기</summary>
+    <div class="answer">
+      <strong>방어 1 (이중 추출 + 교차검증)</strong>: 같은 §3.3.13을 (a) 표 인식 모드(LLM에게 "이건 표다, 컬럼 인식해라" prompt), (b) §3.3.13 본문 산문 추출(SCCS는 표 외에 본문에도 "Resulting MoS is X"를 쓴다)로 두 번 추출 → 값 일치하면 통과, 불일치하면 reject.<br>
+      <strong>방어 2 (구조 보존 PDF 처리)</strong>: pdfplumber/pymupdf의 table extraction 또는 비전 모델(예: Claude vision)에 페이지 이미지 직접 입력 → JSON으로 표 그대로. OCR로 텍스트화한 뒤 추출보다 1단계 적음 → 오류 적음.<br>
+      두 방어를 결합하면 §3.3.13 정확도가 95%+ 가능. 이게 안 되면 자체 NOAEL/SED 계산을 Tier 1에서 처음부터 하고 SCCS의 §3.3.13을 reference로만 활용하는 fallback.
+    </div>
+  </details>
+</div>
+
+</div>
+
+<h2>10. 다음 단계</h2>
+
+<ul>
+  <li><strong>Lesson 0005 후보 1</strong>: Tier 4 — B.3 Reasoning generator + evaluator rubric 설계. SCCS NoG의 평가 흐름을 LLM rubric으로 변환.</li>
+  <li><strong>Lesson 0005 후보 2</strong>: Tier 2 — CosIng·ECHA·내부 R&D DB 통합. INCI 정규화의 함정.</li>
+  <li>병행 build task: SCCS Opinion 1편(가장 흔한 성분 — 예: phenoxyethanol SCCS/1575/16)을 받아 위 schema로 수동 추출 → ground truth fixture 1개 확보. 이게 evaluator의 첫 test case.</li>
+</ul>
+
+<div class="callout">
+  <span class="label">교사에게 질문</span>
+  "§3.3.13 표 형식이 Opinion마다 다른가? 시간대별 일관성은?", "ECHA REACH dossier의 NOAEL 데이터 라이선스는 사내 corpus화 가능?", "Tier 3 결과의 confidence 등급을 4단계가 아닌 연속값(0~1)으로 가져갈 때 Tier 4 prompt에 어떻게 노출?" — 답에 따라 Lesson 0005 깊이가 조정됩니다.
+</div>
+
+<div class="nav">
+  Previous: <a href="0003-tier1-exposure-and-mos.html">0003 — Tier 1: SED/MoS</a> ·
+  Next: <a href="0005-tier2-data-plumbing-and-inci.html">0005 — Tier 2: Data Plumbing</a> ·
+  Then: <a href="0006-tier4-reasoning-and-evaluator.html">0006 — Tier 4: Reasoning + Evaluator</a> ·
+  Glossary: <a href="../reference/glossary.html">용어집</a>
+</div>
+
+</body>
+</html>

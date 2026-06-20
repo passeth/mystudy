@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Lesson 0012 — 재활용성 등급 추정기: 우리 제품을 직접 채점한다</title>
+<style>
+  :root {
+    --ink: #1a1a1a;
+    --muted: #5a5a5a;
+    --line: #d8d3c7;
+    --accent: #0369a1;
+    --accent2: #15803d;
+    --highlight: #f0f9ff;
+    --code-bg: #f3efe5;
+    --quiz-bg: #f9f5ea;
+    --warn: #b45309;
+    --good: #15803d;
+    --bad: #b91c1c;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Iowan Old Style", "Georgia", "Apple SD Gothic Neo", "Noto Serif KR", serif;
+    color: var(--ink);
+    max-width: 820px;
+    margin: 60px auto;
+    padding: 0 28px 80px;
+    line-height: 1.7;
+    font-size: 17px;
+    background: #fefcf7;
+  }
+  .meta {
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 12px; letter-spacing: 0.1em;
+    color: var(--muted); text-transform: uppercase; margin-bottom: 12px;
+  }
+  .tier-tag {
+    display: inline-block; background: var(--accent2); color: #fff;
+    padding: 3px 10px; border-radius: 4px;
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 11px; font-weight: 600; letter-spacing: 0.08em; margin-right: 8px;
+  }
+  h1 { font-size: 30px; line-height: 1.25; margin: 0 0 8px; letter-spacing: -0.01em; }
+  .subtitle { color: var(--muted); font-style: italic; margin-bottom: 36px; }
+  h2 { font-size: 22px; margin: 44px 0 12px; padding-bottom: 6px; border-bottom: 1px solid var(--line); }
+  h3 { font-size: 18px; margin: 30px 0 8px; color: var(--accent); }
+  p { margin: 12px 0; }
+  ul, ol { padding-left: 24px; }
+  li { margin: 6px 0; }
+  code {
+    font-family: "SF Mono", "Menlo", monospace; font-size: 14px;
+    background: var(--code-bg); padding: 2px 6px; border-radius: 3px;
+  }
+  .callout {
+    background: var(--highlight); border-left: 4px solid var(--accent);
+    padding: 16px 20px; margin: 24px 0; border-radius: 0 6px 6px 0;
+  }
+  .callout-warn { background: #fef7e6; border-left-color: var(--warn); }
+  .callout-bad { background: #fef2f2; border-left-color: var(--bad); }
+  .callout-good { background: #f0fdf4; border-left-color: var(--good); }
+  .callout .label {
+    display: block; font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--accent); margin-bottom: 6px; font-weight: 600;
+  }
+  .callout-warn .label { color: var(--warn); }
+  .callout-bad .label { color: var(--bad); }
+  .callout-good .label { color: var(--good); }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { background: var(--code-bg); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .ok { color: var(--good); font-weight: 700; }
+  .down { color: var(--warn); font-weight: 700; }
+  .kill { color: var(--bad); font-weight: 700; }
+  /* Estimator */
+  .estimator {
+    background: #fff; border: 2px solid var(--accent2);
+    border-radius: 12px; padding: 26px 28px; margin: 30px 0;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  }
+  .estimator h3 { margin-top: 0; color: var(--accent2); }
+  .est-row { margin: 16px 0; display: flex; flex-direction: column; gap: 5px; }
+  .est-row label { font-weight: 600; font-size: 15px; }
+  .est-row select {
+    font-family: inherit; font-size: 15px; padding: 8px 10px;
+    border: 1px solid var(--line); border-radius: 6px; background: #fefcf7; color: var(--ink);
+  }
+  .est-btn {
+    margin-top: 8px; background: var(--accent2); color: #fff; border: none;
+    padding: 12px 22px; border-radius: 8px; font-family: inherit; font-size: 16px;
+    font-weight: 700; cursor: pointer;
+  }
+  .est-btn:hover { background: #166534; }
+  .est-result {
+    margin-top: 22px; padding: 20px 22px; border-radius: 10px;
+    background: var(--code-bg); display: none;
+  }
+  .grade-badge {
+    display: inline-block; font-family: "SF Mono", monospace; font-weight: 800;
+    font-size: 34px; width: 60px; height: 60px; line-height: 60px; text-align: center;
+    border-radius: 12px; color: #fff; margin-right: 14px; vertical-align: middle;
+  }
+  .g-A { background: #15803d; } .g-B { background: #65a30d; }
+  .g-C { background: #ca8a04; } .g-D { background: #ea580c; } .g-E { background: #b91c1c; }
+  .est-result ul { font-size: 14px; }
+  .quiz { background: var(--quiz-bg); padding: 28px 32px; margin: 40px 0; border-radius: 8px; }
+  .quiz h2 { border: none; margin-top: 0; }
+  .question { margin: 24px 0; }
+  details { margin: 8px 0; }
+  details > summary { cursor: pointer; color: var(--accent); font-size: 14px; user-select: none; list-style: revert; }
+  details[open] > summary { margin-bottom: 8px; }
+  .answer { margin-top: 8px; padding: 12px 16px; background: #fff; border: 1px dashed var(--line); border-radius: 4px; }
+  .nav { margin-top: 60px; padding-top: 24px; border-top: 1px solid var(--line); font-size: 14px; color: var(--muted); }
+  .nav a { color: var(--accent); text-decoration: none; }
+  .nav a:hover { text-decoration: underline; }
+  .cite { font-size: 13px; color: var(--muted); }
+  .cite a { color: var(--muted); text-decoration: underline; }
+  strong { font-weight: 700; }
+  @media print { body { background: #fff; max-width: 100%; margin: 0; } .estimator { break-inside: avoid; } }
+
+  .tracklink { background:#f0fdf4; border:1px solid #15803d; border-radius:10px; padding:12px 16px; margin:0 0 30px; font-size:13px; line-height:2.0; }
+  .tracklink b { color:#15803d; text-transform:uppercase; letter-spacing:0.08em; font-size:11px; display:block; margin-bottom:5px; }
+  .tracklink a { color:#0369a1; text-decoration:none; }
+  .tracklink a:hover { text-decoration:underline; }
+  .tracklink .cur { background:#15803d; color:#fff; padding:1px 8px; border-radius:4px; font-weight:700; }
+  .tracklink .sep { color:#cdd6c9; margin:0 2px; }
+</style>
+</head>
+<body>
+
+<div class="meta"><span class="tier-tag">PPWR · 패키징</span>Lesson 0012 · 약 35분 · 스킬 레슨</div>
+<h1>재활용성 등급 추정기 — 우리 제품을 직접 채점한다</h1>
+<p class="subtitle">0011에서 "재활용성 등급(제6조)이 우리 제품의 EU 출시를 가장 먼저 결정한다"고 했다. 이번엔 추상을 끝낸다. 임의의 자사 SKU를 부품 단위로 채점해 <strong>A~E 등급을 직접 추정</strong>하고, 2030/2038 통과 여부와 <strong>가장 먼저 고쳐야 할 부품</strong>을 짚는 스킬을 손에 넣는다.</p>
+
+<div class="tracklink">
+  <b>📦 PPWR 트랙 · 화장품 패키징 규제</b>
+  <a href="0011-ppwr-foundation.html">0011 토대</a> <span class="sep">·</span> <span class="cur">0012 등급추정</span> <span class="sep">·</span> <a href="0013-substances-and-pcr.html">0013 유해물질·PCR</a> <span class="sep">·</span> <a href="0014-rpet-pcr-sourcing-certification.html">0014 rPET조달</a> <span class="sep">·</span> <a href="0015-reduce-and-reuse.html">0015 감축·재사용</a> <span class="sep">·</span> <a href="0016-labelling-epr-doc.html">0016 라벨·EPR·DoC</a> <span class="sep">·</span> <a href="0017-korea-memberstates-roadmap.html">0017 실무로드맵</a> <span class="sep">·</span> <a href="0018-td-data-collection-bom.html">0018 부자재TD수집</a> <span class="sep">·</span> <a href="0019-component-master-architecture.html">0019 스케일수집</a> <span class="sep">·</span> <a href="0020-self-declaration-and-verification.html">0020 자기선언·검증</a> <span class="sep">·</span> <a href="0021-screening-engine-and-portal.html">0021 스크리닝엔진</a> <span class="sep">·</span> <a href="../reference/packaging-materials.html">📋 매터리얼 지도</a>
+</div>
+
+<div class="callout">
+  <span class="label">이 레슨의 약속</span>
+  마치면 (1) PPWR 등급 스케일 <strong>A~E의 정확한 기준선</strong>과 두 개의 관문, (2) 등급을 결정하는 <strong>4요소</strong>, (3) 위임법(2028) 확정 전 실무 표준인 <strong>RecyClass·APR 부품별 규칙</strong>, (4) 페이지 하단 <strong>인터랙티브 추정기로 실제 자사 제품을 채점</strong>. 단, 이건 <em>법적 확정 등급이 아니라 설계 단계 추정</em>임을 분명히 한다.</p>
+</div>
+
+<h2>1. 등급 스케일 — A~E, 그리고 두 개의 관문</h2>
+
+<p>0011에서 A/B/C만 봤지만 실제 스케일은 <strong>D·E까지</strong> 있다. "C 미만 금지"의 그 '미만'이 D·E다.</p>
+
+<table>
+  <tr><th>등급</th><th>재활용 가능 비율</th><th>2030년~</th><th>2038년~</th></tr>
+  <tr><td><strong>A</strong></td><td>≥ 95%</td><td class="ok">출시 가능</td><td class="ok">출시 가능</td></tr>
+  <tr><td><strong>B</strong></td><td>≥ 80%</td><td class="ok">출시 가능</td><td class="ok">출시 가능</td></tr>
+  <tr><td><strong>C</strong></td><td>≥ 70%</td><td class="ok">출시 가능</td><td class="kill">출시 금지</td></tr>
+  <tr><td><strong>D</strong></td><td>&lt; 70%</td><td class="kill">출시 금지</td><td class="kill">출시 금지</td></tr>
+  <tr><td><strong>E</strong></td><td>재활용 불가</td><td class="kill">출시 금지</td><td class="kill">출시 금지</td></tr>
+</table>
+<p class="cite">출처: PPWR(Reg (EU) 2025/40) 제6조 + 부속서 II Table 3. 시행: 2030.1.1 또는 위임법 발효 후 24개월 중 늦은 날. <a href="https://eur-lex.europa.eu/eli/reg/2025/40/oj/eng" target="_blank">EUR-Lex</a>, <a href="https://www.getsunhat.com/blog/ppwr-design-for-recycling-grades" target="_blank">grades 해설</a>.</p>
+
+<div class="callout callout-warn">
+  <span class="label">관문이 하나가 아니라 둘이다 — 이게 핵심 함정</span>
+  <ol style="margin:6px 0;">
+    <li><strong>관문 ① 설계 재활용성(Design for Recyclability):</strong> "이론적으로 재활용 가능하게 설계됐나" → A~E 등급. <strong>2030년</strong>부터 ≥C 강제.</li>
+    <li><strong>관문 ② 대규모 재활용(Recycled at Scale):</strong> "EU 인프라에서 실제로 유의미한 양이 재활용되나" → <strong>2035년</strong>부터 추가. 설계는 완벽해도 그 재질의 실제 회수·재활용 스트림이 EU에 없으면 탈락.</li>
+  </ol>
+  즉 <strong>등급 A를 받아도 2035년 관문 ②에서 다시 걸릴 수 있다.</strong> 이번 레슨의 추정기는 관문 ①(설계)을 다룬다. 관문 ②는 재질 선택 단계에서 "주류 스트림(PET·HDPE·PP)인가"로 미리 방어한다.
+</div>
+
+<h2>2. 등급을 결정하는 4요소</h2>
+
+<p>위임법이 세부 산식을 2028년까지 정하지만, 평가 축은 이미 제6조에 박혀 있다. 모든 부품 규칙은 이 4개로 환원된다.</p>
+
+<table>
+  <tr><th>#</th><th>요소</th><th>현실의 질문</th></tr>
+  <tr><td>①</td><td><strong>선별성</strong> (Sorting compatibility)</td><td>선별장 <strong>NIR 스캐너</strong>가 이 재질을 식별·분류할 수 있나?</td></tr>
+  <tr><td>②</td><td><strong>분리성</strong> (Material separability)</td><td>부품들을 재생품질 훼손 없이 물리적으로 나눌 수 있나?</td></tr>
+  <tr><td>③</td><td><strong>오염 회피</strong> (Contamination avoidance)</td><td>잉크·접착제·코팅·안료가 재생원료를 오염시키나?</td></tr>
+  <tr><td>④</td><td><strong>해체 용이성</strong> (Dismantling ease)</td><td>소비자나 기계가 재활용 전에 부품을 쉽게 분리하나?</td></tr>
+</table>
+<p class="cite">출처: PPWR 제6조 평가 기준 요약(<a href="https://www.getsunhat.com/blog/ppwr-design-for-recycling-grades" target="_blank">DfR criteria</a>).</p>
+
+<h2>3. 실무 표준 — RecyClass / APR (위임법 전까지의 사실상 기준)</h2>
+
+<p>위임법이 미확정이라 지금 등급을 추정하려면 <strong>업계 합의 프로토콜</strong>을 쓴다. EU는 <a href="https://recyclass.eu/our-approach/recyclass-methodology/" target="_blank">RecyClass</a>, 미국은 <a href="https://plasticsrecycling.org/apr-design-hub/apr-design-guide/pet-rigid/" target="_blank">APR Design Guide</a>. 둘 다 PPWR 4요소와 같은 물리에 기반하므로 부품 규칙이 거의 일치한다. RecyClass도 Class A·B·C까지를 "재활용 가능"으로 본다.</p>
+
+<div class="callout callout-bad">
+  <span class="label">RecyClass가 콕 집은 화장품 패키징의 5대 약점</span>
+  <strong>① 작은 크기</strong>(선별기에서 누락) · <strong>② 복합재질</strong>(multimaterial) · <strong>③ 검정 안료 과다 사용</strong>(carbon black) · <strong>④ 압착 안 되는 둥근 형상</strong> · <strong>⑤ 다부품 디스펜서 + 과한 장식</strong>. 해법은 <strong>모노재질(한 폴리머 ≥90%)</strong> + 잔여물 비우기 쉬운 설계. <span class="cite">(RecyClass personal care 가이드.)</span>
+</div>
+
+<h2>4. 부품별 채점 규칙 — 즉사(⛔) · 감점(⚠️) · 무해(✅)</h2>
+
+<p>추정기를 돌리기 전에, 각 부품이 등급에 어떻게 작용하는지 본다. <span class="kill">⛔ 즉사</span>는 하나만 있어도 D/E로 떨어뜨린다 — 다른 부품이 아무리 완벽해도.</p>
+
+<h3>4.1 본체(Body) 폴리머 · 색상</h3>
+<table>
+  <tr><th>요인</th><th class="ok">✅ 선호</th><th class="down">⚠️ 감점</th><th class="kill">⛔ 즉사</th></tr>
+  <tr><td>폴리머</td><td>PET / HDPE / PP (주류 스트림)</td><td>—</td><td>PVC · PS · PLA · 복합필름</td></tr>
+  <tr><td>색상</td><td>투명 · 연한 파랑 · 투명 녹색</td><td>불투명 흰색(TiO₂) · 기타 유색</td><td><strong>검정(카본블랙, NIR 미검출)</strong></td></tr>
+</table>
+<p>카본블랙은 적외선을 흡수해 NIR 스캐너가 재질을 못 읽는다 → 선별 실패 → 매립·소각. <strong>화장품에서 가장 흔한 즉사 원인.</strong> <span class="cite">(<a href="https://www.recyclingtoday.com/article/ampacet-masterbatches-improve-black-plastic-recyclability/" target="_blank">NIR·carbon black</a>.)</span></p>
+
+<h3>4.2 펌프 · 캡 · 디스펜서</h3>
+<table>
+  <tr><th>요인</th><th class="ok">✅ 선호</th><th class="down">⚠️ 감점</th><th class="kill">⛔ 즉사</th></tr>
+  <tr><td>재질·밀도</td><td>PP·HDPE·LDPE·TPE 등 <strong>물에 뜨는 폴리올레핀</strong>(분리됨)</td><td>물에 가라앉는 비폴리올레핀 · 유색 PET 캡</td><td><strong>PVC · 금속 캡</strong></td></tr>
+  <tr><td>금속 스프링</td><td>스프링 없는 구조 · 모노재질 펌프</td><td>—</td><td><strong>금속 스프링</strong>(금속 검출 시 전체 반려)</td></tr>
+</table>
+<p>대부분의 화장품 펌프는 <strong>금속 스프링 + 다중 재질</strong> = 즉사급. 모노폴리머 펌프(예: 스프링리스/단일 PP)로 가야 등급이 산다. <span class="cite">(<a href="https://plasticsrecycling.org/apr-design-hub/apr-design-guide/pet-rigid/" target="_blank">APR PET Rigid</a>.)</span></p>
+
+<h3>4.3 라벨 · 전면 슬리브</h3>
+<table>
+  <tr><th>요인</th><th class="ok">✅ 선호</th><th class="down">⚠️ 감점</th><th class="kill">⛔ 즉사</th></tr>
+  <tr><td>라벨</td><td>뜨는 PO 필름 · wash-off 접착 · 커버리지 제한(≤55% 소용량)</td><td>종이 라벨 · 비탈착 접착</td><td>PVC·PLA 필름(PET와 함께 가라앉아 오염)</td></tr>
+  <tr><td>전면 슬리브</td><td>제거 가능 PET-G 슬리브(&lt;50µm, 천공)</td><td>대면적 인쇄</td><td><strong>전면 슬리브가 본체를 가려 NIR 식별 차단</strong> · 검정 슬리브</td></tr>
+</table>
+
+<h3>4.4 배리어·코팅·부착물</h3>
+<table>
+  <tr><th>요인</th><th class="ok">✅ 선호</th><th class="kill">⛔ 즉사 / 비재활용</th></tr>
+  <tr><td>배리어·코팅</td><td>검증 통과한 산소흡수제</td><td>금속화(metallization) · 미검증 실리콘 코팅 · 광택제(optical brightener)</td></tr>
+  <tr><td>부착물</td><td>뜨는 PET·PO 부착물</td><td>금속 · RFID · PVC·PLA · 용접된 비PET</td></tr>
+</table>
+
+<h2>5. ▶ 추정기 — 우리 제품을 채점하라</h2>
+<p>실제 자사 SKU 하나를 떠올리고 각 항목을 선택한 뒤 <strong>채점</strong>을 누른다. 모르면 가장 가까운 걸 고르고, 나중에 사양서로 확정하면 된다.</p>
+
+<div class="estimator">
+  <h3>🧪 PPWR 재활용성 등급 추정기 (설계 단계 heuristic)</h3>
+
+  <div class="est-row">
+    <label>① 본체 폴리머</label>
+    <select id="poly">
+      <option value="ok">PET / HDPE / PP (주류 재활용 스트림)</option>
+      <option value="kill">PVC · PS · PLA · 복합(multilayer) 필름</option>
+    </select>
+  </div>
+  <div class="est-row">
+    <label>② 본체 색상</label>
+    <select id="color">
+      <option value="ok">투명 · 연한 파랑 · 투명 녹색</option>
+      <option value="down">불투명 흰색(TiO₂) 또는 진한 유색</option>
+      <option value="kill">검정(카본블랙)</option>
+    </select>
+  </div>
+  <div class="est-row">
+    <label>③ 펌프 / 캡</label>
+    <select id="pump">
+      <option value="ok">폴리올레핀(PP·PE) 캡, 물에 뜸 · 금속 스프링 없음</option>
+      <option value="down">가라앉는 비폴리올레핀 캡 또는 유색 PET 캡</option>
+      <option value="kill">금속 스프링 펌프 · PVC · 금속 캡</option>
+    </select>
+  </div>
+  <div class="est-row">
+    <label>④ 라벨 / 슬리브</label>
+    <select id="label">
+      <option value="ok">뜨는 PO 필름 + wash-off 접착, 부분 라벨</option>
+      <option value="down">종이 라벨 또는 비탈착 접착 또는 대면적</option>
+      <option value="kill">전면 슬리브(본체 가림) · PVC·PLA 필름 · 검정 슬리브</option>
+    </select>
+  </div>
+  <div class="est-row">
+    <label>⑤ 배리어 / 코팅 / 금속 부착물</label>
+    <select id="barrier">
+      <option value="ok">없음 또는 검증된 산소흡수제만</option>
+      <option value="kill">금속화 · 미검증 코팅 · 금속/RFID/PVC 부착물</option>
+    </select>
+  </div>
+
+  <button class="est-btn" onclick="estimate()">채점하기 →</button>
+
+  <div class="est-result" id="result"></div>
+</div>
+
+<p class="cite">⚠️ 이 추정기는 RecyClass·APR 설계 규칙을 단순화한 <strong>교육용 heuristic</strong>이다. 실제 PPWR 법적 등급은 2028년 위임법 산식 + 인증기관 평가로 확정된다. 추정기는 "어느 부품이 등급을 죽이는가"를 빠르게 짚는 용도.</p>
+
+<h2>6. 적용 예 — EVAS PET 세럼 + 펌프</h2>
+<p>0011의 예시 제품(투명 PET 보틀 + 펌프)을 채점해보자. 전형적 구성:</p>
+<ul>
+  <li>본체: 투명 PET → ✅</li>
+  <li>색상: 투명 → ✅</li>
+  <li>펌프: <strong>금속 스프링 표준 펌프 → ⛔ 즉사</strong></li>
+  <li>라벨: PP wash-off 부분 라벨 → ✅</li>
+  <li>배리어: 없음 → ✅</li>
+</ul>
+<p>4개가 완벽해도 펌프 하나(금속 스프링 = 즉사 요인)가 등급을 <strong>E(재활용 불가 → 2030 출시 금지)</strong>로 떨군다. → <strong>가장 먼저 고칠 1순위 = 펌프</strong>(모노폴리머/스프링리스로 교체). 이게 추정기의 가치 — "어디부터 손대야 ROI가 가장 큰가"를 5초에 답한다.</p>
+
+<div class="callout callout-good">
+  <span class="label">처방(Action)</span>
+  펌프를 스프링리스 모노-PP 또는 RecyClass 검증 펌프(예: airless PET류)로 바꾸면 같은 보틀이 <strong>E → A/B</strong>로 점프한다. 단상자·슬리브를 안 쓰고 투명 PET를 유지하는 한, 화장품 보틀의 등급은 <strong>거의 항상 펌프/디스펜서에서 결판난다.</strong>
+</div>
+
+<div class="quiz">
+<h2>되짚기 — 보지 말고 답하기</h2>
+<p style="font-size:14px; color:var(--muted); margin-top:0;">머릿속으로 먼저 답하고 토글을 연다.</p>
+
+<div class="question">
+  <strong>Q1.</strong> PPWR 등급 A·B·C·D·E의 기준선(%)과, 2030년·2038년 각각 출시 가능한 최저 등급은?
+  <details><summary>답 보기</summary>
+  <div class="answer">A ≥95% · B ≥80% · C ≥70% · D &lt;70% · E 재활용불가. <strong>2030년: ≥C</strong>(C 이상), <strong>2038년: ≥B</strong>(B 이상)부터 출시 가능. D·E는 두 시점 모두 금지.</div>
+  </details>
+</div>
+
+<div class="question">
+  <strong>Q2.</strong> 설계 재활용성 등급(A) 을 받아도 2035년에 다시 걸릴 수 있는 두 번째 관문의 이름과 뜻은?
+  <details><summary>답 보기</summary>
+  <div class="answer"><strong>대규모 재활용(Recycled at Scale)</strong> — EU 수거·선별 인프라에서 실제로 유의미한 양이 재활용되어야 한다. 이론적 설계 재활용성과 별개로 2035년부터 추가 적용. 방어책: 재질을 PET·HDPE·PP 같은 주류 스트림으로.</div>
+  </details>
+</div>
+
+<div class="question">
+  <strong>Q3.</strong> 화장품 보틀에서 가장 흔한 "즉사(non-recyclable)" 원인 2가지를, 4요소 중 어느 요소를 깨는지와 함께.
+  <details><summary>답 보기</summary>
+  <div class="answer">(1) <strong>카본블랙(검정 본체·슬리브)</strong> → NIR 미검출 → ①선별성 파괴. (2) <strong>펌프 금속 스프링/PVC</strong> → 금속 검출 시 전체 반려·오염 → ②분리성·③오염회피 파괴. 둘 다 다른 부품과 무관하게 등급을 떨군다.</div>
+  </details>
+</div>
+
+<div class="question">
+  <strong>Q4.</strong> 펌프 캡을 고를 때 "물에 뜨는 폴리올레핀(PP·PE)"이 선호되는 이유는?
+  <details><summary>답 보기</summary>
+  <div class="answer">재활용 공정의 <strong>밀도 분리(float-sink)</strong>에서 PET 플레이크(가라앉음)와 자연스럽게 분리되기 때문. 가라앉는 비폴리올레핀 캡은 PET 재생원료에 섞여 오염시킨다(②분리성·③오염회피).</div>
+  </details>
+</div>
+
+<div class="question">
+  <strong>Q5.</strong> 위임법(2028)이 아직 안 나왔는데 지금 등급을 추정하려면 실무에서 무엇을 기준으로 쓰며, 그 추정의 한계는?
+  <details><summary>답 보기</summary>
+  <div class="answer">EU는 <strong>RecyClass</strong>, 미국은 <strong>APR Design Guide</strong> 프로토콜을 사실상 표준으로 사용. 한계: 이건 업계 합의 설계 가이드일 뿐, <strong>법적 등급은 2028 위임법 산식 + 인증기관 평가로 확정</strong>되므로 추정치는 설계 방향 잡기용이지 출시 보증이 아니다.</div>
+  </details>
+</div>
+</div>
+
+<h2>다음 레슨 예고</h2>
+<p>재활용성 등급을 잡았으니, 같은 재활용 묶음의 나머지 두 조항으로 간다 — <strong>0013: 제5(유해물질 — 중금속 4종 100mg/kg·PFAS) · 제7(PCR 재생원료 최소 함량)</strong>. "등급은 통과해도 유해물질·PCR에서 막히는" 케이스를 막는다.</p>
+
+<div class="callout">
+  <span class="label">📌 1차 출처 — 직접 읽어보기</span>
+  <ul style="margin:8px 0 0;">
+    <li><strong>법 원문:</strong> <a href="https://eur-lex.europa.eu/eli/reg/2025/40/oj/eng" target="_blank">PPWR 제6조 + 부속서 II (EUR-Lex)</a></li>
+    <li><strong>설계 실무 표준:</strong> <a href="https://recyclass.eu/our-approach/recyclass-methodology/" target="_blank">RecyClass Methodology</a> · <a href="https://plasticsrecycling.org/apr-design-hub/apr-design-guide/pet-rigid/" target="_blank">APR Design Guide — PET Rigid</a></li>
+    <li><strong>한국어 맥락:</strong> 대한화장품협회 PPWR 심층보고서 (<code>reference/</code>)</li>
+  </ul>
+</div>
+
+<div class="callout callout-warn">
+  <span class="label">교사에게 질문</span>
+  추정기를 실제 SKU에 돌리다 막히면 바로 물어보세요. 예: "우리 OO 토너 사양서 줄 테니 같이 채점해줘", "스프링리스 모노-PP 펌프 실제 공급사·검증 사례 찾아줘", "전면 슬리브를 꼭 써야 하는데 등급 살릴 방법 있어?", "관문②(recycled at scale) 한국발 PET가 EU에서 실제 재활용되는지 어떻게 확인해?" — 사양서를 주시면 추정기를 함께 채워 1순위 개선 부품을 짚어드립니다.
+</div>
+
+<div class="nav">
+  Track: PPWR · 패키징 ·
+  Previous: <a href="0011-ppwr-foundation.html">0011 — PPWR 토대</a> ·
+  Next: 0013 — 제5(유해물질)·제7(PCR 함량) <em>예정</em> ·
+  Glossary: <a href="../reference/glossary.html">용어집</a>
+</div>
+
+<script>
+function estimate() {
+  var ids = ['poly','color','pump','label','barrier'];
+  var names = {poly:'본체 폴리머', color:'본체 색상', pump:'펌프/캡', label:'라벨/슬리브', barrier:'배리어/부착물'};
+  var score = 100, killers = [], downs = [];
+  ids.forEach(function(id){
+    var v = document.getElementById(id).value;
+    if (v === 'kill') killers.push(names[id]);
+    else if (v === 'down') { downs.push(names[id]); score -= 15; }
+  });
+
+  var grade, pct, note, cls;
+  if (killers.length > 0) {
+    grade = 'E'; cls = 'g-E';
+    pct = '재활용 불가 (선별·분리 실패)';
+    note = '하나 이상의 <strong>즉사 요인</strong>이 있어 등급이 무너진다. 다른 부품이 완벽해도 소용없다.';
+  } else {
+    if (score >= 95) { grade='A'; cls='g-A'; }
+    else if (score >= 80) { grade='B'; cls='g-B'; }
+    else if (score >= 70) { grade='C'; cls='g-C'; }
+    else { grade='D'; cls='g-D'; }
+    pct = '추정 재활용성 ≈ ' + score + '%';
+  }
+
+  var market;
+  if (grade==='A'||grade==='B') market = '<span class="ok">2030·2038 모두 출시 가능</span>';
+  else if (grade==='C') market = '<span class="down">2030 출시 가능 / <strong>2038 금지</strong> (B 이상으로 올려야 함)</span>';
+  else market = '<span class="kill">2030부터 출시 금지 — 즉시 재설계 필요</span>';
+
+  var html = '<div><span class="grade-badge '+cls+'">'+grade+'</span>'+
+             '<strong style="font-size:18px;">등급 '+grade+'</strong> &nbsp;·&nbsp; '+pct+'</div>'+
+             '<p style="margin:14px 0 6px;">'+ (note || '') +'</p>'+
+             '<p style="margin:6px 0;">시장 접근: '+market+'</p>';
+
+  if (killers.length > 0) {
+    html += '<p style="margin:10px 0 4px;"><strong>⛔ 가장 먼저 고칠 즉사 부품:</strong></p><ul>';
+    killers.forEach(function(k){ html += '<li class="kill">'+k+'</li>'; });
+    html += '</ul>';
+  } else if (downs.length > 0) {
+    html += '<p style="margin:10px 0 4px;"><strong>⚠️ 등급을 깎는 감점 부품 (개선 시 상향):</strong></p><ul>';
+    downs.forEach(function(d){ html += '<li class="down">'+d+'</li>'; });
+    html += '</ul>';
+  } else {
+    html += '<p class="ok" style="margin:10px 0;">✅ 즉사·감점 요인 없음 — 모노재질 설계가 잘 잡혀 있다. 관문②(2035 recycled at scale)만 재질 스트림으로 방어.</p>';
+  }
+  html += '<p class="cite" style="margin-top:12px;">heuristic 추정치. 법적 등급은 2028 위임법 + 인증기관 평가로 확정.</p>';
+
+  var r = document.getElementById('result');
+  r.innerHTML = html;
+  r.style.display = 'block';
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,23 @@
+[
+  {
+    "id": "pif-cpsr",
+    "title": "PIF · CPSR 자동화",
+    "subtitle": "사내 CPSR 자동작성 AI 에이전트 시스템 — 도메인 골격부터 4-Tier 파이프라인, HITL UI까지",
+    "color": "lime",
+    "order": 1
+  },
+  {
+    "id": "ppwr",
+    "title": "PPWR 패키징 규제",
+    "subtitle": "EU 포장·포장폐기물 규정 — 재활용성 등급, PCR, 라벨·EPR, 컴포넌트 마스터 아키텍처",
+    "color": "lilac",
+    "order": 2
+  },
+  {
+    "id": "reference",
+    "title": "레퍼런스",
+    "subtitle": "용어집·패키징 소재 지도·시스템 치트시트 등 상시 참고 자료",
+    "color": "cream",
+    "order": 3
+  }
+]

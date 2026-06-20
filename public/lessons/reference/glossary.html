@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Reference — Cosmetic Safety Assessment Glossary</title>
+<style>
+  :root {
+    --ink: #1a1a1a;
+    --muted: #5a5a5a;
+    --line: #d8d3c7;
+    --accent: #7a3b2e;
+    --highlight: #fbf6ec;
+    --code-bg: #f3efe5;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Iowan Old Style", "Georgia", "Apple SD Gothic Neo", "Noto Serif KR", serif;
+    color: var(--ink);
+    max-width: 820px;
+    margin: 50px auto;
+    padding: 0 28px 80px;
+    line-height: 1.65;
+    font-size: 16px;
+    background: #fefcf7;
+  }
+  .meta {
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  h1 {
+    font-size: 28px;
+    margin: 0 0 8px;
+    letter-spacing: -0.01em;
+  }
+  .subtitle {
+    color: var(--muted);
+    font-style: italic;
+    margin-bottom: 36px;
+  }
+  h2 {
+    font-size: 18px;
+    margin: 40px 0 12px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--line);
+    color: var(--accent);
+    letter-spacing: 0.02em;
+  }
+  dl { margin: 0; }
+  dt {
+    font-weight: 600;
+    margin-top: 18px;
+    font-size: 16px;
+  }
+  dt .en {
+    font-family: "SF Mono", "Menlo", monospace;
+    font-weight: 500;
+    font-size: 13px;
+    color: var(--accent);
+    margin-left: 6px;
+    background: var(--code-bg);
+    padding: 1px 6px;
+    border-radius: 3px;
+  }
+  dd {
+    margin: 4px 0 0 0;
+    color: var(--ink);
+  }
+  dd .cite {
+    display: block;
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+  code {
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 14px;
+    background: var(--code-bg);
+    padding: 1px 5px;
+    border-radius: 3px;
+  }
+  .toc {
+    background: var(--highlight);
+    padding: 16px 20px;
+    border-radius: 6px;
+    margin-bottom: 32px;
+    font-size: 14px;
+  }
+  .toc a {
+    color: var(--accent);
+    text-decoration: none;
+    margin-right: 16px;
+    display: inline-block;
+  }
+  .toc a:hover { text-decoration: underline; }
+  .nav {
+    margin-top: 50px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .nav a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+  @media print {
+    body { background: #fff; max-width: 100%; margin: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="meta">Reference · Glossary · v1</div>
+<h1>Cosmetic Safety Assessment 용어집</h1>
+<p class="subtitle">SCCS Notes of Guidance 12th Revision (2023) 기준. 모든 레슨에서 이 용어집의 정의를 사용한다.</p>
+
+<div class="toc">
+  <a href="#regulatory">규제·문서</a>
+  <a href="#exposure">노출량</a>
+  <a href="#toxicology">독성학</a>
+  <a href="#risk">위험성 평가</a>
+  <a href="#testing">시험·데이터</a>
+</div>
+
+<h2 id="regulatory">규제·문서 구조</h2>
+<dl>
+
+<dt>PIF <span class="en">Product Information File</span></dt>
+<dd>EU Reg 1223/2009 Art. 11에 따라 RP(Responsible Person)가 제품별로 보유해야 하는 모든 정보를 모은 마스터 파일. CPSR을 포함.</dd>
+
+<dt>CPSR <span class="en">Cosmetic Product Safety Report</span></dt>
+<dd>PIF의 핵심 구성요소. EU Reg Annex I이 구조를 정의. Part A(10개 섹션, 데이터) + Part B(4개 섹션, 평가)로 구성.</dd>
+
+<dt>SA <span class="en">Safety Assessor</span></dt>
+<dd>CPSR Part B를 작성·서명하는 자격자. EU에서는 약리학/독성학/의학/유사 학위 + 실무 경험 필요 (EU Reg Art. 10).</dd>
+
+<dt>RP <span class="en">Responsible Person</span></dt>
+<dd>EU 시장 출시 제품에 대해 규정 준수의 법적 책임을 지는 법인 또는 자연인 (EU Reg Art. 4-5).</dd>
+
+<dt>SCCS <span class="en">Scientific Committee on Consumer Safety</span></dt>
+<dd>EU 집행위원회 자문 과학 위원회. 화장품 성분의 안전성에 대한 공식 의견(Opinion)을 발행하며, 본 미션의 1차 권위 자료.</dd>
+
+<dt>NoG <span class="en">Notes of Guidance</span></dt>
+<dd>SCCS가 정기 개정 발행하는 안전성 평가 방법론 지침서. 본 미션은 <strong>12th Revision (SCCS/1647/22, 2023)</strong> 기준.</dd>
+
+<dt>CosIng</dt>
+<dd>EU 화장품 성분 데이터베이스. 성분의 INCI명, 기능, EU Reg Annex II~VI(금지/제한/색소/보존제/UV필터) 등록 여부 조회.</dd>
+
+<dt>CIR <span class="en">Cosmetic Ingredient Review</span></dt>
+<dd>미국 PCPC(개인용품협회) 자금 지원 독립 패널. 성분별 안전성 평가 보고서 발행. SCCS Opinion이 없는 성분의 NOAEL 보완 자료.</dd>
+
+<dt>INCI <span class="en">International Nomenclature of Cosmetic Ingredients</span></dt>
+<dd>화장품 성분의 국제 표준 명명 체계. 라벨·CPSR Part A.1에 INCI명으로 표기.</dd>
+
+</dl>
+
+<h2 id="exposure">노출량(Exposure) 관련</h2>
+<dl>
+
+<dt>Exposure assessment</dt>
+<dd>사용자가 제품을 사용할 때 각 성분에 얼마나, 얼마나 자주, 어떻게 노출되는지 정량화하는 과정. CPSR A.6 + A.7.</dd>
+
+<dt>RfE <span class="en">Relevant Exposure</span></dt>
+<dd>특정 제품 카테고리의 일일 적용량(g/day). SCCS NoG 12판 Table 1에 카테고리별 기본값 (예: face cream 1.54 g/day).</dd>
+
+<dt>Retention factor</dt>
+<dd>제품이 피부에 남는 비율. Leave-on = 1.0, Rinse-off = 약 0.01~0.1 (제품군별 차이).</dd>
+
+<dt>Dermal absorption</dt>
+<dd>피부를 통한 성분의 전신 흡수율(%). 데이터 없으면 기본값 50% 적용 (SCCS NoG 12판 §3-6.3). in vitro 시험(OECD TG 428)으로 측정.</dd>
+
+<dt>SED <span class="en">Systemic Exposure Dosage</span></dt>
+<dd>특정 성분의 일일 전신 노출량 (mg/kg bw/day). 공식: <code>SED = A × C × DA% × F / BW</code>. A=일일 적용량, C=농도, DA%=흡수율, F=retention factor, BW=체중(기본 60kg, SCCS NoG 12판). MoS의 분모.</dd>
+
+<dt>Aggregate exposure</dt>
+<dd>한 사용자가 동일 성분을 함유한 여러 제품(예: 클렌저+토너+세럼+크림+자외선차단제)을 동시에 사용할 때의 총 노출량. SCCS NoG 12판이 강조하는 평가 항목.</dd>
+
+</dl>
+
+<h2 id="toxicology">독성학(Toxicology) 관련</h2>
+<dl>
+
+<dt>NOAEL <span class="en">No Observed Adverse Effect Level</span></dt>
+<dd>반복투여 독성시험(주로 90일 경구, OECD TG 408)에서 통계적으로 유의한 유해 영향이 관찰되지 않은 최대 용량 (mg/kg bw/day). MoS의 분자.</dd>
+
+<dt>LOAEL <span class="en">Lowest Observed Adverse Effect Level</span></dt>
+<dd>유해 영향이 관찰된 최저 용량. NOAEL이 없을 때 LOAEL/(추가 안전계수)로 대체.</dd>
+
+<dt>BMD / BMDL <span class="en">Benchmark Dose / Lower confidence limit</span></dt>
+<dd>NOAEL의 통계적 대안. 용량-반응 곡선에서 특정 효과 발현률(예: 5%)에 대응하는 용량. SCCS NoG 12판이 NOAEL의 문제점을 보완하기 위해 권장.</dd>
+
+<dt>Acute toxicity</dt>
+<dd>1회 노출 후 단기(통상 24시간) 내 독성. LD50 등으로 표현. 화장품 SA에서 우선순위는 낮음.</dd>
+
+<dt>Skin irritation / corrosion</dt>
+<dd>피부 자극·부식. OECD TG 439 (in vitro RhE) 등으로 평가. 국소 안전성 평가.</dd>
+
+<dt>Skin sensitization</dt>
+<dd>피부 감작(알레르기 유발 가능성). OECD TG 442C/D/E (DPRA, KeratinoSens, h-CLAT) 조합. 알레르겐성 향료 26+24종 별도 관리.</dd>
+
+<dt>Genotoxicity</dt>
+<dd>유전 독성. OECD TG 471 (Ames), 487 (Micronucleus), 490 (Mouse Lymphoma). 양성이면 사실상 사용 불가.</dd>
+
+<dt>Reproductive / Developmental toxicity</dt>
+<dd>생식·발달 독성. OECD TG 414, 416, 421/422. 임산부 노출 평가의 핵심.</dd>
+
+<dt>Carcinogenicity</dt>
+<dd>발암성. OECD TG 451. 화장품 신규 성분 평가의 highest bar.</dd>
+
+<dt>Photoxicity / Phototoxicity</dt>
+<dd>광독성·광자극성. UV/Vis 흡수 + OECD TG 432 (3T3 NRU). 자외선차단제·향료 평가의 필수 항목.</dd>
+
+</dl>
+
+<h2 id="risk">위험성 평가 결과</h2>
+<dl>
+
+<dt>MoS <span class="en">Margin of Safety</span></dt>
+<dd>안전 여유. <code>MoS = NOAEL / SED</code>. SCCS 기준 <strong>≥ 100</strong>이 안전 판정 임계. 100은 종간차 10 × 개체차 10의 기본 불확실성 계수에서 유래.</dd>
+
+<dt>Uncertainty factor (UF)</dt>
+<dd>NOAEL을 인체에 적용할 때 적용하는 안전계수. 종간차(10) × 개체차(10) = 100이 기본. 데이터 갭이 있으면 추가 UF (1~10) 적용 → MoS 목표 상향.</dd>
+
+<dt>Safe / Safe with conditions / Not safe</dt>
+<dd>Part B.1 결론의 세 등급. "Safe with conditions"는 라벨 경고·사용자 제한·농도 한도 등 조건부 안전.</dd>
+
+<dt>Threshold of Toxicological Concern (TTC)</dt>
+<dd>독성 데이터가 부족한 성분(예: 향료 미량 성분)에 적용하는 기본 안전 임계값. SCCS NoG 12판 §3-6.4에 적용 조건 정리.</dd>
+
+<dt>Read-across</dt>
+<dd>독성 데이터가 없는 성분을 구조적으로 유사한 성분의 데이터로 평가. SCCS NoG 12판이 받아들이는 조건 명시.</dd>
+
+</dl>
+
+<h2 id="testing">시험·데이터 소스</h2>
+<dl>
+
+<dt>OECD TG <span class="en">OECD Test Guidelines</span></dt>
+<dd>OECD가 발행하는 국제 표준 독성시험 가이드라인. SCCS는 OECD TG 기반 데이터를 우선 수용.</dd>
+
+<dt>3R / Alternative methods</dt>
+<dd>Replacement, Reduction, Refinement. EU는 화장품 동물시험 금지(EU Reg Art. 18). in vitro/in silico/QSAR 대체법이 표준.</dd>
+
+<dt>QSAR <span class="en">Quantitative Structure-Activity Relationship</span></dt>
+<dd>화학구조로부터 독성을 예측하는 컴퓨터 모델. 데이터 갭 보완에 사용. SCCS는 OECD QSAR Toolbox 권장.</dd>
+
+<dt>REACH</dt>
+<dd>EU 화학물질 등록·평가·승인·제한 규정. ECHA 데이터베이스에 등록된 화학물질의 안전성 자료(NOAEL 등) 다수가 화장품 평가에 활용 가능.</dd>
+
+<dt>HRIPT <span class="en">Human Repeat Insult Patch Test</span></dt>
+<dd>완제품 반복 첩포 시험. 50~100명 피험자. 감작·자극 임상 검증. CPSR A.10에 결과 포함.</dd>
+
+<dt>Challenge test</dt>
+<dd>보존력 시험. ISO 11930. 미생물 접종 후 시간별 균감소 측정. CPSR A.3.</dd>
+
+</dl>
+
+<div class="nav">
+  Lessons: <a href="../lessons/0001-anatomy-of-cpsr.html">0001 — CPSR Anatomy</a> ·
+  Mission: <a href="../MISSION.md">MISSION.md</a>
+</div>
+
+</body>
+</html>

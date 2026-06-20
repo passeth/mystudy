@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Lesson 0016 — 라벨링·EPR·적합성선언: 증빙이 모이는 곳</title>
+<style>
+  :root {
+    --ink:#1a1a1a; --muted:#5a5a5a; --line:#d8d3c7;
+    --accent:#0369a1; --accent2:#15803d; --highlight:#f0f9ff;
+    --code-bg:#f3efe5; --quiz-bg:#f9f5ea;
+    --warn:#b45309; --good:#15803d; --bad:#b91c1c;
+  }
+  * { box-sizing:border-box; }
+  body { font-family:"Iowan Old Style","Georgia","Apple SD Gothic Neo","Noto Serif KR",serif; color:var(--ink); max-width:820px; margin:60px auto; padding:0 28px 80px; line-height:1.7; font-size:17px; background:#fefcf7; }
+  .meta { font-family:"SF Mono","Menlo",monospace; font-size:12px; letter-spacing:0.1em; color:var(--muted); text-transform:uppercase; margin-bottom:12px; }
+  .tier-tag { display:inline-block; background:var(--accent2); color:#fff; padding:3px 10px; border-radius:4px; font-family:"SF Mono","Menlo",monospace; font-size:11px; font-weight:600; letter-spacing:0.08em; margin-right:8px; }
+  h1 { font-size:30px; line-height:1.25; margin:0 0 8px; letter-spacing:-0.01em; }
+  .subtitle { color:var(--muted); font-style:italic; margin-bottom:36px; }
+  h2 { font-size:22px; margin:44px 0 12px; padding-bottom:6px; border-bottom:1px solid var(--line); }
+  h3 { font-size:18px; margin:30px 0 8px; color:var(--accent); }
+  p { margin:12px 0; }
+  ul, ol { padding-left:24px; } li { margin:6px 0; }
+  code { font-family:"SF Mono","Menlo",monospace; font-size:14px; background:var(--code-bg); padding:2px 6px; border-radius:3px; }
+  .callout { background:var(--highlight); border-left:4px solid var(--accent); padding:16px 20px; margin:24px 0; border-radius:0 6px 6px 0; }
+  .callout-warn { background:#fef7e6; border-left-color:var(--warn); }
+  .callout-bad { background:#fef2f2; border-left-color:var(--bad); }
+  .callout-good { background:#f0fdf4; border-left-color:var(--good); }
+  .callout .label { display:block; font-size:12px; text-transform:uppercase; letter-spacing:0.1em; color:var(--accent); margin-bottom:6px; font-weight:600; }
+  .callout-warn .label { color:var(--warn); } .callout-bad .label { color:var(--bad); } .callout-good .label { color:var(--good); }
+  table { width:100%; border-collapse:collapse; margin:20px 0; font-size:14px; }
+  th, td { text-align:left; padding:10px 12px; border-bottom:1px solid var(--line); vertical-align:top; }
+  th { background:var(--code-bg); font-weight:600; font-size:12px; text-transform:uppercase; letter-spacing:0.05em; }
+  .ok { color:var(--good); font-weight:700; } .down { color:var(--warn); font-weight:700; } .kill { color:var(--bad); font-weight:700; }
+  .pyramid { font-family:"SF Mono","Menlo",monospace; font-size:13px; background:var(--code-bg); padding:18px 22px; border-radius:8px; margin:20px 0; line-height:1.8; text-align:center; }
+  .checker { background:#fff; border:2px solid var(--accent2); border-radius:12px; padding:24px 26px; margin:28px 0; box-shadow:0 2px 12px rgba(0,0,0,0.04); }
+  .checker h3 { margin-top:0; color:var(--accent2); }
+  .chk-item { margin:12px 0; display:flex; gap:10px; align-items:flex-start; }
+  .chk-item input { margin-top:5px; transform:scale(1.25); }
+  .chk-item label { font-size:15px; }
+  .chk-btn { margin-top:14px; background:var(--accent2); color:#fff; border:none; padding:12px 22px; border-radius:8px; font-family:inherit; font-size:16px; font-weight:700; cursor:pointer; }
+  .chk-btn:hover { background:#166534; }
+  .chk-out { margin-top:20px; padding:18px 22px; border-radius:10px; background:var(--code-bg); display:none; }
+  .bar { height:22px; background:#e5e0d3; border-radius:11px; overflow:hidden; margin:10px 0; }
+  .bar > span { display:block; height:100%; background:var(--accent2); text-align:right; color:#fff; font-size:12px; line-height:22px; padding-right:8px; font-family:"SF Mono",monospace; }
+  .quiz { background:var(--quiz-bg); padding:28px 32px; margin:40px 0; border-radius:8px; }
+  .quiz h2 { border:none; margin-top:0; } .question { margin:24px 0; }
+  details { margin:8px 0; } details > summary { cursor:pointer; color:var(--accent); font-size:14px; user-select:none; list-style:revert; }
+  details[open] > summary { margin-bottom:8px; }
+  .answer { margin-top:8px; padding:12px 16px; background:#fff; border:1px dashed var(--line); border-radius:4px; }
+  .nav { margin-top:60px; padding-top:24px; border-top:1px solid var(--line); font-size:14px; color:var(--muted); }
+  .nav a { color:var(--accent); text-decoration:none; } .nav a:hover { text-decoration:underline; }
+  .cite { font-size:13px; color:var(--muted); } .cite a { color:var(--muted); text-decoration:underline; }
+  strong { font-weight:700; }
+  @media print { body { background:#fff; max-width:100%; margin:0; } .checker { break-inside:avoid; } }
+
+  .tracklink { background:#f0fdf4; border:1px solid #15803d; border-radius:10px; padding:12px 16px; margin:0 0 30px; font-size:13px; line-height:2.0; }
+  .tracklink b { color:#15803d; text-transform:uppercase; letter-spacing:0.08em; font-size:11px; display:block; margin-bottom:5px; }
+  .tracklink a { color:#0369a1; text-decoration:none; }
+  .tracklink a:hover { text-decoration:underline; }
+  .tracklink .cur { background:#15803d; color:#fff; padding:1px 8px; border-radius:4px; font-weight:700; }
+  .tracklink .sep { color:#cdd6c9; margin:0 2px; }
+</style>
+</head>
+<body>
+
+<div class="meta"><span class="tier-tag">PPWR · 패키징</span>Lesson 0016 · 약 35분 · 캡스톤</div>
+<h1>라벨링·EPR·적합성선언 — 증빙이 모이는 곳</h1>
+<p class="subtitle">0012~0015에서 만든 등급·시험성적서·PCR 인증·최소화 증빙은 흩어진 채로는 의미가 없다. PPWR은 이 모두를 <strong>하나의 문서 묶음(기술문서 TD → 적합성선언서 DoC)</strong>으로 봉인하라고 요구하고, 그 결과를 <strong>라벨(제12)</strong>로 소비자에게, <strong>EPR(제44~45)</strong>로 당국에 연결한다. "문서가 곧 컴플라이언스"인 지점.</p>
+
+<div class="tracklink">
+  <b>📦 PPWR 트랙 · 화장품 패키징 규제</b>
+  <a href="0011-ppwr-foundation.html">0011 토대</a> <span class="sep">·</span> <a href="0012-recyclability-grade-estimator.html">0012 등급추정</a> <span class="sep">·</span> <a href="0013-substances-and-pcr.html">0013 유해물질·PCR</a> <span class="sep">·</span> <a href="0014-rpet-pcr-sourcing-certification.html">0014 rPET조달</a> <span class="sep">·</span> <a href="0015-reduce-and-reuse.html">0015 감축·재사용</a> <span class="sep">·</span> <span class="cur">0016 라벨·EPR·DoC</span> <span class="sep">·</span> <a href="0017-korea-memberstates-roadmap.html">0017 실무로드맵</a> <span class="sep">·</span> <a href="0018-td-data-collection-bom.html">0018 부자재TD수집</a> <span class="sep">·</span> <a href="0019-component-master-architecture.html">0019 스케일수집</a> <span class="sep">·</span> <a href="0020-self-declaration-and-verification.html">0020 자기선언·검증</a> <span class="sep">·</span> <a href="0021-screening-engine-and-portal.html">0021 스크리닝엔진</a> <span class="sep">·</span> <a href="../reference/packaging-materials.html">📋 매터리얼 지도</a>
+</div>
+
+<div class="callout">
+  <span class="label">이 레슨의 약속</span>
+  마치면 (1) 제12 <strong>조화 라벨(2028)</strong>과 QR의 정확한 역할, (2) EPR <strong>등록 + 에코모듈레이션</strong>이 어떻게 <strong>0012의 등급을 "돈"</strong>으로 바꾸는지, (3) <strong>DoC·TD</strong>의 구조(Module A 자기책임)와 0012~0015 증빙이 어디에 꽂히는지, (4) 하단 <strong>TD 준비도 체커</strong>로 자사 문서 완성도를 측정한다.</p>
+</div>
+
+<h2>1. 큰 그림 — 증빙 → TD → DoC → 시장</h2>
+<p>지금까지의 모든 작업은 결국 <strong>하나의 문서 피라미드</strong>로 수렴한다.</p>
+<div class="pyramid">
+🏷️ <strong>라벨(제12)</strong> &nbsp;+&nbsp; 💶 <strong>EPR 기여금(제45)</strong> &nbsp;← 결과 표시·납부<br>
+▲<br>
+📜 <strong>적합성선언서 (DoC)</strong> — "이 포장은 PPWR 적합" 서면 선언<br>
+▲<br>
+📁 <strong>기술문서 (TD, Annex VII)</strong> — 증빙의 토대<br>
+▲<br>
+🧪 <strong>제6 등급(0012) · 제5 시험(0013) · 제7 PCR(0013·14) · 제10 최소화·제11 재사용(0015)</strong>
+</div>
+<p>즉 0012~0015는 <strong>피라미드의 바닥돌</strong>을 만든 것이었다. 이 레슨은 그 돌을 쌓아 꼭대기(시장 출시)까지 올린다.</p>
+
+<h2>2. 제12조 — 조화 라벨링 (2028)</h2>
+<p>2028년 8월부터 대부분의 포장에 <strong>조화된(harmonised) 픽토그램</strong>을 붙여야 한다:</p>
+<ul>
+  <li><strong>재질 표시</strong> — 플라스틱·알루미늄·종이/판지·유리 등 픽토그램</li>
+  <li><strong>분리배출 방법</strong> — 쓰레기통 심볼과 매칭 (소비자가 어디에 버릴지)</li>
+  <li><strong>재사용 패키징</strong>은 별도 재사용 라벨 + QR(재사용 시스템·회수 지점·순환 횟수 정보)</li>
+</ul>
+<div class="callout callout-warn">
+  <span class="label">QR의 정확한 위치 — "보조"이지 "대체"가 아니다</span>
+  PPWR은 QR·디지털 라벨을 <strong>인쇄 라벨을 보완</strong>하는 용도로 허용한다. 그러나 <strong>QR로 인쇄 라벨을 대체할 수는 없다.</strong> 즉 물리적 픽토그램은 반드시 있어야 하고, QR은 추가 정보(재질 상세·재활용성·회수 안내) 전달용. 화장품은 기존 <strong>화장품법 라벨(성분·용량·주의)과 PPWR 라벨이 병존</strong>하므로 라벨 공간 설계가 까다롭다.
+</div>
+<p class="cite">출처: <a href="https://www.fostplus.be/en/blog/ppwr-insights-3-harmonised-labelling-in-depth-look-new-requirements" target="_blank">Fost Plus — 조화 라벨</a>, <a href="https://deutsche-recycling.com/blog/ppwr-labeling-requirement/" target="_blank">PPWR 라벨 의무</a>.</p>
+
+<h2>3. EPR (제44~45) — 등급이 "돈"이 되는 지점</h2>
+<p>EPR(생산자책임재활용)은 <strong>"네 포장의 폐기물 처리 비용을 네가 내라"</strong>는 제도. PPWR은 이를 제40~45조에 걸쳐 강화한다(보고서 표기 제44~47). 화장품사가 알아야 할 두 축:</p>
+<table>
+  <tr><th>축</th><th>내용</th></tr>
+  <tr><td><strong>제44 등록</strong></td><td>국가별 생산자 등록부에 등재(LUCID 등 공개), 재질별 연간 출시량 보고. <strong>비EU 기업은 회원국별 공인대리인</strong> 지정 필요.</td></tr>
+  <tr><td><strong>제45 기여금 + 에코모듈레이션</strong></td><td>EPR 기여금을 <strong>재활용성 등급(제6)에 따라 차등(eco-modulation)</strong>. 제45(6) ↔ 제6 연동.</td></tr>
+</table>
+<div class="callout callout-good">
+  <span class="label">0012의 등급이 곧 비용 — 등급 A를 만들 진짜 이유</span>
+  에코모듈레이션은 <strong>등급 A 포장은 낮은 EPR 기여금, 낮은 등급은 높은 기여금</strong>을 매긴다. 프랑스·이탈리아·네덜란드 선례에서 같은 재질 내 <strong>재활용 가능 vs 불가의 기여금 차이가 20~60%</strong>. 즉 0012에서 펌프를 바꿔 등급을 올리는 건 "출시 가능/불가"만이 아니라 <strong>매년 내는 EPR 기여금을 20~60% 깎는</strong> 일. 기본 에코모듈레이션은 2025년부터, 등급 기반은 2030년부터.
+</div>
+<p class="cite">출처: <a href="https://www.tanso.de/en/blog/epr-under-the-ppwr-extended-producer-responsibility-modulated-fees-and-registration-in-the-lucid-register" target="_blank">EPR·eco-modulation·LUCID (Tanso)</a>, <a href="https://regsurance.com/reduce-your-ppwr-epr-fees-in-2025-2030-eco-modulation-and-smart-packaging-strategies-to-cut-costs-by-20-50-for-businesses-in-europe/" target="_blank">eco-modulation 비용</a>.</p>
+
+<h2>4. DoC · TD — 자기책임 선언과 그 토대</h2>
+<p>PPWR 적합성은 <strong>Module A 내부생산관리(internal production control)</strong>로 평가된다. 핵심: <strong>외부 공인기관(notified body) 심사가 원칙적으로 없다 — 생산자가 스스로 평가하고 전적인 책임을 진다</strong>(제38 + 부속서 VII). CE마크 같은 제3자 인증이 아니라 자기선언 체계.</p>
+
+<h3>4.1 기술문서(TD, Annex VII) 구성</h3>
+<table>
+  <tr><th>TD 항목</th><th>어느 레슨에서 만들었나</th></tr>
+  <tr><td>포장 일반 설명 · 설계 도면 · 부품 재질 구성</td><td>0011 + <a href="../reference/packaging-materials.html">매터리얼 지도</a></td></tr>
+  <tr><td>적용한 조화 표준(harmonised standards) 목록</td><td>(EN 표준 등)</td></tr>
+  <tr><td><strong>재활용성 평가</strong>(제6)</td><td>0012 등급 추정·평가서</td></tr>
+  <tr><td><strong>유해물질 시험 보고서</strong>(제5)</td><td>0013 중금속·PFAS 성적서</td></tr>
+  <tr><td><strong>PCR 함량 증빙</strong>(제7)</td><td>0013·0014 PCR 인증·CoC</td></tr>
+  <tr><td><strong>최소화·재사용성 평가</strong>(제10·11)</td><td>0015</td></tr>
+</table>
+
+<h3>4.2 적합성선언서(DoC)와 보관</h3>
+<ul>
+  <li><strong>DoC</strong> = TD를 근거로 "이 포장은 PPWR 적합"을 선언하는 서면. <strong>2026.8.12부터</strong> 필요.</li>
+  <li>보관: <strong>일회용 5년 · 재사용 10년</strong>.</li>
+  <li><strong>비EU 제조사(한국 브랜드):</strong> EU 내 수입자 또는 공인대리인이 규제 준수 책임. 국내 브랜드는 공급사로부터 시험성적서·인증서·추적성 증빙을 받아 <strong>제공</strong>해야 한다 — 0014에서 공급사 검증이 중요했던 이유가 여기.</li>
+</ul>
+<p class="cite">출처: <a href="https://www.tanso.de/en/blog/ppwr-declaration-of-conformity-and-technical-documentation-what-companies-must-submit-from-august-12-2026" target="_blank">DoC·TD (Tanso)</a>, <a href="https://euverify.com/resource/eu-declaration-of-conformity-for-packaging/" target="_blank">EU DoC for packaging</a>.</p>
+
+<h2>5. ▶ TD/DoC 준비도 체커</h2>
+<p>자사가 확보한 증빙에 체크하면 기술문서 완성도와 빠진 항목이 나온다. (0012~0015 산출물이 여기로 모인다.)</p>
+<div class="checker">
+  <h3>📋 기술문서(TD) 준비도 체커</h3>
+  <div class="chk-item"><input type="checkbox" id="t1"><label for="t1">포장 일반 설명 · 설계 도면 · <strong>부품별 재질 구성표</strong></label></div>
+  <div class="chk-item"><input type="checkbox" id="t2"><label for="t2"><strong>재활용성 등급 평가서</strong> (제6 · 0012)</label></div>
+  <div class="chk-item"><input type="checkbox" id="t3"><label for="t3"><strong>유해물질 시험성적서</strong> (제5 중금속 등 · 0013)</label></div>
+  <div class="chk-item"><input type="checkbox" id="t4"><label for="t4"><strong>PCR 함량 인증·chain of custody</strong> (제7 · 0013·14)</label></div>
+  <div class="chk-item"><input type="checkbox" id="t5"><label for="t5"><strong>포장 최소화 기술문서</strong> (제10 · 0015)</label></div>
+  <div class="chk-item"><input type="checkbox" id="t6"><label for="t6">재사용성 평가 (제11 · 해당 시 · 0015)</label></div>
+  <div class="chk-item"><input type="checkbox" id="t7"><label for="t7"><strong>EPR 국가별 등록 + 공인대리인</strong> 지정 (제44)</label></div>
+  <div class="chk-item"><input type="checkbox" id="t8"><label for="t8">조화 라벨 설계 적용 (제12 · 2028)</label></div>
+  <button class="chk-btn" onclick="checkTD()">준비도 측정 →</button>
+  <div class="chk-out" id="tdout"></div>
+</div>
+<p class="cite">heuristic. 재사용성(t6)·라벨(t8)은 해당·시점에 따라 가중이 다름. 핵심 4종(t2·t3·t4·t5) 미비 시 DoC 서명 불가로 처리.</p>
+
+<div class="quiz">
+<h2>되짚기 — 보지 말고 답하기</h2>
+<div class="question">
+  <strong>Q1.</strong> PPWR 적합성 평가가 "Module A 내부생산관리"라는 것의 의미와, CE 같은 제3자 인증과의 차이는?
+  <details><summary>답 보기</summary>
+  <div class="answer">외부 공인기관(notified body) 심사 없이 <strong>생산자가 스스로 적합성을 평가하고 전적 책임</strong>을 지는 방식. 제3자가 인증해주는 게 아니라 <strong>자기선언</strong>(DoC) — 그래서 TD 증빙의 신뢰성이 곧 책임.</div>
+  </details>
+</div>
+<div class="question">
+  <strong>Q2.</strong> 에코모듈레이션이 0012의 재활용성 등급을 "돈"으로 바꾼다는 말의 구체적 뜻은?
+  <details><summary>답 보기</summary>
+  <div class="answer">EPR 기여금이 <strong>재활용성 등급(제6)에 따라 차등</strong>(제45(6)↔제6). 등급 A는 낮은 기여금, 낮은 등급은 높은 기여금 — 선례상 <strong>20~60% 차이</strong>. 등급 향상이 매년 EPR 비용을 직접 절감.</div>
+  </details>
+</div>
+<div class="question">
+  <strong>Q3.</strong> 제12 라벨링에서 QR 코드의 허용 범위를 정확히 말하라.
+  <details><summary>답 보기</summary>
+  <div class="answer">QR·디지털 라벨은 <strong>인쇄 라벨을 보완</strong>하는 용도로만 허용. <strong>인쇄(물리) 픽토그램을 대체할 수 없다.</strong> 재질·분리배출 물리 라벨은 필수, QR은 추가 정보 전달.</div>
+  </details>
+</div>
+<div class="question">
+  <strong>Q4.</strong> 비EU(한국) 브랜드가 DoC·TD 책임을 지는 구조와, 0014(공급사 검증)가 왜 여기서 중요한가?
+  <details><summary>답 보기</summary>
+  <div class="answer">EU 내 <strong>수입자 또는 공인대리인</strong>이 준수 책임을 지며, 국내 브랜드는 <strong>공급사로부터 시험성적서·인증서·추적성 증빙을 받아 제공</strong>해야 한다. TD의 PCR·시험 항목이 공급사 문서에 의존하므로, 0014의 공급사 검증이 TD의 신뢰성을 좌우한다.</div>
+  </details>
+</div>
+<div class="question">
+  <strong>Q5.</strong> TD(Annex VII)에 반드시 들어가는 평가 3종(조항 번호 포함)과 DoC 보관 기간은?
+  <details><summary>답 보기</summary>
+  <div class="answer"><strong>재활용성(제6)·최소화(제10)·재사용성(제11) 평가</strong> + 유해물질·PCR 시험/증빙. 보관: <strong>일회용 5년 / 재사용 10년</strong>.</div>
+  </details>
+</div>
+</div>
+
+<h2>다음 레슨 예고</h2>
+<p>PPWR의 조항 골격(위계 + 문서·제도)을 모두 훑었다. 마지막은 <strong>실무로 착지</strong> — <strong>0017: 국내 자원재활용법과의 비교 · 회원국(프·독·네) 차이 · 타임라인별 To-do 로드맵</strong>. "그래서 우리가 2026·2028·2030에 각각 뭘 해야 하나"로 닫는다.</p>
+
+<div class="callout">
+  <span class="label">📌 1차 출처</span>
+  <ul style="margin:8px 0 0;">
+    <li><a href="https://eur-lex.europa.eu/eli/reg/2025/40/oj/eng" target="_blank">PPWR 제12·제38·제44·제45 + 부속서 VII (EUR-Lex)</a></li>
+    <li><a href="https://www.tanso.de/en/blog/ppwr-declaration-of-conformity-and-technical-documentation-what-companies-must-submit-from-august-12-2026" target="_blank">DoC·TD (Tanso)</a> · <a href="https://www.fostplus.be/en/blog/ppwr-insights-3-harmonised-labelling-in-depth-look-new-requirements" target="_blank">조화 라벨 (Fost Plus)</a></li>
+    <li>대한화장품협회 PPWR 심층보고서 — DoC/TD 구성요소·국내 비교 (<code>reference/</code>)</li>
+  </ul>
+</div>
+
+<div class="callout callout-warn">
+  <span class="label">교사에게 질문</span>
+  예: "우리 SKU별로 TD를 어떻게 묶어 관리해? SKU 수가 많은데", "EU 공인대리인은 어떻게 지정·계약해?", "화장품법 라벨 + PPWR 라벨을 작은 용기에 어떻게 다 넣어?", "에코모듈레이션 기여금을 실제로 추정해보고 싶어" — 문서 운영(SKU×공급사 매트릭스)이 진짜 실무 난제라 깊게 파드립니다.
+</div>
+
+<div class="nav">
+  Track: PPWR · 패키징 ·
+  Previous: <a href="0015-reduce-and-reuse.html">0015 — 감축·재사용</a> ·
+  Next: 0017 — 실무(국내법·회원국·To-do) <em>예정</em> ·
+  Materials: <a href="../reference/packaging-materials.html">매터리얼 지도</a> ·
+  Glossary: <a href="../reference/glossary.html">용어집</a>
+</div>
+
+<script>
+function checkTD() {
+  var core = ['t2','t3','t4','t5']; // 등급·유해물질·PCR·최소화
+  var all = ['t1','t2','t3','t4','t5','t6','t7','t8'];
+  var n=0, coreMiss=[];
+  var names = {t1:'재질 구성표', t2:'재활용성 등급(제6)', t3:'유해물질 시험(제5)', t4:'PCR 인증(제7)', t5:'최소화 문서(제10)', t6:'재사용성(제11)', t7:'EPR 등록(제44)', t8:'조화 라벨(제12)'};
+  all.forEach(function(id){ if(document.getElementById(id).checked) n++; });
+  core.forEach(function(id){ if(!document.getElementById(id).checked) coreMiss.push(names[id]); });
+  var miss=[];
+  all.forEach(function(id){ if(!document.getElementById(id).checked) miss.push(names[id]); });
+
+  var pct = Math.round(n/all.length*100);
+  var verdict, cls;
+  if (coreMiss.length>0) { verdict='DoC 서명 불가 — 핵심 증빙 미비'; cls='kill'; }
+  else if (n===all.length) { verdict='완비 — DoC 서명 준비 완료'; cls='ok'; }
+  else { verdict='핵심은 갖춤 — 보조 항목 보완 중'; cls='down'; }
+
+  var html = '<div class="bar"><span style="width:'+pct+'%;">'+pct+'%</span></div>'+
+             '<div><span class="'+cls+'" style="font-size:15px;">'+verdict+'</span> <span style="color:var(--muted);">('+n+'/'+all.length+')</span></div>';
+  if (coreMiss.length>0) {
+    html += '<p style="margin:10px 0 4px;"><strong class="kill">핵심 4종 중 미비 (DoC 막힘):</strong></p><ul>';
+    coreMiss.forEach(function(m){ html += '<li class="kill">'+m+'</li>'; });
+    html += '</ul>';
+  }
+  if (miss.length>0) {
+    html += '<p style="margin:10px 0 4px;"><strong>전체 미비 항목:</strong></p><ul>';
+    miss.forEach(function(m){ html += '<li>'+m+'</li>'; });
+    html += '</ul>';
+  } else {
+    html += '<p class="ok" style="margin-top:10px;">✅ TD 8개 항목 완비. DoC 서명 후 보관(일회용 5년/재사용 10년).</p>';
+  }
+  var o=document.getElementById('tdout');
+  o.innerHTML=html; o.style.display='block';
+}
+</script>
+
+</body>
+</html>
