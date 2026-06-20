@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Git, PR, CodeRabbit, GitHub 메뉴 입문 코스</title>
+  <link rel="stylesheet" href="assets/course.css">
+</head>
+<body>
+<main>
+  <header class="course-header">
+    <p class="kicker">GitHub beginner course</p>
+    <h1>Git, PR, CodeRabbit, GitHub 상단 메뉴 입문</h1>
+    <p class="lede">RISELAB 화면을 기준으로 Git의 기초 단어와 GitHub 메뉴를 연결해서 이해하는 짧은 코스입니다. 목표는 “어디를 눌러야 하는지”와 “무엇을 보고 판단해야 하는지”를 분리해서 아는 것입니다.</p>
+  </header>
+
+  <section class="callout">
+    <h2>가장 중요한 그림</h2>
+    <div class="flow">
+      <div class="flow-step"><strong>수정</strong>내 컴퓨터에서 파일을 바꿉니다.</div>
+      <div class="flow-step"><strong>commit</strong>변경 묶음에 이름표를 붙입니다.</div>
+      <div class="flow-step"><strong>branch</strong>안전한 작업 줄기에서 실험합니다.</div>
+      <div class="flow-step"><strong>push</strong>내 branch를 GitHub로 올립니다.</div>
+      <div class="flow-step"><strong>PR</strong>main에 넣어도 되는지 요청합니다.</div>
+      <div class="flow-step"><strong>merge</strong>승인된 변경을 main에 합칩니다.</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>학습 순서</h2>
+    <div class="grid">
+      <a class="card" href="0003-git-basics-commit-branch-push-pr.html">
+        <h3>Lesson 0003: Git 기초</h3>
+        <p>commit, branch, push, pull, PR, merge를 초보자 언어로 정리합니다.</p>
+      </a>
+      <a class="card" href="0004-github-top-menu-guide.html">
+        <h3>Lesson 0004: GitHub 상단 메뉴</h3>
+        <p>Code, Pull requests, Agents, Actions, Projects, Wiki, Security, Insights, Settings를 하나씩 봅니다.</p>
+      </a>
+      <a class="card" href="0005-pr-actions-coderabbit-operating-loop.html">
+        <h3>Lesson 0005: PR 운영 루프</h3>
+        <p>PR이 열리고 Actions, CodeRabbit, 사람 approval을 거쳐 merge되는 흐름을 익힙니다.</p>
+      </a>
+      <a class="card" href="reference-git-github-glossary.html">
+        <h3>Reference: 용어표</h3>
+        <p>자주 헷갈리는 단어를 한 장짜리 표로 다시 봅니다.</p>
+      </a>
+    </div>
+  </section>
+
+  <section>
+    <h2>화면 상단 메뉴 빠른 지도</h2>
+    <nav class="menu-map" aria-label="GitHub menu map">
+      <a class="menu-pill" href="0004-github-top-menu-guide.html#code">Code</a>
+      <a class="menu-pill" href="0004-github-top-menu-guide.html#issues">Issues</a>
+      <a class="menu-pill important" href="0004-github-top-menu-guide.html#pull-requests">Pull requests</a>
+      <a class="menu-pill important" href="0004-github-top-menu-guide.html#agents">Agents</a>
+      <a class="menu-pill important" href="0004-github-top-menu-guide.html#actions">Actions</a>
+      <a class="menu-pill" href="0004-github-top-menu-guide.html#projects">Projects</a>
+      <a class="menu-pill" href="0004-github-top-menu-guide.html#wiki">Wiki</a>
+      <a class="menu-pill important" href="0004-github-top-menu-guide.html#security">Security and quality</a>
+      <a class="menu-pill" href="0004-github-top-menu-guide.html#insights">Insights</a>
+      <a class="menu-pill important" href="0004-github-top-menu-guide.html#settings">Settings</a>
+    </nav>
+  </section>
+
+  <section class="grid three">
+    <div class="card">
+      <h3>작업할 때</h3>
+      <p><strong>Code</strong>에서 파일과 commit을 봅니다. 내 변경은 branch에서 만들고 push합니다.</p>
+    </div>
+    <div class="card">
+      <h3>넣어도 되는지 볼 때</h3>
+      <p><strong>Pull requests</strong>와 <strong>Actions</strong>에서 리뷰, 테스트, 실패 로그를 봅니다.</p>
+    </div>
+    <div class="card">
+      <h3>운영 규칙을 바꿀 때</h3>
+      <p><strong>Settings</strong>에서 branch protection, Actions 권한, collaborator, secrets를 봅니다. 조심해야 하는 영역입니다.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>기존 보조 자료</h2>
+    <ul class="checklist">
+      <li><a href="0001-git-config-to-pr-review-gate.html">0001 Git 설정에서 PR 리뷰 게이트까지</a></li>
+      <li><a href="0001-pr-review-harness-cheatsheet.html">0001 PR 리뷰 하네스 치트시트</a></li>
+      <li><a href="0002-pr-review-harness-cheatsheet.html">0002 PR 리뷰 하네스 치트시트</a></li>
+      <li><a href="0002-pr-coderabbit-jules-workflow-reference.html">0002 RISELAB PR 게이트 빠른 참조</a></li>
+    </ul>
+  </section>
+
+  <footer>
+    Sources: GitHub Docs, Git SCM, CodeRabbit Docs. 각 lesson의 하단에 원문 링크를 정리했습니다.
+  </footer>
+</main>
+</body>
+</html>

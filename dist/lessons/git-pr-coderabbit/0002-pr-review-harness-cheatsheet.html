@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="GitHub review state, status checks, branch ruleset, CodeRabbit evidence를 분리해 merge blocker를 진단하는 빠른 참조표.">
+  <title>Reference 0002 — PR 리뷰 하네스 치트시트</title>
+  <style>
+/* Shared lesson stylesheet for the teaching workspace. */
+:root {
+  --ink: #17202a;
+  --muted: #5d6d7e;
+  --paper: #fbfaf7;
+  --panel: #ffffff;
+  --line: #e4dfd5;
+  --accent: #2f6f73;
+  --accent-soft: #e7f0ef;
+  --warn: #8a5a00;
+  --code: #102027;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: ui-serif, Georgia, 'Noto Serif KR', 'Apple SD Gothic Neo', serif;
+  color: var(--ink);
+  background: radial-gradient(circle at top left, #fff 0, var(--paper) 38rem);
+  line-height: 1.65;
+}
+main {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 56px 24px 96px;
+}
+header.lesson-header {
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+}
+.kicker {
+  color: var(--accent);
+  font: 700 0.8rem/1 ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+h1 {
+  font-size: clamp(2rem, 5vw, 4rem);
+  line-height: 1.05;
+  margin: 12px 0 16px;
+  letter-spacing: -0.04em;
+}
+.subtitle {
+  max-width: 720px;
+  color: var(--muted);
+  font-size: 1.1rem;
+}
+h2 {
+  margin-top: 42px;
+  font-size: 1.65rem;
+  letter-spacing: -0.02em;
+}
+h3 { margin-top: 28px; }
+a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.card, .quiz-card {
+  background: rgba(255,255,255,0.82);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 22px;
+  margin: 20px 0;
+  box-shadow: 0 12px 36px rgba(23, 32, 42, 0.05);
+}
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+.callout {
+  border-left: 4px solid var(--accent);
+  background: var(--accent-soft);
+  padding: 16px 18px;
+  border-radius: 12px;
+}
+.warn {
+  border-left-color: #d79a00;
+  background: #fff6dc;
+}
+code, pre {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
+}
+pre {
+  overflow-x: auto;
+  background: var(--code);
+  color: #eef7f6;
+  padding: 16px;
+  border-radius: 14px;
+  font-size: 0.92rem;
+}
+code { color: #0f4d52; }
+pre code { color: inherit; }
+.small { color: var(--muted); font-size: 0.92rem; }
+.checklist li { margin-bottom: 8px; }
+.quiz-card button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin: 8px 0;
+  color: var(--ink);
+  cursor: pointer;
+  font: inherit;
+}
+.quiz-card button:hover, .quiz-card button:focus { border-color: var(--accent); outline: none; }
+.quiz-card button.correct { background: #e8f5e9; border-color: #2e7d32; }
+.quiz-card button.incorrect { background: #ffebee; border-color: #c62828; }
+.quiz-feedback { min-height: 1.5em; font-weight: 700; }
+footer {
+  margin-top: 52px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+}
+@media print {
+  body { background: white; }
+  main { padding: 24px; }
+  .card, .quiz-card { box-shadow: none; break-inside: avoid; }
+  a::after { content: ' (' attr(href) ')'; font-size: 0.8em; color: var(--muted); }
+}
+
+</style>
+</head>
+<body>
+<main>
+  <header class="lesson-header">
+    <p class="kicker">Reference 0001</p>
+    <h1>PR 리뷰 하네스 치트시트</h1>
+    <p class="subtitle">merge blocker를 추측하지 않고 Git, GitHub, Actions, CodeRabbit 신호로 분리해 진단하는 빠른 참조표.</p>
+  </header>
+
+  <section class="card">
+    <h2>핵심 모델: 4개의 신호를 분리한다</h2>
+    <ol class="checklist">
+      <li><strong>GitHub review state</strong>: 사람 리뷰의 Comment / Approve / Request changes. CodeRabbit check 성공과 같지 않다.</li>
+      <li><strong>Status checks</strong>: CI, CodeRabbit commit status, security scanner, required check의 success/failure/pending/skipped.</li>
+      <li><strong>Ruleset / branch protection</strong>: required reviews, required status checks, conversation resolution, linear history, merge queue 등 정책.</li>
+      <li><strong>CodeRabbit robot-review evidence</strong>: walkthrough, blocking findings, warnings, pre-merge check, current-head SHA 기준의 봇 증거.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>증거 수집 명령</h2>
+    <pre><code># 1) Git 설정 출처 확인
+git config --list --show-origin
+
+git config --show-origin user.name
+git config --show-origin user.email
+
+# 2) PR 핵심 상태 확인
+gh pr view &lt;PR_NUMBER_OR_URL&gt;   --json number,headRefOid,mergeable,mergeStateStatus,reviewDecision,statusCheckRollup,latestReviews
+
+# 3) required check만 보기
+gh pr checks &lt;PR_NUMBER_OR_URL&gt; --required
+
+# 4) 리뷰 객체와 check-run/status를 분리해서 보기
+gh api repos/&lt;OWNER&gt;/&lt;REPO&gt;/pulls/&lt;PR&gt;/reviews
+gh api repos/&lt;OWNER&gt;/&lt;REPO&gt;/commits/&lt;HEAD_SHA&gt;/status
+gh api repos/&lt;OWNER&gt;/&lt;REPO&gt;/commits/&lt;HEAD_SHA&gt;/check-runs
+
+# 5) ruleset/branch protection 확인
+gh api repos/&lt;OWNER&gt;/&lt;REPO&gt;/rulesets --jq '.[] | {name, enforcement, conditions, rules}'</code></pre>
+  </section>
+
+  <section class="grid">
+    <div class="card">
+      <h3>CodeRabbit commands</h3>
+      <ul>
+        <li><code>@coderabbitai review</code>: incremental review</li>
+        <li><code>@coderabbitai full review</code>: 전체 PR 재리뷰</li>
+        <li><code>@coderabbitai pause</code> / <code>resume</code>: 자동 리뷰 일시정지/재개</li>
+        <li><code>@coderabbitai resolve</code>: CodeRabbit 이전 코멘트 resolve 요청</li>
+        <li><code>@coderabbitai approve</code>: 설정이 켜져 있을 때만 approval 시도</li>
+        <li><code>@coderabbitai run pre-merge checks</code>: pre-merge checks 재실행</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>위험한 오진</h3>
+      <ul>
+        <li>CodeRabbit check success를 GitHub <code>APPROVED</code> 리뷰로 착각하기.</li>
+        <li>stale head SHA의 리뷰/스크린샷을 current-head evidence로 착각하기.</li>
+        <li>보안 scanner 실패를 <code>continue-on-error</code>로 숨기기.</li>
+        <li><code>pull_request_target</code>에서 PR branch 코드를 checkout/실행하기.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>판단 알고리즘</h2>
+    <ol class="checklist">
+      <li>PR head SHA를 먼저 적는다.</li>
+      <li>GitHub reviewDecision이 막는지 본다.</li>
+      <li>required status checks가 막는지 본다.</li>
+      <li>ruleset/branch protection이 요구하는 계약을 읽는다.</li>
+      <li>CodeRabbit findings가 current-head에서 해결/반박/무시 처리되었는지 본다.</li>
+      <li>수정 후 같은 명령을 다시 실행해 before/after evidence를 남긴다.</li>
+    </ol>
+  </section>
+
+  <footer>
+    Sources: <a href="https://git-scm.com/book/en/v2/Getting-Started-First-Time-Git-Setup">Pro Git setup</a>,
+    <a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/about-pull-request-reviews">GitHub PR reviews</a>,
+    <a href="https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches">GitHub protected branches</a>,
+    <a href="https://docs.coderabbit.ai/guides/commands">CodeRabbit commands</a>,
+    <a href="https://raw.githubusercontent.com/ContextualWisdomLab/naruon/develop/.agents/skills/github-robot-review-gate/SKILL.md">naruon robot review gate</a>.
+  </footer>
+</main>
+</body>
+</html>
