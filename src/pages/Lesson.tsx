@@ -43,7 +43,7 @@ export default function Lesson() {
           className="btn btn-ghost btn-sm"
           style={{ marginLeft: -6 }}
         >
-          ← 목록
+          목록
         </Link>
         <span className="v-title">{lesson.title}</span>
         <div className="viewer-nav">
@@ -53,7 +53,7 @@ export default function Lesson() {
             onClick={() => prev && nav(`/t/${topic.id}/${prev.id}`)}
             aria-label="이전 레슨"
           >
-            ‹
+            이전
           </button>
           <button
             className="btn btn-secondary btn-sm"
@@ -61,7 +61,7 @@ export default function Lesson() {
             onClick={() => next && nav(`/t/${topic.id}/${next.id}`)}
             aria-label="다음 레슨"
           >
-            ›
+            다음
           </button>
         </div>
       </div>

@@ -3,16 +3,24 @@ import { Link, Outlet, useLocation } from "react-router-dom";
 export default function Layout() {
   const loc = useLocation();
   const onUpload = loc.pathname === "/upload";
+  const onHome = loc.pathname === "/";
+
   return (
     <>
       <header className="nav">
         <div className="wrap nav-inner">
           <Link to="/" className="brand">
-            <span className="dot" />
-            mystudy
+            <span className="brand-mark" aria-hidden="true">
+              ms
+            </span>
+            <span>mystudy</span>
           </Link>
           <nav className="nav-actions">
-            <Link to="/" className="btn btn-ghost btn-sm">
+            <Link
+              to="/"
+              className={`btn btn-ghost btn-sm ${onHome ? "is-active" : ""}`}
+              aria-current={onHome ? "page" : undefined}
+            >
               아카이브
             </Link>
             {onUpload ? (
@@ -21,7 +29,7 @@ export default function Layout() {
               </Link>
             ) : (
               <Link to="/upload" className="btn btn-primary btn-sm">
-                + 업로드
+                업로드
               </Link>
             )}
           </nav>
@@ -32,7 +40,7 @@ export default function Layout() {
       </main>
       <footer className="footer">
         <div className="wrap footer-inner">
-          <span className="caption">mystudy — 학습 기록 아카이브</span>
+          <span className="caption">mystudy / 학습 기록 아카이브</span>
           <span className="caption">스킬로 만든 HTML을 토픽별로 보관</span>
         </div>
       </footer>

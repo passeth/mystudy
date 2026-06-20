@@ -206,15 +206,15 @@ export function mdToBody(md: string): string {
 }
 
 const DOC_STYLE = `
-  :root { --ink:#1a1a1a; --muted:#6b6b6b; --line:#e6e6e6; --accent:#ff3d8b; --code-bg:#f5f5f3; }
+  :root { --ink:#171917; --muted:#686d65; --line:#dedfd7; --accent:#8fd46d; --code-bg:#f4f5ee; }
   * { box-sizing: border-box; }
   body {
-    font-family: "Inter","SF Pro Display","Apple SD Gothic Neo",system-ui,sans-serif;
+    font-family: "Satoshi","Geist","SF Pro Display","Apple SD Gothic Neo",system-ui,sans-serif;
     color: var(--ink); max-width: 760px; margin: 48px auto; padding: 0 24px 96px;
     line-height: 1.7; font-size: 17px; font-weight: 360;
     -webkit-font-smoothing: antialiased;
   }
-  h1,h2,h3,h4,h5,h6 { line-height: 1.25; letter-spacing: -0.02em; font-weight: 600; margin: 1.8em 0 0.6em; }
+  h1,h2,h3,h4,h5,h6 { line-height: 1.25; letter-spacing: 0; font-weight: 600; margin: 1.8em 0 0.6em; }
   h1 { font-size: 2em; margin-top: 0; } h2 { font-size: 1.5em; } h3 { font-size: 1.25em; } h4 { font-size: 1.08em; }
   p { margin: 0 0 1.1em; }
   a { color: #0b66c3; text-decoration: underline; text-underline-offset: 2px; }
@@ -243,9 +243,6 @@ export function mdToHtml(md: string, title = "Untitled"): string {
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>${safeTitle}</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>${DOC_STYLE}</style>
 </head>
 <body>

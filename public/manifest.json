@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-20T01:57:49.129Z",
+  "generatedAt": "2026-06-20T05:45:52.413Z",
   "topics": [
     {
       "id": "pif-cpsr",
@@ -67,6 +67,12 @@
           "title": "Lesson 0010 — Sunscreen·UV Filter 확장: Nano + Photo Toxicity의 추가 복잡성",
           "subtitle": "Niacinamide cream까지의 모든 도메인은 sunscreen 앞에서 다시 짜야 한다. UV filter는 (1) Positive list 강제, (2) Nano material 별도 의무, (3) Photo toxicity·photostability 평가, (4) SPF·UVA-PF 효능 표시 검증. 4개 축 각각이 별도 sub-pipeline.",
           "file": "lessons/pif-cpsr/0010-sunscreen-uv-filter-expansion.html"
+        },
+        {
+          "id": "0011-스크리닝-엔진-공급사-포털-룰을-시스템으로",
+          "title": "Lesson 0021 — 스크리닝 엔진 + 공급사 포털: 룰을 시스템으로",
+          "subtitle": "\"항목·% 입력하면 스크리닝 결과를 보여주고 싶은데, 그 검증 DB는 어디서 구하나?\" — 답: 대부분 *사오는 DB가 아니라 규칙*이고, 그 규칙은 이미 0012·0013·0015 인터랙티브에 있다. 이 레슨은 그 룰을 실제 Supabase 스키마 + 스크리닝 함수",
+          "file": "lessons/pif-cpsr/0011-스크리닝-엔진-공급사-포털-룰을-시스템으로.html"
         }
       ]
     },

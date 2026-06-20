@@ -136,7 +136,7 @@ export default function Upload() {
             {result.ok && result.topicId && (
               <>
                 {" "}
-                <Link to={`/t/${result.topicId}`}>토픽 보기 →</Link>
+                <Link to={`/t/${result.topicId}`}>토픽 보기</Link>
               </>
             )}
           </div>
@@ -186,7 +186,7 @@ export default function Upload() {
                     onChange={(e) => setNewTitle(e.target.value)}
                   />
                   {newTitle && (
-                    <div className="hint">id: {slugify(newTitle) || "—"}</div>
+                    <div className="hint">id: {slugify(newTitle) || "-"}</div>
                   )}
                 </div>
                 <input
@@ -221,7 +221,7 @@ export default function Upload() {
             <label>레슨 제목 *</label>
             <input
               className="input"
-              placeholder="예: Lesson 0001 — 핵심 개념"
+              placeholder="예: Lesson 0001 - 핵심 개념"
               value={lessonTitle}
               onChange={(e) => setLessonTitle(e.target.value)}
             />
@@ -333,7 +333,7 @@ export default function Upload() {
                     border: "1px solid var(--hairline)",
                     borderRadius: 8,
                     marginTop: 10,
-                    background: "#fff",
+                    background: "var(--surface)",
                   }}
                 />
               )}
@@ -349,7 +349,7 @@ export default function Upload() {
         >
           {submitting ? (
             <>
-              <span className="spinner" /> 업로드 중…
+              <span className="inline-loader" aria-hidden="true" /> 업로드 중...
             </>
           ) : (
             `${effectiveTopicId || "토픽"}에 추가`

@@ -30,7 +30,7 @@ export default function Topic() {
         "삭제 완료. 재배포가 끝나면(30~60초) 목록에서도 완전히 사라집니다."
       );
     } catch (e: any) {
-      setNotice("⚠️ " + (e.message || String(e)));
+      setNotice("오류: " + (e.message || String(e)));
     } finally {
       setBusy(null);
     }
@@ -60,7 +60,7 @@ export default function Topic() {
   return (
     <div className="wrap section">
       <Link to="/" className="btn btn-ghost btn-sm" style={{ marginLeft: -12 }}>
-        ← 아카이브
+        아카이브
       </Link>
 
       <div
@@ -77,7 +77,7 @@ export default function Topic() {
 
       {notice && (
         <div
-          className={`notice ${notice.startsWith("⚠️") ? "err" : "ok"}`}
+          className={`notice ${notice.startsWith("오류:") ? "err" : "ok"}`}
           style={{ marginBottom: 16 }}
         >
           {notice}
@@ -101,7 +101,7 @@ export default function Topic() {
               disabled={busy === l.id}
               onClick={() => del(l.id, l.title)}
             >
-              {busy === l.id ? "…" : "🗑"}
+              {busy === l.id ? "처리" : "삭제"}
             </button>
           </div>
         ))}
