@@ -19,5 +19,12 @@
     "subtitle": "용어집·패키징 소재 지도·시스템 치트시트 등 상시 참고 자료",
     "color": "cream",
     "order": 3
+  },
+  {
+    "id": "git-flow",
+    "title": "Git Flow",
+    "subtitle": "",
+    "color": "lime",
+    "order": 4
   }
 ]
