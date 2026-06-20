@@ -7,7 +7,6 @@ export default function Home() {
   const { data, loading, error } = useManifest();
 
   const topics = data?.topics ?? [];
-  const lessonCount = topics.reduce((n, t) => n + t.lessons.length, 0);
   const recentLessons = topics
     .flatMap((topic) =>
       topic.lessons.map((lesson) => ({
@@ -17,7 +16,6 @@ export default function Home() {
       }))
     )
     .slice(0, 8);
-  const heroTopics = topics.slice(0, 3);
 
   return (
     <>
@@ -44,40 +42,6 @@ export default function Home() {
             )}
           </div>
         </div>
-        <div className="hero-showcase" aria-label="학습 아카이브 미리보기">
-          <div className="showcase-header">
-            <span>mystudy board</span>
-            <span>{topics.length} topics</span>
-          </div>
-          <div className="showcase-tiles">
-            {heroTopics.map((topic, index) => (
-              <Link
-                key={topic.id}
-                to={`/t/${topic.id}`}
-                className={`showcase-tile bg-${topic.color}${
-                  isDark(topic.color) ? " on-dark" : ""
-                }`}
-                style={{ "--i": index } as CSSProperties}
-              >
-                <span>{topic.id.toUpperCase()}</span>
-                <strong>{topic.title}</strong>
-              </Link>
-            ))}
-          </div>
-          <div className="showcase-strip">
-            <div>
-              <span className="metric-number">{lessonCount}</span>
-              <span className="caption">saved lessons</span>
-            </div>
-            <div>
-              <span className="metric-number">
-                {recentLessons.length ? recentLessons[0].topicTitle : "ready"}
-              </span>
-              <span className="caption">latest topic</span>
-            </div>
-          </div>
-        </div>
-        <div className="hero-glow" aria-hidden="true" />
       </section>
 
       <section className="section wrap topics-section">

@@ -204,7 +204,7 @@ button { font-family: inherit; cursor: pointer; }
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-height: calc(100dvh - 78px);
+  min-height: min(620px, calc(100dvh - 78px));
   padding-top: 84px;
   padding-bottom: 72px;
 }
@@ -243,104 +243,6 @@ button { font-family: inherit; cursor: pointer; }
   justify-content: center;
 }
 
-.hero-showcase {
-  position: relative;
-  z-index: 2;
-  width: min(960px, 100%);
-  min-height: 305px;
-  margin-top: 68px;
-  border-radius: 34px;
-  padding: 18px;
-  background: rgba(255, 254, 251, 0.78);
-  border: 1px solid rgba(21, 23, 22, 0.07);
-  box-shadow: 0 30px 72px -45px rgba(32, 39, 31, 0.46);
-  backdrop-filter: blur(18px) saturate(140%);
-  overflow: hidden;
-  animation: floatUp 0.82s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-.showcase-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 6px 8px 18px;
-  font-family: var(--mono);
-  font-size: 12px;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-.showcase-tiles {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 14px;
-}
-.showcase-tile {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  min-height: 132px;
-  padding: 22px;
-  border-radius: 24px;
-  border: 1px solid rgba(21, 23, 22, 0.06);
-  color: var(--ink);
-  animation: rowIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
-  animation-delay: calc(var(--i) * 90ms);
-}
-.showcase-tile span {
-  font-family: var(--mono);
-  font-size: 11px;
-  color: var(--muted);
-  letter-spacing: 0.08em;
-}
-.showcase-tile strong {
-  font-size: 19px;
-  font-weight: 620;
-}
-.showcase-tile.on-dark span {
-  color: rgba(247,248,243,0.68);
-}
-.showcase-strip {
-  display: grid;
-  grid-template-columns: 0.65fr 1.35fr;
-  gap: 14px;
-  margin-top: 14px;
-}
-.showcase-strip > div {
-  min-height: 86px;
-  border-radius: 24px;
-  padding: 18px 20px;
-  background: #f4f4f1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  overflow: hidden;
-}
-.metric-number {
-  display: block;
-  font-family: var(--display);
-  font-size: 38px;
-  line-height: 1;
-  color: var(--ink);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.hero-glow {
-  position: absolute;
-  left: 50%;
-  bottom: 18px;
-  width: min(1180px, 92vw);
-  height: 360px;
-  transform: translateX(-50%);
-  border-radius: 52px;
-  background:
-    radial-gradient(circle at 18% 34%, rgba(156,245,138,0.42), transparent 17rem),
-    radial-gradient(circle at 83% 44%, rgba(210,255,145,0.48), transparent 20rem);
-  filter: blur(10px);
-  opacity: 0.76;
-  pointer-events: none;
-}
-
 @keyframes breathe {
   0%, 100% { transform: scale(0.88); opacity: 0.64; }
   50% { transform: scale(1); opacity: 1; }
@@ -348,10 +250,6 @@ button { font-family: inherit; cursor: pointer; }
 @keyframes rowIn {
   from { opacity: 0; transform: translateY(14px); }
   to { opacity: 1; transform: translateY(0); }
-}
-@keyframes floatUp {
-  from { opacity: 0; transform: translateY(24px) scale(0.985); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 @media (max-width: 880px) {
@@ -364,10 +262,6 @@ button { font-family: inherit; cursor: pointer; }
   }
   .display-lg {
     font-size: 42px;
-  }
-  .showcase-tiles,
-  .showcase-strip {
-    grid-template-columns: 1fr;
   }
 }
 
@@ -665,8 +559,101 @@ button { font-family: inherit; cursor: pointer; }
   padding-top: max(10px, env(safe-area-inset-top));
 }
 .viewer-bar .v-title { flex: 1; min-width: 0; font-weight: 500; font-size: 15px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.viewer-frame { flex: 1; border: 0; width: 100%; background: var(--surface); }
+.viewer-shell {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 318px minmax(0, 1fr);
+  background: var(--surface);
+}
+.viewer-frame { height: 100%; border: 0; width: 100%; background: var(--surface); }
 .viewer-nav { display: flex; gap: 6px; }
+.lesson-sidebar {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--hairline);
+  background:
+    radial-gradient(circle at 24% 0%, rgba(156,245,138,0.16), transparent 18rem),
+    #fbfcf7;
+}
+.lesson-sidebar-head {
+  padding: 24px 22px 18px;
+  border-bottom: 1px solid var(--hairline-soft);
+}
+.lesson-sidebar-head strong {
+  display: block;
+  margin-top: 8px;
+  font-size: 20px;
+  line-height: 1.18;
+}
+.lesson-sidebar-list {
+  min-height: 0;
+  overflow-y: auto;
+  padding: 10px;
+}
+.lesson-sidebar-link {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+  padding: 13px 12px;
+  border-radius: 14px;
+  color: var(--ink);
+  transition: background 0.22s ease, transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.lesson-sidebar-link:hover {
+  background: rgba(255,255,255,0.72);
+  transform: translateX(3px);
+}
+.lesson-sidebar-link.is-current {
+  background: #f1ffe3;
+  box-shadow: inset 0 0 0 1px rgba(21,23,22,0.06);
+}
+.lesson-sidebar-link span {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  padding-top: 2px;
+}
+.lesson-sidebar-link strong {
+  min-width: 0;
+  font-size: 13px;
+  font-weight: 560;
+  line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+@media (max-width: 860px) {
+  .viewer-shell {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+  .lesson-sidebar {
+    border-right: 0;
+    border-bottom: 1px solid var(--hairline);
+    max-height: 240px;
+  }
+  .lesson-sidebar-head {
+    padding: 16px 18px 12px;
+  }
+  .lesson-sidebar-head strong {
+    font-size: 17px;
+  }
+  .lesson-sidebar-list {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(220px, 72vw);
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 10px 14px 14px;
+  }
+  .lesson-sidebar-link:hover {
+    transform: translateY(-2px);
+  }
+}
 
 /* ---------- upload form ---------- */
 .form-card {

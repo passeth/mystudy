@@ -65,13 +65,36 @@ export default function Lesson() {
           </button>
         </div>
       </div>
-      <iframe
-        key={lesson.id}
-        className="viewer-frame"
-        src={`/${lesson.file}`}
-        title={lesson.title}
-        sandbox="allow-same-origin allow-popups allow-scripts"
-      />
+      <div className="viewer-shell">
+        <aside className="lesson-sidebar" aria-label={`${topic.title} 레슨 목록`}>
+          <div className="lesson-sidebar-head">
+            <span className="caption">{topic.id.toUpperCase()}</span>
+            <strong>{topic.title}</strong>
+          </div>
+          <nav className="lesson-sidebar-list">
+            {topic.lessons.map((item, itemIndex) => (
+              <Link
+                key={item.id}
+                to={`/t/${topic.id}/${item.id}`}
+                className={`lesson-sidebar-link ${
+                  item.id === lesson.id ? "is-current" : ""
+                }`}
+                aria-current={item.id === lesson.id ? "page" : undefined}
+              >
+                <span>{String(itemIndex + 1).padStart(2, "0")}</span>
+                <strong>{item.title}</strong>
+              </Link>
+            ))}
+          </nav>
+        </aside>
+        <iframe
+          key={lesson.id}
+          className="viewer-frame"
+          src={`/${lesson.file}`}
+          title={lesson.title}
+          sandbox="allow-same-origin allow-popups allow-scripts"
+        />
+      </div>
     </div>
   );
 }
