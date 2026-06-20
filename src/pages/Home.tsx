@@ -25,9 +25,9 @@ export default function Home() {
         <div className="hero-copy center-copy">
           <span className="eyebrow hero-eyebrow">LEARNING ARCHIVE</span>
           <h1 className="display-xl">
-            배운 것을 다시 꺼내 쓰는
+            Learn Once.
             <br />
-            나만의 학습 보드
+            Use It Again.
           </h1>
           <p className="lede">
             AI 스킬이 만든 HTML을 토픽별 카드와 최근 레슨 보드로 정리합니다.
