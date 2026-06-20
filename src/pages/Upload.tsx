@@ -9,7 +9,6 @@ type Source = "paste" | "file";
 const slugify = (s: string) =>
   s
     .toLowerCase()
-    .normalize("NFKD")
     .replace(/[^a-z0-9가-힣\s-]/g, "")
     .trim()
     .replace(/\s+/g, "-")

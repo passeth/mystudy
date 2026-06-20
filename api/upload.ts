@@ -22,7 +22,6 @@ const COLORS = ["lime", "lilac", "cream", "pink", "mint", "coral", "navy"];
 function slugify(s: string): string {
   return s
     .toLowerCase()
-    .normalize("NFKD")
     .replace(/[^a-z0-9가-힣\s-]/g, "")
     .trim()
     .replace(/\s+/g, "-")
