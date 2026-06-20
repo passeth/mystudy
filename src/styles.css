@@ -94,7 +94,7 @@ button { font-family: inherit; cursor: pointer; }
   color: var(--muted);
 }
 .display-xl {
-  font-size: clamp(44px, 8vw, 84px);
+  font-size: clamp(38px, 8vw, 84px);
   font-weight: 340;
   line-height: 1.0;
   letter-spacing: -0.022em;
@@ -121,10 +121,16 @@ button { font-family: inherit; cursor: pointer; }
 .wrap {
   max-width: var(--maxw);
   margin: 0 auto;
-  padding: 0 var(--s-xl);
+  /* horizontal only — vertical rhythm is owned by .hero / .section.
+     max() keeps a comfortable gutter while respecting notch safe-areas. */
+  padding-left: max(var(--s-xl), env(safe-area-inset-left));
+  padding-right: max(var(--s-xl), env(safe-area-inset-right));
 }
 @media (max-width: 600px) {
-  .wrap { padding: 0 var(--s-lg); }
+  .wrap {
+    padding-left: max(var(--s-lg), env(safe-area-inset-left));
+    padding-right: max(var(--s-lg), env(safe-area-inset-right));
+  }
 }
 
 /* ---------- top nav ---------- */
@@ -202,7 +208,7 @@ button { font-family: inherit; cursor: pointer; }
 .chip .swatch { width: 9px; height: 9px; border-radius: var(--r-full); }
 
 /* ---------- hero ---------- */
-.hero { padding: clamp(48px, 9vw, 104px) 0 var(--s-xxl); }
+.hero { padding-top: clamp(40px, 9vw, 104px); padding-bottom: var(--s-xxl); }
 .hero p.lede {
   max-width: 620px;
   margin: var(--s-lg) 0 var(--s-xl);
@@ -216,7 +222,7 @@ button { font-family: inherit; cursor: pointer; }
 .hero-stat .l { margin-top: 8px; }
 
 /* ---------- section heading ---------- */
-.section { padding: clamp(40px, 6vw, 72px) 0; }
+.section { padding-top: clamp(36px, 6vw, 72px); padding-bottom: clamp(36px, 6vw, 72px); }
 .section-head {
   display: flex;
   align-items: flex-end;
@@ -286,12 +292,19 @@ button { font-family: inherit; cursor: pointer; }
 .lesson-row {
   display: flex;
   align-items: center;
+  border-bottom: 1px solid var(--hairline-soft);
+}
+.lesson-link {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
   gap: var(--s-md);
   padding: var(--s-lg) var(--s-md);
-  border-bottom: 1px solid var(--hairline-soft);
+  border-radius: var(--r-md);
   transition: background 0.14s ease, padding-left 0.14s ease;
 }
-.lesson-row:hover { background: var(--surface-soft); padding-left: calc(var(--s-md) + 6px); }
+.lesson-link:hover { background: var(--surface-soft); padding-left: calc(var(--s-md) + 6px); }
 .lesson-row .idx {
   font-family: var(--mono);
   font-size: 13px;
@@ -301,6 +314,22 @@ button { font-family: inherit; cursor: pointer; }
 .lesson-row .l-body { flex: 1; min-width: 0; }
 .lesson-row .l-title { font-size: 18px; font-weight: 440; letter-spacing: -0.01em; }
 .lesson-row .l-sub { font-size: 14px; color: var(--muted); margin-top: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.l-del {
+  flex: none;
+  margin-left: var(--s-xs);
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: var(--r-full);
+  background: transparent;
+  font-size: 16px;
+  line-height: 1;
+  opacity: 0.4;
+  transition: opacity 0.14s ease, background 0.14s ease;
+}
+.lesson-row:hover .l-del { opacity: 0.75; }
+.l-del:hover { opacity: 1; background: #fdecec; }
+.l-del:disabled { opacity: 0.5; }
 .lesson-row .l-go { font-size: 18px; color: var(--muted); }
 
 /* ---------- lesson viewer ---------- */
