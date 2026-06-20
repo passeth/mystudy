@@ -26,5 +26,12 @@
     "subtitle": "",
     "color": "lime",
     "order": 4
+  },
+  {
+    "id": "pr-git",
+    "title": "PR git",
+    "subtitle": "",
+    "color": "lime",
+    "order": 5
   }
 ]
