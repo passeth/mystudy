@@ -1,9 +1,11 @@
+import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useManifest, findTopic } from "../lib/manifest";
 
 export default function Lesson() {
   const { topicId = "", lessonId = "" } = useParams();
   const { data, loading } = useManifest();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const nav = useNavigate();
   const topic = findTopic(data, topicId);
   const idx = topic?.lessons.findIndex((l) => l.id === lessonId) ?? -1;
@@ -46,11 +48,24 @@ export default function Lesson() {
           목록
         </Link>
         <span className="v-title">{lesson.title}</span>
+        <button
+          className="btn btn-secondary btn-sm lesson-list-toggle"
+          type="button"
+          aria-controls="lesson-topic-list"
+          aria-expanded={sidebarOpen}
+          onClick={() => setSidebarOpen((open) => !open)}
+        >
+          글목록
+        </button>
         <div className="viewer-nav">
           <button
             className="btn btn-secondary btn-sm"
             disabled={!prev}
-            onClick={() => prev && nav(`/t/${topic.id}/${prev.id}`)}
+            onClick={() => {
+              if (!prev) return;
+              setSidebarOpen(false);
+              nav(`/t/${topic.id}/${prev.id}`);
+            }}
             aria-label="이전 레슨"
           >
             이전
@@ -58,15 +73,23 @@ export default function Lesson() {
           <button
             className="btn btn-secondary btn-sm"
             disabled={!next}
-            onClick={() => next && nav(`/t/${topic.id}/${next.id}`)}
+            onClick={() => {
+              if (!next) return;
+              setSidebarOpen(false);
+              nav(`/t/${topic.id}/${next.id}`);
+            }}
             aria-label="다음 레슨"
           >
             다음
           </button>
         </div>
       </div>
-      <div className="viewer-shell">
-        <aside className="lesson-sidebar" aria-label={`${topic.title} 레슨 목록`}>
+      <div className={`viewer-shell ${sidebarOpen ? "is-sidebar-open" : ""}`}>
+        <aside
+          className="lesson-sidebar"
+          id="lesson-topic-list"
+          aria-label={`${topic.title} 레슨 목록`}
+        >
           <div className="lesson-sidebar-head">
             <span className="caption">{topic.id.toUpperCase()}</span>
             <strong>{topic.title}</strong>
@@ -80,6 +103,7 @@ export default function Lesson() {
                   item.id === lesson.id ? "is-current" : ""
                 }`}
                 aria-current={item.id === lesson.id ? "page" : undefined}
+                onClick={() => setSidebarOpen(false)}
               >
                 <span>{String(itemIndex + 1).padStart(2, "0")}</span>
                 <strong>{item.title}</strong>
