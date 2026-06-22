@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-22T04:04:12.698Z",
+  "generatedAt": "2026-06-22T04:30:14.872Z",
   "topics": [
     {
       "id": "pif-cpsr",
@@ -193,6 +193,12 @@
           "title": "Lesson 0007 — PR, Actions, CodeRabbit 운영 루프",
           "subtitle": "",
           "file": "lessons/git-pr-coderabbit/0005-pr-actions-coderabbit-operating-loop.html"
+        },
+        {
+          "id": "0006-trade-intel-page-speed-case-study",
+          "title": "Lesson 0006 — Trade Intel 페이지 속도 개선 케이스 스터디",
+          "subtitle": "",
+          "file": "lessons/git-pr-coderabbit/0006-trade-intel-page-speed-case-study.html"
         },
         {
           "id": "index",
