@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 5: 실무 적용 — 지식 관리 시스템 구축 | OKF 학습</title>
+  <style>
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --border: #2a2d3a;
+      --accent: #6c8fff;
+      --accent2: #a78bfa;
+      --green: #4ade80;
+      --yellow: #fbbf24;
+      --orange: #fb923c;
+      --red: #f87171;
+      --pink: #f472b6;
+      --text: #e2e8f0;
+      --muted: #8892a4;
+      --radius: 12px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.75; padding: 2rem 1rem; }
+    .container { max-width: 860px; margin: 0 auto; }
+    .lesson-badge { display: inline-block; background: linear-gradient(135deg, var(--accent), var(--pink)); color: white; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.25rem 0.75rem; border-radius: 999px; margin-bottom: 1rem; }
+    h1 { font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem; line-height: 1.2; }
+    .subtitle { color: var(--muted); font-size: 1.05rem; margin-bottom: 2.5rem; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.75rem; margin-bottom: 1.5rem; }
+    .card h2 { font-size: 1.15rem; font-weight: 700; margin-bottom: 1rem; color: var(--accent); }
+    p { margin-bottom: 0.75rem; }
+    ul, ol { padding-left: 1.5rem; margin-bottom: 0.75rem; }
+    li { margin-bottom: 0.4rem; }
+    .roadmap { display: flex; flex-direction: column; gap: 0; position: relative; }
+    .roadmap-item { display: flex; gap: 1.5rem; padding: 1.25rem 0; position: relative; }
+    .roadmap-item::before { content: ''; position: absolute; left: 19px; top: 0; bottom: 0; width: 2px; background: var(--border); }
+    .roadmap-item:last-child::before { display: none; }
+    .roadmap-dot { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; position: relative; z-index: 1; border: 2px solid var(--border); background: var(--surface); }
+    .roadmap-item.step1 .roadmap-dot { background: rgba(108,143,255,0.2); border-color: var(--accent); }
+    .roadmap-item.step2 .roadmap-dot { background: rgba(167,139,250,0.2); border-color: var(--accent2); }
+    .roadmap-item.step3 .roadmap-dot { background: rgba(74,222,128,0.15); border-color: var(--green); }
+    .roadmap-item.step4 .roadmap-dot { background: rgba(251,191,36,0.15); border-color: var(--yellow); }
+    .roadmap-item.step5 .roadmap-dot { background: rgba(244,114,182,0.15); border-color: var(--pink); }
+    .roadmap-content { flex: 1; }
+    .roadmap-content h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.4rem; }
+    .roadmap-content p { font-size: 0.9rem; color: var(--muted); margin-bottom: 0; }
+    .roadmap-content .time { font-size: 0.75rem; color: var(--muted); margin-top: 0.3rem; }
+    .code-block { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.82rem; overflow-x: auto; color: #a8d8a8; line-height: 1.7; margin: 1rem 0; }
+    .highlight-box { background: linear-gradient(135deg, rgba(108,143,255,0.1), rgba(167,139,250,0.1)); border: 1px solid rgba(108,143,255,0.3); border-radius: var(--radius); padding: 1.25rem 1.5rem; margin: 1.25rem 0; }
+    .highlight-box strong { color: var(--accent); }
+    .use-case-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin: 1rem 0; }
+    .use-case { background: var(--bg); border-radius: 10px; padding: 1.25rem; border: 1px solid var(--border); }
+    .use-case .uc-icon { font-size: 1.75rem; margin-bottom: 0.5rem; }
+    .use-case h3 { font-size: 0.9rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .use-case p { font-size: 0.82rem; color: var(--muted); margin-bottom: 0; }
+    .use-case ul { font-size: 0.82rem; color: var(--muted); }
+    .tip-box { background: rgba(74,222,128,0.08); border-left: 4px solid var(--green); border-radius: 0 var(--radius) var(--radius) 0; padding: 1rem 1.25rem; margin: 1.25rem 0; }
+    .tip-box .label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--green); font-weight: 700; margin-bottom: 0.4rem; }
+    .checklist { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin: 1rem 0; }
+    .checklist h3 { color: var(--yellow); margin-bottom: 1rem; font-size: 1rem; }
+    .check-item { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.6rem 0; border-bottom: 1px solid var(--border); }
+    .check-item:last-child { border-bottom: none; }
+    .check-item input[type="checkbox"] { width: 18px; height: 18px; margin-top: 0.1rem; accent-color: var(--green); flex-shrink: 0; cursor: pointer; }
+    .check-item label { font-size: 0.9rem; cursor: pointer; }
+    .check-item label .sub { display: block; font-size: 0.78rem; color: var(--muted); margin-top: 0.2rem; }
+    .progress-bar-wrap { background: var(--border); border-radius: 999px; height: 6px; margin-top: 1.25rem; overflow: hidden; }
+    .progress-bar { background: linear-gradient(90deg, var(--accent), var(--green)); height: 100%; border-radius: 999px; transition: width 0.4s; }
+    .progress-label { font-size: 0.8rem; color: var(--muted); text-align: right; margin-top: 0.4rem; }
+    .celebration { display: none; text-align: center; padding: 2rem; background: linear-gradient(135deg, rgba(108,143,255,0.1), rgba(244,114,182,0.1)); border-radius: var(--radius); border: 1px solid rgba(108,143,255,0.3); }
+    .celebration h3 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+    .completion-box {
+      background: linear-gradient(135deg, rgba(108,143,255,0.15), rgba(244,114,182,0.15));
+      border: 1px solid rgba(244,114,182,0.3);
+      border-radius: var(--radius);
+      padding: 2rem;
+      text-align: center;
+      margin: 2rem 0;
+    }
+    .completion-box h2 { font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--pink); }
+    .completion-box p { color: var(--muted); }
+    .next-steps { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem; }
+    @media (max-width: 600px) { .next-steps { grid-template-columns: 1fr; } }
+    .next-step-item { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem; }
+    .next-step-item .ns-icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
+    .next-step-item h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.4rem; }
+    .next-step-item p { font-size: 0.82rem; color: var(--muted); margin-bottom: 0; }
+    .nav-links { display: flex; justify-content: space-between; align-items: center; margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border); }
+    .nav-btn { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 0.6rem 1.25rem; border-radius: 8px; text-decoration: none; font-size: 0.9rem; transition: border-color 0.2s; }
+    .nav-btn:hover { border-color: var(--accent); }
+    .nav-btn.primary { background: linear-gradient(135deg, var(--accent), var(--accent2)); border-color: transparent; color: white; }
+    .lesson-progress { display: flex; gap: 0.4rem; justify-content: center; }
+    .progress-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); }
+    .progress-dot.done { background: var(--accent2); }
+    .progress-dot.active { background: var(--accent); }
+    .hint-box { background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.3); border-radius: 8px; padding: 1rem; margin-top: 1.5rem; font-size: 0.9rem; }
+    .hint-box strong { color: var(--yellow); }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="lesson-badge">Lesson 5 / 5 — Final</div>
+  <h1>실무 적용</h1>
+  <p class="subtitle">업무 지식 관리 시스템을 OKF로 구축하는 로드맵</p>
+
+  <div class="lesson-progress" style="margin-bottom: 2rem;">
+    <div class="progress-dot done"></div>
+    <div class="progress-dot done"></div>
+    <div class="progress-dot done"></div>
+    <div class="progress-dot done"></div>
+    <div class="progress-dot active"></div>
+  </div>
+
+  <!-- 전체 그림 -->
+  <div class="card">
+    <h2>🗺️ 내 업무에 OKF 적용하기</h2>
+    <div class="highlight-box">
+      <p>목표: 화장품 기획 업무의 지식(성분, 제품, 프로세스, 캠페인)을 <strong>AI 에이전트와 팀원 모두가 접근</strong>할 수 있는 OKF Bundle로 구조화하기.</p>
+    </div>
+    <div class="use-case-grid">
+      <div class="use-case">
+        <div class="uc-icon">🧪</div>
+        <h3>성분 지식베이스</h3>
+        <ul>
+          <li>INCI 명, 효능, EWG 점수</li>
+          <li>배합 호환성 관계</li>
+          <li>규제 정보 링크</li>
+        </ul>
+      </div>
+      <div class="use-case">
+        <div class="uc-icon">🏷️</div>
+        <h3>제품 카탈로그</h3>
+        <ul>
+          <li>SKU, 브랜드, 타겟</li>
+          <li>핵심 성분 크로스링크</li>
+          <li>출시 이력</li>
+        </ul>
+      </div>
+      <div class="use-case">
+        <div class="uc-icon">📋</div>
+        <h3>프로세스 플레이북</h3>
+        <ul>
+          <li>안정성 테스트 절차</li>
+          <li>승인 워크플로우</li>
+          <li>규제 체크리스트</li>
+        </ul>
+      </div>
+      <div class="use-case">
+        <div class="uc-icon">📣</div>
+        <h3>캠페인 지식</h3>
+        <ul>
+          <li>타겟 페르소나</li>
+          <li>클레임 근거</li>
+          <li>채널별 전략</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5단계 로드맵 -->
+  <div class="card">
+    <h2>🚀 5단계 구축 로드맵</h2>
+    <div class="roadmap">
+      <div class="roadmap-item step1">
+        <div class="roadmap-dot">1️⃣</div>
+        <div class="roadmap-content">
+          <h3>Bundle 디렉토리 설계</h3>
+          <p>어떤 개념 타입이 필요한지 결정. <code>ingredients/</code>, <code>products/</code>, <code>processes/</code>, <code>references/</code> 등 서브디렉토리 구조 초안 작성.</p>
+          <div class="time">⏱ 1~2시간</div>
+        </div>
+      </div>
+      <div class="roadmap-item step2">
+        <div class="roadmap-dot">2️⃣</div>
+        <div class="roadmap-content">
+          <h3>type 네이밍 컨벤션 정의</h3>
+          <p>예: <code>Cosmetic Ingredient</code>, <code>Product SKU</code>, <code>Process Playbook</code>, <code>Campaign Brief</code>. 팀 전체에서 일관되게 사용할 type 값 목록 확정.</p>
+          <div class="time">⏱ 30분</div>
+        </div>
+      </div>
+      <div class="roadmap-item step3">
+        <div class="roadmap-dot">3️⃣</div>
+        <div class="roadmap-content">
+          <h3>핵심 Concept 10개 작성</h3>
+          <p>가장 자주 참조되는 성분 5개 + 핵심 프로세스 5개부터 시작. frontmatter + body 섹션(Schema, Examples, Citations) 포함.</p>
+          <div class="time">⏱ 하루</div>
+        </div>
+      </div>
+      <div class="roadmap-item step4">
+        <div class="roadmap-dot">4️⃣</div>
+        <div class="roadmap-content">
+          <h3>Cross-link 연결 + index.md 생성</h3>
+          <p>성분→제품, 제품→프로세스 링크 추가. 각 디렉토리에 index.md 생성. Git 레포지토리로 초기화 및 첫 커밋.</p>
+          <div class="time">⏱ 반나절</div>
+        </div>
+      </div>
+      <div class="roadmap-item step5">
+        <div class="roadmap-dot">5️⃣</div>
+        <div class="roadmap-content">
+          <h3>AI 에이전트 연동 + 팀 공유</h3>
+          <p>Claude에게 Bundle을 컨텍스트로 제공. Obsidian에서 마크다운으로 열기. 팀원에게 기여 방법 공유. log.md로 변경 이력 관리 시작.</p>
+          <div class="time">⏱ 지속적</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 예시 번들 구조 -->
+  <div class="card">
+    <h2>📁 화장품 브랜드 Bundle 예시</h2>
+    <div class="code-block">evas-cosmetic-knowledge/
+├── index.md                    # 전체 Bundle 목차
+├── log.md                      # 변경 이력
+│
+├── ingredients/
+│   ├── index.md
+│   ├── niacinamide.md          # type: Cosmetic Ingredient
+│   ├── retinol.md
+│   └── ceramide-np.md
+│
+├── products/
+│   ├── index.md
+│   ├── ceraclean-foam.md       # type: Product SKU
+│   └── fraijour-cream.md
+│
+├── processes/
+│   ├── index.md
+│   ├── stability-test.md       # type: Process Playbook
+│   └── regulatory-approval.md
+│
+├── campaigns/
+│   ├── index.md
+│   └── sensitive-skin-2026.md  # type: Campaign Brief
+│
+└── references/
+    ├── cosing-database.md      # type: Reference
+    └── kfda-guidelines.md</div>
+    <div class="tip-box">
+      <div class="label">💡 AI 에이전트 활용</div>
+      <p>이 Bundle을 Claude에게 제공하면: "세라마이드 NP가 포함된 제품은?", "레티놀 배합 주의사항은?", "안정성 테스트 절차를 알려줘" 같은 질문에 정확하게 답변할 수 있습니다.</p>
+    </div>
+  </div>
+
+  <!-- OKF + Obsidian -->
+  <div class="card">
+    <h2>🔌 기존 도구와 통합</h2>
+    <p>OKF는 기존 도구와 자연스럽게 통합됩니다:</p>
+    <ul>
+      <li><strong>Obsidian</strong> — OKF Bundle 디렉토리를 Vault로 열면 바로 브라우징 가능. [[링크]] 스타일도 함께 사용 가능.</li>
+      <li><strong>GitHub/GitLab</strong> — 레포지토리에 Bundle을 체크인하면 PR 리뷰, 히스토리, blame이 자동으로 작동.</li>
+      <li><strong>Claude/ChatGPT</strong> — Concept 파일들을 컨텍스트로 제공하면 지식 기반 Q&A 에이전트 즉시 구축.</li>
+      <li><strong>MkDocs / Hugo</strong> — Bundle을 정적 사이트로 렌더링해 팀 위키로 제공 가능.</li>
+    </ul>
+  </div>
+
+  <!-- 최종 체크리스트 -->
+  <div class="card">
+    <h2>✅ OKF 마스터 체크리스트</h2>
+    <div class="checklist">
+      <h3>📊 배운 것을 실무에 적용하기 위한 체크리스트</h3>
+      <div class="check-item">
+        <input type="checkbox" id="c1" onchange="updateProgress()">
+        <label for="c1">OKF의 목적과 핵심 가치를 동료에게 설명할 수 있다
+          <span class="sub">Lesson 1 내용 — 왜 마크다운+frontmatter인가?</span></label>
+      </div>
+      <div class="check-item">
+        <input type="checkbox" id="c2" onchange="updateProgress()">
+        <label for="c2">나의 업무 지식을 위한 Bundle 디렉토리 구조를 설계했다
+          <span class="sub">Lesson 2 내용 — index.md, log.md, 서브디렉토리</span></label>
+      </div>
+      <div class="check-item">
+        <input type="checkbox" id="c3" onchange="updateProgress()">
+        <label for="c3">최소 3개의 Concept 문서를 작성했다 (type 필드 포함)
+          <span class="sub">Lesson 3 내용 — frontmatter + body 섹션</span></label>
+      </div>
+      <div class="check-item">
+        <input type="checkbox" id="c4" onchange="updateProgress()">
+        <label for="c4">Concept 간 절대 링크로 최소 2개의 관계를 표현했다
+          <span class="sub">Lesson 4 내용 — /경로/파일.md 형식</span></label>
+      </div>
+      <div class="check-item">
+        <input type="checkbox" id="c5" onchange="updateProgress()">
+        <label for="c5">Bundle을 Git 레포지토리로 초기화하고 첫 커밋을 만들었다
+          <span class="sub">Lesson 5 내용 — 버전 관리 시작</span></label>
+      </div>
+      <div class="check-item">
+        <input type="checkbox" id="c6" onchange="updateProgress()">
+        <label for="c6">Claude에게 Bundle 파일을 제공해 지식 기반 Q&A를 테스트했다
+          <span class="sub">Lesson 5 내용 — AI 에이전트 연동</span></label>
+      </div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar" id="progress-bar" style="width: 0%"></div>
+      </div>
+      <div class="progress-label" id="progress-label">0 / 6 완료</div>
+      <div class="celebration" id="celebration">
+        <div style="font-size: 3rem; margin-bottom: 0.75rem;">🎉</div>
+        <h3>OKF 실무 적용 준비 완료!</h3>
+        <p style="color: var(--muted);">모든 체크리스트를 완료했습니다. 이제 지식 관리 시스템을 구축할 준비가 되었습니다!</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 완료 -->
+  <div class="completion-box">
+    <div style="font-size: 2.5rem; margin-bottom: 0.75rem;">🏆</div>
+    <h2>5개 레슨 완료!</h2>
+    <p>OKF의 핵심 개념을 모두 학습했습니다. 이제 실제 Bundle을 만들어보세요.</p>
+    <div class="next-steps">
+      <div class="next-step-item">
+        <div class="ns-icon">📖</div>
+        <h4>Reference 문서 보기</h4>
+        <p>레슨에서 배운 내용의 압축 치트시트를 확인하세요.</p>
+      </div>
+      <div class="next-step-item">
+        <div class="ns-icon">💬</div>
+        <h4>Claude에게 질문하기</h4>
+        <p>더 깊이 있는 내용이나 실무 적용 방법을 자유롭게 물어보세요.</p>
+      </div>
+      <div class="next-step-item">
+        <div class="ns-icon">🔗</div>
+        <h4>공식 스펙 읽기</h4>
+        <p><a href="https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md" style="color: var(--accent);">OKF SPEC v0.1</a> 전문을 직접 읽어보세요.</p>
+      </div>
+      <div class="next-step-item">
+        <div class="ns-icon">🛠️</div>
+        <h4>첫 Bundle 만들기</h4>
+        <p>업무에서 가장 자주 찾는 지식 10개를 OKF로 작성해보세요.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="hint-box">
+    <strong>💬 계속 배우기!</strong> "내 Bundle 구조를 리뷰해줘", "성분 타입 컨벤션 어떻게 정하면 좋을까?", "OKF Bundle을 Claude에게 제공하는 가장 좋은 방법은?"
+  </div>
+
+  <div class="nav-links">
+    <a href="0004-cross-linking.html" class="nav-btn">← 이전: Cross-linking</a>
+    <div class="lesson-progress">
+      <div class="progress-dot done"></div>
+      <div class="progress-dot done"></div>
+      <div class="progress-dot done"></div>
+      <div class="progress-dot done"></div>
+      <div class="progress-dot active"></div>
+    </div>
+    <a href="0001-what-is-okf.html" class="nav-btn">↩ 처음부터 복습</a>
+  </div>
+</div>
+
+<script>
+function updateProgress() {
+  const boxes = document.querySelectorAll('.check-item input[type="checkbox"]');
+  const checked = Array.from(boxes).filter(b => b.checked).length;
+  const pct = Math.round((checked / boxes.length) * 100);
+  document.getElementById('progress-bar').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = `${checked} / ${boxes.length} 완료`;
+  if (checked === boxes.length) {
+    document.getElementById('celebration').style.display = 'block';
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 3: Concept 문서 작성법 | OKF 학습</title>
+  <style>
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --border: #2a2d3a;
+      --accent: #6c8fff;
+      --accent2: #a78bfa;
+      --green: #4ade80;
+      --yellow: #fbbf24;
+      --orange: #fb923c;
+      --red: #f87171;
+      --text: #e2e8f0;
+      --muted: #8892a4;
+      --radius: 12px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.75; padding: 2rem 1rem; }
+    .container { max-width: 820px; margin: 0 auto; }
+    .lesson-badge { display: inline-block; background: var(--green); color: #0f1117; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.25rem 0.75rem; border-radius: 999px; margin-bottom: 1rem; }
+    h1 { font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem; line-height: 1.2; }
+    .subtitle { color: var(--muted); font-size: 1.05rem; margin-bottom: 2.5rem; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.75rem; margin-bottom: 1.5rem; }
+    .card h2 { font-size: 1.15rem; font-weight: 700; margin-bottom: 1rem; color: var(--accent); }
+    p { margin-bottom: 0.75rem; }
+    ul, ol { padding-left: 1.5rem; margin-bottom: 0.75rem; }
+    li { margin-bottom: 0.4rem; }
+    .annotated-doc {
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+    @media (max-width: 600px) { .annotated-doc { grid-template-columns: 1fr; } }
+    .doc-code { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.82rem; line-height: 1.9; overflow-x: auto; }
+    .fm-required { color: #f87171; }
+    .fm-recommended { color: #fbbf24; }
+    .fm-optional { color: var(--muted); }
+    .fm-body { color: #a8d8a8; }
+    .fm-comment { color: #4a5568; font-style: italic; }
+    .annotations { display: flex; flex-direction: column; gap: 0.6rem; }
+    .ann { background: var(--bg); border-radius: 8px; padding: 0.75rem; border-left: 3px solid var(--border); font-size: 0.82rem; }
+    .ann.req { border-color: var(--red); }
+    .ann.rec { border-color: var(--yellow); }
+    .ann.opt { border-color: var(--muted); }
+    .ann .ann-label { font-weight: 700; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.3rem; }
+    .ann.req .ann-label { color: var(--red); }
+    .ann.rec .ann-label { color: var(--yellow); }
+    .ann.opt .ann-label { color: var(--muted); }
+    .tag { display: inline-block; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
+    .tag.required { background: rgba(248,113,113,0.15); color: #f87171; }
+    .tag.recommended { background: rgba(251,191,36,0.15); color: var(--yellow); }
+    .tag.optional { background: rgba(74,222,128,0.12); color: var(--green); }
+    .table-wrap { overflow-x: auto; margin: 1rem 0; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    th { text-align: left; padding: 0.6rem 1rem; background: var(--bg); border-bottom: 2px solid var(--border); color: var(--muted); font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    td { padding: 0.7rem 1rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+    td code { background: var(--bg); padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.85rem; color: var(--orange); font-family: 'SF Mono', 'Fira Code', monospace; }
+    .section-heading-table { width: 100%; }
+    .tip-box { background: rgba(74,222,128,0.08); border-left: 4px solid var(--green); border-radius: 0 var(--radius) var(--radius) 0; padding: 1rem 1.25rem; margin: 1.25rem 0; }
+    .tip-box .label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--green); font-weight: 700; margin-bottom: 0.4rem; }
+    .editor-area { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin: 1rem 0; }
+    .editor-area h3 { color: var(--yellow); margin-bottom: 0.75rem; font-size: 1rem; }
+    .editor-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media (max-width: 600px) { .editor-grid { grid-template-columns: 1fr; } }
+    textarea { width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; color: var(--text); font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.82rem; min-height: 260px; resize: vertical; line-height: 1.7; }
+    .preview-pane { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; min-height: 260px; overflow-y: auto; }
+    .preview-pane .fm-block { background: var(--bg); border-radius: 6px; padding: 0.75rem; margin-bottom: 0.75rem; font-family: monospace; font-size: 0.8rem; line-height: 1.6; }
+    .preview-pane .body-text { font-size: 0.9rem; line-height: 1.7; }
+    .check-btn { background: var(--accent); border: none; color: white; padding: 0.6rem 1.25rem; border-radius: 8px; cursor: pointer; font-size: 0.9rem; margin-top: 0.75rem; }
+    .validation-result { margin-top: 0.75rem; padding: 0.75rem; border-radius: 8px; font-size: 0.85rem; display: none; }
+    .quiz-section { margin-top: 2rem; }
+    .quiz-section h2 { font-size: 1.25rem; font-weight: 700; margin-bottom: 1.25rem; color: var(--yellow); }
+    .question { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1.25rem; }
+    .question p { font-weight: 500; margin-bottom: 1rem; }
+    .options { display: flex; flex-direction: column; gap: 0.6rem; }
+    .option { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid var(--border); cursor: pointer; transition: all 0.2s; background: var(--bg); }
+    .option:hover { border-color: var(--accent); background: rgba(108,143,255,0.05); }
+    .option.correct { background: rgba(74,222,128,0.1); border-color: var(--green); }
+    .option.wrong { background: rgba(248,113,113,0.08); border-color: #f87171; }
+    .option-letter { width: 28px; height: 28px; border-radius: 50%; background: var(--border); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; flex-shrink: 0; }
+    .feedback { display: none; margin-top: 0.75rem; padding: 0.75rem; border-radius: 8px; font-size: 0.9rem; }
+    .feedback.correct-fb { background: rgba(74,222,128,0.1); color: var(--green); display: block; }
+    .feedback.wrong-fb { background: rgba(248,113,113,0.1); color: #f87171; display: block; }
+    .nav-links { display: flex; justify-content: space-between; align-items: center; margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border); }
+    .nav-btn { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 0.6rem 1.25rem; border-radius: 8px; text-decoration: none; font-size: 0.9rem; transition: border-color 0.2s; }
+    .nav-btn:hover { border-color: var(--accent); }
+    .nav-btn.primary { background: var(--accent); border-color: var(--accent); color: white; }
+    .lesson-progress { display: flex; gap: 0.4rem; justify-content: center; }
+    .progress-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); }
+    .progress-dot.done { background: var(--accent2); }
+    .progress-dot.active { background: var(--accent); }
+    .hint-box { background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.3); border-radius: 8px; padding: 1rem; margin-top: 1.5rem; font-size: 0.9rem; }
+    .hint-box strong { color: var(--yellow); }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="lesson-badge">Lesson 3 / 5</div>
+  <h1>Concept 문서 작성법</h1>
+  <p class="subtitle">YAML frontmatter + Markdown body — OKF의 핵심 단위 만들기</p>
+
+  <div class="lesson-progress" style="margin-bottom: 2rem;">
+    <div class="progress-dot done"></div>
+    <div class="progress-dot done"></div>
+    <div class="progress-dot active"></div>
+    <div class="progress-dot"></div>
+    <div class="progress-dot"></div>
+  </div>
+
+  <!-- 구조 설명 -->
+  <div class="card">
+    <h2>📄 Concept 문서의 두 파트</h2>
+    <p>모든 Concept 문서는 딱 두 부분으로 구성됩니다:</p>
+    <div class="annotated-doc">
+      <div class="doc-code"><span class="fm-comment">---  ← frontmatter 시작</span>
+<span class="fm-required">type: Cosmetic Ingredient</span>  <span class="fm-comment"># REQUIRED</span>
+<span class="fm-recommended">title: 나이아신아마이드</span>          <span class="fm-comment"># 권장</span>
+<span class="fm-recommended">description: 피부 미백 비타민 B3</span> <span class="fm-comment"># 권장</span>
+<span class="fm-recommended">resource: https://cosing.eu/...</span>  <span class="fm-comment"># 권장</span>
+<span class="fm-recommended">tags: [미백, 비타민B3]</span>            <span class="fm-comment"># 권장</span>
+<span class="fm-recommended">timestamp: 2026-06-22T00:00:00Z</span>  <span class="fm-comment"># 권장</span>
+<span class="fm-optional">ewg_score: 1</span>                      <span class="fm-comment"># 임의 확장</span>
+<span class="fm-comment">---  ← frontmatter 끝</span>
+
+<span class="fm-body"># 설명</span>
+<span class="fm-body">비타민 B3의 활성형. 멜라닌 이동을 억제한다.</span>
+
+<span class="fm-body"># 효능</span>
+<span class="fm-body">- 미백 효과</span>
+<span class="fm-body">- 모공 축소</span>
+
+<span class="fm-body"># Citations</span>
+<span class="fm-body">[1] [CosIng Database](https://cosing.eu)</span></div>
+      <div class="annotations">
+        <div class="ann req">
+          <div class="ann-label">🔴 REQUIRED</div>
+          <code>type</code> — 유일한 필수 필드. 없으면 비준수(non-conformant).
+        </div>
+        <div class="ann rec">
+          <div class="ann-label">🟡 RECOMMENDED</div>
+          <code>title, description, resource, tags, timestamp</code> — 생략 가능하지만 강력 권장.
+        </div>
+        <div class="ann opt">
+          <div class="ann-label">⚪ EXTENSION</div>
+          임의 키 추가 가능. Consumers는 미알려진 키를 무시함.
+        </div>
+        <div class="ann" style="border-color: var(--green);">
+          <div class="ann-label" style="color: var(--green);">🟢 BODY</div>
+          자유로운 마크다운. 제목, 목록, 표, 코드블록 모두 가능.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Frontmatter 필드 -->
+  <div class="card">
+    <h2>🏷️ Frontmatter 필드 상세</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>필드</th><th>필수 여부</th><th>설명</th><th>예시</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>type</code></td>
+            <td><span class="tag required">REQUIRED</span></td>
+            <td>Concept의 종류. 중앙 등록 없이 자유롭게 정의.</td>
+            <td><code>BigQuery Table</code>, <code>Metric</code>, <code>Playbook</code></td>
+          </tr>
+          <tr>
+            <td><code>title</code></td>
+            <td><span class="tag recommended">권장</span></td>
+            <td>사람이 읽기 위한 표시 이름. 없으면 파일명에서 유도.</td>
+            <td><code>Customer Orders</code></td>
+          </tr>
+          <tr>
+            <td><code>description</code></td>
+            <td><span class="tag recommended">권장</span></td>
+            <td>한 문장 요약. index.md 자동생성과 검색에 사용.</td>
+            <td><code>One row per completed order.</code></td>
+          </tr>
+          <tr>
+            <td><code>resource</code></td>
+            <td><span class="tag recommended">권장</span></td>
+            <td>Concept이 설명하는 실제 자산의 URI. 추상 개념이면 생략.</td>
+            <td><code>https://bigquery.../table</code></td>
+          </tr>
+          <tr>
+            <td><code>tags</code></td>
+            <td><span class="tag optional">선택</span></td>
+            <td>가로 분류용 태그 목록.</td>
+            <td><code>[미백, 수용성]</code></td>
+          </tr>
+          <tr>
+            <td><code>timestamp</code></td>
+            <td><span class="tag optional">선택</span></td>
+            <td>마지막 수정 시각. ISO 8601.</td>
+            <td><code>2026-06-22T00:00:00Z</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Body 관례 -->
+  <div class="card">
+    <h2>📝 Body 작성 관례</h2>
+    <p>Body에 필수 섹션은 없습니다. 그러나 아래 헤딩은 <strong>관례적(conventional)</strong> 의미를 가집니다:</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>헤딩</th><th>용도</th><th>예시 맥락</th></tr></thead>
+        <tbody>
+          <tr><td><code># Schema</code></td><td>자산의 컬럼/필드 구조적 설명</td><td>테이블, API 응답 스키마</td></tr>
+          <tr><td><code># Examples</code></td><td>구체적 사용 예시 (코드블록 등)</td><td>쿼리 예시, 배합 예시</td></tr>
+          <tr><td><code># Citations</code></td><td>본문 주장을 뒷받침하는 외부 출처</td><td>논문, 공식 문서, 규제 데이터</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="tip-box">
+      <div class="label">💡 구조적 마크다운 권장</div>
+      <p>OKF 명세는 "구조적 마크다운(헤딩, 목록, 표, 코드블록)을 자유 형식 산문보다 선호하라"고 권장합니다. 이유: 구조가 있어야 사람과 LLM 모두 검색과 추출이 쉽습니다.</p>
+    </div>
+  </div>
+
+  <!-- 실습 에디터 -->
+  <div class="card">
+    <h2>✍️ 직접 작성 실습</h2>
+    <p>화장품 관련 Concept 문서를 작성해보세요. 아래 템플릿에서 시작하세요:</p>
+    <div class="editor-area">
+      <h3>📝 내 Concept 문서</h3>
+      <textarea id="doc-editor">---
+type: Cosmetic Ingredient
+title:
+description:
+tags: []
+timestamp: 2026-06-22T00:00:00Z
+---
+
+# 설명
+
+
+
+# 효능
+-
+
+# 배합 주의사항
+
+
+
+# Citations
+[1]
+</textarea>
+      <button class="check-btn" onclick="validateDoc()">🔍 유효성 검사</button>
+      <div id="val-result" class="validation-result"></div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div class="quiz-section">
+    <h2>🧠 이해 확인 퀴즈</h2>
+
+    <div class="question">
+      <p>Q1. 다음 중 OKF v0.1 준수(conformant)를 위반하는 것은?</p>
+      <div class="options" id="q1">
+        <div class="option" onclick="answer(this,'q1',false)"><div class="option-letter">A</div><span>title 필드가 없는 문서</span></div>
+        <div class="option" onclick="answer(this,'q1',false)"><div class="option-letter">B</div><span>알 수 없는 type 값 (예: "My Custom Type")</span></div>
+        <div class="option" onclick="answer(this,'q1',true)"><div class="option-letter">C</div><span>frontmatter가 전혀 없는 .md 파일</span></div>
+        <div class="option" onclick="answer(this,'q1',false)"><div class="option-letter">D</div><span>임의의 추가 필드 (예: ewg_score: 1)</span></div>
+      </div>
+      <div id="q1-fb-correct" class="feedback">✅ 맞습니다! 모든 비예약 .md 파일은 파싱 가능한 YAML frontmatter 블록을 포함해야 합니다. frontmatter 자체가 없으면 비준수입니다.</div>
+      <div id="q1-fb-wrong" class="feedback">❌ OKF §9 Conformance: title이 없거나, 미알려진 type이거나, 추가 필드가 있어도 모두 허용됩니다. 반드시 있어야 하는 것은 frontmatter 블록과 type 필드입니다.</div>
+    </div>
+
+    <div class="question">
+      <p>Q2. <code>resource</code> 필드를 생략해도 되는 Concept의 예는?</p>
+      <div class="options" id="q2">
+        <div class="option" onclick="answer(this,'q2',false)"><div class="option-letter">A</div><span>BigQuery 테이블 문서</span></div>
+        <div class="option" onclick="answer(this,'q2',false)"><div class="option-letter">B</div><span>API 엔드포인트 문서</span></div>
+        <div class="option" onclick="answer(this,'q2',true)"><div class="option-letter">C</div><span>온콜 인시던트 대응 플레이북</span></div>
+        <div class="option" onclick="answer(this,'q2',false)"><div class="option-letter">D</div><span>S3 버킷 설명 문서</span></div>
+      </div>
+      <div id="q2-fb-correct" class="feedback">✅ 정확! OKF 명세: "resource 필드는 추상적 아이디어를 설명하는 Concept에서는 생략한다." 플레이북은 실제 물리 자산이 아닌 프로세스 지식이므로 생략 가능합니다.</div>
+      <div id="q2-fb-wrong" class="feedback">❌ BigQuery 테이블, API 엔드포인트, S3 버킷은 모두 실제 자산(physical resource)입니다. resource 필드에 그 자산의 URI를 넣어야 합니다.</div>
+    </div>
+  </div>
+
+  <div class="hint-box">
+    <strong>💬 질문해보세요!</strong> "type 값을 어떻게 정하면 좋을까요?", "화장품 성분 타입 명명 규칙을 추천해주세요"
+  </div>
+
+  <div class="nav-links">
+    <a href="0002-bundle-structure.html" class="nav-btn">← 이전: Bundle 구조</a>
+    <div class="lesson-progress">
+      <div class="progress-dot done"></div>
+      <div class="progress-dot done"></div>
+      <div class="progress-dot active"></div>
+      <div class="progress-dot"></div>
+      <div class="progress-dot"></div>
+    </div>
+    <a href="0004-cross-linking.html" class="nav-btn primary">다음: Cross-linking →</a>
+  </div>
+</div>
+
+<script>
+function answer(el, qid, isCorrect) {
+  const container = document.getElementById(qid);
+  container.querySelectorAll('.option').forEach(o => o.style.pointerEvents = 'none');
+  el.classList.add(isCorrect ? 'correct' : 'wrong');
+  document.getElementById(qid + '-fb-correct').classList[isCorrect ? 'add' : 'remove']('correct-fb');
+  document.getElementById(qid + '-fb-wrong').classList[isCorrect ? 'remove' : 'add']('wrong-fb');
+}
+function validateDoc() {
+  const text = document.getElementById('doc-editor').value;
+  const res = document.getElementById('val-result');
+  const issues = [];
+  const passes = [];
+  if (!text.includes('---')) { issues.push('❌ frontmatter 블록(---)이 없습니다'); }
+  else {
+    passes.push('✅ frontmatter 블록 존재');
+    const fmMatch = text.match(/---\n([\s\S]*?)\n---/);
+    if (fmMatch) {
+      const fm = fmMatch[1];
+      if (fm.includes('type:') && fm.match(/type:\s*\S+/)) passes.push('✅ type 필드 있음 (REQUIRED 충족)');
+      else issues.push('❌ type 필드가 없습니다 (REQUIRED)');
+      if (fm.includes('title:')) passes.push('✅ title 필드 있음');
+      else issues.push('💡 title 필드 추가를 권장합니다');
+      if (fm.includes('description:')) passes.push('✅ description 필드 있음');
+      else issues.push('💡 description 필드 추가를 권장합니다');
+    }
+  }
+  const allMsgs = [...passes, ...issues];
+  res.innerHTML = allMsgs.map(m => `<div style="margin:0.3rem 0;font-size:0.85rem;">${m}</div>`).join('');
+  res.style.display = 'block';
+  res.style.background = issues.some(i => i.includes('❌')) ? 'rgba(248,113,113,0.08)' : 'rgba(74,222,128,0.08)';
+  res.style.border = `1px solid ${issues.some(i => i.includes('❌')) ? '#f87171' : 'var(--green)'}`;
+  res.style.borderRadius = '8px';
+  res.style.padding = '0.75rem';
+}
+</script>
+</body>
+</html>

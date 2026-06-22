@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesson 2: Knowledge Bundle 구조 | OKF 학습</title>
+  <style>
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --border: #2a2d3a;
+      --accent: #6c8fff;
+      --accent2: #a78bfa;
+      --green: #4ade80;
+      --yellow: #fbbf24;
+      --orange: #fb923c;
+      --text: #e2e8f0;
+      --muted: #8892a4;
+      --radius: 12px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.75; padding: 2rem 1rem; }
+    .container { max-width: 820px; margin: 0 auto; }
+    .lesson-badge { display: inline-block; background: var(--accent2); color: white; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.25rem 0.75rem; border-radius: 999px; margin-bottom: 1rem; }
+    h1 { font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem; line-height: 1.2; }
+    .subtitle { color: var(--muted); font-size: 1.05rem; margin-bottom: 2.5rem; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.75rem; margin-bottom: 1.5rem; }
+    .card h2 { font-size: 1.15rem; font-weight: 700; margin-bottom: 1rem; color: var(--accent); }
+    p { margin-bottom: 0.75rem; }
+    ul, ol { padding-left: 1.5rem; margin-bottom: 0.75rem; }
+    li { margin-bottom: 0.4rem; }
+    .file-tree {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem 1.5rem;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.88rem;
+      line-height: 1.8;
+      margin: 1rem 0;
+    }
+    .ft-dir { color: var(--accent); font-weight: 600; }
+    .ft-reserved { color: var(--orange); }
+    .ft-concept { color: var(--green); }
+    .ft-comment { color: var(--muted); font-style: italic; }
+    .ft-indent { margin-left: 1.4rem; }
+    .ft-indent2 { margin-left: 2.8rem; }
+    .highlight-box { background: linear-gradient(135deg, rgba(108,143,255,0.1), rgba(167,139,250,0.1)); border: 1px solid rgba(108,143,255,0.3); border-radius: var(--radius); padding: 1.25rem 1.5rem; margin: 1.25rem 0; }
+    .highlight-box strong { color: var(--accent); }
+    .table-wrap { overflow-x: auto; margin: 1rem 0; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    th { text-align: left; padding: 0.6rem 1rem; background: var(--bg); border-bottom: 2px solid var(--border); color: var(--muted); font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    td { padding: 0.7rem 1rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+    td code { background: var(--bg); padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.85rem; color: var(--orange); }
+    .tag { display: inline-block; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
+    .tag.required { background: rgba(248,113,113,0.15); color: #f87171; }
+    .tag.optional { background: rgba(74,222,128,0.12); color: var(--green); }
+    .tip-box { background: rgba(74,222,128,0.08); border-left: 4px solid var(--green); border-radius: 0 var(--radius) var(--radius) 0; padding: 1rem 1.25rem; margin: 1.25rem 0; }
+    .tip-box .label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--green); font-weight: 700; margin-bottom: 0.4rem; }
+    .code-block { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.85rem; overflow-x: auto; color: #a8d8a8; line-height: 1.7; margin: 1rem 0; }
+    .quiz-section { margin-top: 2rem; }
+    .quiz-section h2 { font-size: 1.25rem; font-weight: 700; margin-bottom: 1.25rem; color: var(--yellow); }
+    .question { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1.25rem; }
+    .question p { font-weight: 500; margin-bottom: 1rem; }
+    .options { display: flex; flex-direction: column; gap: 0.6rem; }
+    .option { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid var(--border); cursor: pointer; transition: all 0.2s; background: var(--bg); }
+    .option:hover { border-color: var(--accent); background: rgba(108,143,255,0.05); }
+    .option.correct { background: rgba(74,222,128,0.1); border-color: var(--green); }
+    .option.wrong { background: rgba(248,113,113,0.08); border-color: #f87171; }
+    .option-letter { width: 28px; height: 28px; border-radius: 50%; background: var(--border); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; flex-shrink: 0; }
+    .feedback { display: none; margin-top: 0.75rem; padding: 0.75rem; border-radius: 8px; font-size: 0.9rem; }
+    .feedback.correct-fb { background: rgba(74,222,128,0.1); color: var(--green); display: block; }
+    .feedback.wrong-fb { background: rgba(248,113,113,0.1); color: #f87171; display: block; }
+    .nav-links { display: flex; justify-content: space-between; align-items: center; margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border); }
+    .nav-btn { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 0.6rem 1.25rem; border-radius: 8px; text-decoration: none; font-size: 0.9rem; transition: border-color 0.2s; }
+    .nav-btn:hover { border-color: var(--accent); }
+    .nav-btn.primary { background: var(--accent); border-color: var(--accent); color: white; }
+    .lesson-progress { display: flex; gap: 0.4rem; justify-content: center; }
+    .progress-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); }
+    .progress-dot.done { background: var(--accent2); }
+    .progress-dot.active { background: var(--accent); }
+    .hint-box { background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.3); border-radius: 8px; padding: 1rem; margin-top: 1.5rem; font-size: 0.9rem; }
+    .hint-box strong { color: var(--yellow); }
+    .interactive-builder { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin: 1rem 0; }
+    .interactive-builder h3 { color: var(--yellow); margin-bottom: 1rem; font-size: 1rem; }
+    .drag-zone { min-height: 120px; background: var(--surface); border: 2px dashed var(--border); border-radius: 8px; padding: 1rem; margin: 0.5rem 0; }
+    .drag-zone.correct-zone { border-color: var(--green); background: rgba(74,222,128,0.05); }
+    .drag-zone label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 0.5rem; }
+    .file-chip { display: inline-flex; align-items: center; gap: 0.4rem; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 0.3rem 0.7rem; font-size: 0.85rem; margin: 0.3rem; cursor: move; font-family: monospace; }
+    .file-chip.reserved { border-color: var(--orange); color: var(--orange); }
+    .file-chip.concept { border-color: var(--green); color: var(--green); }
+    .check-btn { background: var(--accent); border: none; color: white; padding: 0.6rem 1.25rem; border-radius: 8px; cursor: pointer; font-size: 0.9rem; margin-top: 0.75rem; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="lesson-badge">Lesson 2 / 5</div>
+  <h1>Knowledge Bundle 구조</h1>
+  <p class="subtitle">디렉토리 계층, 예약 파일, 배포 방식 이해하기</p>
+
+  <div class="lesson-progress" style="margin-bottom: 2rem;">
+    <div class="progress-dot done"></div>
+    <div class="progress-dot active"></div>
+    <div class="progress-dot"></div>
+    <div class="progress-dot"></div>
+    <div class="progress-dot"></div>
+  </div>
+
+  <!-- Bundle 개념 -->
+  <div class="card">
+    <h2>📦 Bundle이란?</h2>
+    <div class="highlight-box">
+      <strong>Knowledge Bundle</strong>은 자기 완결적인 지식 문서의 계층적 컬렉션입니다. 배포의 단위이자 지식의 "패키지"입니다.
+    </div>
+    <p>Bundle은 단순히 <strong>마크다운 파일들이 있는 디렉토리</strong>입니다. 특별한 형식이 없습니다.</p>
+    <p>Bundle은 다음 방식으로 배포할 수 있습니다:</p>
+    <ul>
+      <li>🐙 <strong>Git 레포지토리</strong> — 권장 방식. 히스토리, blame, PR 모두 작동</li>
+      <li>📁 <strong>타볼/ZIP</strong> — 아카이브로 공유</li>
+      <li>📂 <strong>큰 레포의 서브디렉토리</strong> — 코드와 함께 관리</li>
+    </ul>
+  </div>
+
+  <!-- Bundle 구조 -->
+  <div class="card">
+    <h2>🗂️ Bundle 디렉토리 구조</h2>
+    <p>아래는 화장품 지식 Bundle의 예시 구조입니다:</p>
+    <div class="file-tree">
+      <div><span class="ft-dir">cosmetic-knowledge/</span> &nbsp;<span class="ft-comment">← Bundle 루트</span></div>
+      <div class="ft-indent"><span class="ft-reserved">index.md</span> &nbsp;<span class="ft-comment">← 예약 파일: 목차</span></div>
+      <div class="ft-indent"><span class="ft-reserved">log.md</span> &nbsp;<span class="ft-comment">← 예약 파일: 변경 이력</span></div>
+      <div class="ft-indent"><span class="ft-concept">brand-overview.md</span> &nbsp;<span class="ft-comment">← Concept 문서</span></div>
+      <div class="ft-indent"><span class="ft-dir">ingredients/</span></div>
+      <div class="ft-indent2"><span class="ft-reserved">index.md</span></div>
+      <div class="ft-indent2"><span class="ft-concept">niacinamide.md</span></div>
+      <div class="ft-indent2"><span class="ft-concept">retinol.md</span></div>
+      <div class="ft-indent"><span class="ft-dir">products/</span></div>
+      <div class="ft-indent2"><span class="ft-reserved">index.md</span></div>
+      <div class="ft-indent2"><span class="ft-concept">ceraclean-foam.md</span></div>
+      <div class="ft-indent"><span class="ft-dir">processes/</span></div>
+      <div class="ft-indent2"><span class="ft-concept">stability-test-playbook.md</span></div>
+    </div>
+    <div style="display: flex; gap: 1.5rem; margin-top: 0.75rem; font-size: 0.85rem; flex-wrap: wrap;">
+      <span><span style="color: var(--accent);">■</span> 디렉토리</span>
+      <span><span style="color: var(--orange);">■</span> 예약 파일</span>
+      <span><span style="color: var(--green);">■</span> Concept 문서</span>
+    </div>
+  </div>
+
+  <!-- 예약 파일 -->
+  <div class="card">
+    <h2>📌 예약 파일 (Reserved Filenames)</h2>
+    <p>어느 디렉토리에서든 두 파일명은 특별한 의미를 가집니다. <strong>Concept 문서로 사용 금지.</strong></p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>파일명</th>
+            <th>용도</th>
+            <th>필수 여부</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>index.md</code></td>
+            <td>해당 디렉토리의 목차. Progressive disclosure를 위해 생성 — 전체 Bundle을 로드하지 않고도 탐색 가능하게 함.</td>
+            <td><span class="tag optional">Optional</span></td>
+          </tr>
+          <tr>
+            <td><code>log.md</code></td>
+            <td>변경 이력. 날짜별로 어떤 Concept이 추가/수정/삭제되었는지 기록.</td>
+            <td><span class="tag optional">Optional</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 style="margin-top: 1.5rem;">index.md 형식</h2>
+    <div class="code-block">## 성분 (Ingredients)
+
+* [나이아신아마이드](niacinamide.md) - 피부 미백 및 모공 축소 비타민 B3
+* [레티놀](retinol.md) - 주름 개선 비타민 A 유도체
+
+## 제품 (Products)
+
+* [세라클린 폼](../products/ceraclean-foam.md) - 저자극 클렌징 폼</div>
+
+    <h2 style="margin-top: 1.5rem;">log.md 형식</h2>
+    <div class="code-block"># Bundle Update Log
+
+## 2026-06-22
+* **Creation**: 나이아신아마이드 개념 문서 초안 작성
+* **Update**: 레티놀 배합 주의사항 보완
+
+## 2026-06-15
+* **Initialization**: Bundle 초기 구조 생성</div>
+
+    <div class="tip-box">
+      <div class="label">💡 Progressive Disclosure</div>
+      <p>index.md의 핵심 가치: LLM이 전체 Bundle을 한번에 로드하지 않고도 "무엇이 있는지" 먼저 파악할 수 있습니다. 컨텍스트 창을 효율적으로 사용합니다.</p>
+    </div>
+  </div>
+
+  <!-- 실습 -->
+  <div class="card">
+    <h2>🏗️ Bundle 설계 실습</h2>
+    <p>당신의 화장품 업무 지식을 Bundle로 설계해보세요. 아래 질문에 답하며 구조를 만들어 봅니다:</p>
+    <div class="interactive-builder">
+      <h3>📝 나만의 Bundle 구조 작성</h3>
+      <p style="font-size: 0.9rem; color: var(--muted); margin-bottom: 1rem;">아래 텍스트 영역에 당신의 Bundle 구조를 직접 작성해보세요:</p>
+      <textarea id="bundle-input" style="width:100%; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; color: var(--text); font-family: monospace; font-size: 0.85rem; min-height: 180px; resize: vertical; line-height: 1.7;"># 내 Bundle 이름:
+# (예: cosmetic-brand-knowledge/)
+
+my-bundle/
+├── index.md
+├── (여기에 서브디렉토리와 파일을 추가해보세요)
+</textarea>
+      <button class="check-btn" onclick="checkBundle()">✅ 구조 검토 요청</button>
+      <div id="bundle-feedback" style="margin-top: 0.75rem; display: none;"></div>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div class="quiz-section">
+    <h2>🧠 이해 확인 퀴즈</h2>
+
+    <div class="question">
+      <p>Q1. <code>ingredients/vitamin-c.md</code>라는 파일이 있다면, 이 Concept의 ID는 무엇인가요?</p>
+      <div class="options" id="q1">
+        <div class="option" onclick="answer(this, 'q1', false)">
+          <div class="option-letter">A</div><span>vitamin-c</span>
+        </div>
+        <div class="option" onclick="answer(this, 'q1', false)">
+          <div class="option-letter">B</div><span>ingredients/vitamin-c.md</span>
+        </div>
+        <div class="option" onclick="answer(this, 'q1', true)">
+          <div class="option-letter">C</div><span>ingredients/vitamin-c</span>
+        </div>
+        <div class="option" onclick="answer(this, 'q1', false)">
+          <div class="option-letter">D</div><span>/ingredients/vitamin-c</span>
+        </div>
+      </div>
+      <div id="q1-fb-correct" class="feedback">✅ 맞습니다! Concept ID는 Bundle 루트로부터의 경로에서 <code>.md</code> 확장자를 제거한 것입니다.</div>
+      <div id="q1-fb-wrong" class="feedback">❌ OKF 명세: "The path of the concept's file within the bundle, with the .md suffix removed." — .md를 빼고, 앞에 /는 없습니다.</div>
+    </div>
+
+    <div class="question">
+      <p>Q2. <code>index.md</code>에서 frontmatter (YAML 블록)가 허용되는 위치는?</p>
+      <div class="options" id="q2">
+        <div class="option" onclick="answer(this, 'q2', false)">
+          <div class="option-letter">A</div><span>모든 index.md에서 허용</span>
+        </div>
+        <div class="option" onclick="answer(this, 'q2', false)">
+          <div class="option-letter">B</div><span>어떤 index.md에서도 허용되지 않음</span>
+        </div>
+        <div class="option" onclick="answer(this, 'q2', true)">
+          <div class="option-letter">C</div><span>Bundle 루트의 index.md에만 허용 (버전 선언용)</span>
+        </div>
+        <div class="option" onclick="answer(this, 'q2', false)">
+          <div class="option-letter">D</div><span>log.md에서만 허용</span>
+        </div>
+      </div>
+      <div id="q2-fb-correct" class="feedback">✅ 정확합니다! Bundle 루트 index.md에서만 <code>okf_version: "0.1"</code> 같은 frontmatter를 선언할 수 있습니다. 이게 Bundle의 버전을 선언하는 유일한 방법입니다.</div>
+      <div id="q2-fb-wrong" class="feedback">❌ OKF 명세 §11 Versioning을 확인하세요. 특별히 허용되는 딱 한 곳이 있습니다.</div>
+    </div>
+  </div>
+
+  <div class="hint-box">
+    <strong>💬 궁금한 점?</strong> Claude에게 물어보세요! "내 Obsidian vault를 OKF Bundle로 변환하려면?", "index.md는 자동으로 생성할 수 있나요?"
+  </div>
+
+  <div class="nav-links">
+    <a href="0001-what-is-okf.html" class="nav-btn">← 이전: OKF란?</a>
+    <div class="lesson-progress">
+      <div class="progress-dot done"></div>
+      <div class="progress-dot active"></div>
+      <div class="progress-dot"></div>
+      <div class="progress-dot"></div>
+      <div class="progress-dot"></div>
+    </div>
+    <a href="0003-concept-document.html" class="nav-btn primary">다음: Concept 문서 →</a>
+  </div>
+</div>
+
+<script>
+function answer(el, qid, isCorrect) {
+  const container = document.getElementById(qid);
+  container.querySelectorAll('.option').forEach(o => o.style.pointerEvents = 'none');
+  el.classList.add(isCorrect ? 'correct' : 'wrong');
+  document.getElementById(qid + '-fb-correct').classList[isCorrect ? 'add' : 'remove']('correct-fb');
+  document.getElementById(qid + '-fb-wrong').classList[isCorrect ? 'remove' : 'add']('wrong-fb');
+}
+function checkBundle() {
+  const val = document.getElementById('bundle-input').value;
+  const fb = document.getElementById('bundle-feedback');
+  const hasIndex = val.includes('index.md');
+  const hasSubdir = val.includes('/');
+  const hasConcept = val.match(/\w+\.md/) && !val.match(/^index\.md$|^log\.md$/m);
+  let msgs = [];
+  if (hasIndex) msgs.push('✅ index.md 포함 — 좋습니다!');
+  else msgs.push('💡 index.md를 추가해보세요 (루트에 하나, 각 서브디렉토리에도)');
+  if (hasSubdir) msgs.push('✅ 서브디렉토리로 개념을 그룹화했네요!');
+  else msgs.push('💡 관련 Concept들을 서브디렉토리로 묶어보세요 (예: ingredients/, products/)');
+  msgs.push('📌 Claude에게 직접 보여주고 리뷰를 받아보세요!');
+  fb.innerHTML = msgs.map(m => `<div style="margin: 0.3rem 0; font-size:0.9rem;">${m}</div>`).join('');
+  fb.style.display = 'block';
+}
+</script>
+</body>
+</html>

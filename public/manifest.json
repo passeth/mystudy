@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-22T04:45:57.835Z",
+  "generatedAt": "2026-06-22T04:49:54.616Z",
   "topics": [
     {
       "id": "pif-cpsr",
@@ -222,10 +222,34 @@
       "order": 4,
       "lessons": [
         {
-          "id": "0001-okf-foundations",
-          "title": "Lesson 0001 — OKF 기초 학습 기록",
-          "subtitle": "OKF를 마크다운 기반 지식 규격으로 이해하고, 화장품 기획 업무에 적용할 type 목록과 다음 실행 단계를 정리합니다.",
-          "file": "lessons/okf/0001-okf-foundations.html"
+          "id": "0001-what-is-okf",
+          "title": "Lesson 1: OKF란 무엇인가? | OKF 학습",
+          "subtitle": "Open Knowledge Format — 지식을 마크다운으로 표현하는 보편적 형식",
+          "file": "lessons/okf/0001-what-is-okf.html"
+        },
+        {
+          "id": "0002-bundle-structure",
+          "title": "Lesson 2: Knowledge Bundle 구조 | OKF 학습",
+          "subtitle": "디렉토리 계층, 예약 파일, 배포 방식 이해하기",
+          "file": "lessons/okf/0002-bundle-structure.html"
+        },
+        {
+          "id": "0003-concept-document",
+          "title": "Lesson 3: Concept 문서 작성법 | OKF 학습",
+          "subtitle": "YAML frontmatter + Markdown body — OKF의 핵심 단위 만들기",
+          "file": "lessons/okf/0003-concept-document.html"
+        },
+        {
+          "id": "0004-cross-linking",
+          "title": "Lesson 4: Cross-linking과 지식 그래프 | OKF 학습",
+          "subtitle": "개념 간 연결로 트리를 넘어 그래프 지식 구조 만들기",
+          "file": "lessons/okf/0004-cross-linking.html"
+        },
+        {
+          "id": "0005-practical-application",
+          "title": "Lesson 5: 실무 적용 — 지식 관리 시스템 구축 | OKF 학습",
+          "subtitle": "업무 지식 관리 시스템을 OKF로 구축하는 로드맵",
+          "file": "lessons/okf/0005-practical-application.html"
         }
       ]
     },
