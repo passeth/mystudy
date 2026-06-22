@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-22T04:35:59.362Z",
+  "generatedAt": "2026-06-22T04:45:57.835Z",
   "topics": [
     {
       "id": "pif-cpsr",
@@ -196,7 +196,7 @@
         },
         {
           "id": "0006-trade-intel-page-speed-case-study",
-          "title": "Lesson 0006 — Trade Intel 페이지 속도 개선 케이스 스터디",
+          "title": "Lesson 0010 — Trade Intel 페이지 속도 개선 케이스 스터디",
           "subtitle": "",
           "file": "lessons/git-pr-coderabbit/0006-trade-intel-page-speed-case-study.html"
         },
