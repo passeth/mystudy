@@ -14,10 +14,17 @@
     "order": 2
   },
   {
+    "id": "git-pr-coderabbit",
+    "title": "Git · PR 리뷰 · CodeRabbit",
+    "subtitle": "Git 설정 출처 확인부터 GitHub PR 리뷰 하네스, merge gate 진단, CodeRabbit 자동 리뷰 운영까지",
+    "color": "mint",
+    "order": 3
+  },
+  {
     "id": "reference",
     "title": "레퍼런스",
     "subtitle": "용어집·패키징 소재 지도·시스템 치트시트 등 상시 참고 자료",
     "color": "cream",
-    "order": 3
+    "order": 4
   }
 ]

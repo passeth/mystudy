@@ -1,3 +1,10 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Git/GitHub 빠른 용어표</title>
+  <style>
 :root {
   color-scheme: light;
   --ink: #17202a;
@@ -302,3 +309,58 @@ footer {
     break-inside: avoid;
   }
 }
+  </style>
+</head>
+<body>
+<main>
+  <header class="course-header">
+    <p class="kicker">Reference</p>
+    <h1>Git/GitHub 빠른 용어표</h1>
+    <p class="lede">헷갈릴 때 이 표만 다시 보면 됩니다. “내 컴퓨터”, “GitHub branch”, “PR 검토 공간”, “main 공식 버전”을 구분하는 것이 핵심입니다.</p>
+  </header>
+
+  <section>
+    <h2>Git 기본</h2>
+    <table>
+      <thead><tr><th>단어</th><th>한 줄 설명</th><th>헷갈리지 말 것</th></tr></thead>
+      <tbody>
+        <tr><td>commit</td><td>내 변경 묶음을 이력으로 저장</td><td>push가 아니다. commit만으로 GitHub에 올라가지 않는다.</td></tr>
+        <tr><td>branch</td><td>main과 분리된 작업 줄기</td><td>작업 branch가 있어도 main은 아직 안 바뀐다.</td></tr>
+        <tr><td>push</td><td>내 branch/commit을 GitHub에 올림</td><td>merge가 아니다. 올렸을 뿐이다.</td></tr>
+        <tr><td>pull</td><td>GitHub의 변경을 내 컴퓨터로 가져와 반영</td><td>push의 반대 방향이다.</td></tr>
+        <tr><td>PR</td><td>branch 변경을 main에 넣어도 되는지 검토 요청</td><td>push와 다르다. 리뷰 공간이다.</td></tr>
+        <tr><td>merge</td><td>승인된 branch를 main에 합침</td><td>보통 PR gate 통과 후 한다.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>GitHub 메뉴</h2>
+    <table>
+      <thead><tr><th>메뉴</th><th>무엇을 보는 곳인가</th><th>초보자 질문</th></tr></thead>
+      <tbody>
+        <tr><td>Code</td><td>파일, branch, commit, README</td><td>현재 공식 코드가 무엇인가?</td></tr>
+        <tr><td>Issues</td><td>해야 할 일과 논의</td><td>무엇을 해야 하나?</td></tr>
+        <tr><td>Pull requests</td><td>변경 검토와 merge 요청</td><td>이 변경을 넣어도 되나?</td></tr>
+        <tr><td>Agents</td><td>AI coding agent 작업</td><td>AI가 어떤 branch/PR을 만들었나?</td></tr>
+        <tr><td>Actions</td><td>자동 테스트/빌드/배포 로그</td><td>왜 check가 실패했나?</td></tr>
+        <tr><td>Projects</td><td>작업 관리판</td><td>일감들이 어떤 상태인가?</td></tr>
+        <tr><td>Wiki</td><td>장기 운영 문서</td><td>팀 규칙과 사용법은 어디 있나?</td></tr>
+        <tr><td>Security and quality</td><td>보안/품질 경고</td><td>위험한 secret이나 취약점이 있나?</td></tr>
+        <tr><td>Insights</td><td>활동 통계</td><td>최근 프로젝트 활동이 어떤가?</td></tr>
+        <tr><td>Settings</td><td>저장소 운영 설정</td><td>권한과 보호 규칙은 어떻게 되어 있나?</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="callout">
+    <h2>초보자 판단 공식</h2>
+    <p>파일을 보려면 <strong>Code</strong>, 작업 내용을 넣으려면 <strong>Pull requests</strong>, 실패 로그를 보려면 <strong>Actions</strong>, AI 리뷰를 보려면 PR 안의 <strong>CodeRabbit comment</strong>, 전체 규칙을 바꾸려면 <strong>Settings</strong>입니다.</p>
+  </section>
+
+  <footer>
+    <a href="index.html">코스 시작으로 돌아가기</a>
+  </footer>
+</main>
+</body>
+</html>

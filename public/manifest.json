@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-20T05:56:05.591Z",
+  "generatedAt": "2026-06-22T01:45:21.837Z",
   "topics": [
     {
       "id": "pif-cpsr",
@@ -146,11 +146,74 @@
       ]
     },
     {
+      "id": "git-pr-coderabbit",
+      "title": "Git · PR 리뷰 · CodeRabbit",
+      "subtitle": "Git 설정 출처 확인부터 GitHub PR 리뷰 하네스, merge gate 진단, CodeRabbit 자동 리뷰 운영까지",
+      "color": "mint",
+      "order": 3,
+      "lessons": [
+        {
+          "id": "0001-git-config-to-pr-review-gate",
+          "title": "Lesson 0001 — Git 설정에서 PR 리뷰 게이트까지",
+          "subtitle": "Git 설정 출처 확인부터 GitHub PR 리뷰 하네스와 CodeRabbit merge gate 신호를 분리 진단하는 첫 레슨.",
+          "file": "lessons/git-pr-coderabbit/0001-git-config-to-pr-review-gate.html"
+        },
+        {
+          "id": "0001-pr-review-harness-cheatsheet",
+          "title": "PR 리뷰 하네스 치트시트",
+          "subtitle": "",
+          "file": "lessons/git-pr-coderabbit/0001-pr-review-harness-cheatsheet.html"
+        },
+        {
+          "id": "0002-pr-coderabbit-jules-workflow-reference",
+          "title": "RISELAB PR 게이트 빠른 참조",
+          "subtitle": "",
+          "file": "lessons/git-pr-coderabbit/0002-pr-coderabbit-jules-workflow-reference.html"
+        },
+        {
+          "id": "0002-pr-review-harness-cheatsheet",
+          "title": "Reference 0002 — PR 리뷰 하네스 치트시트",
+          "subtitle": "GitHub review state, status checks, branch ruleset, CodeRabbit evidence를 분리해 merge blocker를 진단하는 빠른 참조표.",
+          "file": "lessons/git-pr-coderabbit/0002-pr-review-harness-cheatsheet.html"
+        },
+        {
+          "id": "0003-git-basics-commit-branch-push-pr",
+          "title": "Lesson 0003 — Git 기초: commit, branch, push, PR",
+          "subtitle": "",
+          "file": "lessons/git-pr-coderabbit/0003-git-basics-commit-branch-push-pr.html"
+        },
+        {
+          "id": "0004-github-top-menu-guide",
+          "title": "Lesson 0004 — GitHub 상단 메뉴 활용법",
+          "subtitle": "",
+          "file": "lessons/git-pr-coderabbit/0004-github-top-menu-guide.html"
+        },
+        {
+          "id": "0005-pr-actions-coderabbit-operating-loop",
+          "title": "Lesson 0005 — PR, Actions, CodeRabbit 운영 루프",
+          "subtitle": "",
+          "file": "lessons/git-pr-coderabbit/0005-pr-actions-coderabbit-operating-loop.html"
+        },
+        {
+          "id": "index",
+          "title": "Git, PR, CodeRabbit, GitHub 메뉴 입문 코스",
+          "subtitle": "",
+          "file": "lessons/git-pr-coderabbit/index.html"
+        },
+        {
+          "id": "reference-git-github-glossary",
+          "title": "Git/GitHub 빠른 용어표",
+          "subtitle": "",
+          "file": "lessons/git-pr-coderabbit/reference-git-github-glossary.html"
+        }
+      ]
+    },
+    {
       "id": "reference",
       "title": "레퍼런스",
       "subtitle": "용어집·패키징 소재 지도·시스템 치트시트 등 상시 참고 자료",
       "color": "cream",
-      "order": 3,
+      "order": 4,
       "lessons": [
         {
           "id": "glossary",
