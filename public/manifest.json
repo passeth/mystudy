@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-22T01:50:05.914Z",
+  "generatedAt": "2026-06-22T01:59:14.820Z",
   "topics": [
     {
       "id": "pif-cpsr",
@@ -160,49 +160,49 @@
         },
         {
           "id": "0001-pr-review-harness-cheatsheet",
-          "title": "PR 리뷰 하네스 치트시트",
+          "title": "Lesson 0002 — PR 리뷰 하네스 치트시트",
           "subtitle": "",
           "file": "lessons/git-pr-coderabbit/0001-pr-review-harness-cheatsheet.html"
         },
         {
           "id": "0002-pr-coderabbit-jules-workflow-reference",
-          "title": "RISELAB PR 게이트 빠른 참조",
+          "title": "Lesson 0003 — RISELAB PR 게이트 빠른 참조",
           "subtitle": "",
           "file": "lessons/git-pr-coderabbit/0002-pr-coderabbit-jules-workflow-reference.html"
         },
         {
           "id": "0002-pr-review-harness-cheatsheet",
-          "title": "Reference 0002 — PR 리뷰 하네스 치트시트",
+          "title": "Lesson 0004 — PR 리뷰 하네스 치트시트",
           "subtitle": "GitHub review state, status checks, branch ruleset, CodeRabbit evidence를 분리해 merge blocker를 진단하는 빠른 참조표.",
           "file": "lessons/git-pr-coderabbit/0002-pr-review-harness-cheatsheet.html"
         },
         {
           "id": "0003-git-basics-commit-branch-push-pr",
-          "title": "Lesson 0003 — Git 기초: commit, branch, push, PR",
+          "title": "Lesson 0005 — Git 기초: commit, branch, push, PR",
           "subtitle": "",
           "file": "lessons/git-pr-coderabbit/0003-git-basics-commit-branch-push-pr.html"
         },
         {
           "id": "0004-github-top-menu-guide",
-          "title": "Lesson 0004 — GitHub 상단 메뉴 활용법",
+          "title": "Lesson 0006 — GitHub 상단 메뉴 활용법",
           "subtitle": "",
           "file": "lessons/git-pr-coderabbit/0004-github-top-menu-guide.html"
         },
         {
           "id": "0005-pr-actions-coderabbit-operating-loop",
-          "title": "Lesson 0005 — PR, Actions, CodeRabbit 운영 루프",
+          "title": "Lesson 0007 — PR, Actions, CodeRabbit 운영 루프",
           "subtitle": "",
           "file": "lessons/git-pr-coderabbit/0005-pr-actions-coderabbit-operating-loop.html"
         },
         {
           "id": "index",
-          "title": "Git, PR, CodeRabbit, GitHub 메뉴 입문 코스",
+          "title": "Lesson 0008 — Git, PR, CodeRabbit, GitHub 메뉴 입문 코스",
           "subtitle": "",
           "file": "lessons/git-pr-coderabbit/index.html"
         },
         {
           "id": "reference-git-github-glossary",
-          "title": "Git/GitHub 빠른 용어표",
+          "title": "Lesson 0009 — Git/GitHub 빠른 용어표",
           "subtitle": "",
           "file": "lessons/git-pr-coderabbit/reference-git-github-glossary.html"
         }
