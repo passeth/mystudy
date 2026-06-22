@@ -2,10 +2,13 @@ import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useManifest, findTopic } from "../lib/manifest";
 
+type ShareStatus = "idle" | "copied" | "shared" | "failed";
+
 export default function Lesson() {
   const { topicId = "", lessonId = "" } = useParams();
   const { data, loading } = useManifest();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [shareStatus, setShareStatus] = useState<ShareStatus>("idle");
   const nav = useNavigate();
   const topic = findTopic(data, topicId);
   const idx = topic?.lessons.findIndex((l) => l.id === lessonId) ?? -1;
@@ -37,17 +40,72 @@ export default function Lesson() {
     );
   }
 
+  const currentTopic = topic;
+  const currentLesson = lesson;
+
+  async function shareLesson(): Promise<void> {
+    const url = `${window.location.origin}/t/${currentTopic.id}/${currentLesson.id}`;
+    const title = currentLesson.title;
+
+    try {
+      if (typeof navigator.share === "function") {
+        await navigator.share({
+          title,
+          text: `${currentTopic.title} · ${title}`,
+          url,
+        });
+        setShareStatus("shared");
+        window.setTimeout(() => setShareStatus("idle"), 1800);
+        return;
+      }
+
+      await navigator.clipboard.writeText(url);
+      setShareStatus("copied");
+      window.setTimeout(() => setShareStatus("idle"), 1800);
+    } catch (error) {
+      if (error instanceof DOMException && error.name === "AbortError") {
+        return;
+      }
+      if (error instanceof Error) {
+        setShareStatus("failed");
+        window.setTimeout(() => setShareStatus("idle"), 2200);
+        return;
+      }
+      setShareStatus("failed");
+      window.setTimeout(() => setShareStatus("idle"), 2200);
+    }
+  }
+
+  const shareLabel =
+    shareStatus === "copied"
+      ? "복사됨"
+      : shareStatus === "shared"
+        ? "공유됨"
+        : shareStatus === "failed"
+          ? "실패"
+          : "공유";
+
   return (
     <div className="viewer">
       <div className="viewer-bar">
         <Link
-          to={`/t/${topic.id}`}
+          to={`/t/${currentTopic.id}`}
           className="btn btn-ghost btn-sm"
           style={{ marginLeft: -6 }}
         >
           목록
         </Link>
-        <span className="v-title">{lesson.title}</span>
+        <span className="v-title">{currentLesson.title}</span>
+        <button
+          className={`btn btn-secondary btn-sm share-btn ${
+            shareStatus !== "idle" ? "is-done" : ""
+          }`}
+          type="button"
+          onClick={() => void shareLesson()}
+          aria-live="polite"
+        >
+          {shareLabel}
+        </button>
         <button
           className="btn btn-secondary btn-sm lesson-list-toggle"
           type="button"
@@ -64,7 +122,7 @@ export default function Lesson() {
             onClick={() => {
               if (!prev) return;
               setSidebarOpen(false);
-              nav(`/t/${topic.id}/${prev.id}`);
+              nav(`/t/${currentTopic.id}/${prev.id}`);
             }}
             aria-label="이전 레슨"
           >
@@ -76,7 +134,7 @@ export default function Lesson() {
             onClick={() => {
               if (!next) return;
               setSidebarOpen(false);
-              nav(`/t/${topic.id}/${next.id}`);
+              nav(`/t/${currentTopic.id}/${next.id}`);
             }}
             aria-label="다음 레슨"
           >
@@ -88,21 +146,21 @@ export default function Lesson() {
         <aside
           className="lesson-sidebar"
           id="lesson-topic-list"
-          aria-label={`${topic.title} 레슨 목록`}
+          aria-label={`${currentTopic.title} 레슨 목록`}
         >
           <div className="lesson-sidebar-head">
-            <span className="caption">{topic.id.toUpperCase()}</span>
-            <strong>{topic.title}</strong>
+            <span className="caption">{currentTopic.id.toUpperCase()}</span>
+            <strong>{currentTopic.title}</strong>
           </div>
           <nav className="lesson-sidebar-list">
-            {topic.lessons.map((item, itemIndex) => (
+            {currentTopic.lessons.map((item, itemIndex) => (
               <Link
                 key={item.id}
-                to={`/t/${topic.id}/${item.id}`}
+                to={`/t/${currentTopic.id}/${item.id}`}
                 className={`lesson-sidebar-link ${
-                  item.id === lesson.id ? "is-current" : ""
+                  item.id === currentLesson.id ? "is-current" : ""
                 }`}
-                aria-current={item.id === lesson.id ? "page" : undefined}
+                aria-current={item.id === currentLesson.id ? "page" : undefined}
                 onClick={() => setSidebarOpen(false)}
               >
                 <span>{String(itemIndex + 1).padStart(2, "0")}</span>
@@ -112,10 +170,10 @@ export default function Lesson() {
           </nav>
         </aside>
         <iframe
-          key={lesson.id}
+          key={currentLesson.id}
           className="viewer-frame"
-          src={`/${lesson.file}`}
-          title={lesson.title}
+          src={`/${currentLesson.file}`}
+          title={currentLesson.title}
           sandbox="allow-same-origin allow-popups allow-scripts"
         />
       </div>

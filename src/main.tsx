@@ -6,7 +6,6 @@ import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import Topic from "./pages/Topic";
 import Lesson from "./pages/Lesson";
-import Upload from "./pages/Upload";
 import NotFound from "./pages/NotFound";
 
 const router = createBrowserRouter([
@@ -15,7 +14,6 @@ const router = createBrowserRouter([
     children: [
       { path: "/", element: <Home /> },
       { path: "/t/:topicId", element: <Topic /> },
-      { path: "/upload", element: <Upload /> },
       { path: "*", element: <NotFound /> },
     ],
   },

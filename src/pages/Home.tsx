@@ -32,9 +32,6 @@ export default function Home() {
             읽기, 비교, 재사용이 빠르게 이어지도록 첫 화면에서 맥락을 보여줍니다.
           </p>
           <div className="hero-cta">
-            <Link to="/upload" className="btn btn-primary">
-              HTML 업로드
-            </Link>
             {topics[0] && (
               <Link to={`/t/${topics[0].id}`} className="btn btn-secondary">
                 첫 토픽 열기
@@ -52,9 +49,6 @@ export default function Home() {
               토픽별로 읽는 학습 묶음
             </h2>
           </div>
-          <Link to="/upload" className="btn btn-ghost btn-sm">
-            토픽 추가
-          </Link>
         </div>
 
         {loading && (
@@ -73,8 +67,8 @@ export default function Home() {
 
         {!loading && !error && topics.length === 0 && (
           <div className="empty">
-            아직 토픽이 없습니다. <Link to="/upload">첫 학습 HTML</Link>을
-            업로드해 보세요.
+            아직 토픽이 없습니다. 로컬 레포에서 학습 HTML을 추가한 뒤
+            배포해 주세요.
           </div>
         )}
 
@@ -133,8 +127,8 @@ export default function Home() {
           ))}
           {!recentLessons.length && !loading && (
             <div className="empty">
-              아직 표시할 레슨이 없습니다. <Link to="/upload">업로드</Link>에서
-              첫 글을 추가해 보세요.
+              아직 표시할 레슨이 없습니다. 로컬 레포에서 학습 HTML을 추가한 뒤
+              배포해 주세요.
             </div>
           )}
           {loading && (

@@ -2,7 +2,6 @@ import { Link, Outlet, useLocation } from "react-router-dom";
 
 export default function Layout() {
   const loc = useLocation();
-  const onUpload = loc.pathname === "/upload";
   const onHome = loc.pathname === "/";
 
   return (
@@ -20,15 +19,6 @@ export default function Layout() {
             >
               아카이브
             </Link>
-            {onUpload ? (
-              <Link to="/" className="btn btn-secondary btn-sm">
-                닫기
-              </Link>
-            ) : (
-              <Link to="/upload" className="btn btn-primary btn-sm">
-                업로드
-              </Link>
-            )}
           </nav>
         </div>
       </header>
