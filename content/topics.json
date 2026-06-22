@@ -21,10 +21,17 @@
     "order": 3
   },
   {
+    "id": "okf",
+    "title": "OKF 기초",
+    "subtitle": "OKF를 앱이 아니라 Git으로 관리되는 마크다운 지식 규격으로 이해하고, 화장품 기획 업무에 적용하는 기초 기록",
+    "color": "coral",
+    "order": 4
+  },
+  {
     "id": "reference",
     "title": "레퍼런스",
     "subtitle": "용어집·패키징 소재 지도·시스템 치트시트 등 상시 참고 자료",
     "color": "cream",
-    "order": 4
+    "order": 5
   }
 ]
