@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-21T15:36:19.172852Z",
+  "generatedAt": "2026-07-21T15:53:52.153570Z",
   "topics": [
     {
       "id": "pif-cpsr",
@@ -320,6 +320,12 @@
       "color": "lilac",
       "order": 7,
       "lessons": [
+        {
+          "id": "0000-from-prompt-to-graph",
+          "title": "프롬프트에서 그래프까지 · 엔지니어링 사다리",
+          "subtitle": "prompt → context → harness → loop → graph 다섯 층을 한 장으로 연결해 이해한다.",
+          "file": "lessons/graph-engineering/0000-from-prompt-to-graph.html"
+        },
         {
           "id": "0001-single-loop-four-failures",
           "title": "단일 루프는 왜 배신하는가 · Graph Engineering",

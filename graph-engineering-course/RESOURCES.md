@@ -30,3 +30,8 @@
 ## Gaps
 - “Graph engineering”이 업계에서 이중으로 쓰임: (A) 개선 루프 네트워크 (B) multi-agent 실행 그래프. 혼동 방지 레슨 필수.
 - 한국어 1차 자료 부족.
+
+- [X Article: Loop and Harness engineering — ArchiveExplorer](https://x.com/i/article/2070935503793184768)
+  하네스 7파일, 루프 5스텝, 실패 3종, harness first. Use for: 사다리 3~4층.
+- [X Article: 彻底告别Loop Engineering — AI超元域](https://x.com/i/article/2079426409504899072)
+  실행 그래프 입문(병렬·라우팅·하드게이트). Use for: 5층 실행 그래프; 제목의 ‘작별’은 과격 표현으로 읽기.

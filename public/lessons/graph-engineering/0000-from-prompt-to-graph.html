@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="prompt → context → harness → loop → graph 다섯 층을 한 장으로 연결해 이해한다.">
+  <title>프롬프트에서 그래프까지 · 엔지니어링 사다리</title>
+  <style>
+:root {
+  --ink: #18201f;
+  --muted: #5d6864;
+  --paper: #fbfaf6;
+  --panel: #ffffff;
+  --line: #d9ddd6;
+  --accent: #136f63;
+  --accent-2: #a23d31;
+  --soft: #eaf3ef;
+  --warn: #fff2d6;
+  --code: #101917;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  color: var(--ink);
+  background: var(--paper);
+  font-family: ui-serif, Georgia, "Apple SD Gothic Neo", "Noto Serif KR", serif;
+  line-height: 1.68;
+}
+main {
+  width: min(960px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 52px 0 88px;
+}
+.kicker {
+  color: var(--accent);
+  font: 700 12px/1 ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+h1 {
+  margin: 12px 0 14px;
+  font-size: clamp(34px, 6vw, 64px);
+  line-height: 1.02;
+}
+.subtitle {
+  max-width: 720px;
+  color: var(--muted);
+  font-size: 18px;
+}
+h2 {
+  margin-top: 42px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 8px;
+}
+a { color: var(--accent); text-underline-offset: 3px; }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+.card, .quiz-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 20px;
+  margin: 18px 0;
+}
+.callout {
+  border-left: 4px solid var(--accent);
+  background: var(--soft);
+  border-radius: 6px;
+  padding: 14px 16px;
+}
+.warn {
+  border-left-color: #c98210;
+  background: var(--warn);
+}
+pre {
+  overflow-x: auto;
+  background: var(--code);
+  color: #eef7f2;
+  border-radius: 8px;
+  padding: 16px;
+}
+code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.92em;
+}
+.pill {
+  display: inline-block;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 2px 9px;
+  font: 700 12px/1.7 ui-sans-serif, system-ui, sans-serif;
+  color: var(--muted);
+}
+.quiz-card button {
+  display: block;
+  width: 100%;
+  margin: 8px 0;
+  padding: 11px 13px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.quiz-card button.correct { border-color: #1f7a3f; background: #e8f4eb; }
+.quiz-card button.incorrect { border-color: var(--accent-2); background: #fae9e7; }
+.quiz-feedback { min-height: 1.6em; font-weight: 700; }
+footer {
+  margin-top: 54px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+}
+@media print {
+  body { background: #fff; }
+  main { width: auto; padding: 24px; }
+  .card, .quiz-card { break-inside: avoid; }
+  a::after { content: " (" attr(href) ")"; font-size: 0.8em; color: var(--muted); }
+}
+
+  </style>
+</head>
+<body>
+<main>
+
+  <header>
+    <div class="kicker">Lesson 0000 · Graph Engineering</div>
+    <h1>프롬프트 → 컨텍스트 → 하네스 → 루프 → 그래프</h1>
+    <p class="subtitle">요즘 단어가 너무 빨리 바뀐다. 새 유행을 “작별 선언”으로 듣지 말고, <strong>한 층 위에 무엇을 올리는지</strong>로 들으면 된다.</p>
+  </header>
+
+  <section class="callout">
+    <strong>오늘의 한 줄 답:</strong> 다섯 층은 서로 대체 관계가 아니라 <em>쌓는 관계</em>다. 아래 층이 약하면 위 층은 멋져 보여도 쉽게 무너진다.
+  </section>
+
+  <h2>0. 왜 이 레슨이 필요한가</h2>
+  <p>타임라인에는 동시에 이런 말이 떠다닌다.</p>
+  <ul>
+    <li>“루프 엔지니어링과 작별, 이제 그래프”</li>
+    <li>“루프는 괜찮다. 밑의 폴더(하네스)가 안 짜여 있을 뿐”</li>
+    <li>“graph engineering이 왔다”</li>
+  </ul>
+  <p>셋 다 틀린 말이 아닐 수 있다. 다만 <strong>가리키는 층이 다르다</strong>. 이 레슨은 그 층을 한 사다리로 고정한다. 참고 인포그래픽의 5단 정의와, harness를 바닥으로 보는 실무 글, 우리가 이미 배운 루프/그래프 논의를 한 줄로 잇는다.</p>
+
+  <h2>1. 다섯 층 사다리</h2>
+  <div class="grid">
+    <div class="card">
+      <span class="pill">1</span>
+      <strong>Prompt engineering</strong><br>
+      한 번 호출에 넣을 <em>지시문</em>을 잘 쓴다. “무엇을 어떻게 답하라.”
+    </div>
+    <div class="card">
+      <span class="pill">2</span>
+      <strong>Context engineering</strong><br>
+      모델이 <em>무엇을 보게 할지</em> 고른다. 파일, 검색 결과, 메모리, 대화 이력, 토큰 예산.
+    </div>
+    <div class="card">
+      <span class="pill">3</span>
+      <strong>Harness engineering</strong><br>
+      모델 바깥의 <em>실행 환경</em>. 도구, 권한, 훅, 스킬, MCP, 상태 파일, 정책.
+    </div>
+    <div class="card">
+      <span class="pill">4</span>
+      <strong>Loop engineering</strong><br>
+      그 환경 위에서 <em>목표→행동→검증→계속/중단</em>을 돌린다. 오래 달리게 하되, 검증 가능하게.
+    </div>
+    <div class="card">
+      <span class="pill">5</span>
+      <strong>Graph engineering</strong><br>
+      여러 작업/루프/에이전트를 <em>의존·병렬·검증·실패 격리</em>로 연결한다. (그리고 개선 루프끼리의 견제도 그래프다.)
+    </div>
+  </div>
+
+  <pre><code>Prompt     : 한 문장/한 턴의 지시
+Context    : 그 턴에 넣는 재료
+Harness    : 매번 같은 무대·규칙·도구
+Loop       : 무대 위 사이클 (goal → act → verify → memory → again?)
+Graph      : 여러 사이클/노드의 관계 (실행 배선 + 견제 배선)</code></pre>
+
+  <section class="callout warn">
+    <strong>대체 신화 깨기:</strong> “프롬프트 끝 → 컨텍스트 → 하네스 → 루프 끝 → 그래프”처럼 아래를 버리는 서술은 거의 항상 과장이다. 그래프 안에도 프롬프트·컨텍스트·하네스·로컬 루프가 그대로 산다.
+  </section>
+
+  <h2>2. 층마다 “고장 나면 어디를 고치나”</h2>
+  <div class="grid">
+    <div class="card"><strong>Prompt 고장</strong><br>지시가 애매, 역할 혼선, 출력 형식 없음 → 문장 수정.</div>
+    <div class="card"><strong>Context 고장</strong><br>엉뚱한 파일, 과한 히스토리, context rot → 재료 선별·요약·프루닝.</div>
+    <div class="card"><strong>Harness 고장</strong><br>권한 막힘, 훅 없음, 스킬 미로딩, MCP 과다 → 폴더/설정/도구 배선.</div>
+    <div class="card"><strong>Loop 고장</strong><br>검증 없이 통과, 목표 표류, 같은 스텝 반복 → goal spec, verify, stop 조건.</div>
+    <div class="card"><strong>Graph 고장</strong><br>병렬 가능 일을 줄세움, 자기검증만, 핸드오프 뭉개짐, 실패가 전체 중단 → 토폴로지·계약·하드 게이트.</div>
+  </div>
+  <p>Archive 글의 핵심 문장: <em>The harness is the kitchen. The loop is the recipe.</em> 주방이 없으면 레시피는 공상이고, 레시피 없는 주방은 빈 공간이다. 그리고 순서는 보통 <strong>하네스 먼저, 루프 다음</strong>이다. 권한이 없으면 루프가 “할 수 있는 척” 날조하기 쉽기 때문이다. <a href="https://x.com/i/article/2070935503793184768">Loop and Harness engineering (ArchiveExplorer)</a></p>
+
+  <h2>3. 루프 안의 최소 5보 (하네스 위)</h2>
+  <p>실무 루프 글들이 반복하는 최소 세트:</p>
+  <ol>
+    <li><strong>Goal spec</strong> — 완료 정의가 디스크에 있다 (에이전트 머리속이 아님)</li>
+    <li><strong>Plan</strong></li>
+    <li><strong>Act</strong></li>
+    <li><strong>Verify</strong> — 가능하면 별 컨텍스트/별 노드</li>
+    <li><strong>Memory / stop</strong> — 진행 기록, 계속 여부, 정지 조건</li>
+  </ol>
+  <p>검증을 빼면 “자신 있는 쓰레기”가 다음 입력으로 쌓인다. 상태 파일을 안 쓰면 같은 스텝을 다시 계획하는 Ralph-loop 실패가 난다.</p>
+
+  <h2>4. 그래프는 한 종류가 아니다</h2>
+  <div class="grid">
+    <div class="card">
+      <strong>A. 실행 그래프</strong><br>
+      노드 = 작업(조사A, 조사B, 요약, 테스트).<br>
+      엣지 = 의존·병렬·라우팅·핸드오프.<br>
+      질문: 일을 어떻게 펼칠까?<br>
+      n8n / LangGraph / “루프 작별” 중국어 글이 주로 여기.
+    </div>
+    <div class="card">
+      <strong>B. 개선 루프 그래프</strong><br>
+      노드 = 루프 역할(최적화, 감시, 감사, 목표 소유).<br>
+      엣지 = pairing / veto / hierarchy.<br>
+      질문: 개선이 스스로를 속이지 않게 하려면?<br>
+      Perez 에세이가 여기. <a href="https://x.com/i/article/2078418167546691584">Loop→Graph?</a>
+    </div>
+  </div>
+  <p>둘 다 graph engineering이라 불릴 수 있다. 혼동하면 “루프를 버려야 하나?”로 간다. 정답에 가까운 말:</p>
+  <section class="callout">
+    버리는 것은 루프가 아니라 <strong>만능 단일 루프 / 한 줄 파이프라인으로 모든 걸 처리하려는 습관</strong>이다. 그래프 안 로컬 루프는 남는다. 정지 조건 있는 재시도는 여전히 루프다.
+  </section>
+
+  <h2>5. Aside / PATHY로 꽂아 보기</h2>
+  <pre><code>Prompt     지금 채팅 한 줄 지시 ("STORM 영상 올려")
+Context    열린 탭, 첨부, memory, 이전 대화
+Harness    Aside + skills + Voicebox + browser + 정책
+Loop       길이/더듬 검사 → 재생성 → 자막 off → 재mux
+Graph-exec  대본│이미지 병렬 준비 → 합치기 → 업로드
+Graph-imp   L1 제작 최적화 + L2 품질 감시 + 앵커(실제 URL/청취)</code></pre>
+  <p>네가 하던 “하네스 조합이 곧 루프” 감각은, 사실 <strong>3층 하네스 위에 4층 루프를 자주 올려둔 상태</strong>였다. 이제 5층에서 실행 분기와 견제 루프를 구분하면 된다.</p>
+
+  <h2>6. 진단 치트 (5질문)</h2>
+  <ol>
+    <li>한 번 호출로 끝나야 하는데 말이 안 먹히나? → <strong>Prompt / Context</strong></li>
+    <li>매번 같은 도구·권한이 막히나? → <strong>Harness</strong></li>
+    <li>돌긴 도는데 목표에서 벗어나거나 검증이 약하나? → <strong>Loop</strong></li>
+    <li>서로 독립인 일이 줄 서 있거나, 한 실패가 전부 죽이나? → <strong>실행 Graph</strong></li>
+    <li>지표는 초록인데 현실이 나빠지나? → <strong>개선 Graph</strong> (pairing/audit/anchor)</li>
+  </ol>
+
+  <h2>7. 퀴즈</h2>
+  <div class="quiz-card" data-quiz
+    data-correct="맞음. 하네스는 무대, 루프는 그 위 사이클이다."
+    data-incorrect="다시. 주방(하네스)과 레시피(루프)는 층이 다르다.">
+    <p><strong>Q1.</strong> “Harness is the kitchen, loop is the recipe”가 말하려는 관계는?</p>
+    <button type="button" data-answer="wrong">루프를 만들면 하네스는 자동으로 완성된다</button>
+    <button type="button" data-answer="correct">실행 환경과 순환 제어는 다른 층이며 둘 다 필요하다</button>
+    <button type="button" data-answer="wrong">프롬프트만 잘 쓰면 두 층 모두 불필요하다</button>
+    <button type="button" data-answer="wrong">그래프 엔지니어링은 하네스와 루프를 폐기한다</button>
+    <div class="quiz-feedback" data-feedback></div>
+  </div>
+
+  <div class="quiz-card" data-quiz
+    data-correct="맞음. 권한·훅·도구 배선은 하네스 층이다."
+    data-incorrect="다시. 매 반복 권한 팝업은 대개 하네스 설정 문제다.">
+    <p><strong>Q2.</strong> 에이전트가 매 스텝 권한 확인에 막혀 루프가 못 돈다. 우선 손볼 층은?</p>
+    <button type="button" data-answer="correct">Harness (allowlist, hooks, tools)</button>
+    <button type="button" data-answer="wrong">Graph only (노드를 더 늘린다)</button>
+    <button type="button" data-answer="wrong">Prompt only (더 길게 부탁한다)</button>
+    <button type="button" data-answer="wrong">Improvement audit only (감사 루프만 추가)</button>
+    <div class="quiz-feedback" data-feedback></div>
+  </div>
+
+  <div class="quiz-card" data-quiz
+    data-correct="맞음. 작별 대상은 만능 단일 루프/일직선 습관에 가깝다."
+    data-incorrect="다시. 그래프 안에도 로컬 루프와 검증 사이클이 남는다.">
+    <p><strong>Q3.</strong> “루프 엔지니어링과 작별” 헤드라인을 가장 안전하게 번역하면?</p>
+    <button type="button" data-answer="wrong">verify-retry를 코드에서 모두 삭제해야 한다</button>
+    <button type="button" data-answer="correct">한 에이전트·한 줄 파이프라인으로 다 하려는 습관을 졸업한다</button>
+    <button type="button" data-answer="wrong">프롬프트 엔지니어링은 이제 금지다</button>
+    <button type="button" data-answer="wrong">하네스 폴더는 더 이상 필요 없다</button>
+    <div class="quiz-feedback" data-feedback></div>
+  </div>
+
+  <h2>8. 2분 실습</h2>
+  <p>지금 막힌 작업 하나를 골라 한 줄씩만 적어 본다.</p>
+  <ol>
+    <li>증상:</li>
+    <li>의심 층 (1~5 중 하나):</li>
+    <li> tonight 고칠 최소 조치 하나:</li>
+  </ol>
+  <p>예: “ERP 0건 성공 처리” → Loop/Graph-imp (verifier·앵커) → row=0이면 실패로 기록.</p>
+
+  <h2>Primary sources</h2>
+  <ul>
+    <li>사다리 직관: 커뮤니티 인포그래픽 (prompt / context / harness / loop / graph 5단)</li>
+    <li><a href="https://x.com/i/article/2070935503793184768">ArchiveExplorer — Loop and Harness engineering</a> (하네스 7요소, 루프 5스텝, 실패 3종)</li>
+    <li><a href="https://x.com/i/article/2078418167546691584">Perez — From Loop Engineering to Graph Engineering?</a> (개선 루프 그래프)</li>
+    <li><a href="https://x.com/i/article/2079426409504899072">AI超元域 — 彻底告别 Loop Engineering?</a> (실행 그래프; 제목은 과격, 본문은 구조 재배치)</li>
+  </ul>
+
+  <h2>다음 레슨</h2>
+  <ul>
+    <li><a href="./0001-single-loop-four-failures.html">0001 · 단일 루프 네 실패</a></li>
+    <li><a href="./0002-graph-of-loops-and-anchors.html">0002 · 루프 그래프와 앵커</a></li>
+    <li><a href="./0003-glossary.html">용어</a> · <a href="./0004-cheat-sheet.html">치트시트</a></li>
+  </ul>
+
+  <footer>
+    <p>층이 헷갈리면 에이전트에게 “이 증상은 몇 층?”이라고 바로 물어보면 된다.</p>
+    <p class="pill">stack model</p>
+    <p class="pill">not replacement myth</p>
+  </footer>
+
+</main>
+<script>
+document.querySelectorAll("[data-quiz]").forEach((quiz) => {
+  const feedback = quiz.querySelector("[data-feedback]");
+  quiz.querySelectorAll("button[data-answer]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const isCorrect = button.dataset.answer === "correct";
+      quiz.querySelectorAll("button[data-answer]").forEach((b) => {
+        b.classList.remove("correct", "incorrect");
+        b.setAttribute("aria-pressed", "false");
+      });
+      button.classList.add(isCorrect ? "correct" : "incorrect");
+      button.setAttribute("aria-pressed", "true");
+      feedback.textContent = isCorrect ? quiz.dataset.correct : quiz.dataset.incorrect;
+    });
+  });
+});
+
+</script>
+</body>
+</html>
