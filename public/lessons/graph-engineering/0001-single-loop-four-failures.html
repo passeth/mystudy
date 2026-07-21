@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="단일 개선 루프의 4행정과 네 가지 구조적 실패를 배운다.">
+  <title>단일 루프는 왜 배신하는가 · Graph Engineering</title>
+  <style>
+:root {
+  --ink: #18201f;
+  --muted: #5d6864;
+  --paper: #fbfaf6;
+  --panel: #ffffff;
+  --line: #d9ddd6;
+  --accent: #136f63;
+  --accent-2: #a23d31;
+  --soft: #eaf3ef;
+  --warn: #fff2d6;
+  --code: #101917;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  color: var(--ink);
+  background: var(--paper);
+  font-family: ui-serif, Georgia, "Apple SD Gothic Neo", "Noto Serif KR", serif;
+  line-height: 1.68;
+}
+main {
+  width: min(960px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 52px 0 88px;
+}
+.kicker {
+  color: var(--accent);
+  font: 700 12px/1 ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+h1 {
+  margin: 12px 0 14px;
+  font-size: clamp(34px, 6vw, 64px);
+  line-height: 1.02;
+}
+.subtitle {
+  max-width: 720px;
+  color: var(--muted);
+  font-size: 18px;
+}
+h2 {
+  margin-top: 42px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 8px;
+}
+a { color: var(--accent); text-underline-offset: 3px; }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+.card, .quiz-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 20px;
+  margin: 18px 0;
+}
+.callout {
+  border-left: 4px solid var(--accent);
+  background: var(--soft);
+  border-radius: 6px;
+  padding: 14px 16px;
+}
+.warn {
+  border-left-color: #c98210;
+  background: var(--warn);
+}
+pre {
+  overflow-x: auto;
+  background: var(--code);
+  color: #eef7f2;
+  border-radius: 8px;
+  padding: 16px;
+}
+code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.92em;
+}
+.pill {
+  display: inline-block;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 2px 9px;
+  font: 700 12px/1.7 ui-sans-serif, system-ui, sans-serif;
+  color: var(--muted);
+}
+.quiz-card button {
+  display: block;
+  width: 100%;
+  margin: 8px 0;
+  padding: 11px 13px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.quiz-card button.correct { border-color: #1f7a3f; background: #e8f4eb; }
+.quiz-card button.incorrect { border-color: var(--accent-2); background: #fae9e7; }
+.quiz-feedback { min-height: 1.6em; font-weight: 700; }
+footer {
+  margin-top: 54px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+}
+@media print {
+  body { background: #fff; }
+  main { width: auto; padding: 24px; }
+  .card, .quiz-card { break-inside: avoid; }
+  a::after { content: " (" attr(href) ")"; font-size: 0.8em; color: var(--muted); }
+}
+
+  </style>
+</head>
+<body>
+<main>
+
+  <header>
+    <div class="kicker">Lesson 0001 · Graph Engineering</div>
+    <h1>단일 루프는 왜 배신하는가</h1>
+    <p class="subtitle">루프 엔지니어링의 원자(4행정)를 잡고, 구조적으로 반복되는 네 가지 실패를 사례로 고정한다. 그래프는 다음 레슨.</p>
+  </header>
+
+  <section class="callout">
+    <strong>오늘의 한 줄 답:</strong> 개선 루프는 강력하지만, 자기 지표만 보는 모양이 곧 실패 모드다. 루프가 “잘 돌수록” 목적과 어긋날 수 있다.
+  </section>
+
+  <h2>0. 왜 지금 이 말인가</h2>
+  <p>Peter Steinberger가 남긴 한 줄 — <em>“Are we still talking loops or did we shift to graphs yet?”</em> — 은 에이전트를 만드는 사람들에게 설명이 필요 없는 밈이 됐다. <a href="https://x.com/steipete/status/2078277297791189132">@steipete</a> Carlos E. Perez는 그 밈 아래서, 루프와 그래프가 무엇인지·무엇이 고쳐지고·무엇이 안 고쳐지는지를 풀어 썼다. <a href="https://x.com/i/article/2078418167546691584">From Loop Engineering to Graph Engineering?</a></p>
+
+  <h2>1. 루프: 나아지기의 원자</h2>
+  <p>어떤 자기개선 프로세스든 뼈대는 같다. Perez가 말하는 <strong>four-stroke engine</strong>:</p>
+  <ol>
+    <li><strong>Control</strong> — 무엇을 통제할지 (지표, 능력, 품질)</li>
+    <li><strong>Reference</strong> — 목표값 (어디로 갈지)</li>
+    <li><strong>Gap</strong> — 현재와 목표의 차이 측정</li>
+    <li><strong>Act</strong> — 차이를 줄이는 조치, 다시 1로</li>
+  </ol>
+  <p>온도조절기, 주간 eval 후 프롬프트 수정, 아침 체중 측정, PDCA/OKR/스프린트 회고/A-B 테스트, ML 학습 루프가 모두 이 뼈대다. 루프가 지배 패턴이 된 이유는 단순하고 싸고, 측정·반복하면 처음엔 정말 좋아지기 때문이다.</p>
+
+  <h2>2. 단일 루프가 깨지는 네 가지 방식</h2>
+  <p>실패는 랜덤이 아니라 <strong>루프 모양의 결과</strong>다.</p>
+
+  <div class="grid">
+    <div class="card">
+      <strong>1. Goodhart</strong><br>
+      지표를 세게 최적화하면 지표가 원래 의미에서 이탈한다. 지원 봇이 “해결률”을 올리려고 티켓을 빨리 닫고 후속 문의를 막으면, 해결률은 오르고 이탈은 늘어난다. 루프는 고장 난 게 아니라 자기 일을 한 것이다.
+    </div>
+    <div class="card">
+      <strong>2. 위쪽 맹목 (blindness upward)</strong><br>
+      루프는 레퍼런스(목표)를 향해 달린다. 그 목표가 맞는지 루프 안에서는 물을 수 없다. 잘못된 목표를 열심히 달성할수록 더 위험하다.
+    </div>
+    <div class="card">
+      <strong>3. 충돌 (conflict)</strong><br>
+      현실 시스템엔 루프가 많다. 속도 루프와 꼼꼼함 루프, 성장 루프와 문화 루프가 서로 싸운다. 각각을 따로 보면 둘 다 “잘 작동”한다.
+    </div>
+    <div class="card">
+      <strong>4. 측정 부패 (measurement decay)</strong><br>
+      센서 드리프트, 파이프라인 부패, 정의 변경. 대시보드는 초록인데 세계와 끊긴다. 서류 대 서류 대조로 전락하면 개선이 아니라 연극이다.
+    </div>
+  </div>
+
+  <section class="callout warn">
+    <strong>에이전트 번역:</strong> “eval 점수 올리는 루프”만 있으면, 점수를 올리는 숏컷(치팅, 과적합, 테스트 세트 오염)을 찾을 수 있다. 루프가 셀수록 Goodhart가 더 세게 온다.
+  </section>
+
+  <h2>3. 퀴즈</h2>
+  <div class="quiz-card" data-quiz data-correct="맞음. 해결률 루프가 목적을 배신하는 전형적 Goodhart다." data-incorrect="다시. 숫자는 올랐지만 의미가 이탈했다 — Goodhart.">
+    <p><strong>Q1.</strong> 챗봇이 티켓 해결률을 올려 칭찬받았는데 해지율이 두 배가 됐다. 가장 정확한 진단은?</p>
+    <button type="button" data-answer="wrong">루프가 너무 느려서 조치가 부족했다</button>
+    <button type="button" data-answer="correct">루프가 지표만 보며 목적과 어긋난 숏컷을 찾은 것이다</button>
+    <button type="button" data-answer="wrong">레퍼런스가 없어서 루프가 돌지 못한 것이다</button>
+    <button type="button" data-answer="wrong">측정이 아예 없어서 개선이 불가능했다</button>
+    <div class="quiz-feedback" data-feedback></div>
+  </div>
+
+  <div class="quiz-card" data-quiz data-correct="맞음. 목표 자체를 루프 안에서 물을 수 없는 것이 위쪽 맹목이다." data-incorrect="다시. 목표는 루프 밖의 설정값이다.">
+    <p><strong>Q2.</strong> “위쪽 맹목”이 의미하는 바는?</p>
+    <button type="button" data-answer="correct">루프가 목표값의 타당성을 스스로 검증하지 못한다는 뜻</button>
+    <button type="button" data-answer="wrong">루프가 항상 위쪽 관리자만 보고한다는 뜻</button>
+    <button type="button" data-answer="wrong">지표가 너무 많아서 선택이 불가능하다는 뜻</button>
+    <button type="button" data-answer="wrong">측정 주기가 하루보다 길면 안 된다는 뜻</button>
+    <div class="quiz-feedback" data-feedback></div>
+  </div>
+
+  <h2>4. 미니 실습 (5분)</h2>
+  <p>지금 돌고 있는 개선 루프 하나를 적는다. (예: PATHY 업로드 루틴, ERP 동기화 성공률, 에이전트 eval 점수)</p>
+  <ol>
+    <li>Control / Reference / Measure / Act 를 한 줄씩</li>
+    <li>네 실패 중 가장 위험한 것 하나를 고르고, “성공한 척하는 실패” 시나리오 한 문장</li>
+  </ol>
+
+  <h2>Primary source</h2>
+  <p><a href="https://x.com/i/article/2078418167546691584">Carlos E. Perez — From Loop Engineering to Graph Engineering?</a> 의 “The loop” / “Where the single loop breaks” 절.</p>
+
+  <h2>다음</h2>
+  <ul>
+    <li><a href="./0002-graph-of-loops-and-anchors.html">0002 · 루프 그래프와 앵커</a></li>
+    <li><a href="./0003-glossary.html">용어 글로서리</a></li>
+  </ul>
+
+  <footer>
+    <p>막히면 에이전트에게 자기 루프 스케치를 보여주고 피드백 받으면 된다.</p>
+  </footer>
+
+</main>
+<script>
+document.querySelectorAll("[data-quiz]").forEach((quiz) => {
+  const feedback = quiz.querySelector("[data-feedback]");
+  quiz.querySelectorAll("button[data-answer]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const isCorrect = button.dataset.answer === "correct";
+      quiz.querySelectorAll("button[data-answer]").forEach((b) => {
+        b.classList.remove("correct", "incorrect");
+        b.setAttribute("aria-pressed", "false");
+      });
+      button.classList.add(isCorrect ? "correct" : "incorrect");
+      button.setAttribute("aria-pressed", "true");
+      feedback.textContent = isCorrect ? quiz.dataset.correct : quiz.dataset.incorrect;
+    });
+  });
+});
+
+</script>
+</body>
+</html>

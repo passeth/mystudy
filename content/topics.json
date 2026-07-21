@@ -42,10 +42,17 @@
     "order": 6
   },
   {
+    "id": "graph-engineering",
+    "title": "Graph Engineering",
+    "subtitle": "Loop engineering에서 루프 그래프로 — 단일 루프의 네 실패, pairing·감사·앵커, grounded 개선 설계",
+    "color": "lilac",
+    "order": 7
+  },
+  {
     "id": "reference",
     "title": "레퍼런스",
     "subtitle": "용어집·패키징 소재 지도·시스템 치트시트 등 상시 참고 자료",
     "color": "cream",
-    "order": 7
+    "order": 8
   }
 ]

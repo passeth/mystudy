@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-21T15:32:24.212892Z",
+  "generatedAt": "2026-07-21T15:36:19.172852Z",
   "topics": [
     {
       "id": "pif-cpsr",
@@ -11,61 +11,61 @@
         {
           "id": "0001-anatomy-of-cpsr",
           "title": "Lesson 0001 — CPSR Annex I의 골격: Part A + Part B",
-          "subtitle": "Safety Assessment가 어디에, 왜, 어떤 구조로 들어가는지 — 빈 그릇을 먼저 본다.",
+          "subtitle": "",
           "file": "lessons/pif-cpsr/0001-anatomy-of-cpsr.html"
         },
         {
           "id": "0002-automation-tier-taxonomy",
           "title": "Lesson 0002 — CPSR 자동화의 4-Tier 분류 (시스템 Backbone)",
-          "subtitle": "CPSR의 모든 섹션은 다섯 가지 자동화 등급 중 하나로 분류된다. 이 분류가 시스템 전체의 backbone이다.",
+          "subtitle": "",
           "file": "lessons/pif-cpsr/0002-automation-tier-taxonomy.html"
         },
         {
           "id": "0003-tier1-exposure-and-mos",
           "title": "Lesson 0003 — Tier 1: 노출량·SED·MoS 계산의 결정론적 핵심",
-          "subtitle": "LLM이 절대 손대면 안 되는 수학. unit test로 100% 박제하고, 모든 후속 추론의 발판이 되는 영역.",
+          "subtitle": "",
           "file": "lessons/pif-cpsr/0003-tier1-exposure-and-mos.html"
         },
         {
           "id": "0004-tier3-sccs-opinion-rag",
           "title": "Lesson 0004 — Tier 3: SCCS Opinion 코퍼스의 해부와 grounded extraction",
-          "subtitle": "NOAEL과 SCCS 결론을 1차 자료에서 fabrication 0%로 추출하는 RAG 설계. Tier 4 reasoning이 신뢰할 수 있는 ground truth를 만든다.",
+          "subtitle": "",
           "file": "lessons/pif-cpsr/0004-tier3-sccs-opinion-rag.html"
         },
         {
           "id": "0005-tier2-data-plumbing-and-inci",
           "title": "Lesson 0005 — Tier 2: 데이터 plumbing과 INCI 정규화의 함정",
-          "subtitle": "상위 모든 tier의 GIGO를 결정한다. \"garbage in, garbage out\" — 95% acceptance는 입력 정규화 90%에서 절반이 결정난다.",
+          "subtitle": "",
           "file": "lessons/pif-cpsr/0005-tier2-data-plumbing-and-inci.html"
         },
         {
           "id": "0006-tier4-reasoning-and-evaluator",
           "title": "Lesson 0006 — Tier 4: Reasoning Generator와 Evaluator Rubric",
-          "subtitle": "B.3 Reasoning과 B.1 Conclusion. acceptance 95%의 격전지. Tier 1·2·3가 모은 사실 위에 SCCS NoG 화법으로 narrative를 짜고, 별도 evaluator가 채점한다.",
+          "subtitle": "",
           "file": "lessons/pif-cpsr/0006-tier4-reasoning-and-evaluator.html"
         },
         {
           "id": "0007-mvp-build-niacinamide-cream",
           "title": "Lesson 0007 — End-to-end MVP: Niacinamide 4% Face Cream 1차 파이프라인",
-          "subtitle": "Tier 1·2·3·4를 각자 깊이 판 이후, 한 제품으로 처음부터 끝까지 연결한다. 목적은 \"예쁜 시스템\"이 아니라 가장 짧은 거리로 첫 SA 검토 sample을 산출",
+          "subtitle": "",
           "file": "lessons/pif-cpsr/0007-mvp-build-niacinamide-cream.html"
         },
         {
           "id": "0008-reference-set-construction",
           "title": "Lesson 0008 — Reference Set 구축: Historical CPSR을 acceptance ground truth로",
-          "subtitle": "v1 MVP가 docx를 만들었다. 그러나 그 docx가 \"좋은가\"는 측정 불가다. Reference set이 없는 한 acceptance 95%는 슬로건이다. 사내 historical CPSR을 fact bundle + narrative pair로 역추출하는 작업이 이 솔로 메이커의 가장 큰 노동이다.",
+          "subtitle": "",
           "file": "lessons/pif-cpsr/0008-reference-set-construction.html"
         },
         {
           "id": "0009-hitl-workflow-ui",
           "title": "Lesson 0009 — HITL Workflow UI 설계: SA 의사결정의 시스템 흡수",
-          "subtitle": "법적 책임은 영구히 사람 SA에 있다. UI의 일은 SA의 시간을 적게 쓰고, 결정을 분명히 기록하고, 결정이 다음 case의 룰북이 되게 만드는 것. \"예쁜 dashboard\"가 아니라 decision pipeline",
+          "subtitle": "",
           "file": "lessons/pif-cpsr/0009-hitl-workflow-ui.html"
         },
         {
           "id": "0010-sunscreen-uv-filter-expansion",
           "title": "Lesson 0010 — Sunscreen·UV Filter 확장: Nano + Photo Toxicity의 추가 복잡성",
-          "subtitle": "Niacinamide cream까지의 모든 도메인은 sunscreen 앞에서 다시 짜야 한다. UV filter는 (1) Positive list 강제, (2) Nano material 별도 의무, (3) Photo toxicity·photostability 평가, (4) SPF·UVA-PF 효능 표시 검증. 4개 축 각각이 별도 sub-pipeline.",
+          "subtitle": "",
           "file": "lessons/pif-cpsr/0010-sunscreen-uv-filter-expansion.html"
         }
       ]
@@ -80,67 +80,67 @@
         {
           "id": "0011-ppwr-foundation",
           "title": "Lesson 0011 — PPWR 토대: 하나의 원리로 규제 전체를 읽는 법",
-          "subtitle": "71개 조항·부속서 XIII를 통째로 외우려 하면 진다. PPWR은 단 하나의 척추 — 폐기물 위계(감축 > 재사용 > 재활용)",
+          "subtitle": "",
           "file": "lessons/ppwr/0011-ppwr-foundation.html"
         },
         {
           "id": "0012-recyclability-grade-estimator",
           "title": "Lesson 0012 — 재활용성 등급 추정기: 우리 제품을 직접 채점한다",
-          "subtitle": "0011에서 \"재활용성 등급(제6조)이 우리 제품의 EU 출시를 가장 먼저 결정한다\"고 했다. 이번엔 추상을 끝낸다. 임의의 자사 SKU를 부품 단위로 채점해 A~E 등급을 직접 추정",
+          "subtitle": "",
           "file": "lessons/ppwr/0012-recyclability-grade-estimator.html"
         },
         {
           "id": "0013-substances-and-pcr",
           "title": "Lesson 0013 — 유해물질(제5)·PCR 함량(제7): 등급을 통과해도 여기서 막힌다",
-          "subtitle": "0012에서 재활용성 등급(제6)을 A로 만들었다고 끝이 아니다. 같은 '재활용' 묶음에는 두 관문이 더 있다 — 제5: 뭐가 들어가면 안 되나(유해물질)",
+          "subtitle": "",
           "file": "lessons/ppwr/0013-substances-and-pcr.html"
         },
         {
           "id": "0014-rpet-pcr-sourcing-certification",
           "title": "Lesson 0014 — rPET·PCR 조달·인증: \"30%가 진짜 PCR임\"을 증명하는 법",
-          "subtitle": "제7조는 \"PET 보틀에 PCR 30%(2030)\"라고 한 줄로 말한다. 그런데 진짜 어려움은 비율 자체가 아니라 (1) 그 30%가 진짜 소비자 사용 후(PCR)임을 어떻게 증명하고 (2) 어디서 인증된 물량을 조달하느냐",
+          "subtitle": "",
           "file": "lessons/ppwr/0014-rpet-pcr-sourcing-certification.html"
         },
         {
           "id": "0015-reduce-and-reuse",
           "title": "Lesson 0015 — 감축·재사용: 위계의 진짜 1순위",
-          "subtitle": "0012~0014는 전부 위계의 맨 아래(재활용)",
+          "subtitle": "",
           "file": "lessons/ppwr/0015-reduce-and-reuse.html"
         },
         {
           "id": "0016-labelling-epr-doc",
           "title": "Lesson 0016 — 라벨링·EPR·적합성선언: 증빙이 모이는 곳",
-          "subtitle": "0012~0015에서 만든 등급·시험성적서·PCR 인증·최소화 증빙은 흩어진 채로는 의미가 없다. PPWR은 이 모두를 하나의 문서 묶음(기술문서 TD → 적합성선언서 DoC)",
+          "subtitle": "",
           "file": "lessons/ppwr/0016-labelling-epr-doc.html"
         },
         {
           "id": "0017-korea-memberstates-roadmap",
           "title": "Lesson 0017 — 실무 착지: 국내법·회원국 차이·타임라인 To-do",
-          "subtitle": "0011~0016에서 PPWR의 조항 골격을 다 세웠다. 마지막 질문은 단 하나 — \"그래서 우리가 언제, 무엇을 해야 하나?\"",
+          "subtitle": "",
           "file": "lessons/ppwr/0017-korea-memberstates-roadmap.html"
         },
         {
           "id": "0018-td-data-collection-bom",
           "title": "Lesson 0018 — 부자재 리스트의 모든 칸을 Annex VII로 정당화하기",
-          "subtitle": "\"부자재 리스트에 재질·착색·중량·코팅·잉크·COC까지 다 적으라는데, 이게 다 필요한가?\" — 그렇다. 그리고 그 근거는 자의적 요구가 아니라 PPWR 부속서 VII(기술문서 TD)가 글자 그대로 요구하는 항목",
+          "subtitle": "",
           "file": "lessons/ppwr/0018-td-data-collection-bom.html"
         },
         {
           "id": "0019-component-master-architecture",
           "title": "Lesson 0019 — PPWR 데이터를 스케일로: 컴포넌트 마스터 아키텍처",
-          "subtitle": "수백 제품 × 수천 부자재. 제품마다 시트를 채우면 조합 폭발로 영원히 못 끝낸다. 해법은 단 하나 — 수집 단위를 \"제품\"이 아니라 \"컴포넌트\"로 정규화",
+          "subtitle": "",
           "file": "lessons/ppwr/0019-component-master-architecture.html"
         },
         {
           "id": "0020-self-declaration-and-verification",
           "title": "Lesson 0020 — 데이터로 보유 + EU는 어떻게 검증하나: 자기선언과 시장감시",
-          "subtitle": "\"부자재 자료를 증빙 문서 더미가 아니라 우리 데이터(DB)로 모아도 되나? 그리고 우리가 값을 임의로 적는 걸 EU가 무슨 수로 검증하나?\" — 둘 다 PPWR이 자기선언(Module A)",
+          "subtitle": "",
           "file": "lessons/ppwr/0020-self-declaration-and-verification.html"
         },
         {
           "id": "0021-screening-engine-and-portal",
           "title": "Lesson 0021 — 스크리닝 엔진 + 공급사 포털: 룰을 시스템으로",
-          "subtitle": "\"항목·% 입력하면 스크리닝 결과를 보여주고 싶은데, 그 검증 DB는 어디서 구하나?\" — 답: 대부분 *사오는 DB가 아니라 규칙*이고, 그 규칙은 이미 0012·0013·0015 인터랙티브에 있다. 이 레슨은 그 룰을 실제 Supabase 스키마 + 스크리닝 함수",
+          "subtitle": "",
           "file": "lessons/ppwr/0021-screening-engine-and-portal.html"
         }
       ]
@@ -224,31 +224,31 @@
         {
           "id": "0001-what-is-okf",
           "title": "Lesson 1: OKF란 무엇인가? | OKF 학습",
-          "subtitle": "Open Knowledge Format — 지식을 마크다운으로 표현하는 보편적 형식",
+          "subtitle": "",
           "file": "lessons/okf/0001-what-is-okf.html"
         },
         {
           "id": "0002-bundle-structure",
           "title": "Lesson 2: Knowledge Bundle 구조 | OKF 학습",
-          "subtitle": "디렉토리 계층, 예약 파일, 배포 방식 이해하기",
+          "subtitle": "",
           "file": "lessons/okf/0002-bundle-structure.html"
         },
         {
           "id": "0003-concept-document",
           "title": "Lesson 3: Concept 문서 작성법 | OKF 학습",
-          "subtitle": "YAML frontmatter + Markdown body — OKF의 핵심 단위 만들기",
+          "subtitle": "",
           "file": "lessons/okf/0003-concept-document.html"
         },
         {
           "id": "0004-cross-linking",
           "title": "Lesson 4: Cross-linking과 지식 그래프 | OKF 학습",
-          "subtitle": "개념 간 연결로 트리를 넘어 그래프 지식 구조 만들기",
+          "subtitle": "",
           "file": "lessons/okf/0004-cross-linking.html"
         },
         {
           "id": "0005-practical-application",
           "title": "Lesson 5: 실무 적용 — 지식 관리 시스템 구축 | OKF 학습",
-          "subtitle": "업무 지식 관리 시스템을 OKF로 구축하는 로드맵",
+          "subtitle": "",
           "file": "lessons/okf/0005-practical-application.html"
         }
       ]
@@ -314,11 +314,44 @@
       ]
     },
     {
+      "id": "graph-engineering",
+      "title": "Graph Engineering",
+      "subtitle": "Loop engineering에서 루프 그래프로 — 단일 루프의 네 실패, pairing·감사·앵커, grounded 개선 설계",
+      "color": "lilac",
+      "order": 7,
+      "lessons": [
+        {
+          "id": "0001-single-loop-four-failures",
+          "title": "단일 루프는 왜 배신하는가 · Graph Engineering",
+          "subtitle": "단일 개선 루프의 4행정과 네 가지 구조적 실패를 배운다.",
+          "file": "lessons/graph-engineering/0001-single-loop-four-failures.html"
+        },
+        {
+          "id": "0002-graph-of-loops-and-anchors",
+          "title": "루프 그래프와 앵커 · Graph Engineering",
+          "subtitle": "루프 네트워크 설계와 앵커·동결 규칙·현실 접촉을 배운다.",
+          "file": "lessons/graph-engineering/0002-graph-of-loops-and-anchors.html"
+        },
+        {
+          "id": "0003-glossary",
+          "title": "Loop/Graph Engineering 용어",
+          "subtitle": "루프·그래프 엔지니어링 용어 정의.",
+          "file": "lessons/graph-engineering/0003-glossary.html"
+        },
+        {
+          "id": "0004-cheat-sheet",
+          "title": "Loop→Graph 치트시트",
+          "subtitle": "루프에서 그래프로 가는 빠른 복습 카드.",
+          "file": "lessons/graph-engineering/0004-cheat-sheet.html"
+        }
+      ]
+    },
+    {
       "id": "reference",
       "title": "레퍼런스",
       "subtitle": "용어집·패키징 소재 지도·시스템 치트시트 등 상시 참고 자료",
       "color": "cream",
-      "order": 7,
+      "order": 8,
       "lessons": [
         {
           "id": "appguardrail-git-onboard-map",
@@ -341,19 +374,19 @@
         {
           "id": "glossary",
           "title": "Reference — Cosmetic Safety Assessment Glossary",
-          "subtitle": "SCCS Notes of Guidance 12th Revision (2023) 기준. 모든 레슨에서 이 용어집의 정의를 사용한다.",
+          "subtitle": "",
           "file": "lessons/reference/glossary.html"
         },
         {
           "id": "packaging-materials",
           "title": "레퍼런스 — 화장품 포장재 매터리얼·종류 지도",
-          "subtitle": "PPWR 등급·재활용 스트림을 이해하려면 먼저 \"무엇으로 만들어졌나\"를 알아야 한다. ① 매터리얼의 종류·스펙·특성, ② 포장재 종류별로 어떤 매터리얼이 쓰이는지 — 두 축으로 정리한 빠른 참조 카드. 인쇄용.",
+          "subtitle": "",
           "file": "lessons/reference/packaging-materials.html"
         },
         {
           "id": "system-cheatsheet",
           "title": "CPSR Agent System — Master Cheat Sheet",
-          "subtitle": "사내 CPSR 자동작성 AI 에이전트, acceptance 95%. 6개 레슨이 도달한 모든 결론을 한 페이지로.",
+          "subtitle": "",
           "file": "lessons/reference/system-cheatsheet.html"
         }
       ]

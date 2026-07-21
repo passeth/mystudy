@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="루프 네트워크 설계와 앵커·동결 규칙·현실 접촉을 배운다.">
+  <title>루프 그래프와 앵커 · Graph Engineering</title>
+  <style>
+:root {
+  --ink: #18201f;
+  --muted: #5d6864;
+  --paper: #fbfaf6;
+  --panel: #ffffff;
+  --line: #d9ddd6;
+  --accent: #136f63;
+  --accent-2: #a23d31;
+  --soft: #eaf3ef;
+  --warn: #fff2d6;
+  --code: #101917;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  color: var(--ink);
+  background: var(--paper);
+  font-family: ui-serif, Georgia, "Apple SD Gothic Neo", "Noto Serif KR", serif;
+  line-height: 1.68;
+}
+main {
+  width: min(960px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 52px 0 88px;
+}
+.kicker {
+  color: var(--accent);
+  font: 700 12px/1 ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+h1 {
+  margin: 12px 0 14px;
+  font-size: clamp(34px, 6vw, 64px);
+  line-height: 1.02;
+}
+.subtitle {
+  max-width: 720px;
+  color: var(--muted);
+  font-size: 18px;
+}
+h2 {
+  margin-top: 42px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 8px;
+}
+a { color: var(--accent); text-underline-offset: 3px; }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+.card, .quiz-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 20px;
+  margin: 18px 0;
+}
+.callout {
+  border-left: 4px solid var(--accent);
+  background: var(--soft);
+  border-radius: 6px;
+  padding: 14px 16px;
+}
+.warn {
+  border-left-color: #c98210;
+  background: var(--warn);
+}
+pre {
+  overflow-x: auto;
+  background: var(--code);
+  color: #eef7f2;
+  border-radius: 8px;
+  padding: 16px;
+}
+code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.92em;
+}
+.pill {
+  display: inline-block;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 2px 9px;
+  font: 700 12px/1.7 ui-sans-serif, system-ui, sans-serif;
+  color: var(--muted);
+}
+.quiz-card button {
+  display: block;
+  width: 100%;
+  margin: 8px 0;
+  padding: 11px 13px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.quiz-card button.correct { border-color: #1f7a3f; background: #e8f4eb; }
+.quiz-card button.incorrect { border-color: var(--accent-2); background: #fae9e7; }
+.quiz-feedback { min-height: 1.6em; font-weight: 700; }
+footer {
+  margin-top: 54px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+}
+@media print {
+  body { background: #fff; }
+  main { width: auto; padding: 24px; }
+  .card, .quiz-card { break-inside: avoid; }
+  a::after { content: " (" attr(href) ")"; font-size: 0.8em; color: var(--muted); }
+}
+
+  </style>
+</head>
+<body>
+<main>
+
+  <header>
+    <div class="kicker">Lesson 0002 · Graph Engineering</div>
+    <h1>루프 그래프와 앵커</h1>
+    <p class="subtitle">해답은 “더 좋은 단일 루프”가 아니라 루프들의 네트워크다. 다만 그래프만으로는 원형 확증에 빠질 수 있어, 땅에 닿는 앵커가 필요하다.</p>
+  </header>
+
+  <section class="callout">
+    <strong>오늘의 한 줄 답:</strong> 그래프 엔지니어링 = 루프 아키텍처. pairing·hierarchy·arbitration·audit로 단일 루프 실패를 토폴로지로 막고, anchors·frozen rules·외부 판단으로 현실 접촉을 확보한다.
+  </section>
+
+  <h2>1. 성숙한 시스템은 루프가 아니라 네트워크다</h2>
+  <p>MLOps의 진지한 배포는 “재학습 후 출시”가 아니다. champion–challenger, drift monitor, 자동 rollback, 학습 루프가 절대 못 보는 held-out eval이 서로 물린다. 신뢰는 노드(루프)보다 <strong>엣지</strong>에 있다: 누가 누구를 먹이고, 누가 누구를 감시하고, 누가 거부권을 갖나. <a href="https://x.com/i/article/2078418167546691584">Perez</a></p>
+  <p>회사도 같다. 빠른 운영 루프 위에 느린 경영 루프, 그 위에 독립 감사 루프, 그 위에 목표 자체를 묻는 보드 루프. 생물의 체온 조절도 단일 온도계가 아니라 상호작용하는 반사와 감사에 가깝다.</p>
+
+  <h2>2. 네 실패에 대한 토폴로지 답</h2>
+  <div class="grid">
+    <div class="card"><strong>Goodhart → Pairing</strong><br>최적화 루프마다 반지표를 보는 감시 루프. 해결률×갱신율, 속도×에러율.</div>
+    <div class="card"><strong>위쪽 맹목 → Hierarchy</strong><br>느린 루프가 빠른 루프의 레퍼런스를 소유. 목표 수정 자체도 거버넌스 사이클.</div>
+    <div class="card"><strong>충돌 → Arbitration</strong><br>싸우는 루프들 위에 트레이드오프를 소유한 상위 루프.</div>
+    <div class="card"><strong>측정 부패 → Audit</strong><br>다른 루프의 숫자가 아직 세계와 닿는지 주기적으로만 검사하는 루프.</div>
+  </div>
+  <p>설계 단위가 “사이클 하나”에서 “사이클 네트워크”로 바뀐다. 속도도 분리해야 한다: 빠른 루프가 느린 루프가 지키는 것을 때리지 못하게.</p>
+
+  <h2>3. 그래프의 함정: 원형 확증</h2>
+  <p>루프를 많이 연결해도, 모두가 보고서만 먹으면 그래프는 <strong>서로 확인만 하는 원</strong>이 된다. 운영 숫자는 재무 숫자를, 재무는 같은 시스템을, 메타 루프는 그 대시보드를 본다. 일관성은 높아지고 검증은 사라진다. 토폴로지는 정교함을 샀지, 현실 접촉을 산 게 아니다.</p>
+
+  <h3>그래프에 넣어야 하는 것</h3>
+  <ul>
+    <li><strong>Anchors</strong> — 논쟁 불가에 가까운 측정: 실제 입금, 실행된 테스트, 잔존 고객, 실물 재고.</li>
+    <li><strong>Frozen rules</strong> — 최적화 루프가 절대 못 건드리는 규칙. held-out set을 학습 루프에 열어주지 않는 이유와 같다.</li>
+    <li><strong>Outside judgment</strong> — “무엇이 나아짐인가”의 최초 판단. 기계가 생성할 수 없는 전제. 사람·실패 접촉에서 온다.</li>
+  </ul>
+
+  <section class="callout warn">
+    <strong>Perez의 결론축:</strong> 영구 축은 loops vs graphs가 아니라 <em>ungrounded vs grounded</em> — 개선 기계가 자기가 개선한다고 주장하는 현실에 닿는가.
+  </section>
+
+  <h2>4. 용어 충돌 주의 (중요)</h2>
+  <p>지금 업계에서 “graph engineering”은 두 층으로 쓰인다.</p>
+  <div class="grid">
+    <div class="card"><strong>A. 개선 루프의 그래프</strong><br>이 코스의 본체. 메타 루프, 감사, pairing. 제어/거버넌스 감각.</div>
+    <div class="card"><strong>B. 에이전트 실행 그래프</strong><br>LangGraph 등 노드·엣지·공유 상태로 multi-step/multi-agent 실행. 오케스트레이션 감각.</div>
+  </div>
+  <p>B는 “한 에이전트의 while-loop를 org chart로 키운다”에 가깝고, A는 “개선이 스스로를 속이지 않게 루프를 배치한다”에 가깝다. 둘 다 그래프 언어를 쓰지만 실패 모드가 다르다. A의 실패는 원형 확증·앵커 부재, B의 실패는 토폴로지 오류·상태 누수·라우팅 버그.</p>
+
+  <h2>5. 퀴즈</h2>
+  <div class="quiz-card" data-quiz data-correct="맞음. pairing은 반지표 감시 루프를 붙이는 것이다." data-incorrect="다시. Goodhart 대응의 핵심은 반지표를 보는 짝 루프다.">
+    <p><strong>Q1.</strong> Goodhart에 대한 토폴로지 대응은?</p>
+    <button type="button" data-answer="wrong">측정 주기를 더 짧게 만들어 루프를 가속한다</button>
+    <button type="button" data-answer="correct">최적화 지표에 짝이 되는 감시 지표 루프를 붙인다</button>
+    <button type="button" data-answer="wrong">모든 목표를 루프 안에서 자동 생성한다</button>
+    <button type="button" data-answer="wrong">감사 루프를 제거하고 운영 루프만 남긴다</button>
+    <div class="quiz-feedback" data-feedback></div>
+  </div>
+
+  <div class="quiz-card" data-quiz data-correct="맞음. 땅에 닿는 측정·동결 규칙·외부 판단이 앵커다." data-incorrect="다시. 그래프만 키우면 원형 확증이 된다.">
+    <p><strong>Q2.</strong> 루프 그래프가 정교해져도 실패하는 대표 조건은?</p>
+    <button type="button" data-answer="correct">루프들이 서로만 보고 현실 앵커가 없을 때</button>
+    <button type="button" data-answer="wrong">루프가 두 개 이상일 때 항상 실패한다</button>
+    <button type="button" data-answer="wrong">held-out 평가를 두면 무조건 실패한다</button>
+    <button type="button" data-answer="wrong">사람이 목표를 정하면 그래프는 무효다</button>
+    <div class="quiz-feedback" data-feedback></div>
+  </div>
+
+  <h2>6. 미니 실습 (10분)</h2>
+  <p>레슨 0001에서 고른 루프를 그래프로 확장한다.</p>
+  <ol>
+    <li>최적화 루프 1 + 반지표 감시 루프 1 (pairing)</li>
+    <li>목표를 소유하는 느린 루프 1 (hierarchy)</li>
+    <li>앵커 1개 (실제 세계 사건으로 검증 가능한 것)</li>
+    <li>절대 자동 튜닝 금지 규칙 1개 (frozen)</li>
+  </ol>
+  <p>그림은 네모 4개와 화살표면 충분. 예쁜 다이어그램 금지, 판단만.</p>
+
+  <h2>Primary source</h2>
+  <p><a href="https://x.com/i/article/2078418167546691584">Perez — “The graph”, “What the shift is actually about”, “Where the trend goes”</a></p>
+
+  <h2>연결</h2>
+  <ul>
+    <li><a href="./0001-single-loop-four-failures.html">0001 · 단일 루프 네 실패</a></li>
+    <li><a href="../reference/0001-glossary.html">글로서리</a></li>
+    <li><a href="../reference/0002-cheat-sheet.html">치트시트</a></li>
+  </ul>
+
+  <footer>
+    <p>스케치를 에이전트에게 보내면 pairing/앵커가 빠졌는지 같이 볼 수 있다.</p>
+  </footer>
+
+</main>
+<script>
+document.querySelectorAll("[data-quiz]").forEach((quiz) => {
+  const feedback = quiz.querySelector("[data-feedback]");
+  quiz.querySelectorAll("button[data-answer]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const isCorrect = button.dataset.answer === "correct";
+      quiz.querySelectorAll("button[data-answer]").forEach((b) => {
+        b.classList.remove("correct", "incorrect");
+        b.setAttribute("aria-pressed", "false");
+      });
+      button.classList.add(isCorrect ? "correct" : "incorrect");
+      button.setAttribute("aria-pressed", "true");
+      feedback.textContent = isCorrect ? quiz.dataset.correct : quiz.dataset.incorrect;
+    });
+  });
+});
+
+</script>
+</body>
+</html>
