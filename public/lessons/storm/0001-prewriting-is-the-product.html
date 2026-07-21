@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="STORM의 핵심이 pre-writing인 이유를 배운다.">
+  <title>Pre-writing이 제품이다 · STORM</title>
+  <style>
+:root {
+  --ink: #18201f;
+  --muted: #5d6864;
+  --paper: #fbfaf6;
+  --panel: #ffffff;
+  --line: #d9ddd6;
+  --accent: #136f63;
+  --accent-2: #a23d31;
+  --soft: #eaf3ef;
+  --warn: #fff2d6;
+  --code: #101917;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  color: var(--ink);
+  background: var(--paper);
+  font-family: ui-serif, Georgia, "Apple SD Gothic Neo", "Noto Serif KR", serif;
+  line-height: 1.68;
+}
+main {
+  width: min(960px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 52px 0 88px;
+}
+.kicker {
+  color: var(--accent);
+  font: 700 12px/1 ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+h1 {
+  margin: 12px 0 14px;
+  font-size: clamp(34px, 6vw, 64px);
+  line-height: 1.02;
+}
+.subtitle {
+  max-width: 720px;
+  color: var(--muted);
+  font-size: 18px;
+}
+h2 {
+  margin-top: 42px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 8px;
+}
+a { color: var(--accent); text-underline-offset: 3px; }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+.card, .quiz-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 20px;
+  margin: 18px 0;
+}
+.callout {
+  border-left: 4px solid var(--accent);
+  background: var(--soft);
+  border-radius: 6px;
+  padding: 14px 16px;
+}
+.warn {
+  border-left-color: #c98210;
+  background: var(--warn);
+}
+pre {
+  overflow-x: auto;
+  background: var(--code);
+  color: #eef7f2;
+  border-radius: 8px;
+  padding: 16px;
+}
+code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.92em;
+}
+.pill {
+  display: inline-block;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 2px 9px;
+  font: 700 12px/1.7 ui-sans-serif, system-ui, sans-serif;
+  color: var(--muted);
+}
+.quiz-card button {
+  display: block;
+  width: 100%;
+  margin: 8px 0;
+  padding: 11px 13px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.quiz-card button.correct { border-color: #1f7a3f; background: #e8f4eb; }
+.quiz-card button.incorrect { border-color: var(--accent-2); background: #fae9e7; }
+.quiz-feedback { min-height: 1.6em; font-weight: 700; }
+footer {
+  margin-top: 54px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+}
+@media print {
+  body { background: #fff; }
+  main { width: auto; padding: 24px; }
+  .card, .quiz-card { break-inside: avoid; }
+  a::after { content: " (" attr(href) ")"; font-size: 0.8em; color: var(--muted); }
+}
+
+  </style>
+</head>
+<body>
+<main>
+
+  <header>
+    <div class="kicker">Lesson 0001 · STORM Course</div>
+    <h1>Pre-writing이 제품이다</h1>
+    <p class="subtitle">STORM을 “긴 글을 잘 쓰는 모델”로 보면 핵심을 놓친다. 본체는 쓰기 전에 관점을 찾고, 질문하고, 개요를 만드는 pre-writing 엔진이다.</p>
+  </header>
+
+  <section class="callout">
+    <strong>오늘의 한 줄 답:</strong> STORM의 차별점은 검색 결과를 더 예쁘게 요약하는 힘이 아니라, <em>다양한 관점으로 좋은 질문을 자동 생성해 조사 범위를 넓힌 뒤 계층 개요를 만드는 것</em>이다.
+  </section>
+
+  <h2>1. 왜 plain RAG로는 부족한가</h2>
+  <p>일반 RAG/검색 QA는 질문이 이미 좋다는 전제에서 출발한다. 사용자가 “이 주제의 핵심 쟁점은?”처럼 구체적인 질문을 주면, 관련 청크를 찾아 답한다.</p>
+  <p>그런데 “위키 수준 긴 글”이나 “카테고리 기획 리서치”처럼 목표가 넓으면, 처음 질문이 빈약하다. 모델은 아는 각도만 파고, 빠진 관점(unknown unknowns)을 스스로 잘 발견하지 못한다. STORM 논문은 이 pre-writing 단계를 정면으로 다룬다: 주제 조사, 관점 발견, 개요 준비가 쓰기의 전제 조건이다. <a href="https://arxiv.org/abs/2402.14207">Shao et al., 2024</a></p>
+
+  <div class="grid">
+    <div class="card">
+      <strong>Plain RAG</strong><br>
+      질문 → 검색 → 답. 질문의 질이 천장이다.
+    </div>
+    <div class="card">
+      <strong>STORM pre-writing</strong><br>
+      주제 → 관점 발견 → 시뮬레이션 질의 → 정보 큐레이션 → 개요. 질문 자체를 생산한다.
+    </div>
+    <div class="card">
+      <strong>Writing stage</strong><br>
+      개요 + 근거로 인용 있는 본문을 채운다. 여기가 “쓰기”지만, 품질 상한은 이미 개요에서 거의 결정된다.
+    </div>
+  </div>
+
+  <h2>2. STORM의 두 가지 질문 전략</h2>
+  <p>논문/README가 강조하는 핵심: 모델에게 “좋은 질문 좀 해봐”라고 직접 시키면 깊이와 폭이 둘 다 부족하다. 그래서 두 장치를 쓴다. <a href="https://github.com/stanford-oval/storm">stanford-oval/storm</a></p>
+
+  <h3>2-1. Perspective-guided question asking</h3>
+  <p>비슷한 주제의 기존 글을 훑어 “이 주제는 보통 어떤 각도에서 쓰이나”를 먼저 찾는다. 예: 역사 인물이면 생애/영향/논쟁/문화적 수용, 제품 카테고리면 성분/사용 장면/경쟁 구도/규제 민감 표현 같은 관점 목록이 생긴다. 그 관점이 이후 질문 생성을 제어한다.</p>
+
+  <h3>2-2. Simulated conversation</h3>
+  <p>위키 작가 역할과 주제 전문가 역할이, 검색으로 근거를 붙인 채 대화를 나눈다. 작가가 묻고, 전문가가 근거 기반으로 답하고, 후속 질문이 이어진다. 한 번의 프롬프트 폭발이 아니라, 대화 궤적으로 이해를 갱신한다.</p>
+
+  <section class="callout warn">
+    <strong>실무 번역:</strong> PDP 기획이라면 “카피 써줘”가 아니라, 먼저 관점 세트(타깃 고민, 경쟁 프레임, 성분 메커니즘, 사용 루틴, 클레임 리스크)를 만들고, 각 관점으로 조사 질문을 돌린 뒤 섹션 개요를 고정하는 쪽이 STORM에 가깝다.
+  </section>
+
+  <h2>3. 평가가 말하는 것</h2>
+  <p>STORM은 FreshWiki(최근 고품질 위키 문서 집합)로 평가하고, outline 평가를 별도로 둔다. outline-driven retrieval baseline 대비 조직화·커버리지에서 우위를 보고했고, 숙련 위키 편집자 피드백도 수집했다. 동시에 한계도 분명히 적혀 있다: 출처 편향 전이(source bias transfer), 관련 약한 사실의 과연결(over-association). <a href="https://arxiv.org/abs/2402.14207">arXiv:2402.14207</a></p>
+  <p>즉 “더 유창한 글”이 목표가 아니라, <strong>쓰기 전 구조와 조사 폭</strong>이 측정 대상이다.</p>
+
+  <h2>4. 지금 당장 쓸 판단 체크리스트</h2>
+  <ol>
+    <li>내 태스크에 이미 좋은 질문이 있는가, 아니면 질문이 제품인가?</li>
+    <li>관점 목록을 어디서 뽑을 것인가? (유사 문서, 경쟁 PDP, 카테고리 가이드, 규제 문서)</li>
+    <li>조사 대화를 몇 턴 돌릴 것인가? 한 번에 다 물으면 STORM이 아니다.</li>
+    <li>개요 없이 본문 생성을 시작하지 말 것. 개요가 합의된 공유 공간이다.</li>
+    <li>근거 인용 뒤에 남는 위험(편향, 과연결, 효능 과대)을 누가 검수하는가?</li>
+  </ol>
+
+  <h2>5. 퀴즈 · 회수 연습</h2>
+  <div class="quiz-card" data-quiz data-correct="맞음. STORM의 본체는 관점·질문·개요를 만드는 pre-writing이다." data-incorrect="다시. 쓰기는 2단계 중 후반이고, 차별점은 pre-writing에 있다.">
+    <p><strong>Q1.</strong> STORM을 한 문장으로 정의할 때 가장 정확한 강조점은?</p>
+    <button type="button" data-answer="wrong">검색 청크를 더 길게 이어 붙여 유창한 위키 문체를 만드는 시스템</button>
+    <button type="button" data-answer="correct">다양한 관점의 질문으로 조사한 뒤 개요를 만들고 근거 글을 쓰는 시스템</button>
+    <button type="button" data-answer="wrong">사용자 질문 하나에 대해 최고 유사 문서 한 편을 요약하는 시스템</button>
+    <button type="button" data-answer="wrong">위키 편집자를 대체해 출판 가능 문서를 무수정으로 내는 시스템</button>
+    <div class="quiz-feedback" data-feedback></div>
+  </div>
+
+  <div class="quiz-card" data-quiz data-correct="맞음. 직접 질문 프롬프트만으로는 깊이와 폭이 부족해 두 전략을 쓴다." data-incorrect="다시. README/논문은 직접 질문 생성이 약하다고 보고 관점·대화 전략을 도입한다.">
+    <p><strong>Q2.</strong> 왜 “질문 잘 해”라고 한 번 시키는 대신 관점 가이드 + 시뮬레이션 대화를 쓰는가?</p>
+    <button type="button" data-answer="correct">직접 질문 생성은 깊이와 폭이 부족하기 쉬운 까닭이다</button>
+    <button type="button" data-answer="wrong">검색 API 호출 횟수를 강제로 줄여야 하기 때문이다</button>
+    <button type="button" data-answer="wrong">위키 라이선스 때문에 원문을 복사할 수 없기 때문이다</button>
+    <button type="button" data-answer="wrong">개요 생성을 건너뛰고 본문만 쓰게 만들기 위해서다</button>
+    <div class="quiz-feedback" data-feedback></div>
+  </div>
+
+  <div class="quiz-card" data-quiz data-correct="맞음. PDP에서는 조사가 제품이고, 카피는 그 다음이다." data-incorrect="다시. STORM식 적용의 첫 산출물은 카피가 아니라 관점·질문·섹션 개요다.">
+    <p><strong>Q3.</strong> 상세페이지 기획에 STORM 패턴을 옮길 때 첫 산출물로 가장 알맞은 것은?</p>
+    <button type="button" data-answer="wrong">최종 판매 문구 20개와 배너 헤드라인</button>
+    <button type="button" data-answer="correct">관점 목록, 조사 질문, 섹션 개요, 근거 메모</button>
+    <button type="button" data-answer="wrong">제품 사진 리터칭 프롬프트 세트</button>
+    <button type="button" data-answer="wrong">쿠팡 카탈로그 등록용 JSON 스키마</button>
+    <div class="quiz-feedback" data-feedback></div>
+  </div>
+
+  <h2>6. 미니 실습 (5분)</h2>
+  <p>지금 관심 있는 제품 하나(예: 특정 스킨케어 SKU)를 고르고, 종이나 메모에 아래만 적어 보자.</p>
+  <ol>
+    <li>관점 5개 (타깃 고민 / 경쟁 프레임 / 성분 메커니즘 / 사용 루틴 / 클레임 리스크 등)</li>
+    <li>각 관점당 질문 1개</li>
+    <li>그 질문들로 채울 섹션 개요 6줄</li>
+  </ol>
+  <p>본문 카피는 쓰지 말 것. pre-writing만. 막히면 에이전트에게 관점 목록 피드백을 요청하면 된다.</p>
+
+  <h2>Primary source</h2>
+  <p>오늘은 이 논문 초록 + 서론/방법의 pre-writing 부분만 읽어도 충분하다.</p>
+  <p><a href="https://arxiv.org/abs/2402.14207">Assisting in Writing Wikipedia-like Articles From Scratch with Large Language Models (STORM)</a></p>
+  <p>보조: <a href="https://storm.genie.stanford.edu/">live preview</a>에서 익숙한 주제를 하나 넣어, 질문이 어떻게 가지치기되는지 관찰.</p>
+
+  <h2>다음으로 연결</h2>
+  <ul>
+    <li><a href="./0003-storm-glossary.html">용어 글로서리</a></li>
+    <li><a href="./0004-storm-pipeline-map.html">파이프라인 맵</a></li>
+    <li>다음 레슨 후보: 4모듈 입출력과 multi-LM 배치, Co-STORM 담화 프로토콜</li>
+  </ul>
+
+  <footer>
+    <p>막히는 부분은 에이전트에게 바로 물어보면 된다. 이 워크스페이스의 선생님 역할이다.</p>
+    <p class="pill">Mission-linked</p>
+    <p class="pill">ZPD: overview → pre-writing mechanism</p>
+  </footer>
+
+</main>
+<script>
+document.querySelectorAll("[data-quiz]").forEach((quiz) => {
+  const feedback = quiz.querySelector("[data-feedback]");
+  quiz.querySelectorAll("button[data-answer]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const isCorrect = button.dataset.answer === "correct";
+      quiz.querySelectorAll("button[data-answer]").forEach((b) => {
+        b.classList.remove("correct", "incorrect");
+        b.setAttribute("aria-pressed", "false");
+      });
+      button.classList.add(isCorrect ? "correct" : "incorrect");
+      button.setAttribute("aria-pressed", "true");
+      feedback.textContent = isCorrect ? quiz.dataset.correct : quiz.dataset.incorrect;
+    });
+  });
+});
+
+</script>
+</body>
+</html>

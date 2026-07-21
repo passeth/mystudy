@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="STORM/Co-STORM 핵심 용어 정의.">
+  <title>STORM 용어 글로서리</title>
+  <style>
+:root {
+  --ink: #18201f;
+  --muted: #5d6864;
+  --paper: #fbfaf6;
+  --panel: #ffffff;
+  --line: #d9ddd6;
+  --accent: #136f63;
+  --accent-2: #a23d31;
+  --soft: #eaf3ef;
+  --warn: #fff2d6;
+  --code: #101917;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  color: var(--ink);
+  background: var(--paper);
+  font-family: ui-serif, Georgia, "Apple SD Gothic Neo", "Noto Serif KR", serif;
+  line-height: 1.68;
+}
+main {
+  width: min(960px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 52px 0 88px;
+}
+.kicker {
+  color: var(--accent);
+  font: 700 12px/1 ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+h1 {
+  margin: 12px 0 14px;
+  font-size: clamp(34px, 6vw, 64px);
+  line-height: 1.02;
+}
+.subtitle {
+  max-width: 720px;
+  color: var(--muted);
+  font-size: 18px;
+}
+h2 {
+  margin-top: 42px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 8px;
+}
+a { color: var(--accent); text-underline-offset: 3px; }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+.card, .quiz-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 20px;
+  margin: 18px 0;
+}
+.callout {
+  border-left: 4px solid var(--accent);
+  background: var(--soft);
+  border-radius: 6px;
+  padding: 14px 16px;
+}
+.warn {
+  border-left-color: #c98210;
+  background: var(--warn);
+}
+pre {
+  overflow-x: auto;
+  background: var(--code);
+  color: #eef7f2;
+  border-radius: 8px;
+  padding: 16px;
+}
+code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.92em;
+}
+.pill {
+  display: inline-block;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 2px 9px;
+  font: 700 12px/1.7 ui-sans-serif, system-ui, sans-serif;
+  color: var(--muted);
+}
+.quiz-card button {
+  display: block;
+  width: 100%;
+  margin: 8px 0;
+  padding: 11px 13px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.quiz-card button.correct { border-color: #1f7a3f; background: #e8f4eb; }
+.quiz-card button.incorrect { border-color: var(--accent-2); background: #fae9e7; }
+.quiz-feedback { min-height: 1.6em; font-weight: 700; }
+footer {
+  margin-top: 54px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+}
+@media print {
+  body { background: #fff; }
+  main { width: auto; padding: 24px; }
+  .card, .quiz-card { break-inside: avoid; }
+  a::after { content: " (" attr(href) ")"; font-size: 0.8em; color: var(--muted); }
+}
+
+  </style>
+</head>
+<body>
+<main>
+
+  <header>
+    <div class="kicker">Reference · Glossary</div>
+    <h1>STORM 용어 글로서리</h1>
+    <p class="subtitle">레슨 전체에서 이 정의를 우선한다. 새 용어가 생기면 여기부터 갱신한다.</p>
+  </header>
+
+  <div class="card"><strong>STORM</strong><br>Synthesis of Topic Outlines through Retrieval and Multi-perspective Question Asking. 검색·다각도 질문으로 개요를 합성한 뒤 긴 글을 쓰는 시스템.</div>
+  <div class="card"><strong>Pre-writing</strong><br>본문 작성 전 단계. 조사, 관점 발견, 질문, 정보 큐레이션, 개요 생성.</div>
+  <div class="card"><strong>Perspective-guided question asking</strong><br>유사 주제 문서에서 관점을 찾아 질문 생성을 제어하는 전략.</div>
+  <div class="card"><strong>Simulated conversation</strong><br>작가-전문가 역할을 검색 근거 위에서 대화시켜 후속 질문을 키우는 전략.</div>
+  <div class="card"><strong>Outline</strong><br>계층적 주제 골격. writing stage의 제어 신호.</div>
+  <div class="card"><strong>Knowledge curation module</strong><br>주제에 대한 넓은 정보를 모으는 모듈.</div>
+  <div class="card"><strong>Outline generation module</strong><br>수집 정보를 계층 개요로 조직하는 모듈.</div>
+  <div class="card"><strong>Article generation module</strong><br>개요를 근거로 채우는 모듈.</div>
+  <div class="card"><strong>Article polishing module</strong><br>요약 추가, 중복 제거 등 다듬기 모듈.</div>
+  <div class="card"><strong>Retriever / RM</strong><br>검색·검색 모듈. Bing, You, VectorRM 등 교체 가능.</div>
+  <div class="card"><strong>VectorRM</strong><br>사용자 제공 문서 코퍼스에 그라운딩하는 검색 모듈.</div>
+  <div class="card"><strong>Co-STORM</strong><br>Collaborative STORM. 사람+LM 에이전트 담화로 unknown unknowns를 탐색.</div>
+  <div class="card"><strong>Moderator</strong><br>Co-STORM에서 아직 쓰이지 않은 검색 정보 등으로 자극적 질문을 던지는 역할.</div>
+  <div class="card"><strong>Mind map</strong><br>수집 정보를 계층 개념으로 정리한 동적 공유 공간.</div>
+  <div class="card"><strong>FreshWiki</strong><br>STORM 평가용 최근 고품질 위키 데이터셋.</div>
+  <div class="card"><strong>WildSeek</strong><br>Co-STORM 평가용 실제 정보 탐색 목표 데이터셋.</div>
+  <div class="card"><strong>Source bias transfer</strong><br>출처의 편향이 생성 글로 옮겨가는 문제. STORM 한계로 언급.</div>
+  <div class="card"><strong>Over-association</strong><br>관련 약한 사실을 과하게 연결하는 문제.</div>
+  <div class="card"><strong>DSPy</strong><br>STORM 구현의 모듈형 LM 프로그래밍 기반.</div>
+
+  <footer>
+    <p><a href="../lessons/0001-prewriting-is-the-product.html">Lesson 0001</a> · <a href="./0002-storm-pipeline-map.html">Pipeline map</a></p>
+  </footer>
+
+</main>
+<script>
+document.querySelectorAll("[data-quiz]").forEach((quiz) => {
+  const feedback = quiz.querySelector("[data-feedback]");
+  quiz.querySelectorAll("button[data-answer]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const isCorrect = button.dataset.answer === "correct";
+      quiz.querySelectorAll("button[data-answer]").forEach((b) => {
+        b.classList.remove("correct", "incorrect");
+        b.setAttribute("aria-pressed", "false");
+      });
+      button.classList.add(isCorrect ? "correct" : "incorrect");
+      button.setAttribute("aria-pressed", "true");
+      feedback.textContent = isCorrect ? quiz.dataset.correct : quiz.dataset.incorrect;
+    });
+  });
+});
+
+</script>
+</body>
+</html>

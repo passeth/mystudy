@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="STORM/Co-STORM 파이프라인 한 장 요약.">
+  <title>STORM 파이프라인 맵</title>
+  <style>
+:root {
+  --ink: #18201f;
+  --muted: #5d6864;
+  --paper: #fbfaf6;
+  --panel: #ffffff;
+  --line: #d9ddd6;
+  --accent: #136f63;
+  --accent-2: #a23d31;
+  --soft: #eaf3ef;
+  --warn: #fff2d6;
+  --code: #101917;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  color: var(--ink);
+  background: var(--paper);
+  font-family: ui-serif, Georgia, "Apple SD Gothic Neo", "Noto Serif KR", serif;
+  line-height: 1.68;
+}
+main {
+  width: min(960px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 52px 0 88px;
+}
+.kicker {
+  color: var(--accent);
+  font: 700 12px/1 ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+h1 {
+  margin: 12px 0 14px;
+  font-size: clamp(34px, 6vw, 64px);
+  line-height: 1.02;
+}
+.subtitle {
+  max-width: 720px;
+  color: var(--muted);
+  font-size: 18px;
+}
+h2 {
+  margin-top: 42px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 8px;
+}
+a { color: var(--accent); text-underline-offset: 3px; }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+.card, .quiz-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 20px;
+  margin: 18px 0;
+}
+.callout {
+  border-left: 4px solid var(--accent);
+  background: var(--soft);
+  border-radius: 6px;
+  padding: 14px 16px;
+}
+.warn {
+  border-left-color: #c98210;
+  background: var(--warn);
+}
+pre {
+  overflow-x: auto;
+  background: var(--code);
+  color: #eef7f2;
+  border-radius: 8px;
+  padding: 16px;
+}
+code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.92em;
+}
+.pill {
+  display: inline-block;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 2px 9px;
+  font: 700 12px/1.7 ui-sans-serif, system-ui, sans-serif;
+  color: var(--muted);
+}
+.quiz-card button {
+  display: block;
+  width: 100%;
+  margin: 8px 0;
+  padding: 11px 13px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.quiz-card button.correct { border-color: #1f7a3f; background: #e8f4eb; }
+.quiz-card button.incorrect { border-color: var(--accent-2); background: #fae9e7; }
+.quiz-feedback { min-height: 1.6em; font-weight: 700; }
+footer {
+  margin-top: 54px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+}
+@media print {
+  body { background: #fff; }
+  main { width: auto; padding: 24px; }
+  .card, .quiz-card { break-inside: avoid; }
+  a::after { content: " (" attr(href) ")"; font-size: 0.8em; color: var(--muted); }
+}
+
+  </style>
+</head>
+<body>
+<main>
+
+  <header>
+    <div class="kicker">Reference · Pipeline</div>
+    <h1>STORM / Co-STORM 파이프라인 맵</h1>
+    <p class="subtitle">한 장으로 흐름을 복기할 때 쓴다. 상세 설명은 레슨으로.</p>
+  </header>
+
+  <h2>STORM</h2>
+  <pre><code>Topic
+  │
+  ├─ Pre-writing
+  │    ├─ Discover perspectives (유사 문서 스캔)
+  │    ├─ Simulated multi-perspective Q&A (검색 그라운딩)
+  │    └─ Curate → Outline
+  │
+  └─ Writing
+       ├─ Generate article sections with citations
+       └─ Polish (summary / dedupe)</code></pre>
+
+  <h2>Runner 제어 스위치</h2>
+  <ul>
+    <li><code>do_research</code> — 관점·대화·자료 수집</li>
+    <li><code>do_generate_outline</code> — 개요</li>
+    <li><code>do_generate_article</code> — 본문</li>
+    <li><code>do_polish_article</code> — 다듬기</li>
+  </ul>
+
+  <h2>Co-STORM</h2>
+  <pre><code>Topic
+  │
+  ├─ warm_start()  → 공유 개념 공간 시드
+  │
+  ├─ discourse loop
+  │    ├─ Expert agents (근거 답 / 후속 질문)
+  │    ├─ Moderator (미사용 정보 자극 질문)
+  │    └─ Human (관찰 또는 발화 주입)
+  │         └─ dynamic mind map update
+  │
+  └─ reorganize knowledge base → generate_report()</code></pre>
+
+  <h2>PDP 기획에 얹는 최소 매핑</h2>
+  <div class="grid">
+    <div class="card"><strong>Perspectives</strong><br>타깃 고민, 경쟁, 성분, 루틴, 클레임 리스크</div>
+    <div class="card"><strong>Retriever corpus</strong><br>자사 자료, 경쟁 PDP, 후기, 규제/성분 DB</div>
+    <div class="card"><strong>Outline</strong><br>상세페이지 섹션 스토리라인</div>
+    <div class="card"><strong>Human gate</strong><br>효능 표현·금지 문구 검수 (필수)</div>
+  </div>
+
+  <section class="callout warn">
+    STORM 출력은 출판/광고 최종본이 아니다. 조사·개요·초안 레이어로 취급하고, 도메인 가드레일을 바깥에 둔다.
+  </section>
+
+  <footer>
+    <p>출처: <a href="https://arxiv.org/abs/2402.14207">STORM paper</a>, <a href="https://arxiv.org/abs/2408.15232">Co-STORM paper</a>, <a href="https://github.com/stanford-oval/storm">GitHub</a></p>
+  </footer>
+
+</main>
+<script>
+document.querySelectorAll("[data-quiz]").forEach((quiz) => {
+  const feedback = quiz.querySelector("[data-feedback]");
+  quiz.querySelectorAll("button[data-answer]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const isCorrect = button.dataset.answer === "correct";
+      quiz.querySelectorAll("button[data-answer]").forEach((b) => {
+        b.classList.remove("correct", "incorrect");
+        b.setAttribute("aria-pressed", "false");
+      });
+      button.classList.add(isCorrect ? "correct" : "incorrect");
+      button.setAttribute("aria-pressed", "true");
+      feedback.textContent = isCorrect ? quiz.dataset.correct : quiz.dataset.incorrect;
+    });
+  });
+});
+
+</script>
+</body>
+</html>
