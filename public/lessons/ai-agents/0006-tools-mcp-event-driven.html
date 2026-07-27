@@ -139,6 +139,81 @@ footer {
     <strong>오늘의 한 줄 답:</strong> 도구 설계의 기준선은 <em>모델이 지각하는 세계와 도구가 작동하는 세계 사이에 괴리를 두지 않는 것</em>이고, 비동기 에이전트의 핵심은 <em>에이전트가 세계를 폴리링하는 것을 넘어 세계가 에이전트에게 능동 통지하는 채널</em>이다.
   </section>
 
+  <figure style="margin:24px 0;">
+    <svg viewBox="0 0 960 560" style="width:100%;height:auto;display:block;" role="img" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif">
+      <title>도구 5개 카테고리와 이벤트 기반 비동기 에이전트 흐름</title>
+      <defs>
+        <marker id="arr6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="#136f63"/>
+        </marker>
+      </defs>
+      <rect x="1" y="1" width="958" height="558" rx="8" fill="#ffffff" stroke="#d9ddd6"/>
+
+      <text x="48" y="44" font-size="12" font-weight="700" letter-spacing="2" fill="#136f63">FIVE TOOL CATEGORIES</text>
+
+      <!-- center agent -->
+      <rect x="400" y="160" width="160" height="64" rx="32" fill="#136f63"/>
+      <text x="480" y="188" font-size="16" font-weight="700" text-anchor="middle" fill="#ffffff">Agent</text>
+      <text x="480" y="208" font-size="11" text-anchor="middle" fill="#eaf3ef">ReAct loop</text>
+
+      <!-- spokes -->
+      <rect x="60" y="70" width="180" height="52" rx="6" fill="#eaf3ef" stroke="#136f63"/>
+      <text x="150" y="92" font-size="14" font-weight="700" text-anchor="middle" fill="#18201f">Perception</text>
+      <text x="150" y="110" font-size="12" text-anchor="middle" fill="#5d6864">검색·파일·API 읽기</text>
+      <line x1="240" y1="110" x2="408" y2="168" stroke="#136f63" stroke-width="2" marker-end="url(#arr6)"/>
+
+      <rect x="390" y="60" width="180" height="52" rx="6" fill="#eaf3ef" stroke="#136f63"/>
+      <text x="480" y="82" font-size="14" font-weight="700" text-anchor="middle" fill="#18201f">User Communication</text>
+      <text x="480" y="100" font-size="12" text-anchor="middle" fill="#5d6864">문자·음성·이메일</text>
+      <line x1="480" y1="112" x2="480" y2="156" stroke="#136f63" stroke-width="2" marker-end="url(#arr6)"/>
+
+      <rect x="720" y="70" width="180" height="52" rx="6" fill="#eaf3ef" stroke="#136f63"/>
+      <text x="810" y="92" font-size="14" font-weight="700" text-anchor="middle" fill="#18201f">Execution</text>
+      <text x="810" y="110" font-size="12" text-anchor="middle" fill="#5d6864">코드 실행·파일 조작</text>
+      <line x1="720" y1="110" x2="552" y2="168" stroke="#136f63" stroke-width="2" marker-end="url(#arr6)"/>
+
+      <rect x="60" y="250" width="180" height="52" rx="6" fill="#eaf3ef" stroke="#136f63"/>
+      <text x="150" y="272" font-size="14" font-weight="700" text-anchor="middle" fill="#18201f">Collaboration</text>
+      <text x="150" y="290" font-size="12" text-anchor="middle" fill="#5d6864">서브에이전트·사람 확인</text>
+      <line x1="240" y1="264" x2="398" y2="212" stroke="#136f63" stroke-width="2" marker-end="url(#arr6)"/>
+
+      <rect x="720" y="250" width="180" height="52" rx="6" fill="#fff2d6" stroke="#c98210"/>
+      <text x="810" y="272" font-size="14" font-weight="700" text-anchor="middle" fill="#18201f">Event Trigger</text>
+      <text x="810" y="290" font-size="12" text-anchor="middle" fill="#5d6864">세계가 에이전트를 깨움</text>
+      <line x1="720" y1="264" x2="562" y2="212" stroke="#136f63" stroke-width="2" marker-end="url(#arr6)"/>
+
+      <!-- Lethal triad badge -->
+      <rect x="300" y="312" width="360" height="40" rx="20" fill="#ffffff" stroke="#a23d31"/>
+      <text x="480" y="337" font-size="13" font-weight="700" text-anchor="middle" fill="#a23d31">Lethal Triad = 비신뢰 입력 + 민감 데이터 + 외부 통신</text>
+
+      <!-- bottom band: event-driven flow -->
+      <line x1="48" y1="384" x2="912" y2="384" stroke="#d9ddd6" stroke-width="1"/>
+      <text x="48" y="414" font-size="12" font-weight="700" letter-spacing="2" fill="#136f63">EVENT-DRIVEN ASYNC AGENT</text>
+
+      <rect x="56" y="432" width="180" height="60" rx="6" fill="#ffffff" stroke="#5d6864"/>
+      <text x="146" y="456" font-size="13" font-weight="700" text-anchor="middle" fill="#18201f">이벤트 발생</text>
+      <text x="146" y="476" font-size="11" text-anchor="middle" fill="#5d6864">이메일·웹훅·cron</text>
+      <line x1="236" y1="462" x2="276" y2="462" stroke="#136f63" stroke-width="2" marker-end="url(#arr6)"/>
+
+      <rect x="282" y="432" width="180" height="60" rx="6" fill="#ffffff" stroke="#5d6864"/>
+      <text x="372" y="456" font-size="13" font-weight="700" text-anchor="middle" fill="#18201f">Channel / 큐</text>
+      <text x="372" y="476" font-size="11" text-anchor="middle" fill="#5d6864">능동 통지 경로</text>
+      <line x1="462" y1="462" x2="502" y2="462" stroke="#136f63" stroke-width="2" marker-end="url(#arr6)"/>
+
+      <rect x="508" y="432" width="180" height="60" rx="6" fill="#eaf3ef" stroke="#136f63"/>
+      <text x="598" y="456" font-size="13" font-weight="700" text-anchor="middle" fill="#18201f">에이전트 루프 기동</text>
+      <text x="598" y="476" font-size="11" text-anchor="middle" fill="#5d6864">컨텍스트 구성 후 ReAct</text>
+      <line x1="688" y1="462" x2="728" y2="462" stroke="#136f63" stroke-width="2" marker-end="url(#arr6)"/>
+
+      <rect x="734" y="432" width="180" height="60" rx="6" fill="#ffffff" stroke="#5d6864"/>
+      <text x="824" y="456" font-size="13" font-weight="700" text-anchor="middle" fill="#18201f">처리 3전략</text>
+      <text x="824" y="476" font-size="11" text-anchor="middle" fill="#5d6864">즉시·큐잉·일괄 처리</text>
+
+      <text x="48" y="536" font-size="12" fill="#5d6864">도구 설계의 기준선: 모델이 지각하는 세계와 도구가 작동하는 세계 사이에 괴리를 두지 않는다(ACI).</text>
+    </svg>
+    <figcaption style="color:#5d6864;font-size:14px;margin-top:8px;">그림 1. 에이전트를 둘러싼 도구 5개 카테고리(상단)와 세계가 에이전트를 깨우는 이벤트 기반 비동기 흐름(하단).</figcaption>
+  </figure>
+
   <h2>1. 도구의 5개 카테고리</h2>
   <p>Ch4는 도구를 Invocation Direction(호출 방향) × Target of Action(작용 대상)으로 분류한다. 이 표는 이후 모든 설계 논의의 지도다.</p>
 

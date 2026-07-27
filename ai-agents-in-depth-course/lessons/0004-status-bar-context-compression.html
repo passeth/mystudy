@@ -142,6 +142,56 @@ footer {
     <strong>오늘의 한 줄 답:</strong> 모델이 "몇 번 시도했나, 지금 몇 시인가, 뭘 아직 못 했나"를 원시 로그에서 매번 재계산하게 하지 말고, <em>코드가 유지하는 상태 요약을 컨텍스트 끝에 놓아라</em>. 압축은 사후 구제, 격리는 사전 차단이다.
   </section>
 
+  <figure style="margin:24px 0;">
+<svg viewBox="0 0 960 460" style="width:100%;height:auto;display:block;" role="img" xmlns="http://www.w3.org/2000/svg">
+<title>5계층 계층적 압축과 서브에이전트 컨텍스트 격리</title>
+<defs>
+<marker id="arr4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#136f63"/></marker>
+</defs>
+<rect x="1" y="1" width="958" height="458" rx="8" fill="#ffffff" stroke="#d9ddd6"/>
+
+<text x="40" y="46" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="12" font-weight="700" letter-spacing="2" fill="#136f63">HIERARCHICAL COMPRESSION · 5계층</text>
+<rect x="40" y="62" width="380" height="52" fill="#ffffff" stroke="#5d6864"/>
+<text x="230" y="92" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="14" text-anchor="middle" fill="#18201f">L1 · 원시 trajectory (전체 로그)</text>
+<rect x="70" y="122" width="320" height="52" fill="#eaf3ef" stroke="#d9ddd6"/>
+<text x="230" y="152" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="14" text-anchor="middle" fill="#18201f">L2 · 턴 단위 요약</text>
+<rect x="100" y="182" width="260" height="52" fill="#eaf3ef" stroke="#d9ddd6"/>
+<text x="230" y="212" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="14" text-anchor="middle" fill="#18201f">L3 · 세션 단위 요약</text>
+<rect x="130" y="242" width="200" height="52" fill="#eaf3ef" stroke="#136f63"/>
+<text x="230" y="272" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="14" text-anchor="middle" fill="#18201f">L4 · 장기 메모리 증류</text>
+<rect x="155" y="302" width="150" height="52" fill="#136f63"/>
+<text x="230" y="332" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="14" font-weight="700" text-anchor="middle" fill="#ffffff">L5 · working set</text>
+
+<text x="452" y="80" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="13" font-weight="700" fill="#136f63">보존 우선순위</text>
+<text x="452" y="106" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="12" fill="#5d6864">↑ 최근 턴 · 미해결 태스크 ·</text>
+<text x="452" y="124" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="12" fill="#5d6864">사용자 최신 지시는 보존</text>
+<text x="452" y="152" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="12" fill="#5d6864">↓ 오래된 도구 결과 · 해결된</text>
+<text x="452" y="170" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="12" fill="#5d6864">시도부터 먼저 압축</text>
+
+<line x1="648" y1="28" x2="648" y2="380" stroke="#d9ddd6"/>
+
+<text x="678" y="46" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="12" font-weight="700" letter-spacing="2" fill="#136f63">SUB-AGENT ISOLATION</text>
+<rect x="678" y="62" width="258" height="64" fill="#eaf3ef" stroke="#136f63"/>
+<text x="694" y="88" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="14" font-weight="700" fill="#18201f">메인 컨텍스트</text>
+<text x="694" y="108" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="11" fill="#5d6864">orchestrator · 깨끗하게 유지</text>
+<line x1="768" y1="126" x2="768" y2="152" stroke="#136f63" stroke-width="2" marker-end="url(#arr4)"/>
+<text x="756" y="144" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="11" text-anchor="end" fill="#5d6864">위임 (태스크)</text>
+<line x1="846" y1="152" x2="846" y2="126" stroke="#136f63" stroke-width="2" marker-end="url(#arr4)"/>
+<text x="858" y="140" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="11" fill="#136f63">결과(요약)만</text>
+<text x="858" y="154" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="11" fill="#136f63">반환</text>
+<rect x="678" y="156" width="258" height="84" fill="#ffffff" stroke="#5d6864" stroke-dasharray="6 4"/>
+<text x="694" y="182" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="14" font-weight="700" fill="#18201f">서브에이전트</text>
+<text x="694" y="202" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="12" fill="#5d6864">별도 컨텍스트 (격리)</text>
+<text x="694" y="222" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="11" fill="#5d6864">원시 탐색·시행착오는 여기서 소비</text>
+<text x="678" y="276" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="12" fill="#5d6864">압축할 오염을 애초에</text>
+<text x="678" y="294" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="12" fill="#5d6864">메인에 들이지 않는다</text>
+
+<rect x="24" y="380" width="912" height="56" rx="6" fill="#fff2d6"/>
+<text x="480" y="414" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="14" text-anchor="middle" fill="#18201f">압축은 사후 구제, 격리는 사전 차단 — 상태는 코드가 유지하는 요약(status bar)으로 컨텍스트 끝에</text>
+</svg>
+<figcaption style="color:#5d6864;font-size:14px;margin-top:8px;">그림 1. 계층적 압축은 오래된 것부터 줄여 working set을 지키고(좌), 서브에이전트 격리는 컨텍스트 오염을 애초에 차단한다(우).</figcaption>
+</figure>
+
   <h2>1. Status Bar: 흩어진 상태를 끝에 증류한다</h2>
   <p><strong>Agent Status Bar</strong>는 framework가 컨텍스트 끝에 user-role 메시지로 주입하는 상태 요약(호출 횟수, 현재 시각, TODO 진행)이다. 폰 상태바를 떠올리면 된다. system prompt가 고정 매뉴얼이라면 status bar는 실시간 대시보드다.</p>
   <p>이론적 근거가 중요하다: <strong>in-context learning은 추론(reasoning)이 아니라 검색(retrieval)에 가깝다</strong>. Attention은 기존 토큰 조회에는 강하지만, 단일 forward pass로 "지금까지 몇 번 전화했나" 같은 집계 상태를 능동 요약하지는 못한다. 그 결론은 원시 레코드에 흩어져 있고, 모델이 매번 재계산하면 비효율에 오류가 낀다. Status bar는 이 암묵 상태를 명시 지식으로 증류하고, <strong>생성 위치에 인접한 맨 끝에 두어 attention을 조종(steering)</strong>한다.</p>

@@ -138,6 +138,75 @@ footer {
     <strong>오늘의 한 줄 답:</strong> 포스트트레이닝의 선택 기준은 단 하나의 프레임워크로 수렴한다 — <em>언어로 표현 가능한 판단은 프롬프트/스킬에, 결정적 절차는 코드에, 표현 불가능한 암묵 능력만 파라미터에</em>. 그리고 어떤 매체를 고치든 "평가 → 후보 생성 → 검증 게이트 → 점진 릴리즈" 루프 없는 갱신은 진화가 아니라 drift다.
   </section>
 
+  <figure style="margin:24px 0;">
+    <svg viewBox="0 0 960 520" style="width:100%;height:auto;display:block;" role="img" xmlns="http://www.w3.org/2000/svg">
+      <title>SFT vs RL 선택 프레임워크와 4대 갱신 매체 승격 사다리</title>
+      <defs>
+        <marker id="arr9" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+          <path d="M0,0 L8,4 L0,8 Z" fill="#136f63"></path>
+        </marker>
+      </defs>
+      <rect x="1" y="1" width="958" height="518" fill="#ffffff" stroke="#d9ddd6" rx="8"></rect>
+
+      <text x="40" y="52" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="12" font-weight="700" letter-spacing="2" fill="#136f63">SFT VS RL — 선택 프레임워크</text>
+      <rect x="40" y="66" width="400" height="34" fill="#eaf3ef" stroke="#d9ddd6" rx="6"></rect>
+      <text x="56" y="88" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="14" fill="#18201f">제1원칙 · SFT memorizes, RL generalizes</text>
+      <rect x="40" y="106" width="400" height="34" fill="#eaf3ef" stroke="#d9ddd6" rx="6"></rect>
+      <text x="56" y="128" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="14" fill="#18201f">제2원칙 · data and environment &gt; algorithms</text>
+
+      <rect x="130" y="168" width="220" height="42" fill="#ffffff" stroke="#18201f" stroke-width="1.5" rx="6"></rect>
+      <text x="240" y="194" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="15" font-weight="700" fill="#18201f" text-anchor="middle">무엇을 고치고 싶은가?</text>
+      <line x1="200" y1="210" x2="135" y2="248" stroke="#136f63" stroke-width="2" marker-end="url(#arr9)"></line>
+      <line x1="280" y1="210" x2="345" y2="248" stroke="#136f63" stroke-width="2" marker-end="url(#arr9)"></line>
+
+      <rect x="40" y="252" width="190" height="76" fill="#ffffff" stroke="#d9ddd6" rx="6"></rect>
+      <text x="135" y="280" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="14" fill="#18201f" text-anchor="middle">형식·스타일·프로토콜</text>
+      <text x="135" y="308" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="14" font-weight="700" fill="#136f63" text-anchor="middle">→ SFT (암기)</text>
+      <rect x="290" y="252" width="190" height="76" fill="#ffffff" stroke="#d9ddd6" rx="6"></rect>
+      <text x="385" y="280" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="14" fill="#18201f" text-anchor="middle">새 상황·일반화·전략</text>
+      <text x="385" y="308" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="14" font-weight="700" fill="#136f63" text-anchor="middle">→ RL (탐색)</text>
+
+      <rect x="40" y="352" width="400" height="56" fill="#fff2d6" stroke="#d9ddd6" rx="6"></rect>
+      <text x="56" y="376" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="14" font-weight="700" fill="#18201f">전환 신호</text>
+      <text x="56" y="398" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="14" fill="#18201f">데모를 추가핏도 성능이 정체하면 SFT → RL</text>
+
+      <line x1="475" y1="40" x2="475" y2="480" stroke="#d9ddd6" stroke-width="1"></line>
+
+      <text x="500" y="52" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="12" font-weight="700" letter-spacing="2" fill="#136f63">지속 진화 — 4대 갱신 매체</text>
+
+      <rect x="500" y="300" width="100" height="46" fill="#ffffff" stroke="#18201f" stroke-width="1.5" rx="6"></rect>
+      <text x="550" y="327" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="14" font-weight="700" fill="#18201f" text-anchor="middle">지식 파일</text>
+      <rect x="610" y="254" width="105" height="46" fill="#ffffff" stroke="#18201f" stroke-width="1.5" rx="6"></rect>
+      <text x="662" y="281" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="14" font-weight="700" fill="#18201f" text-anchor="middle">프롬프트·스킬</text>
+      <rect x="725" y="208" width="105" height="46" fill="#ffffff" stroke="#18201f" stroke-width="1.5" rx="6"></rect>
+      <text x="777" y="235" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="14" font-weight="700" fill="#18201f" text-anchor="middle">프로그램·도구</text>
+      <rect x="840" y="162" width="100" height="46" fill="#136f63" rx="6"></rect>
+      <text x="890" y="189" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="14" font-weight="700" fill="#ffffff" text-anchor="middle">파라미터</text>
+      <line x1="600" y1="312" x2="636" y2="292" stroke="#136f63" stroke-width="2" marker-end="url(#arr9)"></line>
+      <line x1="715" y1="266" x2="751" y2="246" stroke="#136f63" stroke-width="2" marker-end="url(#arr9)"></line>
+      <line x1="830" y1="220" x2="866" y2="200" stroke="#136f63" stroke-width="2" marker-end="url(#arr9)"></line>
+      <text x="500" y="120" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="13" fill="#5d6864">고칠 수 있는 가장 얕은 매첶터 고친다.</text>
+      <text x="500" y="140" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="13" fill="#5d6864">파라미터는 최후의 수단 (비용·리스크 최대).</text>
+
+      <text x="500" y="392" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="12" font-weight="700" letter-spacing="2" fill="#136f63">운영 루프</text>
+      <rect x="500" y="406" width="100" height="36" fill="#ffffff" stroke="#d9ddd6" rx="6"></rect>
+      <text x="550" y="429" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="13" fill="#18201f" text-anchor="middle">운영 궤적</text>
+      <rect x="615" y="406" width="100" height="36" fill="#ffffff" stroke="#d9ddd6" rx="6"></rect>
+      <text x="665" y="429" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="13" fill="#18201f" text-anchor="middle">학습 신호</text>
+      <rect x="730" y="406" width="100" height="36" fill="#ffffff" stroke="#d9ddd6" rx="6"></rect>
+      <text x="780" y="429" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="13" fill="#18201f" text-anchor="middle">검증 게이트</text>
+      <rect x="845" y="406" width="95" height="36" fill="#ffffff" stroke="#d9ddd6" rx="6"></rect>
+      <text x="892" y="429" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="13" fill="#18201f" text-anchor="middle">승격</text>
+      <line x1="600" y1="424" x2="613" y2="424" stroke="#136f63" stroke-width="2" marker-end="url(#arr9)"></line>
+      <line x1="715" y1="424" x2="728" y2="424" stroke="#136f63" stroke-width="2" marker-end="url(#arr9)"></line>
+      <line x1="830" y1="424" x2="843" y2="424" stroke="#136f63" stroke-width="2" marker-end="url(#arr9)"></line>
+      <polyline points="892,442 892,470 550,470 550,444" fill="none" stroke="#5d6864" stroke-width="2" marker-end="url(#arr9)"></polyline>
+      <text x="720" y="492" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="12" fill="#5d6864" text-anchor="middle">검증 통과분만 다음 매체로 — 루프 없는 갱신은 drift</text>
+    </svg>
+    <figcaption style="color:#5d6864;font-size:14px;margin-top:8px;">그림 1. 좌: SFT와 RL의 선택 프레임워크와 두 대원칙. 우: 경험이 지식 → 프롬프트·스킬 → 프로그램 → 파라미터로 승격되는 사다리와, 승격을 지배하는 운영 루프 (Ch7-8).</figcaption>
+  </figure>
+
+
   <h2>1. 두 개의 대원칙</h2>
   <p>7장 전체는 두 문장으로 압축된다. 첫째, <strong>"SFT memorizes, RL generalizes"</strong> — 같은 예산에서 SFT는 데모의 답을 암기해 환경이 바뀌면 물너지고, RL은 전이 가능한 전략을 배운다. 둘째, <strong>"Data and environment matter more than algorithms"</strong> — 성패를 가르는 것은 PPO냐 GRPO냐가 아니라 ① 베이스 모델(prior) ② 환경 충실도 ③ 데이터 품질이다. 우선순위는 <code>prior &gt; environment &gt; algorithm</code>.</p>
   <p>첫째 원칙은 슬로건이 아니라 통제 실험이다. GeneralPoints 실험(Chu et al., 2025)에서 24점 카드 게임의 규칙을 바꿔 테스트(훈련 J/Q/K=10 → 테스트 11/12/13)하자, SFT를 이어간 모델은 <strong>-8.1pt</strong>(11.5→3.4)로 붕괴한 반면 RL로 전환한 모델은 <strong>+3.5pt</strong>(11.5→15.0)로 상승했다. 시각 변형(검정 수트 → 빨강 수트)에서는 격차가 더 벌어져 RL +17.6pt vs SFT -9.9pt. <a href="https://arxiv.org/abs/2501.17161">arXiv:2501.17161</a></p>

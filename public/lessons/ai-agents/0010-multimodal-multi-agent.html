@@ -138,6 +138,72 @@ footer {
     <strong>오늘의 한 줄 답:</strong> 실시간 아키텍처는 <em>"겹칠 수 있는 단계는 겹치고, 겹칠 수 없는 판정 단계는 아키텍처를 바꾼다"</em>로 진화하고, 멀티에이전트는 <em>"협업이 생성 시점에 없던 정보를 도입하는가"</em>라는 단 하나의 기준으로 싱글 에이전트와 겨룬다.
   </section>
 
+  <figure style="margin:24px 0;">
+    <svg viewBox="0 0 960 500" style="width:100%;height:auto;display:block;" role="img" xmlns="http://www.w3.org/2000/svg">
+      <title>음성 3대 패러다임의 레이턴시 비교와 멀티에이전트 판별 기준</title>
+      <defs>
+        <marker id="arr10" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+          <path d="M0,0 L8,4 L0,8 Z" fill="#136f63"></path>
+        </marker>
+      </defs>
+      <rect x="1" y="1" width="958" height="498" fill="#ffffff" stroke="#d9ddd6" rx="8"></rect>
+
+      <text x="40" y="52" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="12" font-weight="700" letter-spacing="2" fill="#136f63">음성 3대 패러다임 — 응답 레이턴시</text>
+
+      <text x="40" y="100" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="14" fill="#18201f">Cascaded (직렬)</text>
+      <rect x="548" y="82" width="352" height="24" fill="#fff2d6" stroke="#d9ddd6" rx="4"></rect>
+      <text x="700" y="99" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="13" fill="#18201f">0.9 - 2 s</text>
+
+      <text x="40" y="146" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="14" fill="#18201f">Streaming (겹침)</text>
+      <rect x="452" y="128" width="64" height="24" fill="#eaf3ef" stroke="#d9ddd6" rx="4"></rect>
+      <text x="530" y="145" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="13" fill="#18201f">600 - 800 ms</text>
+
+      <text x="40" y="192" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="14" fill="#18201f">Full-duplex (Moshi)</text>
+      <rect x="260" y="174" width="64" height="24" fill="#136f63" rx="4"></rect>
+      <text x="340" y="191" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="13" fill="#18201f">~200 ms</text>
+
+      <line x1="260" y1="216" x2="260" y2="224" stroke="#5d6864" stroke-width="1"></line>
+      <text x="260" y="238" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="11" fill="#5d6864" text-anchor="middle">0</text>
+      <line x1="580" y1="216" x2="580" y2="224" stroke="#5d6864" stroke-width="1"></line>
+      <text x="580" y="238" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="11" fill="#5d6864" text-anchor="middle">1000 ms</text>
+      <line x1="900" y1="216" x2="900" y2="224" stroke="#5d6864" stroke-width="1"></line>
+      <text x="900" y="238" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="11" fill="#5d6864" text-anchor="middle">2000 ms</text>
+
+      <line x1="30" y1="258" x2="930" y2="258" stroke="#d9ddd6" stroke-width="1"></line>
+
+      <text x="40" y="292" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="12" font-weight="700" letter-spacing="2" fill="#136f63">멀티에이전트 — 언제 싱글보다 나은가</text>
+
+      <line x1="70" y1="330" x2="590" y2="330" stroke="#5d6864" stroke-width="2" marker-end="url(#arr10)"></line>
+      <text x="70" y="352" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="13" fill="#5d6864">Shared Context</text>
+      <text x="590" y="352" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="13" fill="#5d6864" text-anchor="end">Non-shared Context</text>
+
+      <rect x="70" y="368" width="150" height="48" fill="#ffffff" stroke="#18201f" stroke-width="1.5" rx="6"></rect>
+      <text x="145" y="389" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="13" font-weight="700" fill="#18201f" text-anchor="middle">공유 스크래치패드</text>
+      <text x="145" y="407" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="12" fill="#5d6864" text-anchor="middle">blackboard</text>
+      <rect x="250" y="368" width="150" height="48" fill="#ffffff" stroke="#18201f" stroke-width="1.5" rx="6"></rect>
+      <text x="325" y="389" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="13" font-weight="700" fill="#18201f" text-anchor="middle">계층적 위임</text>
+      <text x="325" y="407" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="12" fill="#5d6864" text-anchor="middle">orchestrator</text>
+      <rect x="430" y="368" width="160" height="48" fill="#ffffff" stroke="#18201f" stroke-width="1.5" rx="6"></rect>
+      <text x="510" y="389" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="13" font-weight="700" fill="#18201f" text-anchor="middle">메시지 패싱</text>
+      <text x="510" y="407" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="12" fill="#5d6864" text-anchor="middle">peer-to-peer</text>
+
+      <rect x="630" y="300" width="300" height="116" fill="#fff2d6" stroke="#d9ddd6" rx="8"></rect>
+      <text x="650" y="328" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="13" font-weight="700" fill="#136f63" letter-spacing="1">판별 기준</text>
+      <text x="650" y="354" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="15" font-weight="700" fill="#18201f">협업이 신규 정보를 도입하는가?</text>
+      <text x="650" y="380" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="13" fill="#18201f">debate만이면 무효 — 실행 결과·다른 시각의</text>
+      <text x="650" y="400" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="13" fill="#18201f">피드백처럼 생성 시점에 없던 정보여야 한다</text>
+
+      <rect x="70" y="440" width="200" height="36" fill="#ffffff" stroke="#a23d31" rx="18"></rect>
+      <text x="170" y="463" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="13" fill="#a23d31" text-anchor="middle">premature termination</text>
+      <rect x="290" y="440" width="170" height="36" fill="#ffffff" stroke="#a23d31" rx="18"></rect>
+      <text x="375" y="463" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="13" fill="#a23d31" text-anchor="middle">오류 연쇄 증폭</text>
+      <rect x="480" y="440" width="180" height="36" fill="#ffffff" stroke="#a23d31" rx="18"></rect>
+      <text x="570" y="463" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="13" fill="#a23d31" text-anchor="middle">병목은 verifier</text>
+    </svg>
+    <figcaption style="color:#5d6864;font-size:14px;margin-top:8px;">그림 1. 상: 음성 아키텍처 3세대의 응답 레이턴시 — 직렬 0.9-2초, 스트리밍 600-800ms, full-duplex ~200ms. 하: 멀티에이전트 설계 축(공유 컨텍스트 여부)과 "신규 정보 도입" 판별 기준, 대표 실패 모드 (Ch9-10).</figcaption>
+  </figure>
+
+
   <h2>1. 음성 아키텍처의 3대 패러다임</h2>
   <p>OpenAI가 GPT-Live 공개(2026) 때 제시한 3분류다. 서사축은 하나: <strong>"VAD(침묵 감지)를 어떻게 대체하는가"</strong>. 3세대는 대체 관계가 아니라 레이턴시/비용 제약에 따라 공존하는 설계 선택지다.</p>
 

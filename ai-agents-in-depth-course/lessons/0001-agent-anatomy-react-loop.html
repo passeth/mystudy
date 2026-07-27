@@ -139,6 +139,55 @@ footer {
     <strong>오늘의 한 줄 답:</strong> 현대 에이전트는 <em>LLM(추론 엔진) + Context(작업 정보 집합) + Tools(행동 인터페이스)</em>의 조합이고, 이 셋이 ReAct 루프(reason → act → observe) 안에서 결합할 때 비로소 "에이전트"가 된다. 모델을 바꾸지 않고도 Context와 Tools, 즉 Harness를 개선해 성능을 크게 올릴 수 있다.
   </section>
 
+  <figure style="margin:24px 0;">
+      <svg viewBox="0 0 960 560" style="width:100%;height:auto;display:block;" role="img" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif">
+      <title>에이전트의 세 부품과 ReAct 루프, 엔지니어링 패러다임 중첩 구조</title>
+      <defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#136f63"/></marker><marker id="arrm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#5d6864"/></marker></defs>
+      <rect x="1" y="1" width="958" height="558" rx="8" fill="#ffffff" stroke="#d9ddd6" stroke-width="1"/>
+      <text x="40" y="42" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="12" fill="#136f63" text-anchor="start" font-weight="700" letter-spacing="2">AGENT = LLM + CONTEXT + TOOLS</text>
+      <rect x="40" y="70" width="300" height="88" rx="8" fill="#ffffff" stroke="#136f63" stroke-width="1"/>
+      <text x="58" y="94" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="11" fill="#136f63" text-anchor="start" font-weight="700" letter-spacing="1.5">REASONING ENGINE</text>
+      <text x="58" y="120" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="15" fill="#18201f" text-anchor="start" font-weight="700">LLM · 추론 엔진</text>
+      <text x="58" y="143" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="14" fill="#5d6864" text-anchor="start">의도 파악 · 계획 · 판단</text>
+      <line x1="340" y1="114" x2="498" y2="222" stroke="#5d6864" stroke-width="2" marker-end="url(#arrm)"/>
+      <rect x="40" y="178" width="300" height="88" rx="8" fill="#ffffff" stroke="#136f63" stroke-width="1"/>
+      <text x="58" y="202" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="11" fill="#136f63" text-anchor="start" font-weight="700" letter-spacing="1.5">WORKING SET</text>
+      <text x="58" y="228" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="15" fill="#18201f" text-anchor="start" font-weight="700">Context · 작업 정보 집합</text>
+      <text x="58" y="251" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="14" fill="#5d6864" text-anchor="start">환경 · 메모리 · 진행 상태</text>
+      <line x1="340" y1="222" x2="498" y2="222" stroke="#5d6864" stroke-width="2" marker-end="url(#arrm)"/>
+      <rect x="40" y="286" width="300" height="88" rx="8" fill="#ffffff" stroke="#136f63" stroke-width="1"/>
+      <text x="58" y="310" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="11" fill="#136f63" text-anchor="start" font-weight="700" letter-spacing="1.5">ACTION INTERFACES</text>
+      <text x="58" y="336" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="15" fill="#18201f" text-anchor="start" font-weight="700">Tools · 행동 인터페이스</text>
+      <text x="58" y="359" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="14" fill="#5d6864" text-anchor="start">호출 · 코드 생성 · 위임</text>
+      <line x1="340" y1="330" x2="498" y2="222" stroke="#5d6864" stroke-width="2" marker-end="url(#arrm)"/>
+      <circle cx="630" cy="222" r="100" fill="none" stroke="#d9ddd6" stroke-width="1" stroke-dasharray="3 4"/>
+      <path d="M 662 152 A 100 100 0 0 1 704 240" fill="none" stroke="#136f63" stroke-width="2" marker-end="url(#arr)"/>
+      <path d="M 683 294 A 100 100 0 0 1 577 294" fill="none" stroke="#136f63" stroke-width="2" marker-end="url(#arr)"/>
+      <path d="M 556 240 A 100 100 0 0 1 598 152" fill="none" stroke="#136f63" stroke-width="2" marker-end="url(#arr)"/>
+      <circle cx="630" cy="122" r="36" fill="#eaf3ef" stroke="#136f63" stroke-width="1"/>
+      <text x="630" y="127" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="14" fill="#18201f" text-anchor="middle" font-weight="700">reason</text>
+      <circle cx="717" cy="272" r="36" fill="#eaf3ef" stroke="#136f63" stroke-width="1"/>
+      <text x="717" y="277" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="14" fill="#18201f" text-anchor="middle" font-weight="700">act</text>
+      <circle cx="543" cy="272" r="36" fill="#eaf3ef" stroke="#136f63" stroke-width="1"/>
+      <text x="543" y="277" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="14" fill="#18201f" text-anchor="middle" font-weight="700">observe</text>
+      <text x="630" y="217" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="16" fill="#136f63" text-anchor="middle" font-weight="700">ReAct</text>
+      <text x="630" y="237" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="14" fill="#136f63" text-anchor="middle" font-weight="700">루프</text>
+      <text x="40" y="392" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="12" fill="#136f63" text-anchor="start" font-weight="700" letter-spacing="1.5">ENGINEERING PARADIGMS — 바깥으로 갈수록 모델 교체 없이 얻는 성능</text>
+      <rect x="40" y="416" width="180" height="28" rx="8" fill="#ffffff" stroke="#d9ddd6" stroke-width="1"/>
+      <text x="54" y="435" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="14" fill="#18201f" text-anchor="start">Prompt Engineering</text>
+      <rect x="40" y="452" width="260" height="28" rx="8" fill="#ffffff" stroke="#d9ddd6" stroke-width="1"/>
+      <text x="54" y="471" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="14" fill="#18201f" text-anchor="start">Context Engineering</text>
+      <rect x="40" y="488" width="340" height="28" rx="8" fill="#eaf3ef" stroke="#136f63" stroke-width="1"/>
+      <text x="54" y="507" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="14" fill="#18201f" text-anchor="start" font-weight="700">Harness Engineering</text>
+      <rect x="40" y="524" width="420" height="28" rx="8" fill="#eaf3ef" stroke="#136f63" stroke-width="1"/>
+      <text x="54" y="543" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="14" fill="#18201f" text-anchor="start" font-weight="700">Loop Engineering</text>
+      <polyline points="474,490 486,490 486,552 474,552" fill="none" stroke="#136f63" stroke-width="2"/>
+      <text x="498" y="512" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="14" fill="#136f63" text-anchor="start" font-weight="700">모델 교체 없이</text>
+      <text x="498" y="532" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="14" fill="#136f63" text-anchor="start" font-weight="700">성능을 올리는 영역</text>
+      </svg>
+      <figcaption style="color:#5d6864;font-size:14px;margin-top:8px;">그림 1. 에이전트의 세 부품(LLM · Context · Tools)이 ReAct 루프 안에서 결합한다. 아래 중첩 구조는 엔지니어링 패러다임의 확장 순서 — 바깥(Harness · Loop)일수록 모델을 바꾸지 않고 얻는 성능이다.</figcaption>
+  </figure>
+
   <h2>1. 세 부품의 분업</h2>
   <p>Bojie Li의 책은 Chapter 1을 이 공식 하나로 연다. 각 부품에는 명확한 역할 이름이 붙어 있다.</p>
   <div class="grid">

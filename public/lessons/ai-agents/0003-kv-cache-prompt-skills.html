@@ -142,6 +142,57 @@ footer {
     <strong>오늘의 한 줄 답:</strong> 컨텍스트의 <em>앞부분(static prefix)은 절대 건드리지 말고, 동적인 것은 항상 끝에 append</em>하라. 이 한 원칙이 KV cache 경제성, 시스템 프롬프트 설계, 스킬 로딩 방식을 모두 관통한다.
   </section>
 
+  <figure style="margin:24px 0;">
+<svg viewBox="0 0 960 480" style="width:100%;height:auto;display:block;" role="img" xmlns="http://www.w3.org/2000/svg">
+<title>KV cache prefix 안정성과 스킬의 progressive disclosure</title>
+<defs>
+<marker id="arr3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#136f63"/></marker>
+</defs>
+<rect x="1" y="1" width="958" height="478" rx="8" fill="#ffffff" stroke="#d9ddd6"/>
+
+<text x="40" y="46" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="12" font-weight="700" letter-spacing="2" fill="#136f63">CONTEXT WINDOW &amp; KV CACHE</text>
+
+<text x="40" y="80" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="14" fill="#5d6864">안정적 설계: prefix는 불변, suffix는 append-only</text>
+<rect x="40" y="92" width="300" height="44" fill="#eaf3ef" stroke="#136f63"/>
+<text x="56" y="119" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="14" font-weight="700" fill="#18201f">static prefix</text>
+<text x="176" y="119" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="12" fill="#5d6864">system prompt + tool defs</text>
+<rect x="340" y="92" width="122" height="44" fill="#ffffff" stroke="#5d6864"/>
+<text x="352" y="111" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="13" fill="#18201f">trajectory</text>
+<text x="352" y="128" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="11" fill="#5d6864">(append-only)</text>
+<text x="40" y="164" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="14" font-weight="700" fill="#136f63">✓ CACHE HIT · 입력 토큰 ~1/10 비용</text>
+
+<text x="40" y="208" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="14" fill="#5d6864">유해 패턴: 중간에 동적 콘텐츠 삽입</text>
+<rect x="40" y="220" width="108" height="44" fill="#eaf3ef" stroke="#136f63"/>
+<text x="56" y="247" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="13" fill="#18201f">prefix</text>
+<line x1="156" y1="220" x2="172" y2="264" stroke="#a23d31" stroke-width="2.5"/>
+<line x1="172" y1="220" x2="156" y2="264" stroke="#a23d31" stroke-width="2.5"/>
+<rect x="180" y="220" width="282" height="44" fill="#ffffff" stroke="#d9ddd6" stroke-dasharray="5 4"/>
+<text x="196" y="247" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="13" fill="#a23d31">이후 전부 INVALIDATED (재계산)</text>
+<text x="40" y="292" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="12" fill="#5d6864">prefix가 흔들리면 캐시 미스 → 지연·비용 동시 상승</text>
+
+<line x1="486" y1="28" x2="486" y2="356" stroke="#d9ddd6"/>
+
+<text x="512" y="46" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="12" font-weight="700" letter-spacing="2" fill="#136f63">SKILLS · PROGRESSIVE DISCLOSURE</text>
+<rect x="566" y="62" width="300" height="52" fill="#136f63"/>
+<text x="582" y="84" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="14" font-weight="700" fill="#ffffff">메타데이터 (name + description)</text>
+<text x="582" y="103" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="11" fill="#eaf3ef">≈100 tokens · 상시 로드 (라우팅 규칙)</text>
+<line x1="716" y1="116" x2="716" y2="128" stroke="#136f63" stroke-width="2" marker-end="url(#arr3)"/>
+<rect x="546" y="132" width="340" height="52" fill="#eaf3ef" stroke="#136f63"/>
+<text x="562" y="154" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="14" font-weight="700" fill="#18201f">SKILL.md 본문</text>
+<text x="562" y="173" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="11" fill="#5d6864">수천 tokens · 트리거될 때만 로드</text>
+<line x1="716" y1="186" x2="716" y2="198" stroke="#136f63" stroke-width="2" marker-end="url(#arr3)"/>
+<rect x="526" y="202" width="380" height="52" fill="#ffffff" stroke="#5d6864"/>
+<text x="542" y="224" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="14" font-weight="700" fill="#18201f">번들 리소스 (scripts · references)</text>
+<text x="542" y="243" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="11" fill="#5d6864">필요할 때만 on-demand</text>
+<text x="512" y="292" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="12" fill="#5d6864">컨텍스트에는 지금 필요한 만큼만 올린다 —</text>
+<text x="512" y="310" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="12" fill="#5d6864">스킬 로딩도 KV cache와 같은 경제 논리</text>
+
+<rect x="24" y="384" width="912" height="56" rx="6" fill="#fff2d6"/>
+<text x="480" y="418" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="14" text-anchor="middle" fill="#18201f">한 원칙: static prefix는 불변, 동적 요소는 append-only · 스킬도 필요 시점에 단계별 로드</text>
+</svg>
+<figcaption style="color:#5d6864;font-size:14px;margin-top:8px;">그림 1. KV cache는 prefix 안정성에 좌우된다(좌). 스킬은 메타데이터 → 본문 → 리소스 순으로 필요할 때만 컨텍스트에 올라온다(우).</figcaption>
+</figure>
+
   <h2>1. 캐시가 왜 "아키텍처"인가</h2>
   <p>LLM 추론에서 새 토큰을 만들 때마다 이전 모든 토큰의 Key/Value를 다시 계산하면 비용이 폭증한다. 그래서 이전 토큰의 K/V를 재사용하는 것이 <strong>KV Cache</strong>다. 문제는 prefix의 <em>한 토큰이라도 바뀌면</em> 레이어 전파 때문에 그 지점 이후의 캐시가 전부 무효화된다는 것. 캐시는 끝에서부터가 아니라 <strong>변경 지점부터</strong> 깨진다.</p>
   <p>여기에 API 서비스 계층의 <strong>Prompt Cache</strong>가 얹힌다. 요청 사이에 동일 prefix를 재사용하는 캐시로, Anthropic·DeepSeek·OpenAI GPT-5 계열 모두 캐시 읽기 가격이 <strong>신규 계산의 약 1/10</strong>이다. 즉 prefix를 안정적으로 유지하는 것만으로 비용이 10분의 1이 될 수 있다.</p>

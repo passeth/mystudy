@@ -139,6 +139,66 @@ footer {
     <strong>오늘의 한 줄 답:</strong> 오픈엔드 태스크를 겨냥한 범용 에이전트의 코어는 <em>코딩 에이전트 + 파일 시스템</em>이다. 코드는 정확하고(precise), 실행 가능하고(executable), 합성 가능해서(composable) 다른 능력을 만들어내는 메타 능력(meta-capability)이기 때문이다.
   </section>
 
+  <figure style="margin:24px 0;">
+<svg viewBox="0 0 960 540" style="width:100%;height:auto;display:block;" role="img" xmlns="http://www.w3.org/2000/svg">
+<title>범용 에이전트 = 코딩 에이전트 + 파일시스템: 7 코어 툴, 하네스 4컴포넌트, 회로차단기</title>
+<defs>
+<marker id="ah7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#136f63"/></marker>
+</defs>
+<rect x="0" y="0" width="960" height="540" fill="#ffffff" stroke="#d9ddd6" rx="8"/>
+<text x="40" y="38" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="12" font-weight="700" letter-spacing="2" fill="#136f63">GENERAL AGENT = CODING AGENT + FILESYSTEM</text>
+
+<rect x="40" y="60" width="540" height="350" fill="none" stroke="#5d6864" stroke-width="1.5" stroke-dasharray="6 5" rx="10"/>
+<text x="60" y="86" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="12" font-weight="700" letter-spacing="1.5" fill="#5d6864">AGENT LOOP + 7 CORE TOOLS</text>
+
+<ellipse cx="310" cy="240" rx="118" ry="72" fill="#eaf3ef" stroke="#136f63" stroke-width="2"/>
+<text x="310" y="226" text-anchor="middle" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="16" font-weight="700" fill="#18201f">Agent Loop</text>
+<text x="310" y="248" text-anchor="middle" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="13" fill="#5d6864">reason → act → observe</text>
+<text x="310" y="268" text-anchor="middle" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="12" fill="#5d6864">파일시스템이 상태 허브</text>
+
+<g font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="13" fill="#18201f">
+<rect x="60" y="110" width="140" height="34" fill="#ffffff" stroke="#d9ddd6" rx="6"/><text x="130" y="131" text-anchor="middle">Code Interpreter</text>
+<rect x="60" y="156" width="140" height="34" fill="#ffffff" stroke="#d9ddd6" rx="6"/><text x="130" y="177" text-anchor="middle">Bash Shell</text>
+<rect x="60" y="296" width="140" height="34" fill="#ffffff" stroke="#d9ddd6" rx="6"/><text x="130" y="317" text-anchor="middle">Read File</text>
+<rect x="60" y="342" width="140" height="34" fill="#ffffff" stroke="#d9ddd6" rx="6"/><text x="130" y="363" text-anchor="middle">Write File</text>
+<rect x="420" y="110" width="140" height="34" fill="#ffffff" stroke="#d9ddd6" rx="6"/><text x="490" y="131" text-anchor="middle">Edit File</text>
+<rect x="420" y="156" width="140" height="34" fill="#ffffff" stroke="#d9ddd6" rx="6"/><text x="490" y="177" text-anchor="middle">Glob</text>
+<rect x="420" y="342" width="140" height="34" fill="#ffffff" stroke="#d9ddd6" rx="6"/><text x="490" y="363" text-anchor="middle">Grep</text>
+</g>
+<g stroke="#5d6864" stroke-width="1.5">
+<line x1="200" y1="127" x2="232" y2="160"/><line x1="200" y1="173" x2="222" y2="195"/>
+<line x1="200" y1="313" x2="222" y2="290"/><line x1="200" y1="359" x2="235" y2="325"/>
+<line x1="420" y1="127" x2="388" y2="160"/><line x1="420" y1="173" x2="398" y2="195"/>
+<line x1="420" y1="359" x2="385" y2="325"/>
+</g>
+<text x="310" y="398" text-anchor="middle" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="12" fill="#5d6864">탐색 · 읽기 · 수정 · 실행 · 패턴 검색의 정규화된 참조 세트</text>
+
+<text x="620" y="86" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="12" font-weight="700" letter-spacing="1.5" fill="#5d6864">HARNESS 4 COMPONENTS</text>
+<g font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif">
+<rect x="620" y="100" width="300" height="66" fill="#ffffff" stroke="#d9ddd6" rx="8"/>
+<text x="636" y="126" font-size="14" font-weight="700" fill="#18201f">Acceptance Baseline</text>
+<text x="636" y="148" font-size="12" fill="#5d6864">완료의 정의: 테스트 통과 = 완료</text>
+<rect x="620" y="178" width="300" height="66" fill="#ffffff" stroke="#d9ddd6" rx="8"/>
+<text x="636" y="204" font-size="14" font-weight="700" fill="#18201f">Execution Boundary</text>
+<text x="636" y="226" font-size="12" fill="#5d6864">행동 경계: 권한·샌드박스·egress 차단</text>
+<rect x="620" y="256" width="300" height="66" fill="#ffffff" stroke="#d9ddd6" rx="8"/>
+<text x="636" y="282" font-size="14" font-weight="700" fill="#18201f">Feedback</text>
+<text x="636" y="304" font-size="12" fill="#5d6864">실행 결과를 루프에 즉시 반환</text>
+<rect x="620" y="334" width="300" height="66" fill="#ffffff" stroke="#d9ddd6" rx="8"/>
+<text x="636" y="360" font-size="14" font-weight="700" fill="#18201f">Rollback</text>
+<text x="636" y="382" font-size="12" fill="#5d6864">실패 시 복구: Git 롤백·상태 되돌리기</text>
+</g>
+<line x1="580" y1="240" x2="612" y2="240" stroke="#136f63" stroke-width="2" marker-end="url(#ah7)"/>
+
+<rect x="40" y="436" width="880" height="76" fill="#fff2d6" stroke="#d9ddd6" rx="8"/>
+<text x="64" y="466" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="12" font-weight="700" letter-spacing="1.5" fill="#a23d31">CIRCUIT BREAKER</text>
+<text x="64" y="492" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="15" fill="#18201f">같은 실패 3회 반복 → 루프 차단 → 사람에게 에스컬레이션</text>
+<text x="660" y="492" text-anchor="end" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="13" fill="#5d6864">death spiral 방어</text>
+<text x="900" y="492" text-anchor="end" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="13" fill="#a23d31">×3</text>
+</svg>
+<figcaption style="color:#5d6864;font-size:14px;margin-top:8px;">그림 1. 범용 에이전트의 수렴 구조 — 7 코어 툴을 갖춘 코딩 에이전트 루프를 하네스 4컴포넌트가 감싸고, 회로차단기가 실패 연쇄를 끊는다 (Ch5).</figcaption>
+</figure>
+
   <h2>1. 왜 범용 에이전트 = 코딩 에이전트 + 파일 시스템인가</h2>
   <p>Manus(Deep Research + Computer Use + Coding의 결합)든 오픈소스 OpenClaw든, 성공한 범용 에이전트는 같은 패러다임에 수렴한다. PPT는 사실 OOXML 코드고, 리포트도 코드로 생성하고, 데이터 분석은 Python이며, 성공한 GUI 워크플로는 RPA 코드로 고화할 수 있다. Computer Use보다 코드/API 호출이 대체로 더 싸고 빠르고 신뢰성이 높다. 책의 표현대로라면 코드 생성은 <strong>"가장 효율적이고 저비용이며 재사용 가능한 능력 기반"</strong>이다.</p>
   <p>단, 경계가 있다. 버티컬 고객서비스나 음성 어시스턴트처럼 닫힌 태스크 공간에서는 코드가 수많은 툴 중 하나일 뿐이다. 이 결론은 태스크 경계가 불확실한 범용 에이전트에 해당한다. 다만 정밀 계산, 데이터 처리, 규칙 검증 같은 <strong>코딩 능력 자체는 모든 에이전트의 공통 베이스라인</strong>이다.</p>

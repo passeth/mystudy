@@ -139,6 +139,62 @@ footer {
     <strong>오늘의 한 줄 답:</strong> 평가 대상은 모델 단독이 아니라 <em>모델 + 하네스 조합</em>이다. model swap 실험으로 병목이 모델인지 하네스인지를 가르고, Pass@k(능력 상한)와 Pass^k(신뢰성)를 구분하고, 관측 데이터를 평가 자산으로 증류하는 폐쇄 루프가 성숙한 에이전트 운영의 조건이다.
   </section>
 
+  <figure style="margin:24px 0;">
+<svg viewBox="0 0 960 540" style="width:100%;height:auto;display:block;" role="img" xmlns="http://www.w3.org/2000/svg">
+<title>에이전트 평가 3계층: 환경, 방법, 결정 — 그리고 Pass@k vs Pass^k</title>
+<defs>
+<marker id="ah8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#136f63"/></marker>
+</defs>
+<rect x="0" y="0" width="960" height="540" fill="#ffffff" stroke="#d9ddd6" rx="8"/>
+<text x="40" y="38" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="12" font-weight="700" letter-spacing="2" fill="#136f63">EVALUATION = ENVIRONMENT × METHOD × DECISION (평가 대상 = 모델 + 하네스)</text>
+
+<g font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif">
+<rect x="40" y="64" width="560" height="112" fill="#eaf3ef" stroke="#136f63" stroke-width="1.5" rx="8"/>
+<text x="64" y="94" font-size="15" font-weight="700" fill="#18201f">① 환경 Environment</text>
+<text x="64" y="120" font-size="13" fill="#18201f">태스크 데이터셋(난이도 설계·오염 방지) · 실행 샌드박스</text>
+<text x="64" y="142" font-size="13" fill="#18201f">Verifiers 4종: 규칙 · 단위테스트 · 모델 판정 · 인간</text>
+<text x="64" y="164" font-size="12" fill="#5d6864">환경이 현실과 멀면 점수는 의미를 잃는다</text>
+
+<rect x="40" y="192" width="560" height="112" fill="#ffffff" stroke="#d9ddd6" rx="8"/>
+<text x="64" y="222" font-size="15" font-weight="700" fill="#18201f">② 방법 Method</text>
+<text x="64" y="248" font-size="13" fill="#18201f">Pass@k(능력 상한) vs Pass^k(신뢰성) 구분</text>
+<text x="64" y="270" font-size="13" fill="#18201f">Rubric 4원칙 + veto · LLM-as-judge 편향 방어</text>
+<text x="64" y="292" font-size="12" fill="#5d6864">Elo / Bradley-Terry · length·position bias 처리</text>
+
+<rect x="40" y="320" width="560" height="112" fill="#ffffff" stroke="#d9ddd6" rx="8"/>
+<text x="64" y="350" font-size="15" font-weight="700" fill="#18201f">③ 결정 Decision</text>
+<text x="64" y="376" font-size="13" fill="#18201f">model swap 실험: 병목이 모델인가, 하네스인가</text>
+<text x="64" y="398" font-size="13" fill="#18201f">통계적 유의성: SE · McNemar · multiple comparisons</text>
+<text x="64" y="420" font-size="12" fill="#5d6864">비용 3계층 분해(캐시 히트가 ~50% 절감)</text>
+</g>
+<line x1="320" y1="176" x2="320" y2="190" stroke="#136f63" stroke-width="2" marker-end="url(#ah8)"/>
+<line x1="320" y1="304" x2="320" y2="318" stroke="#136f63" stroke-width="2" marker-end="url(#ah8)"/>
+
+<rect x="640" y="64" width="280" height="368" fill="#ffffff" stroke="#d9ddd6" rx="8"/>
+<text x="664" y="94" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="12" font-weight="700" letter-spacing="1.5" fill="#136f63">SAME MODEL, k=8</text>
+<text x="664" y="116" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="13" fill="#5d6864">한 번 맞추기 vs 매번 맞추기</text>
+<g font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="13" fill="#18201f">
+<text x="664" y="156">Pass@1</text>
+<rect x="664" y="164" width="128" height="22" fill="#d9ddd6" rx="4"/>
+<text x="800" y="180">60%</text>
+<text x="664" y="222">Pass@8</text>
+<rect x="664" y="230" width="200" height="22" fill="#136f63" rx="4"/>
+<text x="874" y="246" fill="#136f63" font-weight="700">99%</text>
+<text x="664" y="288">Pass^8</text>
+<rect x="664" y="296" width="17" height="22" fill="#a23d31" rx="4"/>
+<text x="690" y="312" fill="#a23d31" font-weight="700">7.8%</text>
+</g>
+<text x="664" y="352" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="12" fill="#5d6864">일회성 태스크의 지표와</text>
+<text x="664" y="372" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="12" fill="#5d6864">신뢰성 태스크의 지표는 다르다.</text>
+<text x="664" y="404" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="12" font-weight="700" fill="#18201f">운영 루틴은 Pass^k으로 볼 것</text>
+
+<rect x="40" y="456" width="880" height="56" fill="#eaf3ef" stroke="#d9ddd6" rx="8"/>
+<text x="64" y="490" font-family="ui-serif, Georgia, 'Apple SD Gothic Neo', 'Noto Serif KR', serif" font-size="14" fill="#18201f">Observability(궤적 수집) → 평가 자산 증류 → 회귀 테스트 · ablation 스위치 → 개선</text>
+<line x1="880" y1="470" x2="900" y2="470" stroke="#136f63" stroke-width="2" marker-end="url(#ah8)"/>
+</svg>
+<figcaption style="color:#5d6864;font-size:14px;margin-top:8px;">그림 1. 평가는 벤치마크 숫자 하나가 아니라 환경·방법·결정 3계층의 인프라다. 같은 모델이라도 Pass@k와 Pass^k는 극명하게 갈린다 (Ch6).</figcaption>
+</figure>
+
   <h2>1. 평가 대상 = 모델 + 하네스, 그리고 model swap 실험</h2>
   <p>같은 모델도 하네스에 따라 성적이 크게 달라진다. 그래서 "모델 능력 부족"과 "하네스 설계 결함"을 구분하는 도구가 필요하다 — <strong>model swap 실험</strong>(하네스 고정, 모델 교체): 강 모델로 바꿔도 점수가 그대로면 병목은 하네스, 모델 강도에 점수가 민감하면 병목은 모델이다. ablation(컴포넌트를 하나씩 제거)과 역할이 다르다: ablation은 "하네스의 무엇이 중요한가", model swap은 "병목이 모델인가 하네스인가"를 답한다.</p>
   <p>평가 시스템의 제1 가치는 <strong>모델 진화에 빠르고 신뢰성 있게 따라가는 것</strong>이다. 신모델이 나올 때 자체 평가셋 풀런으로 업그레이드 결정을 몇 시간 안에 데이터 주도로 내릴 수 있다. 평가 시스템은 3계층으로 나뉜다: ① 환경("어디서 시험") ② 방법("어떻게 채점" — 데이터셋, 메트릭, LLM-as-a-Judge) ③ 결정("시험 후 무엇" — 모델 선택, 아키텍처 최적화, 통계적 유의성).</p>
