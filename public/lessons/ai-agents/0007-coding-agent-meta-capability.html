@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="범용 에이전트의 코어가 코딩 에이전트 + 파일 시스템인 이유와, 코드가 메타 능력인 이유를 배운다.">
+  <title>코딩 에이전트와 코드라는 메타 능력 · AI Agents in Depth</title>
+  <style>
+:root {
+  --ink: #18201f;
+  --muted: #5d6864;
+  --paper: #fbfaf6;
+  --panel: #ffffff;
+  --line: #d9ddd6;
+  --accent: #136f63;
+  --accent-2: #a23d31;
+  --soft: #eaf3ef;
+  --warn: #fff2d6;
+  --code: #101917;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  color: var(--ink);
+  background: var(--paper);
+  font-family: ui-serif, Georgia, "Apple SD Gothic Neo", "Noto Serif KR", serif;
+  line-height: 1.68;
+}
+main {
+  width: min(960px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 52px 0 88px;
+}
+.kicker {
+  color: var(--accent);
+  font: 700 12px/1 ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+h1 {
+  margin: 12px 0 14px;
+  font-size: clamp(34px, 6vw, 64px);
+  line-height: 1.02;
+}
+.subtitle {
+  max-width: 720px;
+  color: var(--muted);
+  font-size: 18px;
+}
+h2 {
+  margin-top: 42px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 8px;
+}
+a { color: var(--accent); text-underline-offset: 3px; }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+.card, .quiz-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 20px;
+  margin: 18px 0;
+}
+.callout {
+  border-left: 4px solid var(--accent);
+  background: var(--soft);
+  border-radius: 6px;
+  padding: 14px 16px;
+}
+.warn {
+  border-left-color: #c98210;
+  background: var(--warn);
+}
+pre {
+  overflow-x: auto;
+  background: var(--code);
+  color: #eef7f2;
+  border-radius: 8px;
+  padding: 16px;
+}
+code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.92em;
+}
+.pill {
+  display: inline-block;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 2px 9px;
+  font: 700 12px/1.7 ui-sans-serif, system-ui, sans-serif;
+  color: var(--muted);
+}
+.quiz-card button {
+  display: block;
+  width: 100%;
+  margin: 8px 0;
+  padding: 11px 13px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.quiz-card button.correct { border-color: #1f7a3f; background: #e8f4eb; }
+.quiz-card button.incorrect { border-color: var(--accent-2); background: #fae9e7; }
+.quiz-feedback { min-height: 1.6em; font-weight: 700; }
+footer {
+  margin-top: 54px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+}
+@media print {
+  body { background: #fff; }
+  main { width: auto; padding: 24px; }
+  .card, .quiz-card { break-inside: avoid; }
+  a::after { content: " (" attr(href) ")"; font-size: 0.8em; color: var(--muted); }
+}
+
+  </style>
+</head>
+<body>
+<main>
+
+  <header>
+    <div class="kicker">Lesson 0007 · AI Agents in Depth</div>
+    <h1>코딩 에이전트와 코드라는 메타 능력</h1>
+    <p class="subtitle">범용 에이전트를 만들고 싶다면 특별한 아키텍처를 찾지 말 것. 책의 대답은 의외로 단순하다: 코딩 에이전트 + 파일 시스템이면 된다. 그리고 그 조합이 성숙한 이유는 모델이 아니라 하네스에 있다.</p>
+  </header>
+
+  <section class="callout">
+    <strong>오늘의 한 줄 답:</strong> 오픈엔드 태스크를 겨냥한 범용 에이전트의 코어는 <em>코딩 에이전트 + 파일 시스템</em>이다. 코드는 정확하고(precise), 실행 가능하고(executable), 합성 가능해서(composable) 다른 능력을 만들어내는 메타 능력(meta-capability)이기 때문이다.
+  </section>
+
+  <h2>1. 왜 범용 에이전트 = 코딩 에이전트 + 파일 시스템인가</h2>
+  <p>Manus(Deep Research + Computer Use + Coding의 결합)든 오픈소스 OpenClaw든, 성공한 범용 에이전트는 같은 패러다임에 수렴한다. PPT는 사실 OOXML 코드고, 리포트도 코드로 생성하고, 데이터 분석은 Python이며, 성공한 GUI 워크플로는 RPA 코드로 고화할 수 있다. Computer Use보다 코드/API 호출이 대체로 더 싸고 빠르고 신뢰성이 높다. 책의 표현대로라면 코드 생성은 <strong>"가장 효율적이고 저비용이며 재사용 가능한 능력 기반"</strong>이다.</p>
+  <p>단, 경계가 있다. 버티컬 고객서비스나 음성 어시스턴트처럼 닫힌 태스크 공간에서는 코드가 수많은 툴 중 하나일 뿐이다. 이 결론은 태스크 경계가 불확실한 범용 에이전트에 해당한다. 다만 정밀 계산, 데이터 처리, 규칙 검증 같은 <strong>코딩 능력 자체는 모든 에이전트의 공통 베이스라인</strong>이다.</p>
+
+  <div class="grid">
+    <div class="card">
+      <strong>코어 툴 7종</strong><br>
+      Code Interpreter · Bash Shell · Read File · Write File · Edit File · Glob · Grep. 디렉토리 탐색/읽기/수정/실행/패턴 검색 5개 연산 카테고리에서 자연 도출되는 "정규화된 참조 세트".
+    </div>
+    <div class="card">
+      <strong>파일 시스템 = 허브</strong><br>
+      MEMORY.md(상위 사실/선호), daily/YYYY-MM-DD.md(일별 로그), SOUL.md(정체성/행동 규칙), 지식 파일, Git 버전 관리. 벡터 DB 대신 Markdown인 이유: 사용자가 직접 읽고 고칠 수 있고, 시간 순서가 보존되고, Git으로 롤백된다.
+    </div>
+    <div class="card">
+      <strong>Sessionless 설계</strong><br>
+      메신저로 언제든 말을 거는 구조의 전제: 파일 시스템 상태는 영속 스토리지로, 프로세스 상태는 직렬화 가능한 형태(cwd, 환경변수, 백그라운드 태스크 목록)로 워크스페이스 파일에 기록하고 기상 시 재구축.
+    </div>
+  </div>
+
+  <section class="callout warn">
+    <strong>실무 번역:</strong> 이 구조는 낯설지 않다. Aside의 <code>~/.aside/u/0/memory/</code>(MEMORY.md, USER.md), SOUL.md, 스킬 디렉토리가 바로 OpenClaw의 파일 시스템 허브와 동형이다. 책은 이 선택이 유행이 아니라 원칙(사람이 감사 가능하고, Git으로 롤백 가능하고, 시간이 보존되는 상태 표현)에서 온 것이라고 말한다.
+  </section>
+
+  <h2>2. 하네스 4컴포넌트와 목표×검증 4분면</h2>
+  <p>Agent = Model + Harness이고, Harness = Context + Tools + Constraints + Verification + Correction이다. 코딩은 <strong>모든 에이전트 태스크 중 가장 검증 가능(verifiable)</strong>해서 하네스 공학의 효과가 가장 크다. 실전 하네스는 4개 컴포넌트로 분해된다.</p>
+  <div class="grid">
+    <div class="card"><strong>Acceptance Baseline</strong><br>완료의 정의. 테스트 스위트, CI, 리뷰 기준. 완료 기준은 "코드를 썼다"가 아니라 "테스트가 통과했다".</div>
+    <div class="card"><strong>Execution Boundary</strong><br>손댈 수 있는 것의 경계. 모듈 경계, 의존성 규칙, 권한.</div>
+    <div class="card"><strong>Feedback Signals</strong><br>자동 정확성 판정. linter, 테스트, 타입 체크. 빠르고 구조화될수록 자기교정 효율이 오른다.</div>
+    <div class="card"><strong>Rollback Mechanism</strong><br>Git, 샌드박스, 스냅샷. 안전망이 있어야 에이전트가 대담하게 실험한다.</div>
+  </div>
+  <p>목표 명확성 × 검증 자동화 4분면에서, 명확+자동(테스트 있는 버그 수정)이 sweet spot이고, 모호+수동("UI를 예쁘게")은 착수 불가다. <strong>하네스의 목표 = 최대한 많은 태스크를 "명확+자동" 분면으로 밀어넣는 것</strong>. 코딩 에이전트가 가장 성숙한 이유는 코드 모델이 특별히 강해서가 아니라, 수십 년의 소프트웨어 공학 인프라(테스트/타입/버전관리)가 자연스럽게 강력한 하네스를 구성하기 때문이다.</p>
+  <p>일반화 원칙 하나만 기억하자: <strong>Constraints over guidance</strong>. 코드로 강제 가능한 규칙은 문서의 제안("advised against")이 아니라 코드의 불가능("cannot be done")으로 인코딩한다. 제약의 더 깊은 목적은 과정 오류 방지다 — DB를 삭제하고 재구축해서 "수리"하거나, 코드를 전부 지워서 컴파일을 통과시키는 파괴적 지름길(reward hacking의 일상형)을 막는 것이다.</p>
+
+  <h2>3. 실패 4계층과 복구: 엔지니어링 성숙도를 가르는 곳</h2>
+  <p>책이 Claude Code 소스 연구에서 추출한 실패 분류다.</p>
+  <ol>
+    <li><strong>API layer</strong> — 429 rate limit, 과부하, 타임아웃, 출력 절단. 인프라 노이즈.</li>
+    <li><strong>Tool layer</strong> — 환각 호출(없는 툴), 인자 형식 오류. 가장 위험한 패턴: <em>같은 에러를 반환하는 툴을 모델이 무수정 재시도</em>.</li>
+    <li><strong>Context layer</strong> — 컨텍스트 오버플로, compaction 실패, 궤적 구조 손상(tool call에 짝 result 누락).</li>
+    <li><strong>Control-flow layer</strong> — 무한 루프, <em>death spiral</em>(에러 경로의 복구 로직 자체가 LLM 호출 → 다시 실패 → 연쇄).</li>
+  </ol>
+  <p>탐지의 첫 질문은 "재시도할까?"가 아니라 <strong>"재시도가 도움이 되나?"</strong>다. rate limit은 재시도 가능, 잘못된 인자는 불가(전략 변경 필요). 패턴 탐지 도구로는 <em>repeated-call fingerprint</em>(tool name + args 해시 — 동일 지문 재현 = 무진전 루프)와 연속 실패 카운터가 있다. 스트리밍의 최악 실패는 단절이 아니라 <strong>무음 정체(silent stall)</strong> — 연결은 살았는데 데이터가 안 오는 상태라, 연결 타임아웃과 별도로 idle watchdog이 필요하다.</p>
+  <p>복구는 가시성 오름차순으로 단계적 에스컬레이션한다: ① <strong>Silent retry</strong>(지수 백오프 + 지터, 배경 보조 호출은 실패 시 폐기해 "재시도 증폭" 방지) → ② <strong>Degrade and continue</strong>(출력 상한 상향, 모델 폴 백, 저비용 모드 전환) → ③ <strong>Surface to user</strong>(모든 자동 수단 소진 후에야, 이미 시도한 조치와 함께 표시). 핵심 원칙: <strong>에러 처리의 단위는 단일 요청이 아니라 전체 복구 루프</strong>다. 복구 불가가 확인되기 전에 중간 에러를 소비자에게 노출하지 않는다.</p>
+  <p>종료 설계의 실례: Claude Code의 compaction 회로차단기 "연속 3회 실패"는 실측에서 왔다 — 한 세션이 같은 복구 경로에서 3,000회+ 연속 실패했고, 이런 무의미 재시도가 전 세계에서 하루 약 25만 API 호출을 낭비하고 있었다. 3은 "대부분 이전에 회복"과 "추가 재시도 사실상 무望" 사이의 경험적 변곡점이다. Death spiral 실례는 컨텍스트 오버플로 → stop hook 발동("종료 시 커밋") → 커밋 메시지 작성 LLM 호출 → 다시 오버플로. 방어는 <strong>에러 경로에서 모델 호출 부수효과 전부 비활성화 + 재귀 깊이 카운터</strong>다.</p>
+  <p>결론: <strong>에이전트의 신뢰성은 실수하지 않는가가 아니라, 모든 실패 유형에 대응하는 탐지·복구·종료 경로가 있는가로 결정된다.</strong></p>
+
+  <h2>4. 보안: Lethal Triad에 더해진 제4 요소</h2>
+  <p>Simon Willison의 <strong>Lethal Triad</strong>: ① 사적 데이터 접근 ② 신뢰할 수 없는 콘텐츠 노출 ③ 외부 통신 능력 — 셋이 모이면 완전한 공격 루프(악성 지시 주입 → 사적 데이터 읽기 → 외부 유출)가 성립한다. 저자가 추가한 제4 요소는 <strong>Persistent Memory</strong>인데, 병렬 조건이 아니라 <em>증폭기</em>다. 공격자가 장기 메모리에 잠복 지시를 심어두면 세션을 넘어 대기하다 발동한다 — 일회성 공격이 상주형 위협이 된다.</p>
+  <div class="grid">
+    <div class="card">
+      <strong>Egress control가 결정론적 방어</strong><br>
+      모든 인젝션을 식별하는 것보다 유출 채널을 끊는 것이 훨씬 확실하다. 샌드박스 기본 무 네트워크 + 화이트리스트 프록시. 소스는 read-only 마운트, 크리덴셜(~/.ssh)은 마운트 금지.
+    </div>
+    <div class="card">
+      <strong>Command semantic parsing</strong><br>
+      키워드 블랙리스트는 무용하다 — <code>rm</code> 차단은 <code>$(echo rm) -rf /</code>로 우회된다. 인자 타입과 플래그 소비 규칙을 이해하는 시맨틱 파싱이 필요하다.
+    </div>
+    <div class="card">
+      <strong>Speculative execution</strong><br>
+      "Reading file src/main.py…" 같은 부작용 없는 UI 힌트를 먼저 보여주고 백그라운드에서 보안 검사. 실제 상태 변경이 없어 롤백 불필요 — 보안과 UX의 양립.
+    </div>
+  </div>
+  <p>또 하나의 축은 <strong>Principal Loyalty(주체 충성)</strong>: 모델의 기본값 "말을 거는 사람을 돕는다"는 다자 위임에서 위험하다 — 협상 상대는 도움 대상이 아니다. 하네스가 명시해야 할 것: 위임자 지시 최우선, 외부 입력은 "지시가 아니라 참고 데이터"로 기본 강등, 거절 시 보호 항목을 열거하지 않기(열거 자체가 누설). 마지막으로, AI가 쓴 코드 자체를 못 믿겠다면 신뢰 경계를 아래로 내린다 — <strong>Permission-Embedded Data Objects</strong>는 각 데이터 엔터티가 선언적 권한 규칙을 품고 런타임 파이프라인이 모든 쓰기에 강제해, 비교 실험에서 선언 불변조건 위반 쓰기 0건(비용은 쓰기당 약 +2ms)을 기록했다. "더 정확할 가능성"이 아니라 "틀릴 수 없음"이다.</p>
+
+  <h2>5. 코드 = 메타 능력: 6개 적용 방향</h2>
+  <p>메타 능력이란 "다른 능력을 만들어내는 능력"이다. 코드는 런타임에 새 툴(스크립트), 새 제약(assertion), 새 표현 형식(HTML 폼, PPT, 비디오 프레임)을 생성한다. 책은 안에서 바깥으로 6방향을 나열한다.</p>
+  <ol>
+    <li><strong>사고 도구</strong> — 모델의 사고는 확률적, 수학·논리는 결정론을 요구. LLM이 자연어를 SymPy 같은 형식 언어로 번역하고 symbolic 엔진이 정밀 실행(Wolfram의 협업 모델). 단, <em>모델-하네스 트레이드오프</em>: 강 모델이면 코드 솔버 이득이 거의 0, 약 모델이면 극적 — 같은 하네스도 모델 강도에 따라 반대 결론이 난다.</li>
+    <li><strong>비즈니스 규칙 3계층 안전장치</strong> — ① 시스템 프롬프트 자연어 규칙(이해·설명용) ② 파라미터 = 사고 체크리스트(<code>expected_*</code> 파라미터로 판단 근거 명시 강제, 단 자기 보고일 뿐 보안 경계 아님) ③ 서버 측 ground-truth 검증 = 최종 gatekeeper(모델이 위조 불가능한 DB 데이터 위의 최후 방어선).</li>
+    <li><strong>멀티미디어 생성 + Proposer-Reviewer</strong> — PPT는 Slidev 코드로, 비디오는 Blender Python/FFmpeg로. Proposer가 생성, Reviewer가 렌더링 결과를 Vision LLM으로 검토해 구조화 피드백(페이지 번호, 이슈 유형, "14pt로" 같은 actionable 지시)을 반환. 분리 이유: 단일 에이전트는 렌더 스크린샷 누적으로 컨텍스트가 팽창한다.</li>
+    <li><strong>시스템 어댑터</strong> — 끝없이 진화하는 로그 포맷: 파싱 실패 감지 → 에이전트가 샘플 분석·파싱 코드 생성 → 자동 테스트 → 핫 업데이트라는 자기 수리 루프.</li>
+    <li><strong>Generative UI</strong> — <em>A2UI</em>(선언적 UI 기술 언어 — 에이전트는 JSON "UI manifest"만 출력, 클라이언트가 안전 컴포넌트 카탈로그로 렌더)와 <em>AG-UI</em>(이벤트·전송 프로토콜)를 혼동하지 말 것. SQL Artifact 패턴: LLM은 SQL만 생성하고 <strong>데이터는 DB→프론트로 직류, LLM은 데이터 경로에서 완전 제외</strong>.</li>
+    <li><strong>Bootstrapping</strong> — 에이전트가 에이전트를 만들 때 프롬프트에 모든 규칙을 열거하지 말고, <strong>검증된 고품질 구현을 참조 예제로 제공해 복사 후 수정</strong>시킨다. 예제 코드 자체가 베스트 프랙티스를 운송한다 — "적응 수정을 동반한 자기 복제"다.</li>
+  </ol>
+
+  <section class="callout warn">
+    <strong>실무 번역:</strong> 당신의 일일 루틴(erp-sales-hx-daily)이 조용히 0행을 출력했던 사건은 "완료 = 테스트 통과" 원칙 위반의 전형이다 — 코드를 돌렸다가 완료가 아니라, 검증 신호(행 수 &gt; 0 assertion)가 통과해야 완료다. 그리고 Aside의 <code>edit_file</code>이 old→new string 방식인 것은 우연이 아니다: 책의 조언도 "자체 구축 시 old→new가 가장 안전한 출발점, 대규모 편집은 start+end가 경제적 절충, 라인넘버는 IDE 밀결합 아니면 drift로 침몰"이다.
+  </section>
+
+  <h2>6. 퀴즈 · 회수 연습</h2>
+  <div class="quiz-card" data-quiz data-correct="맞음. 코드가 precise + executable + composable이라 새 툴·제약·표현을 런타임에 만들어낸다." data-incorrect="다시. 핵심은 코드의 세 속성(정확·실행 가능·합성 가능)이 새 능력을 생성한다는 점이다.">
+    <p><strong>Q1.</strong> 책이 범용 에이전트의 코어로 코딩 에이전트를 꼽는 근거로 가장 정확한 것은?</p>
+    <button type="button" data-answer="wrong">코드 생성 모델이 다른 능력 모델보다 압도적으로 강하기 때문</button>
+    <button type="button" data-answer="correct">코드가 정확하고 실행 가능하며 합성 가능해 다른 능력을 만들기 때문</button>
+    <button type="button" data-answer="wrong">GUI 자동화보다 스크린샷 비용이 적게 들어 학습이 쉽기 때문</button>
+    <button type="button" data-answer="wrong">개발자 인구가 많아서 코딩 에이전트의 시장이 가장 크기 때문</button>
+    <div class="quiz-feedback" data-feedback></div>
+  </div>
+
+  <div class="quiz-card" data-quiz data-correct="맞음. 실측에서 대부분 3회 내 회복됐고, 그 이후는 사실상 무의미한 재시도였다(하루 25만 호출 낭비 사례)." data-incorrect="다시. 3은 이론이 아니라 실측 분포에서 온 경험적 변곡점이다.">
+    <p><strong>Q2.</strong> Claude Code compaction 회로차단기의 "연속 3회 실패" 기준의 근거는?</p>
+    <button type="button" data-answer="wrong">재시도 횟수를 홀수로 맞춰야 지수 백오프 계산이 단순해지기 때문</button>
+    <button type="button" data-answer="correct">실측에서 대부분 3회 내 회복됐고 그 이후는 무의미한 재시도였기 때문</button>
+    <button type="button" data-answer="wrong">API 제공사의 rate limit 정책이 3회 연속 실패를 전제로 하기 때문</button>
+    <button type="button" data-answer="wrong">사용자가 오류 메시지를 3번 이상 복면 이탈한다는 UX 조사 때문</button>
+    <div class="quiz-feedback" data-feedback></div>
+  </div>
+
+  <div class="quiz-card" data-quiz data-correct="맞음. 영속 메모리는 병렬 조건이 아니라 일회성 공격을 상주형 위협으로 바꾸는 증폭기다." data-incorrect="다시. 제4 요소는 Triad와 나란한 조건이 아니라 세션을 넘어 공격을 증폭시키는 요소다.">
+    <p><strong>Q3.</strong> Lethal Triad에 저자가 추가한 제4 요소(Persistent Memory)의 역할은?</p>
+    <button type="button" data-answer="wrong">네 번째 병렬 조건으로, 없으면 공격 루프가 성립하지 않는다</button>
+    <button type="button" data-answer="correct">공격을 세션 너머로 잠복·발동시키는 증폭기 역할을 한다</button>
+    <button type="button" data-answer="wrong">사적 데이터를 암호화해서 유출을 원천 차단하는 방어층이다</button>
+    <button type="button" data-answer="wrong">외부 통신을 감사 로그로 기록해 사후 추적을 가능하게 한다</button>
+    <div class="quiz-feedback" data-feedback></div>
+  </div>
+
+  <h2>7. 미니 실습 (10분)</h2>
+  <p>당신의 Aside 환경을 책의 프레임으로 매핑해 보자. 메모에 두 열을 만든다.</p>
+  <ol>
+    <li><strong>7 코어 툴 매핑</strong>: Aside가 제공하는 툴(read_file, edit_file, bash, repl, webfetch…)을 7 코어 툴에 대응시킨다. 없는 것은? (예: Glob/Grep은 bash에 흡수)</li>
+    <li><strong>하네스 4컴포넌트 점검</strong>: 당신의 루틴 하나(예: teach-to-3min-video)에 대해 Acceptance Baseline / Execution Boundary / Feedback Signals / Rollback이 각각 무엇인지 적는다. 비어 있는 칸이 그 루틴의 실패 모드다.</li>
+  </ol>
+  <p>특히 Feedback 칸이 비어 있다면 — 그 루틴은 "코드 쓰고 완료 선언"과 같은 태만을 하고 있는 것이다.</p>
+
+  <h2>Primary source</h2>
+  <p>책 Chapter 5 "Coding Agent and Code Generation" (pp. 158-197). 로컬 사본: <code>source/AI-Agents-in-Depth-v1.3.pdf</code></p>
+  <ul>
+    <li>Simon Willison — <a href="https://simonwillison.net/series/lethal-trifecta/">The Lethal Trifecta</a> (프롬프트 인젝션 위험 프레임)</li>
+    <li>Li &amp; Shi, <em>Whose Side Is Your Agent On? Multi-Party Principal Loyalty in LLM Agents</em>, arXiv:2606.30383 (2026)</li>
+    <li><a href="https://github.com/anthropics/claude-code">Claude Code</a> — 실패 분류·복구 원칙의 실증 출처 / Cursor — diff+apply, fast-apply</li>
+    <li>τ-bench (Sierra) — 3계층 비즈니스 규칙 안전장치의 배경 벤치마크</li>
+  </ul>
+
+  <h2>다음으로 연결</h2>
+  <ul>
+    <li>이전: <a href="0006-tools-mcp-event-driven.html">도구 설계, MCP, 이벤트 기반 비동기 에이전트</a></li>
+    <li>다음: <a href="0008-evaluating-agents.html">에이전트 평가: 벤치마크에서 프로덕션 관측성까지</a> — "완료 = 테스트 통과"를 시스템으로 만드는 법</li>
+    <li>관련: <a href="0004-status-bar-context-compression.html">상태 바, 컨텍스트 압축, 서브에이전트 격리</a> (Proposer-Reviewer 분리의 컨텍스트 근거), <a href="0009-post-training-continual-evolution.html">포스트트레이닝과 에이전트의 지속 진화</a> (Bootstrapping의 다른 반쪽)</li>
+  </ul>
+
+  <footer>
+    <p>막히는 부분은 에이전트에게 바로 물어보세요. 이 워크스페이스의 선생님 역할이다.</p>
+    <p class="pill">Mission-linked</p>
+    <p class="pill">ZPD: 도구 사용 → 하네스 설계</p>
+  </footer>
+
+</main>
+<script>
+document.querySelectorAll("[data-quiz]").forEach((quiz) => {
+  const feedback = quiz.querySelector("[data-feedback]");
+  quiz.querySelectorAll("button[data-answer]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const isCorrect = button.dataset.answer === "correct";
+      quiz.querySelectorAll("button[data-answer]").forEach((b) => {
+        b.classList.remove("correct", "incorrect");
+        b.setAttribute("aria-pressed", "false");
+      });
+      button.classList.add(isCorrect ? "correct" : "incorrect");
+      button.setAttribute("aria-pressed", "true");
+      feedback.textContent = isCorrect ? quiz.dataset.correct : quiz.dataset.incorrect;
+    });
+  });
+});
+
+</script>
+</body>
+</html>

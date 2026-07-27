@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="음성 3대 패러다임과 fast-slow 사고, Computer Use 설계 차원, 멀티에이전트가 싱글을 이기는 조건과 실패 모드를 배운다.">
+  <title>멀티모달·실시간 인터랙션과 멀티에이전트 시스템 · AI Agents in Depth</title>
+  <style>
+:root {
+  --ink: #18201f;
+  --muted: #5d6864;
+  --paper: #fbfaf6;
+  --panel: #ffffff;
+  --line: #d9ddd6;
+  --accent: #136f63;
+  --accent-2: #a23d31;
+  --soft: #eaf3ef;
+  --warn: #fff2d6;
+  --code: #101917;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  color: var(--ink);
+  background: var(--paper);
+  font-family: ui-serif, Georgia, "Apple SD Gothic Neo", "Noto Serif KR", serif;
+  line-height: 1.68;
+}
+main {
+  width: min(960px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 52px 0 88px;
+}
+.kicker {
+  color: var(--accent);
+  font: 700 12px/1 ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+h1 {
+  margin: 12px 0 14px;
+  font-size: clamp(34px, 6vw, 64px);
+  line-height: 1.02;
+}
+.subtitle {
+  max-width: 720px;
+  color: var(--muted);
+  font-size: 18px;
+}
+h2 {
+  margin-top: 42px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 8px;
+}
+a { color: var(--accent); text-underline-offset: 3px; }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+.card, .quiz-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 20px;
+  margin: 18px 0;
+}
+.callout {
+  border-left: 4px solid var(--accent);
+  background: var(--soft);
+  border-radius: 6px;
+  padding: 14px 16px;
+}
+.warn {
+  border-left-color: #c98210;
+  background: var(--warn);
+}
+pre {
+  overflow-x: auto;
+  background: var(--code);
+  color: #eef7f2;
+  border-radius: 8px;
+  padding: 16px;
+}
+code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.92em;
+}
+.pill {
+  display: inline-block;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 2px 9px;
+  font: 700 12px/1.7 ui-sans-serif, system-ui, sans-serif;
+  color: var(--muted);
+}
+.quiz-card button {
+  display: block;
+  width: 100%;
+  margin: 8px 0;
+  padding: 11px 13px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.quiz-card button.correct { border-color: #1f7a3f; background: #e8f4eb; }
+.quiz-card button.incorrect { border-color: var(--accent-2); background: #fae9e7; }
+.quiz-feedback { min-height: 1.6em; font-weight: 700; }
+footer {
+  margin-top: 54px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+}
+@media print {
+  body { background: #fff; }
+  main { width: auto; padding: 24px; }
+  .card, .quiz-card { break-inside: avoid; }
+  a::after { content: " (" attr(href) ")"; font-size: 0.8em; color: var(--muted); }
+}
+</style>
+</head>
+<body>
+<main>
+
+  <header>
+    <div class="kicker">Lesson 0010 · AI Agents in Depth</div>
+    <h1>멀티모달·실시간 인터랙션과 멀티에이전트 시스템</h1>
+    <p class="subtitle">실시간의 적은 직렬 파이프라인의 지연 누적이고, 멀티에이전트의 적은 "신규 정보 없는 리뷰"다. 두 챕터는 다른 주제처럼 보이지만 같은 질문을 던진다 — 병목이 정확히 어디에 있는가?</p>
+  </header>
+
+  <section class="callout">
+    <strong>오늘의 한 줄 답:</strong> 실시간 아키텍처는 <em>"겹칠 수 있는 단계는 겹치고, 겹칠 수 없는 판정 단계는 아키텍처를 바꾼다"</em>로 진화하고, 멀티에이전트는 <em>"협업이 생성 시점에 없던 정보를 도입하는가"</em>라는 단 하나의 기준으로 싱글 에이전트와 겨룬다.
+  </section>
+
+  <h2>1. 음성 아키텍처의 3대 패러다임</h2>
+  <p>OpenAI가 GPT-Live 공개(2026) 때 제시한 3분류다. 서사축은 하나: <strong>"VAD(침묵 감지)를 어떻게 대체하는가"</strong>. 3세대는 대체 관계가 아니라 레이턴시/비용 제약에 따라 공존하는 설계 선택지다.</p>
+
+  <div class="grid">
+    <div class="card">
+      <strong>Cascaded (직렬)</strong><br>
+      VAD → ASR → LLM → TTS 릴리이. VAD가 500-800ms 침묵을 "기다림"으로 판별하고, ASR 동안 LLM은 완전 유휴. 이상 조건에서 0.9-2초. <strong>전 구간 스트리밍</strong>으로 겹치면 600-800ms까지 압축 — 단 VAD의 턴 판정 자체는 못 건드림.
+    </div>
+    <div class="card">
+      <strong>End-to-End Omni</strong><br>
+      단일 모델이 듣기-생각-말하기 통합. 운율·감정 같은 paralinguistic 정보 보존. ChatGPT Advanced Voice Mode, Qwen3-Omni. 단 <strong>턴 테이킹 가정은 그대로</strong> — 여전히 VAD로 발화권 배분.
+    </div>
+    <div class="card">
+      <strong>Full-Duplex</strong><br>
+      듣기와 말하기를 동시에. 초당 수차례 "말할지, 들을지, 끼어들지" 결정. Moshi(2024)는 inner monologue 텍스트 스트림으로 E2E 약 200ms. GPT-Live(2026)가 프로덕션 스케일. 턴 개념 자체가 소거돼 인터럽트가 "특별 처리"가 아닌 자연 동작.
+    </div>
+  </div>
+
+  <p>큐잉 이론도 기억할 것: 프로덕션 레이턴시는 <code>Idle Latency × 1/(1-Utilization)</code>으로 근사된다. utilization 80%면 5배. 서버를 고부하로 몰 수 없는 이유다.</p>
+
+  <h2>2. 판별 원칙: 병목이 어떤 정보를 담는가</h2>
+  <p>E2E가 cascade보다 항상 나은 게 아니다. 비교 대상인 <strong>self-cascade</strong>(같은 모델이 먼저 오디오를 구조화 텍스트로 전사한 뒤 그 텍스트로 추론)와 겨루면: 답이 주로 의미 내용("무엇을 말했는가")에 의해 결정되고 중간 텍스트가 그 정보를 다 담을 수 있으면 self-cascade가 동등하거나 우세. 답이 어조·감정·환경음처럼 텍스트로 표현 불가능한 단서에 달렸으면 E2E가 명확히 우세. <strong>성능을 결정하는 것은 중간 표현(bottleneck)의 존재 여부가 아니라, 그 병목이 어떤 정보를 담느냐다.</strong> 중간 텍스트를 paralinguistic 마커 포함 구조화 표현으로 업그레이드하면 E2E의 우위가 종종 좁혀진다.</p>
+
+  <section class="callout warn">
+    <strong>실무 번역:</strong> 이 원칙은 음성만의 것이 아니다. 자동화 파이프라인의 모든 인터페이스에 물어라 — "이 단계가 버리는 정보가 하류 태스크에 필요한가?" 브라우저 자동화에서 DOM 대신 스크린샷만 넘기는 것, 서브에이전트에 전체 궤적 대신 요약만 넘기는 것 모두 병목 설계다. 버려도 되는 정보인지가 판단 기준이다.
+  </section>
+
+  <h2>3. fast-slow 사고: 실시간과 깊은 추론의 분리</h2>
+  <p>사용자는 밀리초 응답을 기대하고 복잡한 문제는 수 초의 사고가 필요하다. 2026년 프론티어 음성 제품의 주류 핵안은 <strong>fast-slow decoupling</strong>: 전경의 빠른 모델이 대화 흐름을 유지하고, 깊은 추론·도구 호출은 배경의 강한 모델에 <em>전체 대화 문맥째로</em> 위임한다. 분리를 택하는 실용 이유 — 프론티어 추론 모델은 몇 달마다 교철되는데, 실시간 인터랙션 능력은 전문 학습이 필요하므로 한 모델에 넣으면 움직이는 과녁을 쫓게 된다. GPT-Live, Thinking Machines의 Interaction Model(micro-turns, 턴 전환 약 0.40초), xAI Grok Voice 모두 이 계열. 반대편 끝은 Step-Audio R1처럼 사고와 표현을 한 모델에 통합(MGRD + MPS dual-brain)하는 길이다.</p>
+  <p>컴퓨터 조작처럼 루프 자체를 빠르게 할 수 없는 영역에서는 우회로가 실증됐다: 느린 Computer Use 에이전트와 빠른 음성 에이전트를 동시 운용하되, 둘은 <strong>"plain text contract"</strong>(rolling status summary = 2장의 Agent Status Bar)로만 소통한다. 음성 응답 중앙 레이턴시 8.64초 → 0.58초(약 15배), 성공률 손실 없음. 단 한 가지 철칙: <strong>느린 쪽의 완료 확인 전까지 빠른 쪽은 절대 "다 됐다"고 말하지 않는다.</strong></p>
+
+  <h2>4. Computer Use: 3대 설계 차원과 관찰 인터페이스</h2>
+  <p>핵심 루프는 perceive-think-act(스크린샷 → 사고+액션 → 실행 → 다음 스크린샷)이고, 액션 사이클당 2-5초로 인간의 1/3~1/5 속도다. 설계 차원은 셋:</p>
+  <ul>
+    <li><strong>Action Space</strong>: GUI 조작(마우스/키보드), bash, 파일 편집(str_replace_editor — 문자열 매칭 기반 정밀 편집) 3종 도구.</li>
+    <li><strong>Visual Grounding</strong>: ① Set-of-Mark(세그멘테이션+번호 마커, 순수 시각) ② 구조화 요소 인덱싱(DOM/접근성 트리 + 고유 ID — 브라우저에서는 이것이 우선, 정확하고 안정적) ③ 순수 좌표 예측(학습 해상도 의존 — 양방향 좌표 스케일링 필수). 공통 지혜: 좌표 예측이라는 개방형 문제를 "주석된 요소 중 선택"이라는 폐쇄형 문제로 바꾼다.</li>
+    <li><strong>관찰 인터페이스(AOI)</strong>: 화면은 정적이 아니다 — 영상, 사라지는 알림, 회의 오디오. 3-5초마다 눈 뜨는 에이전트는 두 프레임 사이의 모든 것에 눈멂다. 핵안은 액션이 아니라 관찰의 재설계: 변화 감지 키프레임 캡처 + 음량 게이트 전사 + <strong>관찰을 영속적 텍스트 기술로 변환</strong>. 반직관적 발견: 중요한 것은 프레임 선택이 아니라 텍스트 변환이다 — 텍스트가 LLM이 가장 잘 다루는 모달리티이므로. 재학습 없이 8개 모델에서 +17~48%p 향상.</li>
+  </ul>
+  <p>효율이 진짜 병목이다: OSWorld에서 정확도는 인간에 접근하지만 태스크 성공핼도 에이전트는 훨씬 많은 스텝이 필요하고, 문맥이 길수록 스텝당 추론이 느려진다. <strong>인간 수준 정확도 ≠ 실용적 사용성.</strong> 음성의 "thinking while speaking"에 대응하는 "thinking-while-operating"은 아직 미해결이다.</p>
+
+  <h2>5. 멀티에이전트: 두 개의 설계 차원</h2>
+  <p>차원 1은 <strong>shared vs non-shared context</strong> — 가장 근본적 결정이다. shared(후속 에이전트가 완전한 이력 계승)는 정보 손실 제로지만 문맥 급팽창, non-shared(독립 문맥 + 명시적 통신)는 모듈성·격리·병렬성이지만 동기화 비용. OS 비유: shared ≈ 스레드, non-shared ≈ 프로세스. 경험칙: <strong>누적 문맥이 윈도우의 50% 초과 예상이면 공유하지 마라.</strong> 차원 2는 토폴로지: peer(2-3개 대등 에이전트 반복 개선), manager(중앙 조정), decentralized(중앙 없는 피어 협업).</p>
+  <p>인프라는 OS 지식이 그대로 적용된다(Table 10-3): static prefix = 프로그램, trajectory = 프로세스 메모리, LLM = 시분할 CPU, spawn = fork. <strong>더 강한 모델로 교체핼도 에이전트는 같은 에이전트다 — 정체성과 메모리는 prefix와 trajectory에 있지 모델 가중치에 없다.</strong> trajectory를 JSONL로 영속화하면(DB의 WAL처럼) 크래시 후 재개·감사·인수인계가 공짜로 얻어진다 — Claude Code/Codex CLI의 세션 resume이 이 방식이다.</p>
+
+  <h2>6. 언제 멀티가 진짜 싱글보다 나은가 — 신규 정보 판별 기준</h2>
+  <p>핵심 질문 하나: <strong>"협업이 단일 에이전트가 답을 만들 때 얻을 수 없었던 정보를 제공하는가?"</strong></p>
+  <div class="grid">
+    <div class="card">
+      <strong>무효 (신규 정보 없음)</strong><br>
+      같은 모델의 self-review, 같은 텍스트에 대한 에이전트 간 debate. Huang et al.(ICLR 2024): 외부 피드백 없는 self-correction은 정답을 오답으로 바꾸는 경우가 더 많다. Tran &amp; Kiela(2026): 동일 thinking-token 예산에서 단일 에이전트가 5종 멀티 아키텍처와 동등하거나 우세.
+    </div>
+    <div class="card">
+      <strong>유효 (신규 정보 도입)</strong><br>
+      테스트 실행 결과로 코드 리뷰(RLEF), 렌더링 스크린샷으로 프론트엔드 리뷰(WebGen-Agent: 26.4% → 51.9%, 거의 2배), 외부 도구로 사실 검증(CRITIC: 도구 제거 시 향상 대부분 소실).
+    </div>
+    <div class="card">
+      <strong>비용</strong><br>
+      Anthropic 공개: 자사 멀티에이전트 리서치 시스템은 일반 대화의 약 15배 토큰. 이득이 비용을 정당화할 만큼 커야 한다. 스텝을 더 준다고 성능이 오르지도 않음(budget-aware 메커니즘 필요).
+    </div>
+  </div>
+  <p>리뷰의 가치는 "다시 생각"이 아니라 <em>생성 시점에 없던 신규 정보의 도입</em>이다. Manager 패턴에서는 planner가 전체 병목이다(Plan-and-Act: 약한 planner + 강한 executor &lt; 강한 planner + 단순 executor) — 가장 강한 모델과 가장 정성 들인 프롬프트는 Manager에 둔다.</p>
+
+  <h2>7. 실패 모드와 Loop Engineering</h2>
+  <p><strong>Premature termination 3형태</strong>: ① lazy fake-done(일부만 하고 완료 선언) ② premature give-up(한 경로 막히자 전체 불가 선언) ③ false success(루프가 실제로 안 닫혔는데 완료로 믿음 — 구두 동의만 받고 확인 단계 누락). 공통 뿌리: <strong>검증되기 전 "완료"는 모델의 주장일 뿐 증명이 아니다.</strong> MAST 연구(7개 프레임워크 150개 트레이스 분석)도 실패 3그룹 중 하나가 "Missing Task Verification"이었다. 처방이 모두 검증으로 수렴하는 이유다.</p>
+  <p><strong>Loop Engineering</strong>(Addy Osmani 명명, 2026): 멈춰도 되는지는 모델이 아니라 verifier가 결정한다. 루프의 병목은 모델이 아니라 verifier — 검증이 불신실하면 빠른 루프는 나쁜 출력을 더 빨리 "완료"로 마킹할 뿐이다.</p>
+  <p><strong>연쇄 증폭(cascading amplification)</strong>: 프로세스는 바이트를 정확히 전달하지만 에이전트는 의미를 전달하며 재전달마다 왜곡된다. 한 에이전트의 용어 오류가 3개 에이전트를 거치며 "일관 적용되어" 더 신뢰할 만해 보이는 전화 게임. Manager 패턴이 특히 취약(부정확한 하위 요약이 이후 모든 작업의 전제). 핵안은 cross-validation — 선행 추론 흔적을 무시하고 원본 증거와 최종 결론의 일관성만 재검사. 공유 파일 시스템에는 optimistic locking(버전 검사)이나 Git worktree 격리로 lost update를 막는다.</p>
+
+  <section class="callout warn">
+    <strong>실무 번역:</strong> Aside에서 서브에이전트를 병렬로 돌릴 때 당신은 이미 manager pattern을 쓰고 있다. 10장의 기준으로 점검하라: ① 각 서브에이전트가 독립 문맥에서 <em>새 정보</em>(실제 파일 읽기, 실제 검색)를 가져오는가, 아니면 같은 텍스트를 재처리하는가? ② 반환은 구조화 요약 + 아티팩트 경로로 제한되는가? ③ "완료" 판정이 서브에이전트의 주장이 아니라 검증 가능한 외부 상태인가? 이 세 개가 갖춰지면 멀티가 싱글을 이긴다.
+  </section>
+
+  <h2>8. Agent Society: 규모가 만드는 창발</h2>
+  <p>목표 지향 협업을 넘어 수백~수천 에이전트가 자유 상호작용하면 설계하지 않은 집단 행동이 나온다. Stanford AI Town(25개 에이전트)에서는 "밸런타인 파티" 의도 하나가 초대 전파·장식 협력·일정 조정으로 창발했다 — 파티 조직 코드는 한 줄도 없었다. Agentopia는 100개 에이전트 10년 시뮬레이션에서 LifeReward 상위 25% 에이전트의 궤적으로 파인튜닝해 사회적 능력이 다운스트림 태스크로 전이됨을 보였다 — 에이전트 사회가 관찰 대상에서 <strong>자기 진화의 경험 소스</strong>로. Vending-Bench Arena에서는 가격 전쟁과 담합 동맹이, Moltbook에서는 디지털 종교가 자생했다. 조직 간 협업의 표준 레이어로는 A2A 프로토콜(Agent Card + 태스크 수명주기 + opaque collaboration)이 있다 — MCP가 에이전트-도구 상호운용이라면 A2A는 에이전트-에이전트 상호운용이다.</p>
+
+  <h2>9. 퀴즈 · 회수 연습</h2>
+  <div class="quiz-card" data-quiz data-correct="맞음. 병목이 태스크 정보를 다 담을 수 있으면 self-cascade가 동등하거나 우세하다." data-incorrect="다시. 판별 기준은 중간 표현의 존재가 아니라 그 병목이 어떤 정보를 담느냐다.">
+    <p><strong>Q1.</strong> E2E 음성 모델이 self-cascade를 명확히 이기는 조건은?</p>
+    <button type="button" data-answer="wrong">모델 파라미터가 self-cascade 구성보다 클 때</button>
+    <button type="button" data-answer="correct">답이 어조·감정처럼 텍스트에 담기지 않는 단서에 달렸을 때</button>
+    <button type="button" data-answer="wrong">대화의 평균 턴 길이가 짧고 응답 속도가 중요할 때</button>
+    <button type="button" data-answer="wrong">배포 환경의 GPU 메모리가 모듈식 구성보다 넉넉할 때</button>
+    <div class="quiz-feedback" data-feedback></div>
+  </div>
+
+  <div class="quiz-card" data-quiz data-correct="맞음. 신규 정보 없는 리뷰는 '한 번 더 생각하기'일 뿐이고, 동일 연산의 단일 에이전트와 동등하거나 못하다." data-incorrect="다시. 멀티&gt;싱글의 판별 기준은 '생성 시점에 없던 정보의 도입 여부'다.">
+    <p><strong>Q2.</strong> 멀티에이전트 리뷰 루프가 단일 에이전트를 이기는 경우는?</p>
+    <button type="button" data-answer="wrong">리뷰어 에이전트가 프로포저와 다른 페르소나 프롬프트를 받았을 때</button>
+    <button type="button" data-answer="correct">리뷰어가 테스트 실행 결과나 렌더링 스크린샷으로 검토할 때</button>
+    <button type="button" data-answer="wrong">리뷰어와 프로포저가 같은 초안을 여러 라운드 주고받을 때</button>
+    <button type="button" data-answer="wrong">리뷰어 에이전트의 모델이 프로포저보다 한 세대 최신일 때</button>
+    <div class="quiz-feedback" data-feedback></div>
+  </div>
+
+  <div class="quiz-card" data-quiz data-correct="맞음. 검증 전 완료는 주장일 뿐이다. 멈춤 판정은 모델이 아니라 verifier가 한다." data-incorrect="다시. premature termination 3형태의 공통 뿌리는 '검증되지 않은 완료 선언'이다.">
+    <p><strong>Q3.</strong> lazy fake-done, premature give-up, false success의 공통 처방은?</p>
+    <button type="button" data-answer="wrong">에이전트에게 더 상세한 체크리스트 프롬프트를 제공하는 것</button>
+    <button type="button" data-answer="correct">완료 판정을 모델의 선언이 아닌 검증 가능한 외부 상태로 하는 것</button>
+    <button type="button" data-answer="wrong">에이전트의 스텝 예산을 넉넉하게 늘려 여유를 주는 것</button>
+    <button type="button" data-answer="wrong">매니저 에이전트가 진행 상황을 더 자주 폴리잉하는 것</button>
+    <div class="quiz-feedback" data-feedback></div>
+  </div>
+
+  <h2>10. 미니 실습 (10분)</h2>
+  <p>최근에 서브에이전트(또는 멀티스텝 자동화)를 쓴 작업 하나를 골라 아래 세 질문에 답해 보자.</p>
+  <ol>
+    <li><strong>신규 정보 테스트:</strong> 각 하위 작업이 부모가 이미 가진 텍스트의 재처리였는가, 아니면 실제 파일/검색/실행 같은 새 정보를 가져왔는가? 재처리였다면 그 분할은 비용만 늘린 것이다.</li>
+    <li><strong>병목 정보 테스트:</strong> 하위 → 부모로 돌아오는 반환물이 하류 판단에 필요한 정보를 다 담고 있는가? 버려진 정보 중 필요한 것이 있었는가?</li>
+    <li><strong>완료 판정 테스트:</strong> 그 작업의 "성공"을 검증 가능한 외부 상태 한 문장으로 써라 (예: "파일이 존재하고 내용에 X가 포함됨" — "에이전트가 했다고 말함"이 아니라).</li>
+  </ol>
+  <p>세 질문 중 하나라도 애매하면, 그게 다음 개선 지점이다. 에이전트에게 이 세 기준으로 자신의 오케스트레이션 설계를 리뷰해 달라고 핮도 된다.</p>
+
+  <h2>Primary source</h2>
+  <p>교재: <em>AI Agents in Depth</em> (Bojie Li, v1.3) — Chapter 9 "Multimodality and Real-Time Interaction" (pp.308-341, 9.9 로봇은 가볍게), Chapter 10 "Multi-Agent Collaboration" (pp.342-392).</p>
+  <ul>
+    <li><a href="https://arxiv.org/abs/2503.09572">Erdogan et al., "Plan-and-Act"</a> — planner가 멀티에이전트 시스템의 최대 병목이라는 근거</li>
+    <li><a href="https://arxiv.org/abs/2406.01297">"When Can LLMs Actually Correct Their Own Mistakes?" (TACL 2024)</a> — 외부 피드백 없는 self-correction이 왜 무효한가</li>
+    <li><a href="https://arxiv.org/abs/2509.22644">Lu et al., "WebGen-Agent"</a> — 시각 피드백 리뷰가 성능을 거의 2배로 올린 사례</li>
+    <li>Kyutai, "Moshi" (2024) — full-duplex 음성의 선구자. 데모를 직접 들어보는 것을 권한다</li>
+  </ul>
+
+  <h2>다음으로 연결</h2>
+  <ul>
+    <li><a href="0009-post-training-continual-evolution.html">이전: 포스트트레이닝과 지속 진화</a></li>
+    <li><a href="0004-status-bar-context-compression.html">복습: 상태 바, 압축, 서브에이전트 격리</a> — fast-slow의 "plain text contract"가 곧 status bar다</li>
+    <li><a href="0006-tools-mcp-event-driven.html">복습: 도구, MCP, 이벤트 기반 에이전트</a> — MCP와 A2A의 관계 정리</li>
+  </ul>
+
+  <footer>
+    <p>막히는 부분은 에이전트에게 바로 물어보세요. 이 워크스페이스의 선생님 역할입니다.</p>
+    <p class="pill">Mission-linked</p>
+    <p class="pill">ZPD: 단일 에이전트 → 실시간·멀티에이전트 설계 판별 기준</p>
+  </footer>
+
+</main>
+
+<script>
+document.querySelectorAll("[data-quiz]").forEach((quiz) => {
+  const feedback = quiz.querySelector("[data-feedback]");
+  quiz.querySelectorAll("button[data-answer]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const isCorrect = button.dataset.answer === "correct";
+      quiz.querySelectorAll("button[data-answer]").forEach((b) => {
+        b.classList.remove("correct", "incorrect");
+        b.setAttribute("aria-pressed", "false");
+      });
+      button.classList.add(isCorrect ? "correct" : "incorrect");
+      button.setAttribute("aria-pressed", "true");
+      feedback.textContent = isCorrect ? quiz.dataset.correct : quiz.dataset.incorrect;
+    });
+  });
+});
+
+</script>
+</body>
+</html>

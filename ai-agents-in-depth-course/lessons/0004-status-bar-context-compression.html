@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Agent Status Bar, 컨텍스트 압축 전략, 서브에이전트 컨텍스트 격리를 배운다.">
+  <title>상태 바, 컨텍스트 압축, 서브에이전트 격리 · AI Agents in Depth</title>
+  <style>
+:root {
+  --ink: #18201f;
+  --muted: #5d6864;
+  --paper: #fbfaf6;
+  --panel: #ffffff;
+  --line: #d9ddd6;
+  --accent: #136f63;
+  --accent-2: #a23d31;
+  --soft: #eaf3ef;
+  --warn: #fff2d6;
+  --code: #101917;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  color: var(--ink);
+  background: var(--paper);
+  font-family: ui-serif, Georgia, "Apple SD Gothic Neo", "Noto Serif KR", serif;
+  line-height: 1.68;
+}
+main {
+  width: min(960px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 52px 0 88px;
+}
+.kicker {
+  color: var(--accent);
+  font: 700 12px/1 ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+h1 {
+  margin: 12px 0 14px;
+  font-size: clamp(34px, 6vw, 64px);
+  line-height: 1.02;
+}
+.subtitle {
+  max-width: 720px;
+  color: var(--muted);
+  font-size: 18px;
+}
+h2 {
+  margin-top: 42px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 8px;
+}
+a { color: var(--accent); text-underline-offset: 3px; }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+.card, .quiz-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 20px;
+  margin: 18px 0;
+}
+.callout {
+  border-left: 4px solid var(--accent);
+  background: var(--soft);
+  border-radius: 6px;
+  padding: 14px 16px;
+}
+.warn {
+  border-left-color: #c98210;
+  background: var(--warn);
+}
+pre {
+  overflow-x: auto;
+  background: var(--code);
+  color: #eef7f2;
+  border-radius: 8px;
+  padding: 16px;
+}
+code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.92em;
+}
+.pill {
+  display: inline-block;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 2px 9px;
+  font: 700 12px/1.7 ui-sans-serif, system-ui, sans-serif;
+  color: var(--muted);
+}
+.quiz-card button {
+  display: block;
+  width: 100%;
+  margin: 8px 0;
+  padding: 11px 13px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.quiz-card button.correct { border-color: #1f7a3f; background: #e8f4eb; }
+.quiz-card button.incorrect { border-color: var(--accent-2); background: #fae9e7; }
+.quiz-feedback { min-height: 1.6em; font-weight: 700; }
+table { width: 100%; border-collapse: collapse; margin: 18px 0; background: var(--panel); }
+th, td { border: 1px solid var(--line); padding: 9px 11px; text-align: left; font-size: 15px; vertical-align: top; }
+th { background: var(--soft); }
+footer {
+  margin-top: 54px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+}
+@media print {
+  body { background: #fff; }
+  main { width: auto; padding: 24px; }
+  .card, .quiz-card { break-inside: avoid; }
+  a::after { content: " (" attr(href) ")"; font-size: 0.8em; color: var(--muted); }
+}
+
+  </style>
+</head>
+<body>
+<main>
+
+  <header>
+    <div class="kicker">Lesson 0004 · AI Agents in Depth</div>
+    <h1>상태 바, 컨텍스트 압축, 서브에이전트 격리</h1>
+    <p class="subtitle">Attention은 조회에는 강하지만 집계에는 약하다. 흩어진 상태를 명시 지식으로 증류해 끝에 놓는 세 가지 기법 — status bar, compression, isolation — 이 장수 에이전트의 성패를 가른다.</p>
+  </header>
+
+  <section class="callout">
+    <strong>오늘의 한 줄 답:</strong> 모델이 "몇 번 시도했나, 지금 몇 시인가, 뭘 아직 못 했나"를 원시 로그에서 매번 재계산하게 하지 말고, <em>코드가 유지하는 상태 요약을 컨텍스트 끝에 놓아라</em>. 압축은 사후 구제, 격리는 사전 차단이다.
+  </section>
+
+  <h2>1. Status Bar: 흩어진 상태를 끝에 증류한다</h2>
+  <p><strong>Agent Status Bar</strong>는 framework가 컨텍스트 끝에 user-role 메시지로 주입하는 상태 요약(호출 횟수, 현재 시각, TODO 진행)이다. 폰 상태바를 떠올리면 된다. system prompt가 고정 매뉴얼이라면 status bar는 실시간 대시보드다.</p>
+  <p>이론적 근거가 중요하다: <strong>in-context learning은 추론(reasoning)이 아니라 검색(retrieval)에 가깝다</strong>. Attention은 기존 토큰 조회에는 강하지만, 단일 forward pass로 "지금까지 몇 번 전화했나" 같은 집계 상태를 능동 요약하지는 못한다. 그 결론은 원시 레코드에 흩어져 있고, 모델이 매번 재계산하면 비효율에 오류가 낀다. Status bar는 이 암묵 상태를 명시 지식으로 증류하고, <strong>생성 위치에 인접한 맨 끝에 두어 attention을 조종(steering)</strong>한다.</p>
+  <div class="callout">
+    <strong>Context Distillation 벤치마크 (Li &amp; Shi, 2026; 3종 태스크, 11개 모델, ~24,000회 평가):</strong><br>
+    ① 약한 모델은 정확도 <strong>+40~54%p</strong> 회복 — 로컬 2B가 status bar 없는 프론티어 모델과 대등해짐<br>
+    ② 강한 모델은 추론 토큰 <strong>80-90% 이상 절감</strong>, 지연·비용 약 1/10<br>
+    ③ status bar 없으면 쿼리당 추론량이 context 길이에 비례해 증가, 있으면 <strong>사실상 상수</strong><br>
+    ④ 형식은 <strong>key-value 필수</strong> — 산문 형태는 재파싱 비용 때문에 효과 급감
+  </div>
+
+  <h2>2. Status Bar의 3대 실천 교훈</h2>
+  <ol>
+    <li><strong>LLM이 아니라 코드로 유지하라</strong> — 20줄의 정규식이 ground truth 수준인데, 프론티어 모델의 일괄 요약은 오류가 많아 baseline 이하로 떨어졌다. LLM이 꼭 필요하면 항목별 추출 후 코드로 집계.</li>
+    <li><strong>원본 삭제 전, 미래 질문을 커버하는지 확인하라</strong> — status bar는 lossy projection이다. "쌍별 조합"만 저장했는데 "삼중 교집합"을 묻자 Claude의 정확도가 <strong>100% → 7.6%</strong>로 붕괴했다. 불완전한 status bar는 <strong>false authority</strong>: 모델이 틀린 상태를 확신하게 만든다. 새 질문 유형은 DB 스키마 변경처럼 취급하라.</li>
+    <li><strong>정확도를 1차 프로덕션 지표로 모니터링하라</strong> — 모델은 status bar를 거의 무조건 신뢰한다. 오차 ~10% 미만이면 이점이 유지되지만 그 이상이면 없는 것보다 나쁘다. 신뢰 가능한 실세계 관측에서만 생성할 것(<strong>status bar poisoning</strong> 주의).</li>
+  </ol>
+  <p><strong>Time Sense 3축</strong>(저자 논문)도 같은 원리다: Urgency(예산 축 — 시간 촉박 시 결단), Persistence(종점 축 — 410 Gone에 5회 재시도는 과잉, 검색 2회 포기는 과소), Vigilance(감시 축 — 500ms 예상 호출이 5초 걸리면 조사). 벤치마크에서 raw timestamp만 주면 정보 없음과 2-3%p 차이였지만, <strong>timestamp + 해석 지침을 함께 주자 통과율이 10%대 → 40-50%(+19~49%p)</strong>로 뛰었다. 모델에게 부족한 것은 읽기(reading)가 아니라 읽은 값을 행동으로 번역하는 전략이다.</p>
+
+  <h2>3. Context Compression: overflow가 아니라 rot이 문제다</h2>
+  <p>압축의 동기는 두 가지다: ① 길이/비용 제약, ② <strong>추론 품질 향상</strong> — 윈도우가 남아 있어도 요약된 지식이 원시 정볼보다 모델에 유용한 경우가 많다. 10회 검색 결과 수만 토큰에 흩어진 것보다 1회 LLM 호출로 만든 구조화 요약("A는…, B는…, C는 미확보")이 낫다.</p>
+  <p>핵심 구별: <strong>Context Overflow ≠ Context Rot</strong>. overflow는 "못 넣음", rot은 "넣었는데 못 찾음" — 겉으로는 정상 작동하면서 결정 품질이 조용히 악화된다. 흔한 실패 모드는 윈도우 부족이 아니라 <strong>정보 밀도 부족</strong>이다.</p>
+  <p>실험 2-9(★★★, Kimi K3에 128K 윈도우 제한을 두고 장문 조사 태스크 수행)의 6전략 비교:</p>
+  <table>
+    <tr><th>전략</th><th>토큰</th><th>결과</th><th>해석</th></tr>
+    <tr><td>No compression</td><td>&gt;110K</td><td>✗ overflow</td><td>압축 없이는 실패</td></tr>
+    <tr><td>Individual summary</td><td>123K</td><td>✓ 24회 반복</td><td>결과당 2-3문단, 정보 파편화</td></tr>
+    <tr><td>Combined summary</td><td>55K</td><td>✓ 21회</td><td>초장문 입력 절단 위험</td></tr>
+    <tr><td><strong>Context-aware</strong></td><td>25K</td><td><strong>✓ 15회, 최소</strong></td><td>"Given query / Current context"로 압축 방향 지시, 147,877자→1,963자(1.3%)에도 핵심 보존</td></tr>
+    <tr><td>Aware + citation</td><td>46K</td><td>✓ 검증 가능</td><td>손실 압축 + 무손실 색인(URL) 결합</td></tr>
+    <tr><td>Adaptive window</td><td>181K</td><td>✓ 최고 충실도</td><td>80% 임계 도달 시 미압축분 일괄 배치 압축</td></tr>
+  </table>
+  <p>압축과 KV cache의 공존 포인트: 압축으로 교체한 지점 이후 캐시는 무효가 되므로, <strong>매 라운드 압축하지 말고 임계(예: 윈도우의 80%) 근접 시 배치 압축</strong>한다. system prompt와 tool definitions는 절대 건드리지 않고 대상은 history의 tool results다.</p>
+
+  <h2>4. 프로덕션 5계층과 보존 우선순위</h2>
+  <p>프로덕션(Claude Code 참조)의 계층적 압축 메커니즘 — 앞 3개가 저비용·캐시 영향可控으로 우선이다:</p>
+  <ol>
+    <li><strong>Tool Result Budget Control</strong> — 대형 출력은 디스크에 저장하고 모델엔 미리보기만. 대체 문자열은 최초 발생 시 동결.</li>
+    <li><strong>Direct Noise Deletion</strong> — 저가치 콘텐츠는 요약 없이 삭제. 노이즈 요약은 토큰 낭비다.</li>
+    <li><strong>API-Level Micro-Compression</strong> — 서버측 context editing으로 특정 tool 결과 제거. overflow 직전에만.</li>
+    <li><strong>Archival Summarization</strong> — git log처럼 라운드별 구조화 요약(squash 아님).</li>
+    <li><strong>Full Compression</strong> — 최후 수단. 연속 실패 시 circuit breaker(프로덕션에 압축 실패 반복 루프 세션이 실제 존재).</li>
+  </ol>
+  <p>압축이 가장 잃기 쉬운 것은 디테일이 아니라 <strong>초기 아키텍처 결정, 제약의 근거, 실패한 경로</strong>다. 보존 우선순위: ① 아키텍처 결정·핵심 제약 ② 수정 파일 목록·핵심 변경 기록 ③ 검증 상태(pass/fail) ④ 미해결 TODO·롤백 노트 ⑤ tool 출력은 결론만. 그리고 <strong>UUID·해시·IP·포트·URL·파일명은 한 글자도 바꾸지 말 것</strong> — PR 번호 한 자리가 바뀌면 이후 tool call이 직접 실패한다.</p>
+
+  <h2>5. Isolation over Compression: 서브에이전트 격리</h2>
+  <p>압축보다 먼저 고려할 것이 <strong>Sub-Agent Context Isolation</strong>이다. 다수 파일 읽기, 코드베이스 광범위 검색처럼 대량 중간 산출물이 나오는 태스크를 sub-agent에 위임하고, 메인 context에는 태스크 기술 + 수백 토큰의 결론 2개 메시지만 남긴다.</p>
+  <div class="grid">
+    <div class="card"><strong>압축 (Compression)</strong><br>사후 손실 구제. 추가 LLM 호출 비용. 메인 context 안에서 원문을 결론으로 대체.</div>
+    <div class="card"><strong>격리 (Isolation)</strong><br>사전 차단. 메인 KV prefix 무결 유지. 오염 원인이 처음부터 메인 context에 들어오지 않음.</div>
+    <div class="card"><strong>격리의 비용</strong><br>sub-agent는 메인 context를 못 본다 → 태스크 기술(task brief)이 self-contained해야 한다.</div>
+  </div>
+  <p>Claude Code의 Task tool, Deep Research의 검색 sub-agent가 구현 예다. 격리할 것인가 압축할 것인가의 기준은 단순하다: <strong>중간 산출물이 메인 라인의 결정에 필요 없다면 격리, 필요하다면 방향 지시(context-aware) 압축.</strong></p>
+
+  <section class="callout warn">
+    <strong>실무 번역:</strong> Aside의 MEMORY.md·루틴 메모리 파일은 사실상 status bar다 — 모델이 무조건 신뢰하는 위치에 놓인다. 즉 <em>그 파일의 정확도가 곧 에이전트의 결정 품질</em>이고, 잘못 적힌 메모리는 false authority다. 네 ERP 동기화 루틴의 "0행 무음 실패"는 status bar(실행 결과의 명시 상태 기록)가 없었던 교과서적 사례다. 그리고 context_explorer·subagent 위임 패턴은 이미 isolation over compression의 실천이다 — 탐색은 위임하고 결론만 받아 메인 세션을 지키는 구조.
+  </section>
+
+  <h2>6. 퀴즈 · 회수 연습</h2>
+  <div class="quiz-card" data-quiz data-correct="맞음. 집계·요약 상태 유지는 코드가 정확하고, LLM 일괄 요약은 오류로 baseline 이하가 됐다." data-incorrect="다시. Context Distillation 벤치마크에서 LLM 유지 방식의 성적이 어땠는지 떠올려 보자.">
+    <p><strong>Q1.</strong> Status bar를 유지하는 권장 방식은?</p>
+    <button type="button" data-answer="wrong">프론티어 모델이 매 라운드 전체 history를 일괄 요약한다</button>
+    <button type="button" data-answer="correct">정규식·카운터 같은 코드가 결정론적으로 갱신한다</button>
+    <button type="button" data-answer="wrong">모델이 스스로 필요할 때마다 원시 로그를 다시 센다</button>
+    <button type="button" data-answer="wrong">매 라운드 system prompt를 새로 렌더링해 주입한다</button>
+    <div class="quiz-feedback" data-feedback></div>
+  </div>
+
+  <div class="quiz-card" data-quiz data-correct="맞음. rot은 넣었는데 못 찾는 상태 — 정보 밀도 부족이 흔한 실패 모드다." data-incorrect="다시. overflow와 rot의 구별을 떠올려 보자.">
+    <p><strong>Q2.</strong> Context rot을 가장 정확히 설명한 것은?</p>
+    <button type="button" data-answer="wrong">컨텍스트 윈도우 한도를 초과해 요청이 거부되는 상태</button>
+    <button type="button" data-answer="wrong">KV cache가 만료되어 prefill을 다시 계산하는 상태</button>
+    <button type="button" data-answer="correct">정보는 들어 있지만 주의가 흩어져 결정 품질이 조용히 악화되는 상태</button>
+    <button type="button" data-answer="wrong">오래된 대화가 삭제되면서 이전 결정 근거가 소실되는 상태</button>
+    <div class="quiz-feedback" data-feedback></div>
+  </div>
+
+  <div class="quiz-card" data-quiz data-correct="맞음. 메인 context를 지키려면 태스크를 격리하되, sub-agent가 메인 context를 못 보니 brief가 self-contained해야 한다." data-incorrect="다시. 격리의 비용 — sub-agent가 볼 수 없는 것이 무엇인지 생각해 보자.">
+    <p><strong>Q3.</strong> Sub-agent isolation으로 대량 탐색 작업을 위임할 때 반드시 충족해야 할 조건은?</p>
+    <button type="button" data-answer="correct">태스크 기술(brief)이 메인 context 없이도 self-contained할 것</button>
+    <button type="button" data-answer="wrong">sub-agent가 메인 세션의 전체 history를 공유할 것</button>
+    <button type="button" data-answer="wrong">위임된 작업의 결과를 요약 없이 전량 회수할 것</button>
+    <button type="button" data-answer="wrong">sub-agent의 모델을 메인보다 큰 모델로 설정할 것</button>
+    <div class="quiz-feedback" data-feedback></div>
+  </div>
+
+  <h2>7. 미니 실습 (10분)</h2>
+  <p>네가 운영 중인 Aside 루틴 하나(예: <code>erp-sales-hx-daily</code> 또는 <code>pathy-daily-content</code>)에 status bar를 설계해 보자. 종이나 메모에 아래를 적는다.</p>
+  <ol>
+    <li>다음 실행이 알아야 할 상태 5개를 key-value로 (예: <code>last_run_date</code>, <code>rows_synced</code>, <code>consecutive_failures</code>)</li>
+    <li>각 항목을 갱신하는 주체가 코드인지 LLM인지 표시 — LLM 표시가 있으면 코드로 바꿀 수 없는지 검토</li>
+    <li>이 status bar가 답하지 못하는 "미래 질문" 하나를 적고, false authority 위험이 없는지 점검</li>
+    <li>갱신 방식 선택: 매 실행 replace vs 누적 append — 갱신 빈도와 history 길이로 판단</li>
+  </ol>
+
+  <h2>Primary source</h2>
+  <p>교재: <em>AI Agents in Depth</em> (Bojie Li, v1.3) Chapter 2 §2.6-2.7 (p.66-81). 로컬 사본: <code>source/AI-Agents-in-Depth-v1.3.pdf</code></p>
+  <ul>
+    <li><a href="https://01.me/research/context-distillation">Li &amp; Shi, "Distill, Don't Retrieve: Inference-Time Context Distillation for LLM Agent Reasoning" (2026)</a> — status bar 벤치마크의 원전.</li>
+    <li><a href="https://arxiv.org/abs/2607.11598">Li &amp; Shi, "Interaction Scaling: Grounding the Third Axis of Test-Time Compute" (2026)</a> — status bar를 test-time compute의 제3축으로 정식화(선택 읽기).</li>
+    <li>Dherin et al., "Learning without training" (2025) — in-context learning이 일시적·얕은 적응임을 보이는 연구.</li>
+  </ul>
+
+  <h2>다음으로 연결</h2>
+  <ul>
+    <li>이전: <a href="0003-kv-cache-prompt-skills.html">Lesson 0003 · KV Cache 친화적 설계, 시스템 프롬프트, 스킬</a></li>
+    <li>다음: <a href="0005-user-memory-and-rag.html">Lesson 0005 · 유저 메모리와 지식 베이스</a></li>
+    <li>관련: <a href="0010-multimodal-multi-agent.html">Lesson 0010 · 멀티에이전트 시스템</a> (격리의 확장 — 위임 토폴로지)</li>
+  </ul>
+
+  <footer>
+    <p>막히는 부분은 에이전트에게 바로 물어보세요. 이 워크스페이스의 선생님 역할이다.</p>
+    <p class="pill">Mission-linked</p>
+    <p class="pill">ZPD: 캐시·프롬프트 원칙 → 상태 증류와 압축/격리 설계</p>
+  </footer>
+
+</main>
+<script>
+document.querySelectorAll("[data-quiz]").forEach((quiz) => {
+  const feedback = quiz.querySelector("[data-feedback]");
+  quiz.querySelectorAll("button[data-answer]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const isCorrect = button.dataset.answer === "correct";
+      quiz.querySelectorAll("button[data-answer]").forEach((b) => {
+        b.classList.remove("correct", "incorrect");
+        b.setAttribute("aria-pressed", "false");
+      });
+      button.classList.add(isCorrect ? "correct" : "incorrect");
+      button.setAttribute("aria-pressed", "true");
+      feedback.textContent = isCorrect ? quiz.dataset.correct : quiz.dataset.incorrect;
+    });
+  });
+});
+
+</script>
+</body>
+</html>

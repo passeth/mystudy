@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="AI Agents in Depth 코스 용어 글로서리">
+  <title>용어 글로서리 · AI Agents in Depth</title>
+  <style>:root{--ink:#18201f;--muted:#5d6864;--paper:#fbfaf6;--panel:#ffffff;--line:#d9ddd6;--accent:#136f63;--accent-2:#a23d31;--soft:#eaf3ef;--warn:#fff2d6;--code:#101917;}
+*{box-sizing:border-box;}body{margin:0;color:var(--ink);background:var(--paper);font-family:ui-serif,Georgia,"Apple SD Gothic Neo","Noto Serif KR",serif;line-height:1.68;}
+main{width:min(960px,calc(100% - 40px));margin:0 auto;padding:52px 0 88px;}
+.kicker{color:var(--accent);font:700 12px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;}
+h1{margin:12px 0 14px;font-size:clamp(34px,6vw,64px);line-height:1.02;}
+.subtitle{max-width:720px;color:var(--muted);font-size:18px;}
+h2{margin-top:42px;border-bottom:1px solid var(--line);padding-bottom:8px;}
+a{color:var(--accent);text-underline-offset:3px;}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px 18px;margin:10px 0;}
+.callout{border-left:4px solid var(--accent);background:var(--soft);border-radius:6px;padding:14px 16px;}
+.pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:2px 9px;font:700 12px/1.7 ui-sans-serif,system-ui,sans-serif;color:var(--muted);}
+dt{font-weight:700;}dd{margin:2px 0 12px 0;color:var(--ink);}
+footer{margin-top:54px;padding-top:24px;border-top:1px solid var(--line);color:var(--muted);}
+table{border-collapse:collapse;width:100%;background:var(--panel);}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top;}
+th{background:var(--soft);}
+@media print{body{background:#fff;}main{width:auto;padding:24px;}}
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <div class="kicker">Reference 0001 · AI Agents in Depth</div>
+    <h1>용어 글로서리</h1>
+    <p class="subtitle">전 10챕터의 핵심 용어를 EN-KR로 압축. 레슨을 읽다 막히는 용어가 나오면 여기부터. 모든 레슨은 이 정의를 따른다.</p>
+  </header>
+  <h2>Ch1-2 · 에이전트와 컨텍스트 기초</h2>
+    <div class="card"><strong>Agent</strong><br>LLM + Context + Tools의 조합으로 목표를 향해 자율 행동하는 시스템. 모델이 아니라 '모델을 감싼 루프'가 본체.</div>
+    <div class="card"><strong>Harness (하네스)</strong><br>모델 바깥에서 모델을 Constrain/Verify/Correct하는 모든 엔지니어링 계층. Prompt ⊂ Context ⊂ Harness ⊂ Loop 중첩 구조의 최상위 실천.</div>
+    <div class="card"><strong>ReAct loop</strong><br>Reasoning + Acting. 생각( thought ) → 도구 호출( action ) → 관찰( observation )을 반복하는 에이전트의 기본 루프.</div>
+    <div class="card"><strong>Context engineering</strong><br>모델에 들어가는 working set 전체(시스템 프롬프트, 도구 정의, 메모리, trajectory)를 설계하는 일. 에이전트 능력의 천장.</div>
+    <div class="card"><strong>Message roles (4종)</strong><br>system / user / assistant / tool. API는 stateless — 매 턴 전체 대화를 다시 본내는 구조.</div>
+    <div class="card"><strong>KV cache</strong><br>이전 토큰의 Key/Value를 재사용하는 추론 캐시. prefix가 바뀌면 무효 → 컨텍스트 앞부분을 안정적으로 유지해야 비용·지연이 줄는다.</div>
+    <div class="card"><strong>Prompt cache</strong><br>API 제공자 레벨의 캐시(캐시 히트 시 입력 토큰 ~1/10 가격). 아키텍처 제약으로 취급해야 한다.</div>
+    <div class="card"><strong>Chat template</strong><br>API 메시지 배열이 모델 토큰 시퀀스로 변환되는 형식. 캐시 경계를 이해하는 단위.</div>
+    <div class="card"><strong>Agent Skills</strong><br>도메인 능력의 조합 가능 단위. progressive disclosure(메타데이터 → 본문 → 리소스) 3계층으로 로드. description은 라우팅 규칙.</div>
+    <div class="card"><strong>Progressive disclosure</strong><br>필요할 때 필요한 만큼만 컨텍스트에 올리는 설계 원칙. 스킬, τ-bench, 도구 발견에 공통 적용.</div>
+    <div class="card"><strong>Agent status bar</strong><br>진행 상황·환경·시간 같은 메타정보를 코드가 유지해 컨텍스트에 주입하는 장치. false authority 주의.</div>
+    <div class="card"><strong>Context compression</strong><br>길어진 trajectory를 요약·계층화해 working set에 넣는 전략. 6전략 비교와 5계층 hierarchical compression이 책의 핵심.</div>
+    <div class="card"><strong>Sub-agent isolation</strong><br>압축 대신 컨텍스트를 분리: 하위 작업을 별도 컨텍스트의 서브에이전트에 위임하고 결과만 가져온다.</div>
+  <h2>Ch3 · 메모리와 RAG</h2>
+    <div class="card"><strong>User memory vs Knowledge base</strong><br>개인 비서(사용자 모델링) vs 도메인 전문가(사실 검색). 기술 스택과 실패 모드를 공유한다.</div>
+    <div class="card"><strong>메모리 3단계 평가</strong><br>Basic Recall → Multi-Session Retrieval → Proactive Service. LoCoMo 벤치마크로 측정.</div>
+    <div class="card"><strong>Episodic / Semantic / Procedural</strong><br>인지과학의 메모리 3분류. 사건 / 사실 / 절차. 에이전트 메모리 설계의 분류 기준.</div>
+    <div class="card"><strong>Mem0</strong><br>대화에서 ADD/UPDATE/DELETE/NOOP 연산으로 메모리를 갱신하는 프레임워크.</div>
+    <div class="card"><strong>Chunking</strong><br>문서를 검색 단위로 나누는 전략(고정 길이/구조 기반/의미 기반). RAG 품질의 1차 변수.</div>
+    <div class="card"><strong>Dense vs Sparse embedding</strong><br>의미 유사도(BGE-M3 등) vs 키워드 정합(BM25). 하이브리드가 실무 기본값.</div>
+    <div class="card"><strong>RRF + Reranking</strong><br>Reciprocal Rank Fusion으로 dense+sparse를 합치고, cross-encoder reranker로 정밀 재순위화.</div>
+    <div class="card"><strong>recall@k / MRR / nDCG</strong><br>검색 품질 지표 3종. 재현율 / 첫 정답 순위 / 순위 가중 적합도.</div>
+    <div class="card"><strong>RAPTOR / GraphRAG</strong><br>계층 요약 트리 / 지식 그래프 기반 structured indexing. naive flat RAG의 실패를 넘는 두 경로.</div>
+    <div class="card"><strong>Agentic RAG</strong><br>검색 자체를 ReAct 루프의 도구로 둔 패러다임. 쿼리 작성·재검색·근거 검증을 에이전트가 수행.</div>
+    <div class="card"><strong>Contextual Retrieval</strong><br>Anthropic 기법. 청크에 문맥 문장을 붙여 임베딩 — 실패율 49%(+rerank 67%) 절감 보고.</div>
+  <h2>Ch4-5 · 도구와 코딩 에이전트</h2>
+    <div class="card"><strong>ACI (Agent-Computer Interface)</strong><br>도구 설명·파라미터·반환 형식의 인터페이스 설계. '설명의 기술'만으로 성공률 72%→90% 사례.</div>
+    <div class="card"><strong>MCP (Model Context Protocol)</strong><br>도구 연결 표준 프로토콜. 생태계 이점 vs 컨텍스트 오버헤드(수만 토큰)·보안 리스크.</div>
+    <div class="card"><strong>Lethal Triad</strong><br>비신뢰 입력 + 민감 데이터 접근 + 외부 통신 능력이 겹칠 때 prompt injection이 치명적이 되는 조합.</div>
+    <div class="card"><strong>Idempotency (멱등성)</strong><br>같은 호출을 반복핀데도 부작용이 한 번만 생기는 성질. 재시도 가능한 도구의 전제.</div>
+    <div class="card"><strong>Event-driven agent</strong><br>Cron/Heartbeat/Webhook 등 트리거로 깨어나는 비동기 에이전트. 처리 전략과 'Never Stop Thinking' 원칙.</div>
+    <div class="card"><strong>Proactive tool discovery</strong><br>수천 개 도구 중 필요한 것만 동적으로 찾아 올리는 기법(MCP-Zero 등, 토큰 ~98% 절감).</div>
+    <div class="card"><strong>Coding agent</strong><br>파일 읽기/편집/검색/실행 등 7 코어 툴을 갖춘 에이전트. 범용 에이전트 = 코딩 에이전트 + 파일시스템.</div>
+    <div class="card"><strong>회로차단기 (Circuit breaker)</strong><br>같은 실패 N회(예: 3회) 반복 시 루프를 끊고 에스컬레이션. death spiral 방어.</div>
+    <div class="card"><strong>Proposer-Reviewer</strong><br>생성자와 검토자를 분리하는 협업 패턴. 위치 특정 피드백으로 반복 개선.</div>
+    <div class="card"><strong>Bootstrapping</strong><br>에이전트가 자기 환경을 진단(doctor)하고 도구/예제를 스스로 만들어 능력을 확장하는 것.</div>
+  <h2>Ch6 · 평가</h2>
+    <div class="card"><strong>평가 3계층</strong><br>환경(environment) / 방법(method) / 결정(decision). 벤치마크 숫자 하나가 아니라 인프라 전체가 평가다.</div>
+    <div class="card"><strong>Verifier</strong><br>결과를 기계적으로 판정하는 장치 4종(규칙/단위테스트/모델 판정/인간). RL과 평가의 공통 부품.</div>
+    <div class="card"><strong>Pass@k vs Pass^k</strong><br>k번 중 한 번이라도 성공 vs k번 모두 성공. 일회성 태스크와 신뢰성 태스크의 지표가 다르다.</div>
+    <div class="card"><strong>LLM-as-judge</strong><br>모델로 출력을 채점. rubric 4원칙, veto 조건, length bias·position bias 방어가 필요.</div>
+    <div class="card"><strong>Goodhart's law</strong><br>지표가 목표가 되면 지표가 망가진다. multi-source judging과 지표 로테이션으로 방어.</div>
+    <div class="card"><strong>Elo / Bradley-Terry</strong><br>상대 평가를 점수화하는 모델. 페어와이즈 비교의 통계 엔진.</div>
+    <div class="card"><strong>SE / McNemar</strong><br>표본오차 √(p(1-p)/n) / 같은 태스크 쌍의 승패를 비교하는 paired 검정. '차이처럼 보이는 것'의 대부분은 노이즈.</div>
+    <div class="card"><strong>Observability</strong><br>OpenTelemetry/LangSmith 같은 궤적 수집. 운영 데이터를 평가 자산으로 증류하는 출발점.</div>
+  <h2>Ch7-8 · 포스트트레이닝과 진화</h2>
+    <div class="card"><strong>SFT memorizes, RL generalizes</strong><br>책의 제1원칙. 형식·스타일은 SFT, 새 상황 일반화는 RL. 선택 기준: '데모를 추가핀데도 안 오륨녀 RL'.</div>
+    <div class="card"><strong>Data & environment > algorithms</strong><br>제2원칙. 우선순위는 prior > environment > algorithm. 알고리즘 교첸는 마지막 수단.</div>
+    <div class="card"><strong>RLHF / Reward model</strong><br>인간 선호 → 보상 모델 → 정책 최적화. over-optimization(Goodhart)에 취약.</div>
+    <div class="card"><strong>PPO / GRPO / DPO</strong><br>정책 경사 / 그룹 상대 우위 / 선호 직접 최적화. 실무 선택은 인프라 성숙도와 데이터 형태가 결정.</div>
+    <div class="card"><strong>Credit assignment</strong><br>멀티턴 궤적에서 어느 행동이 결과를 만들었는지 보상을 배분하는 문제. 보상 밀도 스펙트럼으로 설계.</div>
+    <div class="card"><strong>PRM vs ORM</strong><br>과정 보상 모델 vs 결과 보상 모델. 과정 피드백이 밀도를 올리지만 비용·해킹 리스크.</div>
+    <div class="card"><strong>On-policy distillation</strong><br>강한 교사의 궤적으로 학생을 학습시키되 학생 분포에서. 오프폴리시 SFT보다 스텝 ~1/10.</div>
+    <div class="card"><strong>4대 갱신 매체</strong><br>지식(파일) / 프롬프트·스킬 / 프로그램(도구) / 파라미터(가중치). 지속 진화는 이 중 어디를 고칠지의 선택.</div>
+    <div class="card"><strong>보존 ≠ 학습</strong><br>궤적을 저장하는 것과 그것으로 능력이 나아지는 것은 다르다. 3층 검증 구조가 필요.</div>
+    <div class="card"><strong>Sleep learning</strong><br>운영 중 쌓인 궤적을 비동기로 정리·증류·검증·반영하는 5단계 오프라인 루프.</div>
+  <h2>Ch9-10 · 멀티모달과 멀티에이전트</h2>
+    <div class="card"><strong>Cascaded pipeline</strong><br>ASR → LLM → TTS 직렬 음성 아키텍처. 단순하지만 지연·정보 손실(비언어 신호 소실).</div>
+    <div class="card"><strong>End-to-end Omni</strong><br>음성을 직접 이해하고 생성하는 단일 모델. 병목이 '어떤 정보를 담는가'로 E2E vs cascade를 판별.</div>
+    <div class="card"><strong>Full-duplex</strong><br>듣기와 말하기를 동시에 — 끊기·맞장구 가능(Moshi ~200ms). VAD 기반 턴테이킹의 대체.</div>
+    <div class="card"><strong>Fast-slow thinking</strong><br>빠른 반사 경로와 느린 추론 경로의 분리/통합 문제. 음성·GUI·로봇을 관통하는 주제.</div>
+    <div class="card"><strong>Computer use</strong><br>스크린샷 → 좌표 액션으로 GUI를 조작하는 에이전트. 설계 3차원: action space / visual grounding / 관찰 인터페이스.</div>
+    <div class="card"><strong>SoM (Set-of-Mark)</strong><br>스크린샷의 요소에 번호 마커를 오버레이해 grounding하는 기법. DOM/좌표 예측과의 트레이드오프.</div>
+    <div class="card"><strong>Shared vs non-shared context</strong><br>멀티에이전트 분류의 1축. 같은 컨텍스트를 보는가, 메시지로만 소통하는가.</div>
+    <div class="card"><strong>신규 정보 도입 기준</strong><br>멀티에이전트가 싱글보다 나은 조건: 다른 에이전트가 '새 정보'(실행 결과, 다른 시각)를 가져올 때. 같은 정보로 debate만 하면 무효.</div>
+    <div class="card"><strong>MAST</strong><br>Multi-Agent System Failure Taxonomy. 멀티에이전트 실패 모드 분류표.</div>
+    <div class="card"><strong>Premature termination</strong><br>검증 없이 조기 종료하는 실패 3형태. 병목은 generator가 아니라 verifier.</div>
+  <h2>Meta · 학습</h2>
+    <div class="card"><strong>ZPD (Zone of Proximal Development)</strong><br>근접 발달 영역. 혼자선 못 하지만 scaffolding으로 가능한 지점 — 레슨 난이도의 기준.</div>
+    <div class="card"><strong>Retrieval practice</strong><br>답을 다시 보기 전에 머리에서 꺼내는 연습. 저장 강도(storage strength)를 키우는 핵심.</div>
+    <div class="card"><strong>Fluency vs Storage strength</strong><br>지금 막 이해한 느낌 vs 나중에도 꺼낼 수 있는 힘. 이 코스의 퀴즈·실습은 후자를 겨냥.</div>
+
+  <footer>
+    <p><a href="../index.html">코스 홈</a> · 모르는 용어의 뉘앙스가 헷갈리면 에이전트에게 예시를 달라고 하면 된다.</p>
+    <p class="pill">Quick reference</p>
+  </footer>
+</main>
+</body>
+</html>

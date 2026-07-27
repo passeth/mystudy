@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="도구 설명의 기술, MCP 생태계의 기회와 리스크, 이벤트 기반 비동기 에이전트의 엔지니어링을 배운다.">
+  <title>도구 설계, MCP, 이벤트 기반 비동기 에이전트 · AI Agents in Depth</title>
+  <style>
+:root {
+  --ink: #18201f;
+  --muted: #5d6864;
+  --paper: #fbfaf6;
+  --panel: #ffffff;
+  --line: #d9ddd6;
+  --accent: #136f63;
+  --accent-2: #a23d31;
+  --soft: #eaf3ef;
+  --warn: #fff2d6;
+  --code: #101917;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  color: var(--ink);
+  background: var(--paper);
+  font-family: ui-serif, Georgia, "Apple SD Gothic Neo", "Noto Serif KR", serif;
+  line-height: 1.68;
+}
+main {
+  width: min(960px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 52px 0 88px;
+}
+.kicker {
+  color: var(--accent);
+  font: 700 12px/1 ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+h1 {
+  margin: 12px 0 14px;
+  font-size: clamp(34px, 6vw, 64px);
+  line-height: 1.02;
+}
+.subtitle {
+  max-width: 720px;
+  color: var(--muted);
+  font-size: 18px;
+}
+h2 {
+  margin-top: 42px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 8px;
+}
+a { color: var(--accent); text-underline-offset: 3px; }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+.card, .quiz-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 20px;
+  margin: 18px 0;
+}
+.callout {
+  border-left: 4px solid var(--accent);
+  background: var(--soft);
+  border-radius: 6px;
+  padding: 14px 16px;
+}
+.warn {
+  border-left-color: #c98210;
+  background: var(--warn);
+}
+pre {
+  overflow-x: auto;
+  background: var(--code);
+  color: #eef7f2;
+  border-radius: 8px;
+  padding: 16px;
+}
+code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.92em;
+}
+.pill {
+  display: inline-block;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 2px 9px;
+  font: 700 12px/1.7 ui-sans-serif, system-ui, sans-serif;
+  color: var(--muted);
+}
+.quiz-card button {
+  display: block;
+  width: 100%;
+  margin: 8px 0;
+  padding: 11px 13px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.quiz-card button.correct { border-color: #1f7a3f; background: #e8f4eb; }
+.quiz-card button.incorrect { border-color: var(--accent-2); background: #fae9e7; }
+.quiz-feedback { min-height: 1.6em; font-weight: 700; }
+footer {
+  margin-top: 54px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+}
+@media print {
+  body { background: #fff; }
+  main { width: auto; padding: 24px; }
+  .card, .quiz-card { break-inside: avoid; }
+  a::after { content: " (" attr(href) ")"; font-size: 0.8em; color: var(--muted); }
+}
+
+  </style>
+</head>
+<body>
+<main>
+
+  <header>
+    <div class="kicker">Lesson 0006 · AI Agents in Depth</div>
+    <h1>도구 설계, MCP, 이벤트 기반 비동기 에이전트</h1>
+    <p class="subtitle">도구 설명 한 줄이 모델 교체보다 ROI가 높고, "능동 서비스"는 cron이 아니라 세계가 에이전트를 깨우는 채널에서 완성된다.</p>
+  </header>
+
+  <section class="callout">
+    <strong>오늘의 한 줄 답:</strong> 도구 설계의 기준선은 <em>모델이 지각하는 세계와 도구가 작동하는 세계 사이에 괴리를 두지 않는 것</em>이고, 비동기 에이전트의 핵심은 <em>에이전트가 세계를 폴리링하는 것을 넘어 세계가 에이전트에게 능동 통지하는 채널</em>이다.
+  </section>
+
+  <h2>1. 도구의 5개 카테고리</h2>
+  <p>Ch4는 도구를 Invocation Direction(호출 방향) × Target of Action(작용 대상)으로 분류한다. 이 표는 이후 모든 설계 논의의 지도다.</p>
+
+  <div class="grid">
+    <div class="card">
+      <strong>Perception (지각)</strong><br>
+      에이전트 능동 → 정보 획득. web_search, read_file, grep. 읽기 전용이라 캐싱·병렬화의 자유가 있다. 핵심 설계: 출력량 제어와 명시적 절단(조용한 절단은 오판을 만든다).
+    </div>
+    <div class="card">
+      <strong>Execution (실행)</strong><br>
+      에이전트 능동 → 세계를 변경. shell_exec, write_file, send_email. 오류 비용이 커서 보안 제약이 설계의 중심이다.
+    </div>
+    <div class="card">
+      <strong>Collaboration (협업)</strong><br>
+      에이전트 능동 → 다른 에이전트/인간 구동. spawn_subagent, send_message_to_subagent. 전문화된 분업의 프리미티브.
+    </div>
+    <div class="card">
+      <strong>User Communication</strong><br>
+      에이전트 능동 → 사용자에게 전달. send_user_notification 등. 비동기 메시징에서 "말하기" 자체가 명시적 도구 호출이다.
+    </div>
+    <div class="card">
+      <strong>Event-Triggered</strong><br>
+      에이전트가 <em>등록</em>, 외부가 <em>트리거</em>. set_timer, monitor_shell, connect_channel. 이것이 없으면 말을 걸 때만 반응하는 수동 에이전트다.
+    </div>
+  </div>
+
+  <h2>2. ACI: 도구 설명의 기술과 파라미터 충실성</h2>
+  <p>도구 설계는 3세대로 진화했다: ① API 래퍼(엔드포인트당 도구) → ② <strong>ACI(Agent-Computer Interface)</strong> 원칙(도구는 하부 API가 아니라 에이전트의 목표에 대응해야 — HCI의 유비) → ③ 호출·연쇄·발견 최적화(예시 주도 호출, 동적 발견, 코드 오케스트레이션). ACI의 설명 규약은 구체적이다:</p>
+  <ul>
+    <li><strong>"무엇을"이 아니라 "언제 쓰는가".</strong> "관련 콘텐츠 검색"보다 "실시간 정보 또는 미지의 사실이 필요할 때 사용".</li>
+    <li><strong>경계(못 하는 것) 명시가 능력 기술보다 중요하다.</strong> 도구 호출 실패의 대부분은 모델이 도구의 한계를 모르기 때문. "내용 검색 불가" 같은 네거티브 명시 없으면 모델은 추측한다.</li>
+    <li><strong>파라미터는 추상 규격 대신 구체 예시.</strong> "timestamp: RFC3339" (X) → "예: 2024-03-15T14:30:00Z" (O). 작업 중 모델은 파라미터 형식에 attention의 극히 일부만 쓴다.</li>
+    <li><strong>도구당 실제 호출 예시 1–5개.</strong> JSON Schema는 타입만 말하고, 호출 패턴과 암묵 관례(초 vs 밀리초)는 예시가 전달한다. 이것만으로 벤치마크 호출 정확도가 약 <strong>72% → 90%</strong>로 오른 사례가 있다.</li>
+  </ul>
+  <p>디버깅 원칙: <strong>에이전트가 계속 잘못된 도구를 고륩면 모델을 의심하기 전에 도구 설명을 먼저 점검하라.</strong></p>
+
+  <h3>파라미터 전달 충실성(Fidelity) — 은밀한 안티패턴</h3>
+  <p>책이 꼽는 가장 위험한 안티패턴은 <strong>silent input transformation</strong>이다. 2026년 초 Cursor 사례: edit 도구의 전달 레이어가 중국어식 컬리 인용부호(")를 영어 직선 인용부호(")로 몰래 변환했다. 모델은 read로 컬리 인용부호를 보고 old_string에 그대로 넣었는데 "no match found" — <em>모델이 자가 진단 불가능한 실패 모드</em>. 반대로 "똑똑한 교정"을 하려다 파라미터를 몰래 주입(silent parameter injection)하는 경우도 같다. 원칙은 하나다: 정규화가 필요하면 도구 설명에 문서화하고 반환값에 명시하라.</p>
+
+  <section class="callout warn">
+    <strong>실무 번역:</strong> Aside 스킬의 도구 설명을 감사할 기준이 바로 이것이다. 스킬 파이프라인 중간에서 텍스트를 몰래 정규화(인용부호 변환, 공백 처리)하는 단계가 있다면 에이전트는 원인을 영원히 못 찾는다. 그리고 스킬/도구 설명에 "언제 쓰는가 + 못 하는 것 + 호출 예시"가 없으면 모델 탓을 하기 전에 설명부터 고쳐라 — 72→90%는 모델이 아니라 문서가 만든 수치다.
+  </section>
+
+  <h2>3. MCP: 상호운용성의 표준, 그리고 새로운 신뢰 경계</h2>
+  <p><strong>MCP(Model Context Protocol)</strong>는 Anthropic이 2024년 말 공개한 오픈 표준 — 모델과 외부 도구/데이터 간 통신의 "콘센트 규격"이다. JSON Schema 기반 도구 기술, resources(읽기)/tools(실행)/prompts(템플릿) 3원시 분리, stdio·Streamable HTTP 전송. 가치는 <strong>develop once, use everywhere</strong>다.</p>
+  <p>그러나 세 가지 대가가 있다.</p>
+  <ol>
+    <li><strong>컨텍스트 오버헤드.</strong> MCP 서버 5개의 도구 정의가 약 55,000토큰 — 200K 윈도우의 30%를 대화 전에 소비한다. Cursor의 완화(이름 인덱스만 기본 노출, 필요 시 정의 조회)는 MCP 관련 토큰을 46.9% 절감했다. Anthropic 실험에서 온디맨드 도구 검색은 정확도를 49%→74%로 올렸다.</li>
+    <li><strong>세션 밖을 깨우는 방법이 없다.</strong> MCP는 request-response 중심이라 세션 외 이벤트 진입은 프레임워크가 프로토콜 위에 직접 구축해야 한다 — §5의 이벤트 드리븐으로 이어진다.</li>
+    <li><strong>보안 리스크 4종.</strong> ① Tool description poisoning(설명이 컨텍스트에 그대로 들어감 — 악성 지시 삽입 가능) ② 악성/침해 서버(공급망) ③ Tool shadowing(동명 도구로 정품을 가려 민감 파라미터 탈취) ④ 크리덴셜 오용. Simon Willison의 <strong>Lethal Triad</strong>(개인 데이터 접근 + 신뢰 불가 콘텐츠 노출 + 외부 통신 능력이 모두 있으면 공격 루프 완성)가 조합 리스크의 판단 프레임이다.</li>
+  </ol>
+  <p>도구 과잉의 핵결 방향은 <strong>MCP-Zero</strong>(2,800개 도구에서 토큰 약 98% 절감)와 <strong>Skills 패러다임</strong>이다: 전량 스키마 주입 대신, 에이전트가 갭을 선언하면 온디맨드 주입하거나 — 더 급진적으로는 — 스킬 이름+설명 수백 토큰의 얇은 카탈로그만 두고 필요할 때 파일을 읽게 한다. 도구 선택 문제를 LLM이 잘하는 "지식 검색" 문제로 변환하는 것이다.</p>
+
+  <section class="callout warn">
+    <strong>실무 번역:</strong> Aside의 SKILL.md 생태계가 정확히 이 Skills 패턴이다(카탈로그 상주, 전문 온디맨드). 도구 과잉 대응 순서: ① 설명·분류 정리 ② Skills로 "도구 선택 → 지식 검색" 전환 ③ 정말 필요할 때만 임베딩 검색 인프라. 임베딩 없는 Skills 방식이 유지보수가 최소다.
+  </section>
+
+  <h2>4. 실행 도구의 보안: Proposer-Reviewer와 Sidecar</h2>
+  <p>실행 도구는 다층 방어가 기본이다(입력 검증 fail fast → 권한 제어 → 격리). 그 위의 두 패턴을 구별하자.</p>
+
+  <div class="grid">
+    <div class="card">
+      <strong>Proposer-Reviewer (사전 승인)</strong><br>
+      제안 모델과 심사 모델을 분리 — 은행 복수 서명제. 심사 모델은 다른 패밀리(인지 다양성) + 유사 능력(추론을 따라올 수준)이어야 한다. 거부 사유는 도구 호출 결과로 trajectory에 기록 — 에이전트는 원래 도구 실패를 처리할 줄 안다. 비가역·고영향 작업(과금·발신·설정 변경)에 적용.
+    </div>
+    <div class="card">
+      <strong>Sidecar (병렬 분류)</strong><br>
+      경량 LLM이 메인 루프와 병렬로 <em>행위</em>를 독립 판단. Claude Code Auto Mode가 대표: <em>구조화된 도구 호출 데이터(도구명·파라미터)만 보고 메인 모델의 자유 텍스트 사고는 보지 않는다</em> — 수사학으로 권한 판단을 조작하는 채널을 차단하기 위한 의도적 설계. 분류 문제라 경량 모델로 충분하다.
+    </div>
+  </div>
+
+  <p>멱등성 원칙도 실무 치명적이다. 송금 타임아웃 후 무조건 재시도 = 이중 송금. 멱등 불가 작업(이메일·전화·송금)은 <strong>"사전 점검 + 확인 토큰" 2단계</strong>로 설계하고, 실패 시 같은 단계를 맹목 재시도하지 않는다. 참고로 <em>venv는 샌드박스가 아니다</em> — 패키지 의존성만 격리할 뿐 파일시스템·네트워크 제약이 없다.</p>
+
+  <h2>5. 이벤트 기반 비동기 에이전트: 세계가 에이전트를 깨운다</h2>
+  <p>Ch4 후반의 근본 모순: LLM은 "도구 호출 다음 메시지는 반드시 도구 결과"로 <strong>동기 학습</strong>됐는데, 실제 배포는 <strong>비동기</strong>다. OpenClaw의 내장 자동화 3종 — <strong>Hooks</strong>(라이프사이클 반응), <strong>Cron</strong>(시간 주도), <strong>Heartbeat</strong>(N분마다 깨어 확인) — 는 전부 시간·남부 이벤트 주도라, 제3자 이벤트 소스(새 이메일, API 콜백)에는 다음 틱까지 대기해야 한다.</p>
+  <p><strong>PineClaw</strong> 사례가 왜 그게 안 되는지 보여준다: AI가 사용자 대신 실제 전화(요금 협상)를 거는데, 통화 중 본인 인증 코드 요구·3자 통화 확인은 수초 내 개입이 필요하다. Heartbeat 5분 폴리링이면 상담원이 끊는다. 핵심 통찰: <strong>진정한 능동 서비스는 에이전트가 세계를 확인하는 것뿐 아니라 세계가 에이전트에게 능동 통지할 수 있어야 한다.</strong> 그게 Event-Triggered 도구(set_timer, monitor_shell, connect_channel)다.</p>
+  <p>도착한 이벤트는 긴급도 기반 3대 전략으로 처리한다: <strong>Cancellation-Based</strong>(긴급 — 현 작업 중단, 큐 비우기, 즉시 재호출), <strong>Queued</strong>(일상 — 큐잉 후 현 작업 완료 시 배치 처리), <strong>Parallel</strong>(독립 경량 — 별도 세션 즉시 처리). 그리고 동기 모델을 비동기에서 굴리는 <strong>5개 엔지니어링 규칙</strong>:</p>
+  <ol>
+    <li>LLM 산출(사고·콘텐츠·도구 호출)은 즉시 기록한다.</li>
+    <li>도구 결과는 완료 시에만 기록한다 — 실행 중 trajectory는 "부분 완료" 상태다.</li>
+    <li>도구 실행 중 인터럽트면 플레이스홀더 응답("백그라운드 실행 중")을 생성해 assistant–도구 결과 쌍을 유지한다.</li>
+    <li>LLM 사고 중 인터럽트면 현재 사고를 폐기하고 새 라운드를 시작한다.</li>
+    <li>비긴급 이벤트는 큐잉 후 배치로 처리한다.</li>
+  </ol>
+  <p>이 규칙들 덕에 정상 시 LLM은 완벽한 동기 trajectory를 본다. 단, 플레이스홀더에 "미완료"라 써 있어도 모델이 도구 결과를 날조할 수 있다 — 그래서 인터럽트는 진짜 긴급 시에만. 책의 마무리는 <strong>"Never Stop Thinking"</strong>: 대기 시간은 모델에게 공짜 연산(초당 수천 토큰)이므로 thinking while waiting(미리 추론·조기 발사)이 가능하고, 이를 유용하게 만드는 것은 오케스트레이션이 아니라 검증 가능한 학습 신호다.</p>
+
+  <section class="callout warn">
+    <strong>실무 번역:</strong> Aside의 cron/heartbeat 루틴은 OpenClaw의 시간 주도 모델과 같다 — "답변 대기 후 이어가기"에는 heartbeat가 맞지만, 주문 알림·슬랙 이벤트·이메일 도착 같은 외부 이벤트는 폴리링이 아니라 webhook/channel 진입이 진짜 해답이다(PineClaw의 교훈). 그리고 발주·발신·결제 같은 비가역 작업에는 2단계(사전 점검 + 확인 토큰)와 "거부 사유도 trajectory에 기록"을 기본 설계로 넣어라.
+  </section>
+
+  <h2>6. 퀴즈 · 회수 연습</h2>
+  <div class="quiz-card" data-quiz data-correct="정답. 호출 실패의 대부분은 모델이 도구의 한계를 모르기 때문 — 경계 명시가 능력 기술보다 중요하다." data-incorrect="다시. ACI 설명 규약에서 '언제 쓰는가'와 '못 하는 것'의 우선순위를 복습하자.">
+    <p><strong>Q1.</strong> ACI 원칙에서 도구 설명(description)에 가장 우선 담아야 할 것은?</p>
+    <button type="button" data-answer="wrong">하부 API의 전체 파라미터 목록과 각각의 데이터 타입 정의</button>
+    <button type="button" data-answer="wrong">도구가 남부에서 수행하는 처리 절차의 단계별 상세 의사코드</button>
+    <button type="button" data-answer="correct">언제 쓰는 도구인지와 이 도구가 할 수 없는 것의 명시적 경계</button>
+    <button type="button" data-answer="wrong">이 도구를 만든 팀의 설계 의도와 향후 지원 로드맵 요약</button>
+    <div class="quiz-feedback" data-feedback></div>
+  </div>
+
+  <div class="quiz-card" data-quiz data-correct="정답. Sidecar는 구조화 데이터(도구명·파라미터)의 분류 문제만 풀므로 경량 모델로 충분하다." data-incorrect="다시. Proposer-Reviewer(개방형 사고 심사)와 Sidecar(구조화 분류)의 차이를 떠올리자.">
+    <p><strong>Q2.</strong> Claude Code Auto Mode의 Sidecar가 경량 모델로 충분한 이유는?</p>
+    <button type="button" data-answer="correct">도구명과 파라미터라는 구조화 데이터의 분류 문제만 판단하기 때문이다</button>
+    <button type="button" data-answer="wrong">메인 모델의 사고 과정 전체를 요약해 짧게 만드는 역할이기 때문이다</button>
+    <button type="button" data-answer="wrong">거부 결정은 드물어서 대부분 호출을 그대로 통과시키기 때문이다</button>
+    <button type="button" data-answer="wrong">사후 검증만 수행하므로 판단 속도가 정확도보다 중요하기 때문이다</button>
+    <div class="quiz-feedback" data-feedback></div>
+  </div>
+
+  <div class="quiz-card" data-quiz data-correct="정답. 시간 주도 폴리링의 한계를 넘는 것은 세계가 에이전트를 즉시 깨우는 이벤트 채널이다." data-incorrect="다시. PineClaw 사례에서 Heartbeat 폴리링이 실패한 이유를 떠올리자.">
+    <p><strong>Q3.</strong> Heartbeat/Cron만으로 "능동적 서비스"가 불완전한 근본 이유는?</p>
+    <button type="button" data-answer="wrong">주기적 실행은 토큰 비용이 커서 실시간 서비스에 적합하지 않기 때문이다</button>
+    <button type="button" data-answer="correct">외부 이벤트가 다음 틱까지 대기하므로 수초 내 개입이 필요한 상황을 놓치기 때문이다</button>
+    <button type="button" data-answer="wrong">cron 표현식이 직관적이지 않아 사용자가 스케줄을 틀리게 적기 때문이다</button>
+    <button type="button" data-answer="wrong">장기 실행 태스크가 메인 대화 스레드를 점유해 응답을 막기 때문이다</button>
+    <div class="quiz-feedback" data-feedback></div>
+  </div>
+
+  <h2>7. 미니 실습 (10분)</h2>
+  <p>둘 중 하나를 골라 바로 적용해 보자.</p>
+  <ol>
+    <li><strong>도구/스킬 설명 감사:</strong> 직접 만든 Aside 스킬 하나의 SKILL.md description을 열어 ACI 기준으로 채점하라 — ① "언제 쓰는가"가 있는가 ② "못 하는 것"(negative example)이 있는가 ③ 호출 예시 1–5개가 있는가. 없는 항목을 그 자리에서 보강하라.</li>
+    <li><strong>루틴 점검:</strong> 운영 중인 cron/heartbeat 루틴 하나를 골라 ① 이 루틴이 기다리는 것이 "시간"인가 "외부 이벤트"인가 분류하고 ② 외부 이벤트라면 폴리링 대신 webhook/channel 진입이 가능한지 판단하고 ③ 루틴이 비가역 작업(발신·발주·결제)을 하면 2단계 확인 설계가 있는지 점검하라.</li>
+  </ol>
+
+  <h2>Primary source</h2>
+  <p>교재 Chapter 4 "Tools" (pp. 122–157) — 특히 4.2(도구 설계 보편 원리), 4.3(MCP), 4.5(Execution Tools 보안), 4.7(이벤트 드리븐 비동기 에이전트).</p>
+  <p>책이 인용한 외부 소스:</p>
+  <ul>
+    <li><a href="https://modelcontextprotocol.io/">Model Context Protocol — 공식 스펙</a></li>
+    <li><a href="https://arxiv.org/abs/2506.01056">MCP-Zero: Proactive Tool Discovery (Fei et al., 2025)</a></li>
+    <li><a href="https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/">Simon Willison — The Lethal Trifecta for AI agents</a></li>
+    <li>Li, Bojie &amp; Noah Shi — "Never Stop Thinking: Continuous-Time Language Agents" (2026, forthcoming, 책에 인용)</li>
+  </ul>
+
+  <h2>다음으로 연결</h2>
+  <ul>
+    <li><a href="0005-user-memory-and-rag.html">이전: 유저 메모리와 지식 베이스</a> — Agentic RAG가 검색을 툴로 캡슐화한 것처럼, 이 레슨은 도구 전체의 설계 원리다.</li>
+    <li><a href="0007-coding-agent-meta-capability.html">다음: 코딩 에이전트와 코드라는 메타 능력</a> — 코드 오케스트레이션과 7개 핵심 도구 논증으로 이어진다.</li>
+    <li><a href="0003-kv-cache-prompt-skills.html">관련: KV Cache와 스킬</a> — Skills 패러다임과 동적 도구 로딩의 캐시 최적화.</li>
+  </ul>
+
+  <footer>
+    <p>막히는 부분은 에이전트에게 바로 물어보세요. 이 워크스페이스의 선생님 역할이다.</p>
+    <p class="pill">Mission-linked</p>
+    <p class="pill">ZPD: 지식 검색 → 도구 설계·비동기 아키텍처</p>
+  </footer>
+
+</main>
+<script>
+document.querySelectorAll("[data-quiz]").forEach((quiz) => {
+  const feedback = quiz.querySelector("[data-feedback]");
+  quiz.querySelectorAll("button[data-answer]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const isCorrect = button.dataset.answer === "correct";
+      quiz.querySelectorAll("button[data-answer]").forEach((b) => {
+        b.classList.remove("correct", "incorrect");
+        b.setAttribute("aria-pressed", "false");
+      });
+      button.classList.add(isCorrect ? "correct" : "incorrect");
+      button.setAttribute("aria-pressed", "true");
+      feedback.textContent = isCorrect ? quiz.dataset.correct : quiz.dataset.incorrect;
+    });
+  });
+});
+
+</script>
+</body>
+</html>

@@ -44,15 +44,22 @@
   {
     "id": "graph-engineering",
     "title": "Graph Engineering",
-    "subtitle": "Loop engineering에서 루프 그래프로 — 단일 루프의 네 실패, pairing·감사·앵커, grounded 개선 설계",
+    "subtitle": "Loop에서 graph로 — 개선 루프의 pairing·감사·앵커와 실행 그래프의 diamond·human gate·실전 빌드",
     "color": "lilac",
     "order": 7
+  },
+  {
+    "id": "ai-agents",
+    "title": "AI Agents in Depth",
+    "subtitle": "Bojie Li 교재 전 10챕터 심화 — 하네스·컨텍스트 엔지니어링, 도구·MCP, 평가, 포스트트레이닝, 멀티에이전트",
+    "color": "mint",
+    "order": 8
   },
   {
     "id": "reference",
     "title": "레퍼런스",
     "subtitle": "용어집·패키징 소재 지도·시스템 치트시트 등 상시 참고 자료",
     "color": "cream",
-    "order": 8
+    "order": 9
   }
 ]

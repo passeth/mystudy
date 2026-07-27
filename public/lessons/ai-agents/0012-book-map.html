@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="책 챕터와 레슨의 대응표">
+  <title>챕터-레슨 맵 · AI Agents in Depth</title>
+  <style>:root{--ink:#18201f;--muted:#5d6864;--paper:#fbfaf6;--panel:#ffffff;--line:#d9ddd6;--accent:#136f63;--accent-2:#a23d31;--soft:#eaf3ef;}
+*{box-sizing:border-box;}body{margin:0;color:var(--ink);background:var(--paper);font-family:ui-serif,Georgia,"Apple SD Gothic Neo","Noto Serif KR",serif;line-height:1.68;}
+main{width:min(960px,calc(100% - 40px));margin:0 auto;padding:52px 0 88px;}
+.kicker{color:var(--accent);font:700 12px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;}
+h1{margin:12px 0 14px;font-size:clamp(34px,6vw,56px);line-height:1.05;}
+.subtitle{max-width:720px;color:var(--muted);font-size:18px;}
+a{color:var(--accent);text-underline-offset:3px;}
+table{border-collapse:collapse;width:100%;background:var(--panel);margin:18px 0;}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top;font-size:15px;}
+th{background:var(--soft);}
+.pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:2px 9px;font:700 12px/1.7 ui-sans-serif,system-ui,sans-serif;color:var(--muted);}
+footer{margin-top:54px;padding-top:24px;border-top:1px solid var(--line);color:var(--muted);}
+@media print{body{background:#fff;}main{width:auto;padding:24px;}}
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <div class="kicker">Reference 0002 · AI Agents in Depth</div>
+    <h1>챕터-레슨 맵</h1>
+    <p class="subtitle">원문(<code>source/AI-Agents-in-Depth-v1.3.pdf</code>, 인쇄 페이지 기준)을 읽을 때의 나침반. Ch2는 볼륨이 커서 3개 레슨으로 나눴고, Ch7+8·Ch9+10은 묶었다.</p>
+  </header>
+  <table>
+    <tr><th>챕터</th><th>제목 / 범위</th><th>페이지</th><th>레슨</th><th>핵심 주제</th></tr>
+    <tr><td>1</td><td>Getting Started with AI Agents</td><td>8-31</td><td><a href='./0001-agent-anatomy-react-loop.html'>0001</a></td><td>에이전트 3요소, ReAct, 하네스 엔지니어링, 가드레일</td></tr>
+<tr><td>2</td><td>Context Engineering §2.1-2.2</td><td>32-54</td><td><a href='./0002-context-api-core-loop.html'>0002</a></td><td>메시지 역할, 코어 루프, API 컨텍스트 구성</td></tr>
+<tr><td>2</td><td>Context Engineering §2.3-2.5</td><td>44-66</td><td><a href='./0003-kv-cache-prompt-skills.html'>0003</a></td><td>KV cache, 시스템 프롬프트, 스킬, prompt injection</td></tr>
+<tr><td>2</td><td>Context Engineering §2.6-2.7</td><td>66-82</td><td><a href='./0004-status-bar-context-compression.html'>0004</a></td><td>상태 바, 압축 6전략, 서브에이전트 격리</td></tr>
+<tr><td>3</td><td>User Memory and Knowledge Base</td><td>83-121</td><td><a href='./0005-user-memory-and-rag.html'>0005</a></td><td>메모리 평가/포맷, RAG 스택, Agentic RAG</td></tr>
+<tr><td>4</td><td>Tools</td><td>122-157</td><td><a href='./0006-tools-mcp-event-driven.html'>0006</a></td><td>ACI, MCP, 이벤트 드리븐, 도구 발견</td></tr>
+<tr><td>5</td><td>Coding Agent and Code Generation</td><td>158-197</td><td><a href='./0007-coding-agent-meta-capability.html'>0007</a></td><td>코딩 에이전트 아키텍처, 하네스, 메타 능력</td></tr>
+<tr><td>6</td><td>Evaluating Agents</td><td>198-234</td><td><a href='./0008-evaluating-agents.html'>0008</a></td><td>평가 환경/지표/판정, 통계, 관측성</td></tr>
+<tr><td>7</td><td>Model Post-Training</td><td>235-287</td><td><a href='./0009-post-training-continual-evolution.html'>0009</a></td><td>SFT vs RL, RLHF, credit assignment, 툴콜 RL</td></tr>
+<tr><td>8</td><td>Continual Evolution of Agents</td><td>288-307</td><td><a href='./0009-post-training-continual-evolution.html'>0009</a></td><td>4대 갱신 매체, 이중 루프, sleep learning</td></tr>
+<tr><td>9</td><td>Multimodality and Real-Time Interaction</td><td>308-341</td><td><a href='./0010-multimodal-multi-agent.html'>0010</a></td><td>음성 3패러다임, fast-slow, computer use</td></tr>
+<tr><td>10</td><td>Multi-Agent Systems (협업과 사회)</td><td>342-379+</td><td><a href='./0010-multimodal-multi-agent.html'>0010</a></td><td>협업 분류, 실패 모드, agent society</td></tr>
+  </table>
+  <footer>
+    <p><a href="./0000-course-home.html">코스 홈</a> · <a href="./0011-glossary.html">글로서리</a></p>
+    <p class="pill">Navigation</p>
+  </footer>
+</main>
+</body>
+</html>

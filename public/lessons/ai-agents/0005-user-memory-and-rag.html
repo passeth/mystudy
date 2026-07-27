@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="유저 메모리의 3단계 평가 프레임워크와 4가지 저장 포맷, RAG에서 Agentic RAG까지 지식 베이스 스택 전체를 배운다.">
+  <title>유저 메모리와 지식 베이스 · AI Agents in Depth</title>
+  <style>
+:root {
+  --ink: #18201f;
+  --muted: #5d6864;
+  --paper: #fbfaf6;
+  --panel: #ffffff;
+  --line: #d9ddd6;
+  --accent: #136f63;
+  --accent-2: #a23d31;
+  --soft: #eaf3ef;
+  --warn: #fff2d6;
+  --code: #101917;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  color: var(--ink);
+  background: var(--paper);
+  font-family: ui-serif, Georgia, "Apple SD Gothic Neo", "Noto Serif KR", serif;
+  line-height: 1.68;
+}
+main {
+  width: min(960px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 52px 0 88px;
+}
+.kicker {
+  color: var(--accent);
+  font: 700 12px/1 ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+h1 {
+  margin: 12px 0 14px;
+  font-size: clamp(34px, 6vw, 64px);
+  line-height: 1.02;
+}
+.subtitle {
+  max-width: 720px;
+  color: var(--muted);
+  font-size: 18px;
+}
+h2 {
+  margin-top: 42px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 8px;
+}
+a { color: var(--accent); text-underline-offset: 3px; }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+.card, .quiz-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 20px;
+  margin: 18px 0;
+}
+.callout {
+  border-left: 4px solid var(--accent);
+  background: var(--soft);
+  border-radius: 6px;
+  padding: 14px 16px;
+}
+.warn {
+  border-left-color: #c98210;
+  background: var(--warn);
+}
+pre {
+  overflow-x: auto;
+  background: var(--code);
+  color: #eef7f2;
+  border-radius: 8px;
+  padding: 16px;
+}
+code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.92em;
+}
+.pill {
+  display: inline-block;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 2px 9px;
+  font: 700 12px/1.7 ui-sans-serif, system-ui, sans-serif;
+  color: var(--muted);
+}
+.quiz-card button {
+  display: block;
+  width: 100%;
+  margin: 8px 0;
+  padding: 11px 13px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.quiz-card button.correct { border-color: #1f7a3f; background: #e8f4eb; }
+.quiz-card button.incorrect { border-color: var(--accent-2); background: #fae9e7; }
+.quiz-feedback { min-height: 1.6em; font-weight: 700; }
+footer {
+  margin-top: 54px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+}
+@media print {
+  body { background: #fff; }
+  main { width: auto; padding: 24px; }
+  .card, .quiz-card { break-inside: avoid; }
+  a::after { content: " (" attr(href) ")"; font-size: 0.8em; color: var(--muted); }
+}
+
+  </style>
+</head>
+<body>
+<main>
+
+  <header>
+    <div class="kicker">Lesson 0005 · AI Agents in Depth</div>
+    <h1>유저 메모리와 지식 베이스</h1>
+    <p class="subtitle">메모리는 대화 전사(transcript)가 아니다. 반복 상호작용에서 사용자에 대한 간결한 예측 모델을 능동적으로 구축하는 과정이고, RAG는 그 지식을 꺼내 오는 파이프라인이다.</p>
+  </header>
+
+  <section class="callout">
+    <strong>오늘의 한 줄 답:</strong> 세션을 넘는 지능은 두 층으로 만든다. <em>컨텍스트에 상주하는 소수의 구조화된 핵심 사실(개요)</em>과 <em>온디맨드로 정밀 검색하는 방대한 원본(디테일)</em>. 이 Two-Tier Memory Architecture가 Level 3 "능동적 서비스"의 유일한 실현 경로다.
+  </section>
+
+  <h2>1. User Memory vs Knowledge Base, 그리고 3단계 평가 프레임워크</h2>
+  <p>Ch2가 단일 세션의 컨텍스트 관리였다면, Ch3는 세션을 넘나드는 영속 지식이다. 책은 이를 두 스케일로 나눈다. <strong>User Memory</strong>는 "나를 아는 개인 비서"(사용자별 선호·습관·제약), <strong>Knowledge Base</strong>는 모든 사용자가 공유하는 "도메인 전문가"(규제, 사내 절차, 전문 문서)다. 둘은 같은 기술(벡터 검색, 압축)과 같은 실패 모드(정보 충돌, 낡은 지식)를 공유한다.</p>
+  <p>메모리 능력은 무작정 쌓는다고 생기지 않는다. 책은 LoCoMo 벤치마크(평균 ~300턴 초장문 대화)를 바탕으로 에이전트용 3단계 평가 프레임워크를 제시한다.</p>
+
+  <div class="grid">
+    <div class="card">
+      <strong>Level 1 · Basic Recall</strong><br>
+      사용자가 직접 말한 명확한 정보의 저장·검색. "내 멤버십 번호는 12345."
+    </div>
+    <div class="card">
+      <strong>Level 2 · Multi-Session Retrieval</strong><br>
+      다른 시점·세션에 흩어진 정보를 연결. 차가 두 대면 "내 차 정비"는 추측이 아니라 되묻기다.
+    </div>
+    <div class="card">
+      <strong>Level 3 · Proactive Service</strong><br>
+      어시스턴트급의 리트머스. 국제선 예약 때 몇 달 전 저장된 여권 만료 임박을 먼저 경고한다.
+    </div>
+  </div>
+
+  <p>좋은 메모리 추출의 3가지 특성: <strong>Selectivity</strong>("검색 결과 3개" 같은 일시 정보는 버림), <strong>Abstraction</strong>("창가 좌석"을 일반 선호로 정제), <strong>Structure</strong>(preference/restriction 같은 타입 태그).</p>
+
+  <section class="callout warn">
+    <strong>실무 번역:</strong> Aside의 USER.md(안정 프로필)와 MEMORY.md(운영 디폴트) 계층은 이미 Selectivity·Abstraction이 적용된 메모리다. 질문은 이것이다: 지금 내 메모리 시스템의 목표 레벨은 몇 단계인가? Level 1이면 단순 노트로 충분하고, Level 2부터는 검색과 구조화가, Level 3는 Two-Tier가 필요하다. 목표 레벨을 먼저 정하는 것이 포맷 선택보다 앞선다.
+  </section>
+
+  <h2>2. 어디에 · 어떻게 · 무엇을: 계층과 4가지 저장 포맷</h2>
+  <p>메모리 설계는 3개 독립 차원으로 분해한다. 저장 위치는 <strong>Trajectory</strong>(단일 실행의 append-only 완전 기록, "로그"), <strong>User Long-Term Memory</strong>(세션을 넘는 영속 저장소, "아카이브"), <strong>Business State</strong>(개발자 정의 태스크 단계)의 3층이다. 인지과학의 working memory ≈ trajectory, long-term memory ≈ LTM에 대응한다.</p>
+  <p>저장 포맷은 단순함과 표현력의 트레이드오프 위에서 4단계로 진화한다.</p>
+
+  <div class="grid">
+    <div class="card">
+      <strong>Simple Notes</strong><br>
+      원자적 사실 하나씩. O(1) 연산, 최소 비용. 단점: 사실 간 연관 상실 — 종합 질의에서 흩어진 낱알을 다시 조립해야 한다.
+    </div>
+    <div class="card">
+      <strong>Enhanced Notes</strong><br>
+      완전한 문단으로 저장. 뉘앙스에 강하나 저장 중복, 갱신 복잡, 긴 문단은 임베딩 품질 저하.
+    </div>
+    <div class="card">
+      <strong>JSON Cards</strong><br>
+      Category→Subcategory→Key-Value 중첩. 부분 갱신 쉬움. 단점: 경직된 분류가 차원을 소실시킴.
+    </div>
+    <div class="card">
+      <strong>Advanced JSON Cards</strong><br>
+      사실 + backstory + person + relationship + timestamp. "Dr. Zhang"이 내 치과의사인지 아버지 심장내과인지 구별 — 엔티티 모호성 해결.
+    </div>
+  </div>
+
+  <p>실무 선택 기준은 하이브리드다: <strong>핵심·저빈도 데이터</strong>(선호, 핵심 인간관계)는 Advanced JSON Cards로, <strong>대량·비핵심 사실</strong>은 Simple Notes로. 책의 실험(Exp 3-2)에서 Simple Notes는 기본 회상을 최저 비용으로 통과하지만 Level 2·3에서 실점했고, Advanced JSON Cards는 최고 성적이나 유지 호출 비용이 훨씬 컸다.</p>
+
+  <h3>User as Code: 집계는 LLM 암산에 맡기지 않는다</h3>
+  <p>텍스트 메모리의 근본 한계는 "저장"과 "사용"의 분리다. "올해 국제선 몇 번 탔지?" 같은 집계, 모순 탐지, 제약 강제가 전부 LLM의 암산에 달린다. <strong>User as Code</strong>(저자 논문)는 사용자 상태를 typed Python 객체(dataclass)로, 제약 규칙을 일반 함수로 인코딩한다. 검색 기반 메모리의 집계 정확도가 6–43%인 데 비해 코드는 거의 99%다 — <code>sum(1 for t in trips if t.is_international)</code> 한 줄이면 끝이기 때문이다. 갱신은 append-only fact log(memory phase) + 주기적 재구조화(structuring phase)의 2단계로, DB의 WAL + checkpoint 패턴이다.</p>
+
+  <section class="callout warn">
+    <strong>실무 번역:</strong> 규제 준수(RISELAB의 PIF/CPNP 대상 수량)나 주문 관리(에바스코스메틱 발주 집계)처럼 <em>집계·모순 감지·제약 강제</em>가 필요한 도메인에서는 텍스트 메모리를 믿지 말 것. 6–43% vs 99%는 "느낌"의 차이가 아니라 쓸 수 있는가 없는가의 차이다.
+  </section>
+
+  <h2>3. RAG 스택: 청킹에서 리랭킹까지</h2>
+  <p>RAG = retriever(관련 단편 검색) + generator(단편을 컨텍스트로 답변 생성). 리트리버 품질이 전체 효과를 결정한다. 스택은 다섯 층이다.</p>
+  <ol>
+    <li><strong>청킹(Chunking)</strong>: Fixed-size(512토큰+오버랩), Recursive/Structure-Aware(자연 경계 재귀 분할, 프로덕션 기본값), Semantic(유사도 급락 지점 분할) 3전략. 출발점은 청크당 256–1024토큰, 오버랩 10–20%. 근본 결함은 단편이 원래 맥락에서 단절된다는 것.</li>
+    <li><strong>Dense Embedding</strong>: 의미 유사도를 벡터 거리로. Word2Vec(정적, 다의어 불가) → BERT(context-aware) → BGE-M3(다국어·장문)로 진화. ANN 인덱스는 ANNOY(빌드 빠름, 증분 갱신 불가) vs HNSW(증분 지원, 정확도 극상)로 갈린다.</li>
+    <li><strong>Sparse (BM25)</strong>: 정확 일치에 탁월. k1은 TF 포화(20회 등장이 10회의 2배 관련은 아님), b는 문서 길이 정규화. "HTTP-403" 같은 식별자는 이쪽이 잡는다. 단, 동의어 이해 불가.</li>
+    <li><strong>Hybrid Fusion</strong>: 두 경로 병렬 recall 후 융합. 점수 분포가 달라(cosine 0–1 vs BM25 0–수십) <strong>RRF(Reciprocal Rank Fusion)</strong> — 원점수 버리고 순위만 score=Σ1/(k+rank)으로 합산하는 게 간단·견고하다.</li>
+    <li><strong>Cross-Encoder Reranking</strong>: 쿼리+문서를 하나로 연결해 심층 매칭. 느리지만 정확 — 상위 50개만 재채점. 서류 스크리닝(bi-encoder) 후 심층 면접(cross-encoder)이다.</li>
+  </ol>
+  <p>측정 지표 3종: <strong>recall@k</strong>(top-k 안에 정답이 있는가 — RAG의 핵심 요건), <strong>MRR</strong>(첫 관련 문서 순위의 역수), <strong>nDCG</strong>(순위·관련도 모두 고려). "retrieval failure rate"는 top-20 미스율 ≈ 1−recall@20.</p>
+
+  <h2>4. Naive RAG는 왜 구조적으로 실패하는가</h2>
+  <p>책의 두 사례가 핵심이다. <strong>흑묘백묘 문제</strong>: 100개 독립 사례(흑묘 90/백묘 10)에서 "비율은?"을 물으면 top-k 절단으로 대부분이 검색되지 않는다. 검색의 본질은 "가장 관련된 몇 개"인데 통계 질문은 "전체 카운팅"이기 때문이다. <strong>Xfinity 할인 문제</strong>: 퇴역군인 성공/의사 성공/교사 거절 3개 사례뿐일 때 간호사 문의는 "간호사-의사" 의미 유사도로 의사 사례만 검색되어 오추론한다. 핵결은 같다: 인덱싱 단계에 LLM 컴퓨트를 투입해 <em>사전에</em> 요약·규칙을 추출해 두어야 한다("전체 100마리: 흑묘 90", "할인은 퇴역군인·의사만").</p>
+
+  <div class="grid">
+    <div class="card">
+      <strong>RAPTOR (트리)</strong><br>
+      청크를 클러스터링→LLM 요약→재귀, 디테일(잎)→일반화(뿌리) 지식 트리. "거시 개념 → 드릴다운" 탐색에 강하다.
+    </div>
+    <div class="card">
+      <strong>GraphRAG (그래프)</strong><br>
+      entity-relationship 트리플의 지식 그래프. multi-hop 추론("내 의사의 병원 주소는?")과 엔티티 구별에 강하다. 단, 트리플 변환 시 조건·시간 의존성이 소실된다.
+    </div>
+    <div class="card">
+      <strong>Filesystem Paradigm</strong><br>
+      OpenViking: 모든 지식을 디렉터리/파일 URI로. L0(~100토큰 요약)/L1(~2000토큰 개요)/L2(전문) 3층 온디맨드 로딩 — 대부분 쿼리는 L1에서 해결.
+    </div>
+  </div>
+
+  <p>Filesystem paradigm의 숨은 전제: <strong>파일 간 링크와 인덱스 페이지</strong>다. 강한 모델도 자발적으로는 고립 파일만 append하기 쉬우므로, 지식 작성 프롬프트에 "신규 엔트리 추가 시 기존 관련 엔트리를 검색·링크하고 인덱스를 갱신하라"를 명시해야 지식 네트워크가 형성된다. 거버넌스 원칙 하나 더: 멀티유저 환경에서 권한 필터링은 <em>리콜 후 심사가 아니라 검색 레이어에서</em> — 민감 콘텐츠가 일단 LLM 컨텍스트에 들어가면 유출을 보장할 방법이 없다.</p>
+
+  <h2>5. Agentic RAG와 Contextual Retrieval, 그리고 Two-Tier</h2>
+  <p><strong>Agentic RAG</strong>는 검색을 에이전트가 언제든 호출하는 툴로 캡슐화하고, ReAct 루프로 분해→검색→평가→재검색을 주도한다. 책의 실험(Exp 3-9, 중국 사법 QA)에서 단순 질문은 전통 RAG와 동등하지만, 복합 질문("만취+과실치상+절도 전과의 양형은?")에서는 Agentic이 2차 정밀 쿼리("누범", "수죄 병합")를 스스로 발사해 격차를 벌렸다. 가치는 "질의응답"이 아니라 "문제 해결"에서 나온다.</p>
+  <p><strong>Contextual Retrieval</strong>(Anthropic)은 청킹의 맥락 단절을 원천 수리한다: 벡터화 전에 LLM이 짧은 접두사 요약("[ACME 2025 Q2 재무 보고서 핵심 지표 섹션 발췌]")을 붙인다. BM25에는 정확 매칭 키워드를, dense에는 의미 배경을 동시 공급. Anthropic 데이터로 retrieval failure rate가 BM25 결합 시 <strong>49% 감소</strong>, reranker 결합 시 <strong>67% 감소</strong>. 비용은 인덱싱 시 LLM 호출이나 prompt caching으로 토큰당 약 $1 수준.</p>
+  <p>이 모든 것이 <strong>Two-Tier Memory Architecture</strong>로 수렴한다: Advanced JSON Cards(핵심 사실 소수, 컨텍스트 상주 = "개요") + Contextual Retrieval(원본 대화에서 온디맨드 정밀 조회 = "디테일"). 상주만으로는 용량 한계로 디테일을 잃고, 검색만으로는 전역 시야가 없어 교차 세션 연결을 놓친다. Level 3의 실제 절차: ①JSON 카드 팩트 리뷰(도쿄 여행+여권) → ②연관 추론(출발 1월 vs 만료 2월) → ③원본 대화 검색으로 검증 → ④능동 제안.</p>
+
+  <section class="callout warn">
+    <strong>실무 번역:</strong> Aside의 메모리 파일들(USER.md, MEMORY.md, 프로젝트별 md)은 Two-Tier의 "상주 층"이고, memory_search가 "온디맨드 층"이다. 이 구조를 의식적으로 유지할 것 — 상주 층이 비대해지면 컨텍스트를 먹고, 온디맨드 층에 링크·인덱스가 없으면 검색이 고립 파일 더미를 헤맨다.
+  </section>
+
+  <h2>6. 퀴즈 · 회수 연습</h2>
+  <div class="quiz-card" data-quiz data-correct="정답. 개요(상주 구조화 팩트)만으로는 디테일이, 디테일(검색)만으로는 전역 시야가 부족하다." data-incorrect="다시. Level 3는 어느 한 층만으로는 불가능하다 — Two-Tier의 결합 이유를 복습하자.">
+    <p><strong>Q1.</strong> Level 3(Proactive Service)가 Two-Tier Architecture를 요구하는 이유는?</p>
+    <button type="button" data-answer="wrong">검색 비용을 줄이려면 상주 팩트만으로 모든 판단을 끝내야 하기 때문이다</button>
+    <button type="button" data-answer="correct">상주 개요만으론 디테일이 없고 검색만으론 전역 연결이 안 보이기 때문이다</button>
+    <button type="button" data-answer="wrong">원본 대화는 프라이버시상 저장할 수 없어 요약본만 남겨두기 때문이다</button>
+    <button type="button" data-answer="wrong">벡터 검색이 느려서 실시간 응답에는 항상 캐시가 필요하기 때문이다</button>
+    <div class="quiz-feedback" data-feedback></div>
+  </div>
+
+  <div class="quiz-card" data-quiz data-correct="정답. 집계는 코드가 결정적으로 푼다 — 검색 기반 6-43% vs 코드 약 99%." data-incorrect="다시. 집계·모순 감지·제약 강제에서 텍스트 메모리 + LLM 암산의 한계를 떠올리자.">
+    <p><strong>Q2.</strong> "올해 국제선 탑승 횟수" 같은 집계 질문에 가장 적합한 메모리 표현은?</p>
+    <button type="button" data-answer="wrong">대화 원문을 Enhanced Notes 문단으로 저장해 유사도 검색으로 찾는다</button>
+    <button type="button" data-answer="correct">typed 코드 객체로 상태를 저장하고 일반 함수로 집계를 실행한다</button>
+    <button type="button" data-answer="wrong">모든 비행 기록을 Simple Notes 원자 사실로 나눠 저장해 둔다</button>
+    <button type="button" data-answer="wrong">매 세션 종료 시 전체 이력을 하나의 요약문으로 갱신해 둔다</button>
+    <div class="quiz-feedback" data-feedback></div>
+  </div>
+
+  <div class="quiz-card" data-quiz data-correct="정답. 인덱싱 단계에 접두사 요약을 붙여 BM25와 dense 양쪽을 동시에 강화한다." data-incorrect="다시. Contextual Retrieval은 런타임이 아니라 인덱싱 단계의 가산적(additive) 기법이다.">
+    <p><strong>Q3.</strong> Contextual Retrieval이 retrieval failure rate를 49-67% 절감하는 메커니즘은?</p>
+    <button type="button" data-answer="wrong">런타임에 무관한 대화 이력을 제거해 모델의 attention을 집중시킨다</button>
+    <button type="button" data-answer="wrong">쿼리를 여러 개로 분해해 병렬 검색한 뒤 결과를 LLM이 종합한다</button>
+    <button type="button" data-answer="correct">인덱싱 때 청크에 접두사 맥락을 붙여 키워드와 의미 검색을 함께 돕는다</button>
+    <button type="button" data-answer="wrong">엔티티 관계 그래프를 구축해 multi-hop 경로를 따라 문서를 찾는다</button>
+    <div class="quiz-feedback" data-feedback></div>
+  </div>
+
+  <h2>7. 미니 실습 (10분)</h2>
+  <p>지금 사용 중인 Aside 메모리 계층(USER.md / MEMORY.md / memory/*.md)을 이 레슨의 프레임으로 진단해 보자.</p>
+  <ol>
+    <li><strong>포맷 분류:</strong> 각 파일이 4가지 저장 포맷(Simple/Enhanced/JSON Cards/Advanced JSON Cards) 중 어디에 해당하는지 라벨을 붙여라.</li>
+    <li><strong>레벨 판정:</strong> 현재 구조로 Level 2 질문("지난달에 논의한 X와 어제의 Y가 충돌하는데?")에 답할 수 있는가? 어디서 막히는가?</li>
+    <li><strong>링크 점검:</strong> 메모리 파일들 사이에 상호 링크·인덱스 페이지가 있는가? 없다면 memory_search가 고립 파일 더미를 헤매고 있을 수 있다.</li>
+    <li><strong>집계 테스트:</strong> "이번 달에 X를 몇 번 했지?" 류의 집계 질문을 하나 던져보고, 텍스트 검색으로 풀리는지 확인하라. 안 풀리면 그 도메인은 User as Code 후보다.</li>
+  </ol>
+
+  <h2>Primary source</h2>
+  <p>교재 Chapter 3 "User Memory and Knowledge Base" (pp. 83–121) — 특히 3.1.1(3단계 프레임워크), 3.1.3(4가지 포맷), 3.3.4(Agentic RAG), 3.3.5(Contextual Retrieval).</p>
+  <p>책이 인용한 외부 소스:</p>
+  <ul>
+    <li><a href="https://arxiv.org/abs/2402.17753">LoCoMo: Evaluating Very Long-Term Conversational Memory (Maharana et al., 2024)</a></li>
+    <li><a href="https://arxiv.org/abs/2504.19413">Mem0: Building Production-Ready AI Agents with Scalable Long-Term Memory (Chhikara et al., 2025)</a></li>
+    <li><a href="https://www.anthropic.com/news/contextual-retrieval">Anthropic — Introducing Contextual Retrieval</a></li>
+    <li>Li, Bojie — "User as Code" (arXiv:2606.16707, 2026, 책에 인용)</li>
+  </ul>
+
+  <h2>다음으로 연결</h2>
+  <ul>
+    <li><a href="0004-status-bar-context-compression.html">이전: 상태 바, 컨텍스트 압축, 서브에이전트 격리</a> — 단일 세션의 압축과 이 레슨의 영속 메모리 압축은 레이어가 다르다.</li>
+    <li><a href="0006-tools-mcp-event-driven.html">다음: 도구 설계, MCP, 이벤트 기반 비동기 에이전트</a> — 검색을 툴로 캡슐화하는 Agentic RAG가 도구 설계로 이어진다.</li>
+    <li><a href="0009-post-training-continual-evolution.html">관련: 포스트트레이닝과 지속 진화</a> — 메모리의 "온라인 append + 오프라인 consolidate"가 행동 진화로 일반화된다.</li>
+  </ul>
+
+  <footer>
+    <p>막히는 부분은 에이전트에게 바로 물어보세요. 이 워크스페이스의 선생님 역할이다.</p>
+    <p class="pill">Mission-linked</p>
+    <p class="pill">ZPD: 단일 세션 컨텍스트 → 영속 메모리/지식 베이스</p>
+  </footer>
+
+</main>
+<script>
+document.querySelectorAll("[data-quiz]").forEach((quiz) => {
+  const feedback = quiz.querySelector("[data-feedback]");
+  quiz.querySelectorAll("button[data-answer]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const isCorrect = button.dataset.answer === "correct";
+      quiz.querySelectorAll("button[data-answer]").forEach((b) => {
+        b.classList.remove("correct", "incorrect");
+        b.setAttribute("aria-pressed", "false");
+      });
+      button.classList.add(isCorrect ? "correct" : "incorrect");
+      button.setAttribute("aria-pressed", "true");
+      feedback.textContent = isCorrect ? quiz.dataset.correct : quiz.dataset.incorrect;
+    });
+  });
+});
+
+</script>
+</body>
+</html>

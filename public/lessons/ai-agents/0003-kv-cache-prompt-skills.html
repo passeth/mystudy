@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="KV cache 친화적 컨텍스트 설계, 시스템 프롬프트 엔지니어링, Agent Skills의 progressive disclosure를 배운다.">
+  <title>KV Cache 친화적 설계, 시스템 프롬프트, 그리고 스킬 · AI Agents in Depth</title>
+  <style>
+:root {
+  --ink: #18201f;
+  --muted: #5d6864;
+  --paper: #fbfaf6;
+  --panel: #ffffff;
+  --line: #d9ddd6;
+  --accent: #136f63;
+  --accent-2: #a23d31;
+  --soft: #eaf3ef;
+  --warn: #fff2d6;
+  --code: #101917;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  color: var(--ink);
+  background: var(--paper);
+  font-family: ui-serif, Georgia, "Apple SD Gothic Neo", "Noto Serif KR", serif;
+  line-height: 1.68;
+}
+main {
+  width: min(960px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 52px 0 88px;
+}
+.kicker {
+  color: var(--accent);
+  font: 700 12px/1 ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+h1 {
+  margin: 12px 0 14px;
+  font-size: clamp(34px, 6vw, 64px);
+  line-height: 1.02;
+}
+.subtitle {
+  max-width: 720px;
+  color: var(--muted);
+  font-size: 18px;
+}
+h2 {
+  margin-top: 42px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 8px;
+}
+a { color: var(--accent); text-underline-offset: 3px; }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+.card, .quiz-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 20px;
+  margin: 18px 0;
+}
+.callout {
+  border-left: 4px solid var(--accent);
+  background: var(--soft);
+  border-radius: 6px;
+  padding: 14px 16px;
+}
+.warn {
+  border-left-color: #c98210;
+  background: var(--warn);
+}
+pre {
+  overflow-x: auto;
+  background: var(--code);
+  color: #eef7f2;
+  border-radius: 8px;
+  padding: 16px;
+}
+code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.92em;
+}
+.pill {
+  display: inline-block;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 2px 9px;
+  font: 700 12px/1.7 ui-sans-serif, system-ui, sans-serif;
+  color: var(--muted);
+}
+.quiz-card button {
+  display: block;
+  width: 100%;
+  margin: 8px 0;
+  padding: 11px 13px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.quiz-card button.correct { border-color: #1f7a3f; background: #e8f4eb; }
+.quiz-card button.incorrect { border-color: var(--accent-2); background: #fae9e7; }
+.quiz-feedback { min-height: 1.6em; font-weight: 700; }
+table { width: 100%; border-collapse: collapse; margin: 18px 0; background: var(--panel); }
+th, td { border: 1px solid var(--line); padding: 9px 11px; text-align: left; font-size: 15px; vertical-align: top; }
+th { background: var(--soft); }
+footer {
+  margin-top: 54px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+}
+@media print {
+  body { background: #fff; }
+  main { width: auto; padding: 24px; }
+  .card, .quiz-card { break-inside: avoid; }
+  a::after { content: " (" attr(href) ")"; font-size: 0.8em; color: var(--muted); }
+}
+
+  </style>
+</head>
+<body>
+<main>
+
+  <header>
+    <div class="kicker">Lesson 0003 · AI Agents in Depth</div>
+    <h1>KV Cache 친화적 설계, 시스템 프롬프트, 그리고 스킬</h1>
+    <p class="subtitle">캐시는 사후 최적화가 아니라 사전 아키텍처 제약이다. 프롬프트 한 줄의 공백이 월 추론비를 두 배로 만들 수 있고, 스킬의 description은 기능 요약이 아니라 라우팅 규칙이다.</p>
+  </header>
+
+  <section class="callout">
+    <strong>오늘의 한 줄 답:</strong> 컨텍스트의 <em>앞부분(static prefix)은 절대 건드리지 말고, 동적인 것은 항상 끝에 append</em>하라. 이 한 원칙이 KV cache 경제성, 시스템 프롬프트 설계, 스킬 로딩 방식을 모두 관통한다.
+  </section>
+
+  <h2>1. 캐시가 왜 "아키텍처"인가</h2>
+  <p>LLM 추론에서 새 토큰을 만들 때마다 이전 모든 토큰의 Key/Value를 다시 계산하면 비용이 폭증한다. 그래서 이전 토큰의 K/V를 재사용하는 것이 <strong>KV Cache</strong>다. 문제는 prefix의 <em>한 토큰이라도 바뀌면</em> 레이어 전파 때문에 그 지점 이후의 캐시가 전부 무효화된다는 것. 캐시는 끝에서부터가 아니라 <strong>변경 지점부터</strong> 깨진다.</p>
+  <p>여기에 API 서비스 계층의 <strong>Prompt Cache</strong>가 얹힌다. 요청 사이에 동일 prefix를 재사용하는 캐시로, Anthropic·DeepSeek·OpenAI GPT-5 계열 모두 캐시 읽기 가격이 <strong>신규 계산의 약 1/10</strong>이다. 즉 prefix를 안정적으로 유지하는 것만으로 비용이 10분의 1이 될 수 있다.</p>
+  <div class="callout warn">
+    <strong>실제 사고 사례 (책 §2.3):</strong> 어떤 프로덕션 팀이 system prompt에 <code>Current time: {{now}}</code> 한 줄을 추가했다. 매 요청마다 캐시가 무효화되면서 <strong>TTFT가 0.5초 → 3-5초, 월 추론비가 약 2배</strong>로 뛰었다. 동적 정보는 prefix에 박는 게 아니라 대화 끝에 새 메시지로 append해야 한다.
+  </div>
+  <p>책이 강조하는 프레임: <strong>"Caching as an Architectural Constraint"</strong>. Claude Code는 캐시 경계 마커로 system prompt를 분할해 경계 앞은 전역 캐시, 뒤는 세션별로 관리하고, 프롬프트 조각을 "cacheable / cache-breaking"으로 타이핑해 후자에 경고를 단다. 캐시 경제성은 나중에 튜닝하는 것이 아니라 설계 단계에서 정해진다.</p>
+
+  <h2>2. 3대 실천 원칙과 유해 패턴 5종</h2>
+  <div class="grid">
+    <div class="card"><strong>원칙 1</strong><br>system prompt와 tool definitions는 확정 후 변경 금지. 공백 하나 추가도 전체 캐시 무효화다.</div>
+    <div class="card"><strong>원칙 2</strong><br>동적 정보(시각, 사용자 상태)는 항상 끝에 append. 새 메시지로 대화 말단에 붙인다.</div>
+    <div class="card"><strong>원칙 3</strong><br>표준 API 메시지 형식 사용. "USER: ... ASSISTANT: ..." 수동 문자열 연결은 훈련 포맷 이탈로 다단계 추론이 약해진다.</div>
+  </div>
+  <p>책의 실험 2-3은 흔하지만 유해한 패턴 5종을 정리한다:</p>
+  <ol>
+    <li><strong>Dynamic System Prompt</strong> — 타임스탬프 임베딩. 캐시 전멸. 정답: user 메시지 끝 append 또는 필요시 tool로 획득.</li>
+    <li><strong>Dynamic User Configuration</strong> — 잔여 API 콜·잔액을 매 요청 갱신. 캐시 파괴. 전용 상태 관리로 분리.</li>
+    <li><strong>Tool 정의 동적 정렬</strong> — 사용 빈도순 재배열. 고정 순서가 선택 정확도에 거의 영향 없이 성능은 크게 낫다.</li>
+    <li><strong>Sliding Window history</strong> — prefix 일관성 파괴 + 핵심 tool 결과 유실. 2라운드에 읽은 파일이 15라운드에 필요한데 윈도우 밖이면 같은 tool을 반복 호출하는 루프에 빠진다.</li>
+    <li><strong>Text Formatting</strong> — role-content를 평문으로 연결. 캐시 문제가 아니라 모델 능력 문제: 반복 작업, tool 결과 무시, 파싱 오류.</li>
+  </ol>
+  <p>참고로 Attention 시각화(실험 2-2)가 보여주는 <strong>Position Bias</strong> — 처음과 끝의 정보는 잘 찾고 중간은 놓친다(<a href="https://arxiv.org/abs/2307.03172">Lost in the Middle, TACL 2024</a>) — 도 배치 원칙과 일치한다. 중요한 것은 처음이나 끝에 둔다.</p>
+
+  <h2>3. CoT 정책의 업계 반전: "thinking is not waste but state"</h2>
+  <p>DeepSeek R1 시절 업계 표준은 historical reasoning 전량 제거였다(토큰 절약 + 훈련 분포 이탈 우려). 그런데 에이전트 시나리오에서 중간 추론은 "왜 이 tool을 불렀고 어떤 가설을 배제했나"라는 <strong>상태</strong>다. 제거하면 매 턴 처음부터 재추론하며 같은 실수를 반복한다. DeepSeek V4는 <code>reasoning_content</code> 반환을 <strong>의무화</strong>했고(미반환 시 API 에러), Kimi K2·GLM-5도 같은 프로토콜을 따른다. Claude는 tool call 루프 안에서 thinking block을 서명 검증과 함께 그대로 돌려받길 요구한다.</p>
+
+  <h2>4. 시스템 프롬프트: 신입 사원 테스트와 ablation</h2>
+  <p>책이 제시하는 리트머스: <strong>"우리 워크플로우를 전혀 모르는 유능한 신입이 이 system prompt만 읽고 뭘 할지 알 수 있는가?"</strong></p>
+  <ul>
+    <li><strong>Process-driven &gt; Rule stacking</strong> — 흐름도 없는 수백 개 규칙 나열은 사람에게도 모델에게도 혼란. SOP 형태(검증→분류→전처리→실행→검증)로 단계와 예외 분기를 명시한다.</li>
+    <li><strong>비즈니스 규칙은 실행 가능 수준으로 번역</strong> — "상황에 맞게 과금 유형 선택"은 모호하다. Pine AI 사례처럼 "커미션은 기존 청구액 절감 협상에만, 환불/해지는 NEVER percentage_based → fixed_fee"까지 낮춰야 한다. 모델에게 비즈니스 규칙의 재량권을 주지 말 것.</li>
+    <li><strong>Few-shot</strong> — 규칙으로 서술 어려운 것(문체, 포맷)엔 예시 2-3개 &gt; 장문 설명. 단, <strong>예시 세트는 byte-stable하게</strong>: 요청마다 "가장 관련된" 예시를 동적 검색하면 캐시가 반복 무효화된다. 경계 케이스를 커버하는 2-3개 &gt; 비슷한 10개.</li>
+    <li><strong>Tool definition</strong> — 사용 경계("NEVER invoke grep as Bash command"), 구체 예시, tool 간 관계("Read를 쓴 후에 Edit")까지 적는다.</li>
+  </ul>
+  <div class="callout">
+    <strong>실험 2-4 (Tau-Bench ablation):</strong> ① tone 변경(캐주얼/격식) → 완료율 영향 미미. ② <strong>정보 조직 제거(구조화 → 무구조 규칙 나열) → 성공률 30%p 이상 폭락</strong>, "환불 전 본인확인" 같은 핵심 규칙 위반 빈발. ③ tool 설명문 제거 → tool call 오류율 +45%. 교훈: 성능이 나쁠 때 전면 재작성하지 말고 ablation으로 기여도를 측정하라.
+  </div>
+
+  <h2>5. Prompt Injection과 방어 3종</h2>
+  <p>에이전트는 tool이 있어 챗봇보다 위험하다 — 파일 삭제, 메일 발송 같은 <strong>불가역 행동</strong>이 가능하고, perception tool 하나하나가 injection 진입점이다(웹페이지 보이지 않는 요소, PDF 메타데이터, 이미지 EXIF). Context 레벨 방어 3종:</p>
+  <div class="grid">
+    <div class="card"><strong>Source Tagging</strong><br>외부 콘텐츠를 <code>&lt;external_content source="webpage"&gt;</code>처럼 래핑하고 출처를 주석.</div>
+    <div class="card"><strong>Structured Roles</strong><br>role 체계로 지시/데이터를 구분. tool 결과를 user 메시지에 섞지 말 것.</div>
+    <div class="card"><strong>Input Sanitization</strong><br>의심 패턴 필터. 보조 수단일 뿐 주 방어선이 아니다.</div>
+  </div>
+  <p>새로운 표면: <strong>Skill 자체가 고권한 지시로 context에 진입</strong>한다. 출처 불명 스킬은 실행 코드처럼 설치 전 리뷰해야 한다. Context 방어는 1차 방어선일 뿐이며 execution 레벨(권한 통제, 샌드박스)과 layered defense가 필요하다(Ch4-5).</p>
+
+  <h2>6. Agent Skills: Progressive Disclosure와 라우팅 규칙</h2>
+  <p>정적 프롬프트가 팽창하면 두 가지가 망가진다: <strong>토큰 낭비</strong>(대부분 현재 태스크와 무관)와 <strong>주의 희석</strong>(context rot). Skills의 핵심은 3계층 progressive disclosure다:</p>
+  <table>
+    <tr><th>계층</th><th>내용</th><th>시점·비용</th></tr>
+    <tr><td>L1 metadata</td><td>SKILL.md frontmatter의 name + description</td><td>시작 시 주입, 수백 토큰</td></tr>
+    <tr><td>L2 본문</td><td>SKILL.md 전체</td><td>모델이 판단 후 Skill tool로 로드, ~2K 토큰</td></tr>
+    <tr><td>L3 하위 문서</td><td>reference.md, scripts/*.py 등</td><td>선택적 심화 로드</td></tr>
+  </table>
+  <p>가장 중요한 설계 포인트: <strong>description은 기능 요약이 아니라 라우팅 규칙</strong>이다. "Use when / Do not use when"과 <strong>negative example</strong>이 필수. "backend 작업 지원" 같은 광범위 서술은 무관한 태스크에 오발동한다. 라우팅에는 "무엇을 할 수 있나"보다 "언제 나를 쓸 것인가"가 중요하다.</p>
+  <p>배치 3방법의 트레이드오프: ① system prompt 주입 — instruction-following 최강이지만 로드마다 캐시 무효화. ② 일반 파일 읽기로 중간 배치 — 캐시 무결이나 중간 위치 지시 준수가 모델 의존. ③ <strong>metadata는 사전 제공 + 전체는 전용 Skill tool로 on-demand 로드</strong>(Claude Code 방식) — 라우팅과 실행 분리, emit-once라 최초 1회 cache creation 비용만 내고 이후 영구 HIT. "KV Cache-friendly"는 비용 제로가 아니라 <strong>"write once, benefit repeatedly"</strong>다.</p>
+
+  <section class="callout warn">
+    <strong>실무 번역:</strong> Aside 스킬을 만들 때 frontmatter description을 "이 스킬은 ~한다"가 아니라 "Use when ~ / Not for ~" 라우팅 규칙으로 쓰고 있는지 점검하라. 그리고 네가 관리하는 시스템 프롬프트·AGENTS.md·SOUL.md는 static prefix다 — 날짜나 루틴 상태 같은 동적 정보를 거기 박아넣으면 매번 캐시를 깨는 것과 같다. 동적 상태는 MEMORY.md 갱신처럼 별도 채널(끝 append)로 흘려야 한다.
+  </section>
+
+  <h2>7. 퀴즈 · 회수 연습</h2>
+  <div class="quiz-card" data-quiz data-correct="맞음. 캐시는 변경 지점부터 이후가 전부 무효화되므로, 동적 정보는 대화 끝에 append한다." data-incorrect="다시. prefix를 수정하면 그 지점 이후 캐시가 전부 깨진다는 점을 떠올려 보자.">
+    <p><strong>Q1.</strong> 현재 시각을 에이전트에게 알려줄 때 KV cache 관점에서 올바른 방법은?</p>
+    <button type="button" data-answer="wrong">system prompt에 <code>Current time: {{now}}</code>를 템플릿으로 삽입한다</button>
+    <button type="button" data-answer="wrong">tool definitions 안에 시각 필드를 추가해 매 요청 갱신한다</button>
+    <button type="button" data-answer="correct">대화 맨 끝에 새 user 메시지로 시각을 append한다</button>
+    <button type="button" data-answer="wrong">history를 sliding window로 잘라 최신 시각만 남긴다</button>
+    <div class="quiz-feedback" data-feedback></div>
+  </div>
+
+  <div class="quiz-card" data-quiz data-correct="맞음. tone이 아니라 정보 조직(구조화)이 성공률을 좌우했다 — 30%p 이상 폭락." data-incorrect="다시. 실험 2-4에서 가장 큰 폭락(-30%p)을 만든 조건이 무엇이었는지 떠올려 보자.">
+    <p><strong>Q2.</strong> Tau-Bench ablation(실험 2-4)에서 성공률을 가장 크게 떨어뜨린 변경은?</p>
+    <button type="button" data-answer="correct">구조화된 SOP를 무구조 규칙 나열로 바꾼 것</button>
+    <button type="button" data-answer="wrong">격식체 문체를 캐주얼한 문체로 바꾼 것</button>
+    <button type="button" data-answer="wrong">few-shot 예시를 2개에서 5개로 늘린 것</button>
+    <button type="button" data-answer="wrong">system prompt를 XML에서 Markdown으로 바꾼 것</button>
+    <div class="quiz-feedback" data-feedback></div>
+  </div>
+
+  <div class="quiz-card" data-quiz data-correct="맞음. description은 라우팅 규칙이다 — 언제 쓰고 언제 쓰지 말아야 하는지가 핵심." data-incorrect="다시. 모델이 스킬을 고르는 시점에 필요한 정보가 무엇인지 생각해 보자.">
+    <p><strong>Q3.</strong> SKILL.md의 description을 쓸 때 책이 권하는 방식은?</p>
+    <button type="button" data-answer="wrong">스킬의 기능을 포괄적으로 요약해 범용성을 넓힌다</button>
+    <button type="button" data-answer="correct">Use when / Do not use when과 negative example을 명시한다</button>
+    <button type="button" data-answer="wrong">낶부 스크립트 파일 목록과 파라미터를 상세히 나열한다</button>
+    <button type="button" data-answer="wrong">설계 의도와 제작 배경을 스토리텔링으로 소개한다</button>
+    <div class="quiz-feedback" data-feedback></div>
+  </div>
+
+  <h2>8. 미니 실습 (10분)</h2>
+  <p>네가 직접 만든 Aside 스킬 하나(예: <code>pdp-story</code>, <code>glovv</code>)를 열고 frontmatter description을 라우팅 규칙 관점에서 감사해 보자.</p>
+  <ol>
+    <li>"Use when"이 구체적 트리거(사용자 발화 패턴)까지 적혀 있는가?</li>
+    <li>"Do not use when" 또는 negative example이 있는가? 없으면 오발동이 나기 쉬운 인접 태스크를 하나 적어 추가해 보자.</li>
+    <li>스킬이나 프롬프트 어딘가에 날짜·상태 같은 동적 값이 정적 파일에 박혀 있지 않은가? 있다면 끝 append 채널로 옮기는 설계를 메모하자.</li>
+  </ol>
+
+  <h2>Primary source</h2>
+  <p>교재: <em>AI Agents in Depth</em> (Bojie Li, v1.3) Chapter 2 §2.3-2.5 (p.44-66). 로컬 사본: <code>source/AI-Agents-in-Depth-v1.3.pdf</code></p>
+  <ul>
+    <li><a href="https://arxiv.org/abs/2307.03172">Liu et al., "Lost in the Middle: How Language Models Use Long Contexts", TACL 2024</a> — position bias의 원전.</li>
+    <li><a href="https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills">Anthropic, "Equipping Agents for the Real World with Agent Skills" (2025)</a> — progressive disclosure의 설계자 설명.</li>
+    <li><a href="https://arxiv.org/abs/2606.17107">Li, "Models Take Notes at Prefill: KV Cache Can Be Editable and Composable" (2026)</a> — 저자의 KV cache 편집·합성 연구(선택 읽기).</li>
+  </ul>
+
+  <h2>다음으로 연결</h2>
+  <ul>
+    <li>이전: <a href="0002-context-api-core-loop.html">Lesson 0002 · API 레벨 컨텍스트와 코어 루프</a></li>
+    <li>다음: <a href="0004-status-bar-context-compression.html">Lesson 0004 · 상태 바, 컨텍스트 압축, 서브에이전트 격리</a></li>
+    <li>관련: <a href="0006-tools-mcp-event-driven.html">Lesson 0006 · 도구 설계, MCP, 이벤트 기반 에이전트</a> (tool 정의 팽창 문제의 다른 핵)</li>
+  </ul>
+
+  <footer>
+    <p>막히는 부분은 에이전트에게 바로 물어보세요. 이 워크스페이스의 선생님 역할이다.</p>
+    <p class="pill">Mission-linked</p>
+    <p class="pill">ZPD: context 구조 이해 → 캐시·프롬프트·스킬 설계 원칙</p>
+  </footer>
+
+</main>
+<script>
+document.querySelectorAll("[data-quiz]").forEach((quiz) => {
+  const feedback = quiz.querySelector("[data-feedback]");
+  quiz.querySelectorAll("button[data-answer]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const isCorrect = button.dataset.answer === "correct";
+      quiz.querySelectorAll("button[data-answer]").forEach((b) => {
+        b.classList.remove("correct", "incorrect");
+        b.setAttribute("aria-pressed", "false");
+      });
+      button.classList.add(isCorrect ? "correct" : "incorrect");
+      button.setAttribute("aria-pressed", "true");
+      feedback.textContent = isCorrect ? quiz.dataset.correct : quiz.dataset.incorrect;
+    });
+  });
+});
+
+</script>
+</body>
+</html>

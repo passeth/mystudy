@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SFT와 RL의 선택 기준, 보상 설계, 그리고 경험을 지식·스킬·코드·파라미터로 승격하는 지속 진화 루프를 배운다.">
+  <title>포스트트레이닝과 에이전트의 지속 진화 · AI Agents in Depth</title>
+  <style>
+:root {
+  --ink: #18201f;
+  --muted: #5d6864;
+  --paper: #fbfaf6;
+  --panel: #ffffff;
+  --line: #d9ddd6;
+  --accent: #136f63;
+  --accent-2: #a23d31;
+  --soft: #eaf3ef;
+  --warn: #fff2d6;
+  --code: #101917;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  color: var(--ink);
+  background: var(--paper);
+  font-family: ui-serif, Georgia, "Apple SD Gothic Neo", "Noto Serif KR", serif;
+  line-height: 1.68;
+}
+main {
+  width: min(960px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 52px 0 88px;
+}
+.kicker {
+  color: var(--accent);
+  font: 700 12px/1 ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+h1 {
+  margin: 12px 0 14px;
+  font-size: clamp(34px, 6vw, 64px);
+  line-height: 1.02;
+}
+.subtitle {
+  max-width: 720px;
+  color: var(--muted);
+  font-size: 18px;
+}
+h2 {
+  margin-top: 42px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 8px;
+}
+a { color: var(--accent); text-underline-offset: 3px; }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+.card, .quiz-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 20px;
+  margin: 18px 0;
+}
+.callout {
+  border-left: 4px solid var(--accent);
+  background: var(--soft);
+  border-radius: 6px;
+  padding: 14px 16px;
+}
+.warn {
+  border-left-color: #c98210;
+  background: var(--warn);
+}
+pre {
+  overflow-x: auto;
+  background: var(--code);
+  color: #eef7f2;
+  border-radius: 8px;
+  padding: 16px;
+}
+code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.92em;
+}
+.pill {
+  display: inline-block;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 2px 9px;
+  font: 700 12px/1.7 ui-sans-serif, system-ui, sans-serif;
+  color: var(--muted);
+}
+.quiz-card button {
+  display: block;
+  width: 100%;
+  margin: 8px 0;
+  padding: 11px 13px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.quiz-card button.correct { border-color: #1f7a3f; background: #e8f4eb; }
+.quiz-card button.incorrect { border-color: var(--accent-2); background: #fae9e7; }
+.quiz-feedback { min-height: 1.6em; font-weight: 700; }
+footer {
+  margin-top: 54px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+}
+@media print {
+  body { background: #fff; }
+  main { width: auto; padding: 24px; }
+  .card, .quiz-card { break-inside: avoid; }
+  a::after { content: " (" attr(href) ")"; font-size: 0.8em; color: var(--muted); }
+}
+</style>
+</head>
+<body>
+<main>
+
+  <header>
+    <div class="kicker">Lesson 0009 · AI Agents in Depth</div>
+    <h1>포스트트레이닝과 에이전트의 지속 진화</h1>
+    <p class="subtitle">대부분의 에이전트 문제는 모델 문제가 아니라 하네스 문제다. 그래도 모델을 건드려야 할 때가 온다 — 그때 SFT는 "형"을 잡고 RL은 "신"을 넣는다. 그리고 진짜 진화는 저장이 아니라 검증된 승격 루프다.</p>
+  </header>
+
+  <section class="callout">
+    <strong>오늘의 한 줄 답:</strong> 포스트트레이닝의 선택 기준은 단 하나의 프레임워크로 수렴한다 — <em>언어로 표현 가능한 판단은 프롬프트/스킬에, 결정적 절차는 코드에, 표현 불가능한 암묵 능력만 파라미터에</em>. 그리고 어떤 매체를 고치든 "평가 → 후보 생성 → 검증 게이트 → 점진 릴리즈" 루프 없는 갱신은 진화가 아니라 drift다.
+  </section>
+
+  <h2>1. 두 개의 대원칙</h2>
+  <p>7장 전체는 두 문장으로 압축된다. 첫째, <strong>"SFT memorizes, RL generalizes"</strong> — 같은 예산에서 SFT는 데모의 답을 암기해 환경이 바뀌면 물너지고, RL은 전이 가능한 전략을 배운다. 둘째, <strong>"Data and environment matter more than algorithms"</strong> — 성패를 가르는 것은 PPO냐 GRPO냐가 아니라 ① 베이스 모델(prior) ② 환경 충실도 ③ 데이터 품질이다. 우선순위는 <code>prior &gt; environment &gt; algorithm</code>.</p>
+  <p>첫째 원칙은 슬로건이 아니라 통제 실험이다. GeneralPoints 실험(Chu et al., 2025)에서 24점 카드 게임의 규칙을 바꿔 테스트(훈련 J/Q/K=10 → 테스트 11/12/13)하자, SFT를 이어간 모델은 <strong>-8.1pt</strong>(11.5→3.4)로 붕괴한 반면 RL로 전환한 모델은 <strong>+3.5pt</strong>(11.5→15.0)로 상승했다. 시각 변형(검정 수트 → 빨강 수트)에서는 격차가 더 벌어져 RL +17.6pt vs SFT -9.9pt. <a href="https://arxiv.org/abs/2501.17161">arXiv:2501.17161</a></p>
+
+  <div class="grid">
+    <div class="card">
+      <strong>SFT (Supervised Fine-Tuning)</strong><br>
+      "표준 답을 통째로 외우기" (mass-covering). 포맷·스타일·프로토콜 고착에 강하다. 샘플 효율 높음(수천 개). 천장은 시연자의 수준.
+    </div>
+    <div class="card">
+      <strong>RL (Reinforcement Learning)</strong><br>
+      "보상이 가리키는 최적 mode에 집중" (mode-seeking). 전이 가능한 전략 학습. 샘플 효율 낮음(SFT의 10-100배 비용). 천장이 태스크 자체.
+    </div>
+    <div class="card">
+      <strong>왜 RL의 천장이 더 높은가</strong><br>
+      ① online이라 데모에 없는 전략 발견 가능 ② 검증이 생성보다 쉬움(verification-generation asymmetry) ③ 자기 궤적 위에서 훈련해 실수 복구를 배움.
+    </div>
+  </div>
+
+  <h2>2. 선택 프레임워크: 언제 무엇을 하는가</h2>
+  <p>책이 제시하는 실무 결정 순서는 냉정하다:</p>
+  <ol>
+    <li><strong>Post-training이 정말 필요한가?</strong> 하네스 엔지니어링(프롬프트, 도구 설계, 컨텍스트 관리)으로 풀리면 학습 불필요. 대부분의 에이전트 애플리케이션이 여기 해당한다.</li>
+    <li><strong>필요하면 SFT 먼저.</strong> 출력 포맷·프로토콜·스타일을 파라미터에 고착한다. JSON 파싱 실패율이 20%를 넘는 상태에서 RL을 돌리면 보상 함수가 성패조차 판별 못 해 완전 실패한다 — 이것이 "형 선행, 신 후속(SFT first, then RL)"의 이유.</li>
+    <li><strong>SFT로 부족하면 RL 추가.</strong> 실용 테스트: <em>"데모를 더 추가핮도 신규 시나리오 성능이 안 오륨녀 RL 전환 시점"</em> — 근본 원인이 데모 수가 아니라 SFT의 최적화 목표 자체이기 때문이다.</li>
+  </ol>
+  <p>주의할 대칭 사실: <strong>SFT 데이터가 충분히 좋으면 RL이 아예 필요 없는 경우도 많다.</strong> RL은 SFT의 10-100배 비용이다. Anthropic이 2025년까지 대량 고품질 SFT + RLAIF 중심으로 코딩 모델을 만들었던 것이 증거다. "Data decides how far you can go; RL decides how much higher."</p>
+
+  <section class="callout warn">
+    <strong>실무 번역:</strong> Aside 스킬을 만들고 있다면 당신은 이미 "파라미터 대신 프롬프트/스킬 매체를 택한" 것이다. 스킬 설명을 아무리 다듬어도 모델이 특정 판단을 못 한다면, 그 능력이 "언어로 완전히 표현 가능한가"를 먼저 물어라. 표현 가능한데 안 따라오면 스킬 문제, 표현 자체가 불가능하면(미묘한 문체, 고차원 지각) 그때가 파인튜닝 검토 시점이다.
+  </section>
+
+  <h2>3. 보상 설계: RL의 진짜 어려움</h2>
+  <p>알고리즘 지도는 간단하다 — <strong>PPO</strong>(가치 네트워크로 세밀한 credit, 장궤적 멀티턴에 유리), <strong>GRPO</strong>(같은 문제 N개 응답을 그룹 내 상대 비교, 가치 네트워크 불필요, 단일턴에 유리), <strong>DPO</strong>(선호 쌍을 직접 분류 loss로, 극도로 간단하나 오프라인이라 탐색 불가). 책의 조언: "아무거나 핮도 됨 — 알고리즘에 먼저 매달리지 말 것."</p>
+  <p>진짜 어려움은 보상이다. 세 가지 함정:</p>
+  <ul>
+    <li><strong>Reward model over-optimization</strong> (Gao, Schulman, Hilton 2023): RL이 진행되면 RM 점수는 계속 오르지만 진짜 품질은 상승 후 하락한다. 모델은 더 잘 답하는 법이 아니라 RM이 고득점을 주게 만드는 법(장황함, 아부)을 배운다. Goodhart's Law. 완화책은 KL penalty와 early stopping.</li>
+    <li><strong>PRM vs ORM</strong>: 중간 스텝마다 채점하는 Process Reward(OpenAI "Let's Verify Step by Step")가 최종 결과만 보는 Outcome Reward보다 credit assignment에 유리하지만, 중간 스텝의 정오를 판정하기 어려운 태스크(최적 경로를 모르는)에서는 outcome이 탐색 자유를 준다. SimpleVLA-RL 로봇 실험에서 outcome reward로 훈련한 모델이 인간 데모에 없던 "pushcut" 동작을 자기 발명했다.</li>
+    <li><strong>Outcome-only는 규칙 위반을 유도한다</strong>: 성공과 무관한 제약(거부한 사용자 재전화 금지, <code>rm -rf</code> 금지)은 위반하는 쪽이 지름길이라 겉 성공률이 오른다. 책의 RLVP 처방: "Reward the outcome, penalize the path" — 결정적 규칙 엔진으로 검증 가능한 위반 행동마다 감점 + 준수 행동마다 가점. 4원칙: ① 검증 가능한 "행동"만 처벌("진전 부족" 처벌은 무행동을 가르침) ② outcome reward가 항상 주동력 ③ 처벌마다 대응하는 준수 가점 페어링 ④ 준수 경로가 도달 가능해야.</li>
+  </ul>
+  <p>엔지니어링 디테일 하나: 툴콜 궤적 훈련 때 <strong>환경 피드백 토큰은 loss masking</strong>한다. 인터프리터 출력은 모델이 생성한 게 아니므로 policy gradient에 넣으면 "샌드박스 출력 예측"이라는 이상한 목표를 학습하게 된다.</p>
+
+  <h2>4. On-Policy Distillation: 두 세계의 장점 결합</h2>
+  <div class="grid">
+    <div class="card">
+      <strong>SFT</strong><br>
+      off-policy + dense. 선생 궤적만 모방해 자기 실수에서 복구를 모름(covariate shift).
+    </div>
+    <div class="card">
+      <strong>RL</strong><br>
+      on-policy + sparse. 자기 궤적에서 배우지만 신호가 궤적 끝 성패 스칼라 하나.
+    </div>
+    <div class="card">
+      <strong>On-Policy Distillation</strong><br>
+      on-policy + dense. 학생이 자기 궤적을 생성하고, 선생이 학생이 생성한 토큰마다 목표 확률 분포를 제공. 순수 RL 성능에 약 1/10 스텝으로 도달.
+    </div>
+  </div>
+  <p>저자의 시간 감각 에이전트 실험에서 DPO + 4개 RL 레시피가 각기 다른 실패 모드로 SFT 천장을 못 넘은 반면, On-Policy Distillation은 매끄럽게 수렴해 통과율 +23~47pt를 기록했다. 책의 결론: <strong>"post-training을 멈추게 하는 것은 보통 영리하지 못한 보상 함수가 아니라 밀도 부족한 신호다."</strong></p>
+
+  <h2>5. 8장: 보존 ≠ 학습 — 지속 진화의 공학</h2>
+  <p>오늘의 에이전트는 비슷한 태스크를 만 번 처리하고도 첫날의 실수를 반복한다. 궤적 100개를 벡터 스토어에 넣으면 검색은 되지만, 시스템이 능동적으로 <strong>평가·비교·일반화·검증</strong>하기 전에는 학습이 일어나지 않는다. 3장의 user memory가 "사용자와 세계가 어떤가"를 담는다면, 8장의 경험 학습은 "어떤 조건에서 무엇을 해야 하는가"를 담는다 — 전자는 더 많이 기억하게, 후자는 더 능숙하게 만든다.</p>
+  <p>학습 신호의 출발점은 "요약"이 아니라 <strong>"평가"</strong>다. 3층 검증 구조: 하층 outcome verifier(테스트 결과, DB 상태 → "완료됐는가"), 중층 process verifier(비즈니스 규칙, 권한 → "허용된 방식인가"), 상층 quality verifier(rubric → "적절했는가"). 그리고 <strong>평가자(verifier)와 수정 결정자(진화 모듈)를 분리</strong>한다 — 같은 모델이 심판이면서 규칙을 고치는 것을 막기 위해.</p>
+
+  <h2>6. 4대 갱신 매체와 승격 사다리</h2>
+  <div class="grid">
+    <div class="card">
+      <strong>경험 지식 베이스</strong><br>
+      사실, 경험 패턴, 예외. 빠른 갱신·추적성. 단 검색과 올바른 적용에 의존. 권장 전략은 최소 2개 비실패 궤적의 지지 필요.
+    </div>
+    <div class="card">
+      <strong>Prompt &amp; Skill</strong><br>
+      언어로 명확히 표현 가능한 판단 원칙·운영 절차. 해석 가능하나 팽창·충돌·무시되기 쉬움. Karpathy의 "System Prompt Learning".
+    </div>
+    <div class="card">
+      <strong>프로그램 &amp; Harness</strong><br>
+      결정적 절차, 도구, 하드 제약. 테스트 가능·저비용 실행. PreAct식 워크플로 컴파일은 반복 태스크를 8.5-13배 가속.
+    </div>
+    <div class="card">
+      <strong>모델 파라미터</strong><br>
+      고차원 지각, 생성 스타일, 암묵 전략. 강한 일반화·낮은 추론 오버헤드. 갱신·회귀 비용 최고.
+    </div>
+  </div>
+  <p>선택 기준은 "경험이 얼마나 오래됐나"가 아니라 <strong>"목표 능력이 어떤 매체로 자연스럽게 표현되는가"</strong>다. 매체 간 승격 사다리: 신규 전략은 경험 문서로 → 반복 검증 후 지식으로 → 명확한 규칙은 스킬로 → 안정 절차는 코드로 → 광범위 암묵 의사결정만 post-training으로. "프롬프트에 '반복 호출 금지' 한 줄 추가"는 잘못된 수정 계층의 전형이다 — 재시도 제약처럼 결정적 강제가 가능한 것은 코드에 둬야 한다.</p>
+  <p>개정 방식도 정해져 있다: 전체 재작성이 아니라 유사 실패 그룹에서 <strong>minimal diff</strong>를 생성하고, provenance를 남기고, 기존 규칙과 충돌 검사를 하고, 경계 사례 세트(개선 확인)와 retention 세트(퇴화 확인) 양쪽을 평가한다. 통과핮도 안정 버전을 덮어쓰지 않고 <code>release_to_canary</code>. Voyager(Minecraft)는 이 루프의 완결 사례다 — 자동 커리큘럼 + 스킬 라이브러리 + 환경 검증 피드백으로 신규 월드에서도 스킬이 전이됐다. <a href="https://arxiv.org/abs/2305.16291">arXiv:2305.16291</a></p>
+
+  <h2>7. 이중 루프와 안전 경계</h2>
+  <p>장기 운영의 구조는 <strong>이중 루프</strong>다: 온라인 실행 루프는 태스크 완료와 증거 기록만 하고(프로덕션 에이전트를 직접 재작성하지 않음), 오프라인 진화 루프("sleep learning")가 유휴 시간에 궤적을 집계해 후보 수정을 만들고 검증 게이트를 통과시킨다. 수집과 조직의 분리가 우연한 성공·네트워크 장애·악성 입력이 즉시 장기 능력을 재작성하는 것을 막는다. Claude Code의 auto memory, Hermes의 Curator가 이 패턴의 제품화다.</p>
+  <ul>
+    <li><strong>증거와 지시의 분리</strong>: 원시 웹페이지·도구 출력은 신뢰 불가 증거 — 스킬에 직접 기록 금지, LLM 요약 선행.</li>
+    <li><strong>후보와 프로덕션의 분리</strong>: 신규 지식/스킬/코드는 샌드박스 검증과 회귀 통과 전까지 실트래픽 불가.</li>
+    <li><strong>안전 메커니즘은 자기 수정 불가</strong>: 검증기, 테스트 케이스, 릴리즈 임계, 감사 로그는 편집 범위 밖. 아니면 테스트 임계 인하로 퇴화를 진전으로 위장한다.</li>
+  </ul>
+
+  <section class="callout warn">
+    <strong>실무 번역:</strong> 당신의 Aside daily routine들은 이미 "온라인 실행 루프 + 루틴 메모리"를 갖고 있다. 여기에 빠진 것은 8장식 승격 규칙이다 — 루틴 메모리에 뭔가가 쌓일 때 "최소 N건의 지지 증거 + 검증 통과 전에는 행동 규칙으로 승격하지 않는다"는 임계를 프롬프트에 명시하라. 그리고 매주 한 번의 "sleep learning" 점검(중복 병합, 무효화된 지식 퇴역)이 append-only 축적과 진짜 진화를 가른다.
+  </section>
+
+  <h2>8. 퀴즈 · 회수 연습</h2>
+  <div class="quiz-card" data-quiz data-correct="맞음. 데모를 추가핮도 안 오륨녀 원인이 SFT의 최적화 목표 자체이므로 RL 전환 시점이다." data-incorrect="다시. 책의 실용 테스트는 '데모 추가핮도 신규 시나리오 성능이 정체'가 RL 전환 신호다.">
+    <p><strong>Q1.</strong> SFT에서 RL로 전환해야 한다는 가장 신뢰할 만한 실무 신호는?</p>
+    <button type="button" data-answer="wrong">훈련 loss가 일정 수준 아래로 낮아지지 않을 때</button>
+    <button type="button" data-answer="correct">데모를 추가핮도 신규 시나리오 성능이 오르지 않을 때</button>
+    <button type="button" data-answer="wrong">베이스 모델의 컨텍스트 윈도우가 부족하다고 느껴질 때</button>
+    <button type="button" data-answer="wrong">추론 비용이 예산의 절반을 넘기 시작했을 때</button>
+    <div class="quiz-feedback" data-feedback></div>
+  </div>
+
+  <div class="quiz-card" data-quiz data-correct="맞음. '진전 없음'을 처벌하면 무행동이 회피 최적해가 된다. 검증 가능한 위반 '행동'만 처벌한다." data-incorrect="다시. RLVP 4원칙의 첫째는 검증 가능한 행동만 처벌하고 진전 부족은 절대 처벌하지 않는 것이다.">
+    <p><strong>Q2.</strong> RLVP(경로 처벌) 설계에서 가장 위험한 실수는?</p>
+    <button type="button" data-answer="correct">진전이 없는 스텝에 감점해 무행동을 최적해로 만드는 것</button>
+    <button type="button" data-answer="wrong">결정적 규칙 엔진 대신 학습된 judge 모델을 쓰는 것</button>
+    <button type="button" data-answer="wrong">처벌마다 대응하는 준수 가점을 함께 두는 것</button>
+    <button type="button" data-answer="wrong">준수 경로의 도달 가능성을 사전에 rollout으로 진단하는 것</button>
+    <div class="quiz-feedback" data-feedback></div>
+  </div>
+
+  <div class="quiz-card" data-quiz data-correct="맞음. 저장은 검색을 가능하게 할 뿐, 평가·비교·일반화·검증을 거쳐야 학습이다." data-incorrect="다시. 8장의 핵심 구분은 'preserving experience is not the same as learning from it'이다.">
+    <p><strong>Q3.</strong> "보존 ≠ 학습" 원칙에 가장 충실한 시스템은?</p>
+    <button type="button" data-answer="wrong">모든 대화 궤적을 벡터 스토어에 임베딩해 검색 가능하게 한 시스템</button>
+    <button type="button" data-answer="correct">평가된 궤적에서 다수 지지 증거를 모아 검증 후 규칙으로 승격하는 시스템</button>
+    <button type="button" data-answer="wrong">세션마다 전체 대화 요약을 메모리 파일에 append하는 시스템</button>
+    <button type="button" data-answer="wrong">사용자 피드백을 즉시 시스템 프롬프트에 반영하는 시스템</button>
+    <div class="quiz-feedback" data-feedback></div>
+  </div>
+
+  <h2>9. 미니 실습 (10분)</h2>
+  <p>당신이 운영 중인 워크플로 하나를 골라(예: daily 영상 제작 루틴, 판매현황 동기화) 최근에 "개선하고 싶었던 동작" 하나를 떠올리고, 아래 표를 채워 보자.</p>
+  <ol>
+    <li>그 개선이 어떤 매체에 속하는가: 지식 / 프롬프트·스킬 / 프로그램·코드 / 파라미터 — 선택 근거 한 줄 ("이 능력은 ___로 완전히 표현 가능/불가능하기 때문에")</li>
+    <li>지금 그 개선의 "학습 신호"는 어디서 오는가 — 검증된 평가인가, 그냥 느낌인가</li>
+    <li>승격 임계를 하나 정하라 (예: "같은 실패가 3번 관찰되고, 수정 후보가 회귀 체크를 통과하면 스킬에 반영")</li>
+  </ol>
+  <p>막히면 에이전트에게 이 레슨의 4대 갱신 매체 표를 기준으로 같이 분류해 달라고 하면 된다.</p>
+
+  <h2>Primary source</h2>
+  <p>교재: <em>AI Agents in Depth</em> (Bojie Li, v1.3) — Chapter 7 "Model Post-Training" (pp.235-287), Chapter 8 "Continual Evolution of Agents" (pp.288-307). 7.2, 7.3은 optional reading이라 건너뛰어도 된다.</p>
+  <ul>
+    <li><a href="https://arxiv.org/abs/2501.17161">Chu et al., "SFT Memorizes, RL Generalizes"</a> — 오늘의 제1원칙의 실험 근거</li>
+    <li><a href="https://arxiv.org/abs/2305.16291">Wang et al., "Voyager: An Open-Ended Embodied Agent with LLMs"</a> — 지속 진화 루프의 완결 사례</li>
+    <li><a href="https://arxiv.org/abs/2303.11366">Shinn et al., "Reflexion"</a> — 자연어 반성. 단 책의 경고: "반성 자체는 증거가 아니다"</li>
+  </ul>
+
+  <h2>다음으로 연결</h2>
+  <ul>
+    <li><a href="0008-evaluating-agents.html">이전: 에이전트 평가</a> — 오늘의 verifier가 어제의 평가 인프라다</li>
+    <li><a href="0010-multimodal-multi-agent.html">다음: 멀티모달·실시간 인터랙션과 멀티에이전트 시스템</a></li>
+    <li><a href="0003-kv-cache-prompt-skills.html">복습: KV cache, 프롬프트, 스킬</a> — 프롬프트/스킬 매체의 설계 원칙</li>
+  </ul>
+
+  <footer>
+    <p>막히는 부분은 에이전트에게 바로 물어보세요. 이 워크스페이스의 선생님 역할입니다.</p>
+    <p class="pill">Mission-linked</p>
+    <p class="pill">ZPD: 평가 → 모델 갱신과 지속 진화의 매체 선택</p>
+  </footer>
+
+</main>
+
+<script>
+document.querySelectorAll("[data-quiz]").forEach((quiz) => {
+  const feedback = quiz.querySelector("[data-feedback]");
+  quiz.querySelectorAll("button[data-answer]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const isCorrect = button.dataset.answer === "correct";
+      quiz.querySelectorAll("button[data-answer]").forEach((b) => {
+        b.classList.remove("correct", "incorrect");
+        b.setAttribute("aria-pressed", "false");
+      });
+      button.classList.add(isCorrect ? "correct" : "incorrect");
+      button.setAttribute("aria-pressed", "true");
+      feedback.textContent = isCorrect ? quiz.dataset.correct : quiz.dataset.incorrect;
+    });
+  });
+});
+
+</script>
+</body>
+</html>
