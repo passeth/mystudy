@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-28T15:41:30.510Z",
+  "generatedAt": "2026-07-28T15:46:12.152Z",
   "topics": [
     {
       "id": "pif-cpsr",
@@ -315,8 +315,8 @@
     },
     {
       "id": "graph-engineering",
-      "title": "Graph Engineering",
-      "subtitle": "X 북마크 9건을 검증해 만든 네 가지 그래프 — 문제 트리·개선 거버넌스·실행 오케스트레이션·지식/시간 그래프 완결 코스",
+      "title": "Graph Engineering v2",
+      "subtitle": "한 단어를 네 구조로 분해하기 — 문제 트리, 개선 루프 거버넌스, 실행 오케스트레이션, 지식·시간 그래프를 시각적으로 배우는 10개 레슨",
       "color": "lilac",
       "order": 7,
       "lessons": [
@@ -395,7 +395,7 @@
         {
           "id": "0013-design-pattern-playbook",
           "title": "그래프 설계 한 장 플레이북 · Graph Engineering v2",
-          "subtitle": "그래프 설계 검토에 바로 쓰는 한 장 플레이북 — 12개 체크, 패턴 카드, 실패-처방 표",
+          "subtitle": "Graph Engineering v2 - 그래프 설계 한 장 플레이북. 인쇄 가능한 12체크 설계 리뷰 시트.",
           "file": "lessons/graph-engineering/0013-design-pattern-playbook.html"
         }
       ]
