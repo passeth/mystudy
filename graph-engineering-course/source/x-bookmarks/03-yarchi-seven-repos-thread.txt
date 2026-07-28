@@ -1,0 +1,233 @@
+- title: "X에서 Yarchi 님 : "Graph engineering is great, but it does not work until you have both halves Seven repos, split by which job they actually do. THE GRAPH THAT RUNS THE WORK 1. /langchain-ai/langgraph You draw the steps as a diagram and it executes them, saving progress after each one. Crash at https://t.co/PpOUm9wGfS" / X" [url=https://x.com/undefinedKi/status/2081787771333546438]
+- button "Grok" [ref=e1]
+- button "채팅" [ref=e2]
+- button "홈 타임라인으로 건너뛰기" [ref=e3]
+- button "실시간 트렌드로 건너뛰기" [ref=e4]
+- banner:
+  - heading "X" [ref=e5] [level=1]:
+    - link "X" [ref=e6]
+  - navigation "기본" [ref=e7]:
+    - link "홈" [ref=e8]
+    - link "검색 및 탐색" [ref=e9]: "탐색하기"
+    - link "알림" [ref=e10]
+    - link "쪽지" [ref=e11]: "채팅"
+    - link "SuperGrok" [ref=e12]
+    - link "Premium" [ref=e13]: "Premium+"
+    - link "북마크" [ref=e14]
+    - link "크리에이터 스튜디오" [ref=e15]
+    - link "아티클" [ref=e16]
+    - link "프로필" [ref=e17]
+    - button "메뉴 항목 더 보기" [ref=e18]: "더 보기"
+  - link "게시하기" [ref=e19]
+  - button "계정 메뉴" [ref=e20]:
+    - text: "Seulki Ji"
+    - img "인증된 계정"
+    - text: "@passeth_me"
+- main:
+  - generic [ref=e21]:
+    - generic [ref=e22]:
+      - button "돌아가기" [ref=e23]
+      - heading [level=2]: "게시물"
+    - region "대화" [ref=e24]:
+      - heading "대화" [level=1]
+      - article "Yarchi인증된 계정@undefinedKi 그래프 엔지니어링은 훌륭하지만, 두 부분을 모두 갖추기 전까지는 작동하지 않습니다.실제 작업에 따라 분리된 7개의 저장소.작업을 실행하" [ref=e25]:
+        - link [ref=e26]:
+          - text: "Yarchi"
+          - img "인증된 계정"
+        - link "@undefinedKi" [ref=e27]
+        - button "구독하기 님 @undefinedKi" [ref=e28]: "구독하기"
+        - button "Grok 작업" [ref=e29]
+        - button "더 보기" [ref=e30]
+        - text: "원문 언어 영어"
+        - button "원본 보기" [ref=e31]
+        - button "자동 번역에 관해" [ref=e32]
+        - text: "그래프 엔지니어링은 훌륭하지만, 두 부분을 모두 갖추기 전까지는 작동하지 않습니다.실제 작업에 따라 분리된 7개의 저장소.작업을 실행하는 그래프 1. /langchain-ai/langgraph\n단계들을 다이어그램으로 그려놓으면 이를 실행하며, 각 단계 후에 진행 상황을 저장합니다. 40번째 단계에서 충돌해도 처음부터 다시 시작하는 대신 40번째 단계부터 이어서 진행합니다. 실행 중간에 중단해 사람이 무언가를 승인하도록 한 뒤 며칠 후에 재개할 수도 있습니다. 38k 스타, MIT.2. /microsoft/agent-framework\n.NET이나 Python 팀을 위한 동일한 기능입니다. Microsoft는 AutoGen과 Semantic Kernel을 이것으로 병합하고 모두 여기를 시작점으로 삼으라고 했습니다. 12k 스타, MIT.3. /temporalio/temporal\n당신이 구축하는 어떤 것 아래에 깔립니다. 서버 충돌, 재시작, 또는 누군가의 답변을 3일간 기다리는 상황에서도 프로세스를 생존시킵니다. AI를 위해 만들어진 것이 아니라는 점이 바로 작동하는 이유입니다.작업이 조회하는 그래프 4. /Graphify-Labs/graphify\n어떤 폴더를 가리키기만 하면 내부의 모든 것을 하나의 연결된 그래프로 매핑합니다. 노트, PDF, 코드, 이미지, 스프레드시트. 그런 다음 에이전트는 파일을 하나씩 열지 않고 이 맵을 쿼리합니다. 97k 스타, Apache 2.0.5. /abhigyanpatwari/GitNexus\n같은 아이디어지만 코드에만 초점을 맞추고 훨씬 더 깊이 파고듭니다. 전체 저장소에서 모든 함수 호출, import, 클래스 상속을 추적하므로 에이전트는 의존성을 읽지 않은 파일을 더 이상 편집하지 않습니다. 45k 스타.6. /getzep/graphiti\n사실이 언제 참이었는지 아는 메모리입니다. 2월에 계좌 소유자가 누구였는지 물어보면 오늘날이 아니라 2월이라고 답합니다. 29k 스타, Apache 2.0.7. /topoteretes/cognee\n문서 더미를 직접 호스팅하는 단일 Postgres에서 실행되는 쿼리 가능한 그래프로 변환합니다. 아무것도 당신의 기계에서 벗어나지 않습니다. 29k 스타, Apache 2.0.프로세스를 구축한다면 첫 번째 그룹을 선택하세요. 맵을 구축한다면 두 번째 그룹을 선택하세요.이걸 북마크하세요 이 번역 평가하기:"
+        - button [ref=e33]
+        - button [ref=e34]
+        - button "동영상 재생. 동영상 길이 15초" [ref=e38]
+        - text: "인용"
+        - link [ref=e39]:
+          - text: "Yarchi"
+          - img "인증된 계정"
+          - text: "@undefinedKi 7월 25일"
+          - img "기사"
+          - text: "Graph Engineering: an Agent That Reviews Its Own Work. The Anthropic Method (Full Guide)Your agent is not dumb. It is shaped wrong.\nShort tasks work. You ask for a function, you get a function. Then you point the same agent at something real, a refactor across forty files, a migration, a..."
+        - link "오전 2:04 · 2026년 7월 28일" [ref=e40]
+        - link "4만 조회수" [ref=e41]
+        - group "23 답글, 52 재게시, 392 마음에 들어요, 마음에 들어 함, 604 북마크, 40330 조회수 님 님 님 님 님":
+          - button "23 답글. 답글하기" [ref=e42]: "23"
+          - button "52 재게시. 재게시" [ref=e43]: "52"
+          - button "392 마음에 들어요. 마음에 들어 함" [ref=e44]: "392"
+          - button "604 북마크. 북마크에 추가됨" [ref=e45]: "604"
+          - button "게시물 공유하기" [ref=e46]
+        - button "관련 있음" [ref=e47]
+        - link "인용 보기" [ref=e48]
+      - link [ref=e49]
+      - text: "답글 게시하기"
+      - textbox "게시물 본문" [ref=e50]
+      - button "답글" [ref=e51] [disabled]
+      - article "Nekt0인증된 계정@Nekt_0·19시간 전 that seems fair in context 2 마음에 들어요, 82 조회수 님" [ref=e52]:
+        - link [ref=e53]:
+          - text: "Nekt0"
+          - img "인증된 계정"
+          - link [ref=e54]
+        - link "@Nekt_0" [ref=e55]
+        - link "19시간 전" [ref=e56]: "19시간"
+        - button "Grok 작업" [ref=e57]
+        - button "더 보기" [ref=e58]
+        - text: "that seems fair in context"
+        - group "2 마음에 들어요, 82 조회수 님":
+          - button "0 답글. 답글하기" [ref=e59]
+          - button "0 재게시. 재게시" [ref=e60]
+          - button "2 마음에 들어요. 마음에 들어요" [ref=e61]: "2"
+          - link "82 조회수. 게시 애널리틱스 보기" [ref=e62]: "82"
+          - button "북마크" [ref=e63]
+          - button "게시물 공유하기" [ref=e64]
+      - article "Shadow Nick인증된 계정@doublenickk·18시간 전 이건 분명 미래야" [ref=e65]:
+        - link [ref=e66]:
+          - text: "Shadow Nick"
+          - img "인증된 계정"
+        - link "@doublenickk" [ref=e67]
+        - link "18시간 전" [ref=e68]: "18시간"
+        - button "Grok 작업" [ref=e69]
+        - button "더 보기" [ref=e70]
+        - text: "원문 언어 영어"
+        - button "원본 보기" [ref=e71]
+        - text: "이건 분명 미래야"
+        - group "299 조회수":
+          - button "0 답글. 답글하기" [ref=e72]
+          - button "0 재게시. 재게시" [ref=e73]
+          - button "0 마음에 들어요. 마음에 들어요" [ref=e74]
+          - link "299 조회수. 게시 애널리틱스 보기" [ref=e75]: "299"
+          - button "북마크" [ref=e76]
+          - button "게시물 공유하기" [ref=e77]
+      - article "Vincent Po Li인증된 계정@Vincent_Po_Li·15시간 전 both halves die the same way: at the seams no repo handles." [ref=e78]:
+        - link [ref=e79]:
+          - text: "Vincent Po Li"
+          - img "인증된 계정"
+        - link "@Vincent_Po_Li" [ref=e80]
+        - link "15시간 전" [ref=e81]: "15시간"
+        - button "Grok 작업" [ref=e82]
+        - button "더 보기" [ref=e83]
+        - text: "both halves die the same way: at the seams no repo handles. memory graphs at entity resolution (\"Acme Inc\" = \""
+        - link "acme.com" [ref=e84]
+        - text: "\" - who decides?).  execution graphs at unowned merges: 17.2× error amplification vs 4.4× with one owner. the repos are the easy 20%."
+        - group "1 마음에 들어요, 277 조회수 님":
+          - button "0 답글. 답글하기" [ref=e85]
+          - button "0 재게시. 재게시" [ref=e86]
+          - button "1 마음에 들어요. 마음에 들어요" [ref=e87]: "1"
+          - link "277 조회수. 게시 애널리틱스 보기" [ref=e88]: "277"
+          - button "북마크" [ref=e89]
+          - button "게시물 공유하기" [ref=e90]
+      - article "AI Mastery Guide인증된 계정@aiseomastery·14시간 전 Seven repos, split cleanly by purpose, useful." [ref=e91]:
+        - link [ref=e92]:
+          - text: "AI Mastery Guide"
+          - img "인증된 계정"
+        - link "@aiseomastery" [ref=e93]
+        - link "14시간 전" [ref=e94]: "14시간"
+        - button "Grok 작업" [ref=e95]
+        - button "더 보기" [ref=e96]
+        - text: "Seven repos, split cleanly by purpose, useful."
+        - group "157 조회수":
+          - button "0 답글. 답글하기" [ref=e97]
+          - button "0 재게시. 재게시" [ref=e98]
+          - button "0 마음에 들어요. 마음에 들어요" [ref=e99]
+          - link "157 조회수. 게시 애널리틱스 보기" [ref=e100]: "157"
+          - button "북마크" [ref=e101]
+          - button "게시물 공유하기" [ref=e102]
+      - article "Nick Venturi인증된 계정@nickventuri·12시간 전 seven repos is pure madness💀" [ref=e103]:
+        - link [ref=e104]:
+          - text: "Nick Venturi"
+          - img "인증된 계정"
+        - link "@nickventuri" [ref=e105]
+        - link "12시간 전" [ref=e106]: "12시간"
+        - button "Grok 작업" [ref=e107]
+        - button "더 보기" [ref=e108]
+        - text: "seven repos is pure madness"
+        - image "💀"
+        - group "119 조회수":
+          - button "0 답글. 답글하기" [ref=e109]
+          - button "0 재게시. 재게시" [ref=e110]
+          - button "0 마음에 들어요. 마음에 들어요" [ref=e111]
+          - link "119 조회수. 게시 애널리틱스 보기" [ref=e112]: "119"
+          - button "북마크" [ref=e113]
+          - button "게시물 공유하기" [ref=e114]
+      - article "Truntr인증된 계정@Truntr_·16시간 전 Two groups is right and there is a third nobody ships. The graph that ru" [ref=e115]:
+        - link [ref=e116]:
+          - text: "Truntr"
+          - img "인증된 계정"
+        - link "@Truntr_" [ref=e117]
+        - link "16시간 전" [ref=e118]: "16시간"
+        - button "Grok 작업" [ref=e119]
+        - button "더 보기" [ref=e120]
+        - text: "Two groups is right and there is a third nobody ships. The graph that runs the work, the graph that stores the facts, and nothing that stores the decisions. Graphiti gets closest and still only answers when, not why."
+        - group "126 조회수":
+          - button "0 답글. 답글하기" [ref=e121]
+          - button "0 재게시. 재게시" [ref=e122]
+          - button "0 마음에 들어요. 마음에 들어요" [ref=e123]
+          - link "126 조회수. 게시 애널리틱스 보기" [ref=e124]: "126"
+          - button "북마크" [ref=e125]
+          - button "게시물 공유하기" [ref=e126]
+      - article "Gipp🦅인증된 계정@gippp69·21시간 전 process and knowledge graphs solve different failure modes 1 마음에 들어요, 15" [ref=e127]:
+        - link [ref=e128]:
+          - text: "Gipp"
+          - image "🦅"
+          - img "인증된 계정"
+          - link [ref=e129]
+        - link "@gippp69" [ref=e130]
+        - link "21시간 전" [ref=e131]: "21시간"
+        - button "Grok 작업" [ref=e132]
+        - button "더 보기" [ref=e133]
+        - text: "process and knowledge graphs solve different failure modes"
+        - group "1 마음에 들어요, 155 조회수 님":
+          - button "0 답글. 답글하기" [ref=e134]
+          - button "0 재게시. 재게시" [ref=e135]
+          - button "1 마음에 들어요. 마음에 들어요" [ref=e136]: "1"
+          - link "155 조회수. 게시 애널리틱스 보기" [ref=e137]: "155"
+          - button "북마크" [ref=e138]
+          - button "게시물 공유하기" [ref=e139]
+  - generic [ref=e140]:
+    - search "검색":
+      - combobox "검색어" [ref=e141] [placeholder="검색"]
+    - complementary "연관된 사람":
+      - heading [level=2]: "연관된 사람"
+      - list:
+        - listitem [ref=e142]:
+          - link [ref=e143]:
+            - text: "Yarchi"
+            - img "인증된 계정"
+          - link "@undefinedKi" [ref=e144]
+          - button "팔로우 @undefinedKi" [ref=e145]: "팔로우"
+          - text: "AI & tech researcher | Building cool stuff | Sharing everything I learn"
+    - region "실시간 트렌드" [ref=e146]:
+      - heading "실시간 트렌드" [level=1]
+      - heading [level=2]: "무슨 일이 일어나고 있나요?"
+      - link "영화 ‘오디세이’ 8월 5일 개봉크리스토퍼 놀란 감독, ‘오디세이’로 영화의 새로운 역사를 쓰다🌊Promoted by 유니버설 픽쳐스더 보기" [ref=e147]:
+        - text: "영화 ‘오디세이’ 8월 5일 개봉 크리스토퍼 놀란 감독, ‘오디세이’로 영화의 새로운 역사를 쓰다"
+        - image "🌊"
+        - text: "Promoted by 유니버설 픽쳐스"
+        - button "더 보기" [ref=e148]
+      - link "대한민국에서 트렌드 중규모 7.1더 보기" [ref=e149]:
+        - text: "대한민국에서 트렌드 중 규모 7.1"
+        - button "더 보기" [ref=e150]
+      - link "대한민국에서 트렌드 중스테이 컴퍼니더 보기" [ref=e151]:
+        - text: "대한민국에서 트렌드 중 스테이 컴퍼니"
+        - button "더 보기" [ref=e152]
+      - link "대한민국에서 트렌드 중가내 애인더 보기" [ref=e153]:
+        - text: "대한민국에서 트렌드 중 가내 애인"
+        - button "더 보기" [ref=e154]
+      - link "더 보기" [ref=e155]
+    - navigation "바닥글" [ref=e156]:
+      - link "이용약관" [ref=e157]
+      - text: "·"
+      - link "개인정보 공개 설정" [ref=e158]
+      - text: "·"
+      - link "쿠키" [ref=e159]
+      - text: "·"
+      - link "접근성" [ref=e160]
+      - text: "·"
+      - link "광고 정보" [ref=e161]
+      - text: "·"
+      - button "더 보기" [ref=e162]
+      - text: "© 2026 X Corp."
+- region "Notifications alt+T" [ref=e163]

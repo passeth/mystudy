@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Graph Engineering 코스가 사용한 X 북마크 9건과 그 검증 근거 지도">
+<title>X 북마크와 검증 근거 지도 · Graph Engineering v2</title>
+<style>
+:root {
+  --ink:#18201f; --muted:#5d6864; --paper:#fbfaf6; --panel:#ffffff;
+  --line:#d9ddd6; --exec:#136f63; --improve:#a23d31; --knowledge:#6b5d8e;
+  --problem:#a66b12; --soft:#eaf3ef; --warn:#fff2d6; --purple-soft:#f0edf7;
+  --brick-soft:#fae9e7; --code:#101917;
+}
+*{box-sizing:border-box} body{margin:0;color:var(--ink);background:var(--paper);font-family:ui-serif,Georgia,"Apple SD Gothic Neo","Noto Serif KR",serif;line-height:1.68}
+main{width:min(1040px,calc(100% - 40px));margin:0 auto;padding:52px 0 88px}.kicker{color:var(--exec);font:700 12px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase}
+h1{margin:12px 0 14px;font-size:clamp(30px,5.5vw,54px);line-height:1.06}.subtitle{max-width:780px;color:var(--muted);font-size:18px}
+h2{margin-top:42px;border-bottom:1px solid var(--line);padding-bottom:8px}h3{margin-top:22px}a{color:var(--exec);text-underline-offset:3px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px;margin:16px 0}.card h3{margin-top:0}
+.callout{border-left:4px solid var(--exec);background:var(--soft);border-radius:6px;padding:14px 16px;margin:18px 0}.callout.warn{border-left-color:var(--problem);background:var(--warn)}.callout.brick{border-left-color:var(--improve);background:var(--brick-soft)}.callout.purple{border-left-color:var(--knowledge);background:var(--purple-soft)}
+.badge,.pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:2px 9px;font:700 12px/1.7 ui-sans-serif,system-ui,sans-serif;color:var(--muted)}.badge.exec{color:var(--exec);border-color:var(--exec)}.badge.improve{color:var(--improve);border-color:var(--improve)}.badge.knowledge{color:var(--knowledge);border-color:var(--knowledge)}.badge.problem{color:var(--problem);border-color:var(--problem)}
+.badge.verified{color:#1f7a3f;border-color:#1f7a3f}.badge.partial{color:var(--problem);border-color:var(--problem)}.badge.perspective{color:var(--knowledge);border-color:var(--knowledge)}.badge.misleading{color:var(--improve);border-color:var(--improve)}
+figure{margin:24px 0}.diagram{width:100%;height:auto;display:block}.diagram-frame{background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden}figcaption{margin-top:8px;color:var(--muted);font-size:14px}
+table{border-collapse:collapse;width:100%;background:var(--panel);margin:18px 0;font-size:14.5px}th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}th{background:var(--soft);font-family:ui-sans-serif,system-ui,sans-serif;font-size:12.5px}
+pre{overflow-x:auto;background:var(--code);color:#eef7f2;border-radius:8px;padding:16px}code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.9em}
+.source-note{font-size:14px;color:var(--muted);border-top:1px solid var(--line);padding-top:10px}footer{margin-top:54px;padding-top:24px;border-top:1px solid var(--line);color:var(--muted)}
+@media(max-width:640px){main{width:min(100% - 24px,1040px);padding-top:32px}h1{font-size:32px}table{font-size:12.5px}}
+@media print{body{background:#fff}main{width:auto;padding:24px}.card,figure{break-inside:avoid}a::after{content:" (" attr(href) ")";font-size:.8em;color:var(--muted)}}
+</style>
+</head>
+<body>
+<main>
+
+<header>
+  <div class="kicker">Reference 0012 · Graph Engineering v2</div>
+  <h1>X 북마크와 검증 근거 지도</h1>
+  <p class="subtitle">이 코스는 X(트위터) 글 9건을 관점·입력으로 삼되, 모든 정량 주장은 공식 문서·논문·GitHub로 검증했다(검증 기준시각 2026-07-29 KST). 이 페이지는 어떤 글이 어떤 레슨에 쓰였는지, 무엇이 그대로 맞았고 무엇이 교정됐는지 한 장으로 보여준다.</p>
+</header>
+
+<section class="callout">
+  <strong>방법론:</strong> X 글은 <span class="badge perspective">perspective</span> — 저자의 관점과 실전 감각을 담은 1차 자료이지만 동료심사가 없고 마케팅 요소가 섞여 있다. 공식 문서·논문·공식 GitHub는 <span class="badge verified">authority</span> — 사실 검증의 최종 근거로만 쓴다. 전체 판정은 <code>source/evidence-ledger.md</code>에 있고, 원문 스냅샷은 <code>source/x-bookmarks/</code>에 보존했다.
+</section>
+
+<figure class="diagram-frame">
+<svg class="diagram" viewBox="0 0 1000 460" role="img" xmlns="http://www.w3.org/2000/svg">
+  <title>X 입력이 근거 검증을 거쳐 레슨이 되는 흐름</title>
+  <defs>
+    <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5d6864"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="1000" height="460" fill="#ffffff"/>
+  <text x="30" y="34" font-family="ui-sans-serif,system-ui" font-size="13" font-weight="700" fill="#136f63" letter-spacing="1">STEP 1 · X BOOKMARKS (perspective)</text>
+  <g font-family="ui-serif,Georgia,'Noto Serif KR',serif" font-size="14" fill="#18201f">
+    <rect x="30" y="46" width="220" height="150" rx="8" fill="#f0edf7" stroke="#d9ddd6"/>
+    <text x="45" y="70">9개 원문</text>
+    <text x="45" y="92" font-size="12.5" fill="#5d6864">McKinsey issue tree</text>
+    <text x="45" y="110" font-size="12.5" fill="#5d6864">Perez 개선 루프</text>
+    <text x="45" y="128" font-size="12.5" fill="#5d6864">Akshay·beam·Yarchi·Codez 실행</text>
+    <text x="45" y="146" font-size="12.5" fill="#5d6864">rody·Sprytix 지식/시간</text>
+    <text x="45" y="164" font-size="12.5" fill="#5d6864">Yarchi 7-repos 지도</text>
+    <text x="45" y="182" font-size="11.5" fill="#a66b12">동료심사 없음 · 마케팅 혼재</text>
+  </g>
+  <path d="M255 120 H320" stroke="#5d6864" stroke-width="2" marker-end="url(#ar)"/>
+  <text x="330" y="30" font-family="ui-sans-serif,system-ui" font-size="13" font-weight="700" fill="#136f63" letter-spacing="1">STEP 2 · EVIDENCE LEDGER (authority)</text>
+  <rect x="330" y="46" width="260" height="150" rx="8" fill="#eaf3ef" stroke="#d9ddd6"/>
+  <g font-family="ui-serif,Georgia,'Noto Serif KR',serif" font-size="13.5" fill="#18201f">
+    <text x="345" y="70">공식 문서·논문·GitHub 대조</text>
+    <text x="345" y="92" font-size="12.5" fill="#5d6864">LangGraph / MAF / ADK docs</text>
+    <text x="345" y="110" font-size="12.5" fill="#5d6864">Anthropic 공식 엔지니어링 블로그</text>
+    <text x="345" y="128" font-size="12.5" fill="#5d6864">Microsoft GraphRAG 논문/블로그</text>
+    <text x="345" y="146" font-size="12.5" fill="#5d6864">Graphiti / GitHub API 스냅샷</text>
+    <text x="345" y="164" font-size="12.5" fill="#5d6864">McKinsey 공식 글</text>
+    <text x="345" y="182" font-size="11.5" fill="#136f63">검증 기준시각 2026-07-29 KST</text>
+  </g>
+  <path d="M595 120 H660" stroke="#5d6864" stroke-width="2" marker-end="url(#ar)"/>
+  <text x="670" y="30" font-family="ui-sans-serif,system-ui" font-size="13" font-weight="700" fill="#136f63" letter-spacing="1">STEP 3 · LESSONS 0001–0010</text>
+  <rect x="670" y="46" width="300" height="150" rx="8" fill="#fbfaf6" stroke="#d9ddd6"/>
+  <g font-family="ui-serif,Georgia,'Noto Serif KR',serif" font-size="13.5" fill="#18201f">
+    <text x="685" y="70">교정된 서술 + 범위 명시 수치</text>
+    <text x="685" y="92" font-size="12.5" fill="#5d6864">“90.2%는 internal research eval”</text>
+    <text x="685" y="110" font-size="12.5" fill="#5d6864">“18%/85%는 P&amp;ID 도메인 한정”</text>
+    <text x="685" y="128" font-size="12.5" fill="#5d6864">“Bun≠Python→TS 별개 사례”</text>
+    <text x="685" y="146" font-size="12.5" fill="#5d6864">“GitNexus는 noncommercial”</text>
+    <text x="685" y="164" font-size="12.5" fill="#5d6864">“AutoGen은 maintenance, MAF가 후계”</text>
+  </g>
+  <text x="30" y="230" font-family="ui-sans-serif,system-ui" font-size="13" font-weight="700" fill="#18201f" letter-spacing="1">범례</text>
+  <g font-family="ui-sans-serif,system-ui" font-size="13">
+    <rect x="30" y="245" width="16" height="16" rx="3" fill="#eaf3ef" stroke="#136f63"/>
+    <text x="54" y="258" fill="#18201f">검증됨(verified) — 공식 근거가 그대로 뒷받침</text>
+    <rect x="30" y="272" width="16" height="16" rx="3" fill="#fff2d6" stroke="#a66b12"/>
+    <text x="54" y="285" fill="#18201f">도메인 한정/부분 검증(partly verified) — 범위·대조군이 다름</text>
+    <rect x="30" y="299" width="16" height="16" rx="3" fill="#f0edf7" stroke="#6b5d8e"/>
+    <text x="54" y="312" fill="#18201f">관점/비유(perspective) — 저자 경험담, 수치 없음</text>
+    <rect x="30" y="326" width="16" height="16" rx="3" fill="#fae9e7" stroke="#a23d31"/>
+    <text x="54" y="339" fill="#18201f">과장/오해(misleading) — 대상·시점·comparator가 다름</text>
+  </g>
+  <text x="30" y="380" font-family="ui-serif,Georgia,'Noto Serif KR',serif" font-size="13.5" fill="#5d6864">이 코스의 어느 레슨도 X 수치를 그대로 인용하지 않는다. 모든 수치에는 데이터셋·대조군·기준일이 붙는다.</text>
+  <text x="30" y="404" font-family="ui-serif,Georgia,'Noto Serif KR',serif" font-size="13.5" fill="#5d6864">전체 판정 근거: <tspan fill="#136f63">source/evidence-ledger.md</tspan> · 원문 보존: <tspan fill="#136f63">source/x-bookmarks/</tspan></text>
+</svg>
+</figure>
+
+<h2>1. X 원문 9건 — 무엇을 썼고 어떻게 검증했나</h2>
+<table>
+<tr><th>원문</th><th>고유 기여</th><th>사용 레슨</th><th>신뢰도</th><th>교정 사항</th><th>대응 공식 근거</th></tr>
+<tr>
+  <td><strong>George(@nurijanian)</strong><br>McKinsey Issue Tree<br><a href="https://x.com/nurijanian/article/2081707189853642988">원문</a></td>
+  <td>Why/What/How 3분류, MECE 실무 가이드</td>
+  <td>0001, 0010</td>
+  <td><span class="badge partial">부분 검증</span></td>
+  <td>“McKinsey 공식 3종 표준”이 아니라 교수용 taxonomy로 소개</td>
+  <td>McKinsey 공식 커리어 블로그</td>
+</tr>
+<tr>
+  <td><strong>Yarchi(@undefinedKi)</strong><br>Agent That Reviews Its Own Work<br><a href="https://x.com/undefinedKi/article/2080992300893675775">원문</a></td>
+  <td>Judge-first 8단계 레시피, Bun 사례 인용</td>
+  <td>0006</td>
+  <td><span class="badge partial">부분 검증</span></td>
+  <td>Bun은 Zig→Rust이며 Python→TS는 별개 비공개 사례. $165k는 API 가격 환산치</td>
+  <td>Bun 공식 블로그, Anthropic AI Code Migration</td>
+</tr>
+<tr>
+  <td><strong>rody(@0x_rody)</strong><br>Graph Engineering with Opus 5<br><a href="https://x.com/0x_rody/article/2081664256571810178">원문</a></td>
+  <td>추출/순회 분리, cache·batch·effort 설정</td>
+  <td>0008</td>
+  <td><span class="badge verified">검증됨</span> (가격) / <span class="badge partial">일부 미확인</span> (세부 거동)</td>
+  <td>가격·최소 캐시 길이·batch 할인은 공식 확인. “effort 전환이 항상 캐시를 깬다”는 세부는 별도 검증 표시</td>
+  <td>Anthropic 공식 pricing/caching/effort 문서</td>
+</tr>
+<tr>
+  <td><strong>Yarchi(@undefinedKi)</strong><br>Seven repos 스레드<br><a href="https://x.com/undefinedKi/status/2081787771333546438">원문</a></td>
+  <td>실행 vs 지식 그래프 도구 7종 지도</td>
+  <td>0001, 0008, 0010</td>
+  <td><span class="badge partial">부분 검증</span></td>
+  <td>GitNexus는 PolyForm Noncommercial(오픈소스 아님). AutoGen은 maintenance mode, GraphFlow는 experimental</td>
+  <td>각 공식 GitHub repo/License, Microsoft 공식 문서</td>
+</tr>
+<tr>
+  <td><strong>Akshay(@akshay_pachaar)</strong><br>Graph Engineering Clearly Explained<br><a href="https://x.com/akshay_pachaar/article/2081089131808243999">원문</a></td>
+  <td>노드/엣지/상태 정의, 4대 난제, 언제 과한가</td>
+  <td>0001, 0004, 0007, 0010</td>
+  <td><span class="badge verified">검증됨</span></td>
+  <td>핵심 프레임은 LangGraph/ADK 공식 문서와 일치. Anthropic 90.2%/4x·15x 수치는 범위를 붙여 인용</td>
+  <td>LangGraph, ADK, Anthropic 공식 문서</td>
+</tr>
+<tr>
+  <td><strong>beamnxw</strong><br>Harness vs Loop vs Graph<br><a href="https://x.com/beamnxw/article/2081022966645535079">원문</a></td>
+  <td>environment→feedback→flow 3층 구분, 증상-처방 표</td>
+  <td>0001, 0004, 0007, 0010</td>
+  <td><span class="badge verified">검증됨</span></td>
+  <td>Anthropic/OpenAI/LangGraph/AutoGen/ADK 인용이 대체로 정확. AutoGen 부분은 “현재 후계는 MAF”로 보강</td>
+  <td>Anthropic, OpenAI Agents SDK, LangGraph, AutoGen, ADK 공식 문서</td>
+</tr>
+<tr>
+  <td><strong>Carlos E. Perez(@IntuitMachine)</strong><br>Loop→Graph Engineering<br><a href="https://x.com/IntuitMachine/article/2078419526354378975">원문</a></td>
+  <td>Control/Reference/Gap/Act, 네 실패, 네 토폴로지, anchors</td>
+  <td>0002, 0003</td>
+  <td><span class="badge perspective">관점</span></td>
+  <td>수치 없는 개념적 에세이. “그래프도 원형 확증에 빠질 수 있다”는 저자 자기교정을 그대로 반영</td>
+  <td>—(개념 에세이, 별도 정량 검증 대상 없음)</td>
+</tr>
+<tr>
+  <td><strong>Sprytix</strong><br>Graph Engineering replaced RAG<br><a href="https://x.com/Sprytixl/article/2078778799064584535">원문</a></td>
+  <td>GraphRAG 파이프라인, local/global 질문 프레임</td>
+  <td>0008, 0009</td>
+  <td><span class="badge misleading">교정 필요</span></td>
+  <td>“18% 정확도, 85% 비용 절감”은 Microsoft GraphRAG 일반 결과가 아니라 ChatP&amp;ID 산업 도면 논문의 도메인 한정 수치</td>
+  <td>Microsoft GraphRAG 공식 아키텍처/논문, ChatP&amp;ID 논문</td>
+</tr>
+<tr>
+  <td><strong>Codez(@0xCodez)</strong><br>14-Step Roadmap<br><a href="https://x.com/0xCodez/article/2079165300625330317">원문</a></td>
+  <td>fan-out/fan-in, diamond, barrier/pipeline, dynamic workflows API</td>
+  <td>0004, 0005, 0006, 0007</td>
+  <td><span class="badge partial">부분 검증</span></td>
+  <td>Claude Code dynamic workflows는 실재하나 “무제한 병렬”은 과장 — 공식 한도는 동시 16 agents, run당 1,000 agents, same-session resume</td>
+  <td>Claude Code 공식 workflows 문서</td>
+</tr>
+</table>
+
+<h2>2. 핵심 교정 카드 7선</h2>
+<div class="grid">
+  <div class="card">
+    <span class="badge misleading">교정</span>
+    <h3>GraphRAG “18%/85%”</h3>
+    <p>Microsoft GraphRAG의 보편 성능이 아니라 2026년 ChatP&amp;ID 논문의 산업 도면(P&amp;ID) 도메인 결과이며, accuracy와 cost의 대조군도 서로 다르다. 별도 도메인 사례로 격리해서 가르친다.</p>
+  </div>
+  <div class="card">
+    <span class="badge misleading">교정</span>
+    <h3>Bun vs Python→TypeScript</h3>
+    <p>Bun은 Zig→Rust 마이그레이션(공식·1,448 files)이고, 165k LOC Python→TypeScript 포트는 이름이 공개되지 않은 별도 Anthropic 내부 프로젝트다. 하나의 사례처럼 합치지 않는다.</p>
+  </div>
+  <div class="card">
+    <span class="badge partial">범위 명시</span>
+    <h3>Anthropic 90.2%</h3>
+    <p>Opus 4 lead + Sonnet 4 subagent 구성이 단일 Opus 4 대비 <strong>내부 research eval</strong>에서 90.2% 우위였다. 공개 범용 벤치마크의 일반 향상률이 아니다.</p>
+  </div>
+  <div class="card">
+    <span class="badge partial">범위 명시</span>
+    <h3>토큰 4배/15배</h3>
+    <p>Agent는 채팅 대비 약 4배, 멀티에이전트는 약 15배 토큰을 쓴다는 관측이다. <strong>성능 배수가 아니라 비용 배수</strong>이며 고가치 breadth-first 리서치에만 적용한다.</p>
+  </div>
+  <div class="card">
+    <span class="badge misleading">교정</span>
+    <h3>AutoGen 현재 상태</h3>
+    <p>AutoGen은 공식적으로 Maintenance Mode이고 GraphFlow는 experimental이다. Microsoft의 현재 주력은 Microsoft Agent Framework(MAF) 1.0 GA다. 신규 채택 예제는 MAF 기준으로 짠다.</p>
+  </div>
+  <div class="card">
+    <span class="badge partial">라이선스 정정</span>
+    <h3>GitNexus 라이선스</h3>
+    <p>PolyForm Noncommercial 1.0.0이다. “오픈소스”가 아니라 source-available/noncommercial로 가르치고, 상업적 사용 전 라이선스 검토를 명시한다.</p>
+  </div>
+  <div class="card">
+    <span class="badge misleading">의미 정정</span>
+    <h3>“중단 지점에서 재개”의 실제 의미</h3>
+    <p>LangGraph는 super-step 체크포인트 이후 <strong>노드 처음부터 재실행</strong>(idempotency 필요)되고, Claude Code dynamic workflows는 <strong>같은 세션 안에서만</strong> resume되며 새 세션은 fresh start다. 둘 다 “영구 재개”와 동일시하지 않는다.</p>
+  </div>
+</div>
+
+<h2>3. 감각별 공식 근거 색인</h2>
+<div class="grid">
+  <div class="card">
+    <span class="badge improve">개선 그래프</span>
+    <h3>거버넌스</h3>
+    <p>Carlos E. Perez 원문(개념) · Goodhart's law · PDCA 계열 참고자료. 정량 검증 대상 없음 — 개념 프레임으로 사용.</p>
+  </div>
+  <div class="card">
+    <span class="badge exec">실행 그래프</span>
+    <h3>오케스트레이션</h3>
+    <p><a href="https://docs.langchain.com/oss/python/langgraph/graph-api">LangGraph Graph API</a> · <a href="https://docs.langchain.com/oss/python/langgraph/durable-execution">Durable execution</a> · <a href="https://learn.microsoft.com/en-us/agent-framework/overview">Microsoft Agent Framework</a> · <a href="https://adk.dev/graphs">Google ADK graphs</a> · <a href="https://code.claude.com/docs/en/workflows">Claude Code workflows</a></p>
+  </div>
+  <div class="card">
+    <span class="badge knowledge">지식·시간 그래프</span>
+    <h3>기억과 검색</h3>
+    <p><a href="https://microsoft.github.io/graphrag/index/architecture/">Microsoft GraphRAG</a> · <a href="https://arxiv.org/abs/2404.16130">GraphRAG 논문</a> · <a href="https://github.com/getzep/graphiti">Graphiti</a> · <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching">Anthropic Prompt Caching</a></p>
+  </div>
+  <div class="card">
+    <span class="badge problem">문제 분해</span>
+    <h3>이슈 트리</h3>
+    <p><a href="https://www.mckinsey.com/careers/life-at-mckinsey/our-culture-and-communities/mckinsey-women-blog/problem-solving-is-for-everyday-life-too">McKinsey 공식 글</a> — MECE 원칙과 문제 트리의 실제 범위.</p>
+  </div>
+</div>
+
+<section class="callout purple">
+  <strong>더 깊은 근거가 필요하면:</strong> 이 페이지는 요약이다. 문장 단위 판정 전문은 저장소의 <code>graph-engineering-course/source/evidence-ledger.md</code>에 있고, X 원문 스냅샷은 <code>graph-engineering-course/source/x-bookmarks/</code>, 전체 245개 북마크 원본은 <code>source/all-bookmarks-2026-07-29.json</code>에 보존돼 있다.
+</section>
+
+<h2>다음으로 연결</h2>
+<ul>
+  <li><a href="0011-visual-glossary.html">용어 글로서리</a> — 이 지도에서 쓰인 용어의 정의</li>
+  <li><a href="0013-design-pattern-playbook.html">설계 플레이북</a> — 검증된 패턴을 실제 설계에 적용하는 체크리스트</li>
+  <li><a href="./0001-four-graphs-map.html">Lesson 0001</a> — 네 가지 그래프 감각 처음부터</li>
+</ul>
+
+<footer>
+  <p>막히는 부분이나 특정 주장의 근거가 더 궁금하면 에이전트에게 해당 문장을 그대로 물어보면 된다.</p>
+  <p class="pill">Verification date: 2026-07-29 KST</p>
+  <p class="pill">Method: X = perspective, official docs = authority</p>
+</footer>
+
+</main>
+</body>
+</html>

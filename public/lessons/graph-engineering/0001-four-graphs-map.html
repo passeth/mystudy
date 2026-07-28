@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="그래프 엔지니어링이라는 한 단어가 가리키는 네 가지 서로 다른 구조를 노드가 무엇인지로 구분한다.">
+<title>한 단어, 네 개의 그래프 · Graph Engineering v2</title>
+<style>
+:root {
+  --ink:#18201f; --muted:#5d6864; --paper:#fbfaf6; --panel:#ffffff;
+  --line:#d9ddd6; --exec:#136f63; --improve:#a23d31; --knowledge:#6b5d8e;
+  --problem:#a66b12; --soft:#eaf3ef; --warn:#fff2d6; --purple-soft:#f0edf7;
+  --brick-soft:#fae9e7; --code:#101917;
+}
+*{box-sizing:border-box} body{margin:0;color:var(--ink);background:var(--paper);font-family:ui-serif,Georgia,"Apple SD Gothic Neo","Noto Serif KR",serif;line-height:1.68}
+main{width:min(960px,calc(100% - 40px));margin:0 auto;padding:52px 0 88px}.kicker{color:var(--exec);font:700 12px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase}
+h1{margin:12px 0 14px;font-size:clamp(34px,6vw,62px);line-height:1.04}.subtitle{max-width:760px;color:var(--muted);font-size:18px}
+h2{margin-top:42px;border-bottom:1px solid var(--line);padding-bottom:8px}h3{margin-top:28px}a{color:var(--exec);text-underline-offset:3px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}.card,.quiz-card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:20px;margin:18px 0}.card h3{margin-top:0}
+.callout{border-left:4px solid var(--exec);background:var(--soft);border-radius:6px;padding:14px 16px;margin:18px 0}.callout.warn{border-left-color:var(--problem);background:var(--warn)}.callout.brick{border-left-color:var(--improve);background:var(--brick-soft)}.callout.purple{border-left-color:var(--knowledge);background:var(--purple-soft)}
+.badge,.pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:2px 9px;font:700 12px/1.7 ui-sans-serif,system-ui,sans-serif;color:var(--muted)}.badge.exec{color:var(--exec)}.badge.improve{color:var(--improve)}.badge.knowledge{color:var(--knowledge)}.badge.problem{color:var(--problem)}
+figure{margin:24px 0}.diagram{width:100%;height:auto;display:block}.diagram-frame{background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden}figcaption{margin-top:8px;color:var(--muted);font-size:14px}
+table{border-collapse:collapse;width:100%;background:var(--panel);margin:18px 0}th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}th{background:var(--soft);font-family:ui-sans-serif,system-ui,sans-serif;font-size:13px}
+pre{overflow-x:auto;background:var(--code);color:#eef7f2;border-radius:8px;padding:16px}code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.92em}
+.quiz-card button{display:block;width:100%;margin:8px 0;padding:11px 13px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--ink);font:inherit;text-align:left;cursor:pointer}.quiz-card button.correct{border-color:#1f7a3f;background:#e8f4eb}.quiz-card button.incorrect{border-color:var(--improve);background:var(--brick-soft)}.quiz-feedback{min-height:1.6em;font-weight:700}
+.source-note{font-size:14px;color:var(--muted);border-top:1px solid var(--line);padding-top:10px}footer{margin-top:54px;padding-top:24px;border-top:1px solid var(--line);color:var(--muted)}
+@media(max-width:640px){main{width:min(100% - 24px,960px);padding-top:32px}h1{font-size:38px}table{font-size:13px}.diagram text{font-size:12px}}
+@media print{body{background:#fff}main{width:auto;padding:24px}.card,.quiz-card,figure{break-inside:avoid}a::after{content:" (" attr(href) ")";font-size:.8em;color:var(--muted)}}
+
+</style>
+</head>
+<body>
+<main>
+
+<header>
+<div class="kicker">Lesson 0001 · Graph Engineering v2</div>
+<h1>한 단어, 네 개의 그래프</h1>
+<p class="subtitle">X 타임라인에서 "그래프 엔지니어링"이라고 부르는 것은 최소 네 가지 다른 구조다. 이름이 같다고 같은 것이라 생각하면 처방이 어긋난다.</p>
+</header>
+
+<section class="callout">
+<strong>오늘의 한 줄 답:</strong> 그래프가 헷갈릴 땐 "이 그래프의 노드가 무엇을 하는가?"만 물으면 된다. 노드가 <em>측정하고 조정하는 루프</em>면 개선 그래프, <em>한 번 실행되고 끝나는 작업</em>이면 실행 그래프, <em>사실/엔티티</em>면 지식 그래프, <em>질문/가설</em>이고 실행되지 않으면 문제 트리다.
+</section>
+
+<figure class="diagram-frame">
+<svg class="diagram" viewBox="0 0 960 620" role="img" xmlns="http://www.w3.org/2000/svg">
+<title>같은 단어 "그래프"가 가리키는 네 가지 다른 구조</title>
+<rect x="0" y="0" width="960" height="620" fill="#ffffff"/>
+<text x="480" y="34" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="15" font-weight="700" fill="#18201f">같은 단어, 네 개의 그래프 — 판별 질문: "이 그래프의 노드는 무엇을 하는가?"</text>
+
+<!-- Column A: 문제 트리 -->
+<g>
+<rect x="20" y="60" width="215" height="500" rx="10" fill="#fff8ec" stroke="#a66b12" stroke-width="1.5"/>
+<text x="127" y="90" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" font-weight="700" letter-spacing="1" fill="#a66b12">A · 문제 트리</text>
+<text x="127" y="112" text-anchor="middle" font-size="13" fill="#5d6864">issue / problem tree</text>
+<line x1="127" y1="150" x2="127" y2="175" stroke="#a66b12" stroke-width="2"/>
+<rect x="67" y="122" width="120" height="30" rx="6" fill="#ffffff" stroke="#a66b12"/>
+<text x="127" y="141" text-anchor="middle" font-size="12" fill="#18201f">활성화율 저하?</text>
+<line x1="127" y1="152" x2="80" y2="182" stroke="#a66b12" stroke-width="1.5"/>
+<line x1="127" y1="152" x2="127" y2="182" stroke="#a66b12" stroke-width="1.5"/>
+<line x1="127" y1="152" x2="174" y2="182" stroke="#a66b12" stroke-width="1.5"/>
+<rect x="45" y="182" width="70" height="26" rx="5" fill="#ffffff" stroke="#a66b12"/>
+<text x="80" y="199" text-anchor="middle" font-size="10.5" fill="#18201f">원인 A</text>
+<rect x="92" y="182" width="70" height="26" rx="5" fill="#ffffff" stroke="#a66b12"/>
+<text x="127" y="199" text-anchor="middle" font-size="10.5" fill="#18201f">원인 B</text>
+<rect x="139" y="182" width="70" height="26" rx="5" fill="#ffffff" stroke="#a66b12"/>
+<text x="174" y="199" text-anchor="middle" font-size="10.5" fill="#18201f">원인 C</text>
+<text x="127" y="245" text-anchor="middle" font-size="12" font-weight="700" fill="#18201f">노드 = 질문/가설</text>
+<text x="127" y="264" text-anchor="middle" font-size="12" font-weight="700" fill="#18201f">엣지 = 분해</text>
+<text x="127" y="296" text-anchor="middle" font-size="11.5" fill="#5d6864">실행되지 않는다.</text>
+<text x="127" y="314" text-anchor="middle" font-size="11.5" fill="#5d6864">상태·재시도·체크포인트</text>
+<text x="127" y="332" text-anchor="middle" font-size="11.5" fill="#5d6864">가 없다.</text>
+<text x="127" y="365" text-anchor="middle" font-size="11" fill="#a66b12" font-weight="700">예: Why/What/How 트리</text>
+<text x="127" y="383" text-anchor="middle" font-size="11" fill="#a66b12" font-weight="700">MECE 문제 분해</text>
+<text x="127" y="530" text-anchor="middle" font-size="11.5" fill="#5d6864">쓸 곳:</text>
+<text x="127" y="548" text-anchor="middle" font-size="11" fill="#18201f">"무엇을 풀지" 정하기</text>
+</g>
+
+<!-- Column B: 개선 그래프 -->
+<g>
+<rect x="248" y="60" width="215" height="500" rx="10" fill="#fae9e7" stroke="#a23d31" stroke-width="1.5"/>
+<text x="355" y="90" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" font-weight="700" letter-spacing="1" fill="#a23d31">B · 개선 그래프</text>
+<text x="355" y="112" text-anchor="middle" font-size="13" fill="#5d6864">improvement-loop graph</text>
+<circle cx="320" cy="180" r="26" fill="#ffffff" stroke="#a23d31" stroke-width="1.5"/>
+<text x="320" y="184" text-anchor="middle" font-size="10" fill="#18201f">루프 A</text>
+<circle cx="390" cy="180" r="26" fill="#ffffff" stroke="#a23d31" stroke-width="1.5"/>
+<text x="390" y="184" text-anchor="middle" font-size="10" fill="#18201f">루프 B</text>
+<line x1="346" y1="176" x2="364" y2="176" stroke="#a23d31" stroke-width="1.5" marker-end="url(#arrA)"/>
+<line x1="364" y1="186" x2="346" y2="186" stroke="#a23d31" stroke-width="1.5" marker-end="url(#arrA)"/>
+<text x="355" y="230" text-anchor="middle" font-size="10.5" fill="#5d6864">서로 감시(pairing)</text>
+<text x="355" y="264" text-anchor="middle" font-size="12" font-weight="700" fill="#18201f">노드 = 측정·조정 루프</text>
+<text x="355" y="283" text-anchor="middle" font-size="12" font-weight="700" fill="#18201f">엣지 = 감시·거부·계층</text>
+<text x="355" y="315" text-anchor="middle" font-size="11.5" fill="#5d6864">대표 실패: Goodhart,</text>
+<text x="355" y="333" text-anchor="middle" font-size="11.5" fill="#5d6864">위쪽 맹목, 충돌, 측정 부패</text>
+<text x="355" y="365" text-anchor="middle" font-size="11" fill="#a23d31" font-weight="700">예: Perez의 loop-graph</text>
+<text x="355" y="383" text-anchor="middle" font-size="11" fill="#a23d31" font-weight="700">champion-challenger 배포</text>
+<text x="355" y="530" text-anchor="middle" font-size="11.5" fill="#5d6864">쓸 곳:</text>
+<text x="355" y="548" text-anchor="middle" font-size="11" fill="#18201f">지표·목표·감사 충돌 진단</text>
+</g>
+
+<!-- Column C: 실행 그래프 -->
+<g>
+<rect x="476" y="60" width="215" height="500" rx="10" fill="#eaf3ef" stroke="#136f63" stroke-width="1.5"/>
+<text x="583" y="90" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" font-weight="700" letter-spacing="1" fill="#136f63">C · 실행 그래프</text>
+<text x="583" y="112" text-anchor="middle" font-size="13" fill="#5d6864">execution / orchestration</text>
+<rect x="513" y="150" width="60" height="26" rx="5" fill="#ffffff" stroke="#136f63"/>
+<text x="543" y="167" text-anchor="middle" font-size="10.5" fill="#18201f">research</text>
+<line x1="573" y1="163" x2="595" y2="163" stroke="#136f63" stroke-width="1.5" marker-end="url(#arrC)"/>
+<rect x="595" y="150" width="46" height="26" rx="5" fill="#ffffff" stroke="#136f63"/>
+<text x="618" y="167" text-anchor="middle" font-size="10.5" fill="#18201f">write</text>
+<line x1="618" y1="176" x2="618" y2="200" stroke="#136f63" stroke-width="1.5" marker-end="url(#arrC)"/>
+<rect x="590" y="200" width="56" height="26" rx="5" fill="#ffffff" stroke="#136f63"/>
+<text x="618" y="217" text-anchor="middle" font-size="10.5" fill="#18201f">review</text>
+<path d="M 590 213 Q 560 213 560 190 Q 560 176 595 163" fill="none" stroke="#136f63" stroke-width="1.3" stroke-dasharray="3,2" marker-end="url(#arrC)"/>
+<text x="583" y="255" text-anchor="middle" font-size="10.5" fill="#5d6864">실패 시 write로 재분기</text>
+<text x="583" y="285" text-anchor="middle" font-size="12" font-weight="700" fill="#18201f">노드 = 작업 단계</text>
+<text x="583" y="304" text-anchor="middle" font-size="12" font-weight="700" fill="#18201f">엣지 = 실제 데이터 흐름</text>
+<text x="583" y="336" text-anchor="middle" font-size="11.5" fill="#5d6864">대표 실패: fake edge,</text>
+<text x="583" y="354" text-anchor="middle" font-size="11.5" fill="#5d6864">상태 누수, 라우팅 버그</text>
+<text x="583" y="386" text-anchor="middle" font-size="11" fill="#136f63" font-weight="700">예: LangGraph, MAF,</text>
+<text x="583" y="404" text-anchor="middle" font-size="11" fill="#136f63" font-weight="700">ADK 2.0 workflow graph</text>
+<text x="583" y="530" text-anchor="middle" font-size="11.5" fill="#5d6864">쓸 곳:</text>
+<text x="583" y="548" text-anchor="middle" font-size="11" fill="#18201f">분기·병렬·복구 경로 실행</text>
+</g>
+
+<!-- Column D: 지식 그래프 -->
+<g>
+<rect x="704" y="60" width="236" height="500" rx="10" fill="#f0edf7" stroke="#6b5d8e" stroke-width="1.5"/>
+<text x="822" y="90" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" font-weight="700" letter-spacing="1" fill="#6b5d8e">D · 지식/시간 그래프</text>
+<text x="822" y="112" text-anchor="middle" font-size="13" fill="#5d6864">knowledge / temporal graph</text>
+<circle cx="770" cy="180" r="8" fill="#ffffff" stroke="#6b5d8e" stroke-width="1.5"/>
+<text x="770" y="205" text-anchor="middle" font-size="9.5" fill="#18201f">에바스</text>
+<circle cx="860" cy="180" r="8" fill="#ffffff" stroke="#6b5d8e" stroke-width="1.5"/>
+<text x="860" y="205" text-anchor="middle" font-size="9.5" fill="#18201f">거래처</text>
+<line x1="778" y1="180" x2="852" y2="180" stroke="#6b5d8e" stroke-width="1.5" marker-end="url(#arrD)"/>
+<text x="815" y="172" text-anchor="middle" font-size="9" fill="#6b5d8e">since 2024-03</text>
+<text x="822" y="240" text-anchor="middle" font-size="10.5" fill="#5d6864">엣지에 시간 유효구간</text>
+<text x="822" y="274" text-anchor="middle" font-size="12" font-weight="700" fill="#18201f">노드 = 엔티티/사실</text>
+<text x="822" y="293" text-anchor="middle" font-size="12" font-weight="700" fill="#18201f">엣지 = 관계(+ 시간)</text>
+<text x="822" y="325" text-anchor="middle" font-size="11.5" fill="#5d6864">대표 실패: 엔티티 해상도</text>
+<text x="822" y="343" text-anchor="middle" font-size="11.5" fill="#5d6864">오류, 스키마 드리프트</text>
+<text x="822" y="375" text-anchor="middle" font-size="11" fill="#6b5d8e" font-weight="700">예: GraphRAG, Graphiti</text>
+<text x="822" y="393" text-anchor="middle" font-size="11" fill="#6b5d8e" font-weight="700">Trade Intel 메모리</text>
+<text x="822" y="530" text-anchor="middle" font-size="11.5" fill="#5d6864">쓸 곳:</text>
+<text x="822" y="548" text-anchor="middle" font-size="11" fill="#18201f">관계·시간 multi-hop 질의</text>
+</g>
+
+<rect x="230" y="575" width="500" height="34" rx="17" fill="#18201f"/>
+<text x="480" y="597" text-anchor="middle" font-size="13" fill="#fbfaf6" font-weight="700">겹칠 수 있다 — 하지만 실패 모드와 처방은 각기 다르다</text>
+
+<defs>
+<marker id="arrA" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#a66b12"/></marker>
+<marker id="arrC" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#136f63"/></marker>
+<marker id="arrD" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#6b5d8e"/></marker>
+</defs>
+</svg>
+<figcaption>그림 1. 네 그래프를 노드·엣지·대표 실패·쓸 곳 기준으로 나란히 배치한 지도.</figcaption>
+</figure>
+
+<h2>1. 왜 이렇게 헷갈리는가</h2>
+<p>2026년 7월 한 주 동안 X에는 "그래프 엔지니어링"을 표방하는 글이 최소 9건 쏟아졌다. Carlos Perez는 <strong>개선 루프를 감시하는 네트워크</strong> 이야기를 했고, Codez와 Akshay는 <strong>LangGraph류 실행 오케스트레이션</strong>을 설명했고, Sprytix와 rody는 <strong>지식/시간 그래프(GraphRAG, Graphiti)</strong>를 다뤘고, McKinsey 이슈 트리 글은 <strong>문제 분해</strong>를 그래프처럼 그렸다. 넷 다 "그래프"라고 부르지만 실제로 겹치는 부분은 "노드와 엣지로 그린다"는 시각적 습관뿐이다.</p>
+<p>beamnxw의 표현을 빌리면 계층은 <code>환경 → 피드백 → 흐름</code>(harness → loop → graph)으로 쌓인다. 하지만 "루프들의 네트워크"(Perez)와 "작업 단계의 오케스트레이션"(Codez/Akshay)은 같은 흐름 계층 안에서도 전혀 다른 대상을 가리킨다 — beamnxw 자신도 두 표현을 구분해서 쓴다.</p>
+
+<h2>2. 판별 질문 하나로 구분하기</h2>
+<div class="grid">
+<div class="card"><h3>노드가 측정·조정 루프인가?</h3>Goodhart, 위쪽 맹목, 충돌, 측정 부패를 걱정한다면 → <span class="badge improve">B. 개선 그래프</span></div>
+<div class="card"><h3>노드가 한 번 실행되고 끝나는 작업인가?</h3>fake edge, 상태 스키마, 라우팅, 체크포인트를 걱정한다면 → <span class="badge exec">C. 실행 그래프</span></div>
+<div class="card"><h3>노드가 사실/엔티티인가?</h3>엔티티 해상도, 시간 유효성, multi-hop 질의를 걱정한다면 → <span class="badge knowledge">D. 지식 그래프</span></div>
+<div class="card"><h3>실행되지 않고 사람이 읽기만 하는가?</h3>재시도·체크포인트가 없다면 → <span class="badge problem">A. 문제 트리</span></div>
+</div>
+
+<h2>3. 그래도 겹치는 지점</h2>
+<p>세 층은 실제로 중첩된다. 실행 그래프(C) 안에 개선 그래프(B)가 노드로 내장될 수 있다 — 예를 들어 "같은 실패가 3회 반복되면 사람에게 에스컬레이션"하는 리뷰어 루프. 실행 그래프(C)는 지식 그래프(D)를 도구로 조회할 수도 있다. 문제는 이 중첩 자체가 아니라, <strong>각 층의 실패 모드와 처방을 섞어 쓰는 것</strong>이다. 개선 그래프에 필요한 "anchor(현실 확인)"를 실행 그래프의 "체크포인트"와 같은 것으로 착각하면 둘 다 제대로 작동하지 않는다.</p>
+
+<section class="callout warn">
+<strong>실무 번역:</strong> Aside의 cron 루틴(erp-sales-hx-daily)은 실행 그래프(“fetch → parse → insert”)이면서, 그 위에 “0행이면 실패로 본다”는 개선 그래프 규칙(anchor)이 얹혀야 한다. mystudy 레슨 제작 파이프라인은 실행 그래프(연구→종합→저술→배포)이고, 그 안의 memory_search는 지식 그래프에 가깝다. Trade Intel의 "거래처명 정규화"는 지식 그래프의 엔티티 해상도 문제이지, 실행 그래프의 라우팅 문제가 아니다 — 이걸 구분해야 올바른 레슨(0004 vs 0008)으로 갈 수 있다.
+</section>
+
+<h2>4. 미니 실습 (7분)</h2>
+<p>아래 8개를 A(문제 트리)/B(개선 그래프)/C(실행 그래프)/D(지식 그래프) 중 하나로 분류해 보자. 정답은 하나 이상일 수 있다 — 그 경우 "가장 지배적인 실패 모드가 무엇인가"로 고른다.</p>
+<ol>
+<li>Aside의 <code>pathy-daily-content</code> cron 루틴</li>
+<li>Microsoft GraphRAG의 community report 생성</li>
+<li>LangGraph의 <code>research → write → review</code> 그래프</li>
+<li>"활성화율이 왜 낮은가"를 원인별로 쪼갠 Why-tree</li>
+<li>Trade Intel의 거래처·담당자·계약 상태 시간 이력</li>
+<li>champion-challenger 모델 배포 파이프라인</li>
+<li>ERP 일배치가 "성공"이라고 보고했지만 실제로는 0행이 들어간 사건</li>
+<li>서로를 볼 수 없는 두 리뷰어가 같은 산출물을 채점하는 구조</li>
+</ol>
+
+<h2>5. 퀴즈 · 회수 연습</h2>
+
+<div class="quiz-card" data-quiz data-correct="맞음. 노드가 무엇을 하는지가 유일한 판별 기준이다." data-incorrect="다시. 노드 개수나 도구 이름이 아니라 노드가 하는 일의 종류로 구분한다.">
+<p><strong>Q1.</strong> 네 그래프를 가장 정확하게 구분하는 단일 기준은?</p>
+<button type="button" data-answer="wrong">그래프를 그릴 때 쓰는 도구(LangGraph, Neo4j 등)의 종류</button>
+<button type="button" data-answer="correct">노드가 측정 루프인지, 작업 단계인지, 엔티티인지, 질문인지</button>
+<button type="button" data-answer="wrong">그래프에 포함된 노드의 총 개수</button>
+<button type="button" data-answer="wrong">그래프가 Python으로 구현됐는지 여부</button>
+<div class="quiz-feedback" data-feedback></div>
+</div>
+
+<div class="quiz-card" data-quiz data-correct="맞음. 실행되지 않고 사람이 판단 자료로만 쓰는 정적 분해다." data-incorrect="다시. 이슈 트리는 상태·재시도·체크포인트를 가진 workflow runtime이 아니다.">
+<p><strong>Q2.</strong> McKinsey식 이슈 트리(Why/What/How)가 실행 그래프와 다른 가장 근본적인 이유는?</p>
+<button type="button" data-answer="wrong">이슈 트리는 항상 4단계 깊이로 고정되기 때문에</button>
+<button type="button" data-answer="correct">이슈 트리는 실행되지 않고 상태·재시도·체크포인트가 없기 때문에</button>
+<button type="button" data-answer="wrong">이슈 트리는 사람이 아니라 AI 전용으로 설계됐기 때문에</button>
+<button type="button" data-answer="wrong">이슈 트리는 그래프가 아니라 표이기 때문에</button>
+<div class="quiz-feedback" data-feedback></div>
+</div>
+
+<div class="quiz-card" data-quiz data-correct="맞음. 겹침은 정상이지만 실패 모드·처방은 층마다 다르게 다뤄야 한다." data-incorrect="다시. 세 층은 실제로 중첩되지만, 그렇다고 처방까지 같아지는 것은 아니다.">
+<p><strong>Q3.</strong> 실행 그래프 안에 리뷰어 루프(개선 그래프)가 내장될 수 있다는 사실이 의미하는 것은?</p>
+<button type="button" data-answer="wrong">두 그래프는 사실 같은 것이므로 용어를 통일해야 한다</button>
+<button type="button" data-answer="wrong">중첩이 생기면 반드시 둘 중 하나를 제거해야 한다</button>
+<button type="button" data-answer="correct">중첩은 정상이지만 각 층의 실패 모드·처방은 구분해서 다뤄야 한다</button>
+<button type="button" data-answer="wrong">중첩은 설계 실수이므로 항상 피해야 한다</button>
+<div class="quiz-feedback" data-feedback></div>
+</div>
+
+<h2>Primary sources</h2>
+<ul>
+<li><a href="https://www.anthropic.com/engineering/building-effective-agents">Anthropic, "Building effective agents"</a> — workflow vs agent 구분, 단순한 패턴 우선.</li>
+<li><a href="https://docs.langchain.com/oss/python/langgraph/graph-api">LangGraph Graph API 공식 문서</a> — 실행 그래프 노드/엣지/상태.</li>
+<li><a href="https://www.mckinsey.com/careers/life-at-mckinsey/our-culture-and-communities/mckinsey-women-blog/problem-solving-is-for-everyday-life-too">McKinsey, "Problem solving is for everyday life too"</a> — 이슈 트리/MECE의 공식 범위.</li>
+</ul>
+<h3>X bookmarks (관점/입력 자료)</h3>
+<ul>
+<li>Akshay Pachaar, "Graph Engineering Clearly Explained" — 5단계 스택, 노드/엣지/상태 정의.</li>
+<li>beamnxw, "Agent Harness Engineering vs. Loop Engineering vs. Graph Engineering" — 환경→피드백→흐름, 증상-처방표.</li>
+<li>Carlos E. Perez, "From Loop Engineering to Graph Engineering?" — 개선 루프 그래프(0002-0003에서 심화).</li>
+<li>Sprytix, "Graph Engineering replaced RAG…" — 지식 그래프(0008-0009에서 심화).</li>
+<li>Yarchi, "seven repos" 스레드 — 실행/지식 도구 지도(0010에서 심화).</li>
+<li>George, "McKinsey Issue Tree" X 아티클 — 문제 트리 예시.</li>
+</ul>
+
+<h2>다음으로 연결</h2>
+<ul>
+<li>다음 레슨: <a href="./0002-loop-four-failures.html">Lesson 0002 — 루프는 왜 완벽하게 실패하는가</a> (개선 그래프 심화)</li>
+<li>관련: <a href="./0004-execution-graph-anatomy.html">Lesson 0004 — 노드·엣지·상태·계약</a> (실행 그래프 심화)</li>
+<li>관련: <a href="./0008-knowledge-temporal-graphs.html">Lesson 0008 — 사실·관계·시간을 기억하는 그래프</a> (지식 그래프 심화)</li>
+<li>레퍼런스: <a href="./0011-visual-glossary.html">시각 글로서리</a> · <a href="./0012-source-evidence-map.html">출처 증거 지도</a> · <a href="./0013-design-pattern-playbook.html">설계 플레이북</a></li>
+</ul>
+
+<footer>
+<p>막히는 부분은 에이전트에게 바로 물어보세요. 이 워크스페이스의 선생님 역할입니다.</p>
+<p class="pill">Mission-linked</p>
+<p class="pill">ZPD: 용어 혼동 해소 → 판별 질문 체화</p>
+</footer>
+
+</main>
+<script>
+document.querySelectorAll("[data-quiz]").forEach((quiz) => {
+  const feedback = quiz.querySelector("[data-feedback]");
+  quiz.querySelectorAll("button[data-answer]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const isCorrect = button.dataset.answer === "correct";
+      quiz.querySelectorAll("button[data-answer]").forEach((b) => {
+        b.classList.remove("correct", "incorrect");
+        b.setAttribute("aria-pressed", "false");
+      });
+      button.classList.add(isCorrect ? "correct" : "incorrect");
+      button.setAttribute("aria-pressed", "true");
+      feedback.textContent = isCorrect ? quiz.dataset.correct : quiz.dataset.incorrect;
+    });
+  });
+});
+
+</script>
+</body>
+</html>

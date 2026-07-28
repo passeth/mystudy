@@ -1,0 +1,195 @@
+### Sprytixl 2078778799064584535 
+ # note: interactive (clickable / focusable) elements only.
+- title: "X" [url=https://x.com/Sprytixl/article/2078778799064584535]
+- heading [level=2]:
+  - text: "키보드 단축키를 보려면 물음표를 누르세요."
+  - link "키보드 단축키 보기" [ref=e1]
+- button "Grok" [ref=e2]
+- button "채팅" [ref=e3]
+- banner:
+  - button "나가기" [ref=e4]
+  - button "북마크" [ref=e5]
+- main:
+  - link [ref=e6]
+  - text: "Graph Engineering replaced RAG at Microsoft, Stanford and Anthropic. Here's how it works.그래프 엔지니어링 기술은 마이크로소프트, 스탠퍼드, 앤서로픽에서 RAG 기술을 대체했습니다. 그 작동 방식은 다음과 같습니다."
+  - link [ref=e7]:
+    - text: "Sprytix"
+    - img "인증된 계정"
+  - link "@Sprytixl" [ref=e8]
+  - text: "7월 19일"
+  - button "팔로우 @Sprytixl" [ref=e9]: "팔로우"
+  - button [ref=e10]
+  - group "23 답글, 110 재게시, 657 마음에 들어요, 마음에 들어 함, 2727 북마크, 1021173 조회수 님 님 님 님 님":
+    - button "23 답글. 답글하기" [ref=e11]: "23"
+    - button "110 재게시. 재게시" [ref=e12]: "110"
+    - button "657 마음에 들어요. 마음에 들어 함" [ref=e13]: "657"
+    - link "1021173 조회수. 게시 애널리틱스 보기" [ref=e14]: "102만"
+    - button "북마크에 추가됨" [ref=e15]
+    - button "게시물 공유하기" [ref=e16]
+  - text: "Right now anyone can build an AI system that answers complex questions with 18% better accuracy and 85% lower costs than regular RAG. No PhD. No million dollar budget. No team of researchers.The only thing standing between you and that result is one concept that Microsoft, Stanford and Anthropic all independently discovered - and which most developers still haven't caught up with.Regular RAG finds text. Graph Engineering finds relationships. Here's the full system behind it.Bookmark This and follow - I'm Sprytix, a developer who builds AI systems and automation pipelines that turn technology into real income. DMs open.이 페이지를 북마크하고 꼭 팔로우해 주세요. 저는 스프라이틱스입니다. 인공지능 시스템과 자동화 솔루션을 개발하는 개발자로서, 기술을 실제 수익으로 전환시키는 일을 합니다. 다이렉트 메시지도 언제든지 환영합니다.Why regular RAG hits a ceiling Regular RAG works like this:"
+  - region:
+    - button "클립보드에 복사하기" [ref=e17]
+    - text: "Question\n↓\nSearch documents for matching text\n↓\nReturn most relevant chunks\n↓\nModel generates answer from chunks"
+  - text: "This works well for simple questions. It breaks completely for complex ones.Ask \"why did our product sales drop in March?\" and RAG finds documents with the words \"sales\" and \"March.\" It finds fragments. It does not find the chain of causation."
+  - region:
+    - button "클립보드에 복사하기" [ref=e18]
+    - text: "RAG answer:\nHere are 5 documents mentioning sales in March.\n\nGraph Engineering answer:\nSales dropped because of a release delay\n caused by a supplier dependency\n triggered by a warehouse problem\n which generated negative reviews\n which reduced conversion by 23%."
+  - text: "Same model. Same data. Completely different result - because one system searches text and the other searches reality.This is what Microsoft, Stanford and Anthropic all independently discovered. And it's why all three of them moved to Graph Engineering.Document 1 - Microsoft GraphRAG."
+  - link "github.com/microsoft/graphrag" [ref=e20]
+  - text: "."
+  - link "github.com/microsoft/graphrag/blob/main/docs/index/architecture.md" [ref=e22]
+  - region:
+    - link [ref=e23]
+  - text: "Microsoft built GraphRAG and open-sourced it. The results from their research are the most concrete numbers available on what Graph Engineering actually delivers versus regular RAG.The architecture converts unstructured text into a full knowledge graph:"
+  - region:
+    - button "클립보드에 복사하기" [ref=e24]
+    - text: "Load Documents\n↓\nChunk Documents\n↓\nExtract Entities and Relations\n↓\nBuild Graph\n↓\nDetect Communities\n↓\nGenerate Community Reports\n↓\nEmbed Entities and Reports\n↓\nLocal Search / Global Search"
+  - text: "The key insight Microsoft documented: regular RAG answers local questions well - find me information about this specific entity. It fails on global questions - what are the main themes across this entire dataset, what patterns connect these 10,000 documents.Graph Engineering answers both."
+  - region:
+    - button "클립보드에 복사하기" [ref=e25]
+    - text: "Local Search   |  what happened with supplier X in March\n               |  finds specific node and its connections\n\n Global Search  |  what are the main risk patterns across\n               |  all our supplier relationships\n               |  finds patterns across entire graph"
+  - text: "Practical results from Microsoft's GraphRAG research:"
+  - region:
+    - button "클립보드에 복사하기" [ref=e26]
+    - generic "Accuracy improvement | 18% higher than raw document approach Token cost reduction | 85% lower than l" [ref=e27] [scrollable]
+  - link "arxiv.org/abs/2603.22528" [ref=e29]
+  - region:
+    - link [ref=e30]
+  - text: "These numbers come from the ChatP&ID paper - GraphRAG applied to industrial engineering diagrams. The same principles apply across domains.Document 2 - Stanford DSPy and the graph connection."
+  - link "github.com/stanfordnlp/dspy" [ref=e32]
+  - text: "."
+  - link "arxiv.org/abs/2310.03714" [ref=e34]
+  - text: "Stanford's DSPy paper established that the model is a node in a graph - not the center of the universe. This is the theoretical foundation that connects directly to Graph Engineering.DSPy treats the AI pipeline as a graph of modules:"
+  - region:
+    - button "클립보드에 복사하기" [ref=e35]
+    - text: "Question\n↓\nRetriever      - finds relevant information\n↓\nReasoning      - processes and connects\n↓\nVerifier       - checks the result\n↓\nAnswer"
+  - text: "The connection to Graph Engineering is direct: DSPy optimizes the pipeline graph, GraphRAG optimizes the knowledge graph. Both treat the model as one component in a larger structure rather than the entire solution.Stanford's STORM paper goes further:."
+  - link "github.com/stanford-oval/storm" [ref=e37]
+  - text: "."
+  - link "arxiv.org/abs/2402.14207" [ref=e39]
+  - text: "STORM builds knowledge from scratch through a structured graph of research steps before writing a single word. Research, source collection, outline, writing, verification, revision - each step informed by the relationships discovered in the previous one.The shared insight across all Stanford research: complex tasks need a system of connected steps, not a single model call. The graph is the system.Document 3 - Stanford scaling laws for knowledge graphs"
+  - link "arxiv.org/abs/2505.16276" [ref=e41]
+  - text: "This paper compared 26 open-source models on knowledge graph engineering tasks. The conclusion is one of the most important in the field:"
+  - region:
+    - button "클립보드에 복사하기" [ref=e42]
+    - text: "Larger model + bad graph   |  worse results\n Smaller model + good graph |  better results"
+  - text: "The right graph beats the bigger model. Every time.This is the same conclusion Microsoft reached with GraphRAG and Anthropic reached with Claude Code - the system around the model determines the output more than the model itself. Graph Engineering is the most concrete implementation of that principle.Document 4 - MIT Press research on relational memory"
+  - link "direct.mit.edu/tacl/article/doi/10.1162/tacl_a_00476" [ref=e44]
+  - text: "Published in Transactions of the Association for Computational Linguistics.The research shows what happens when you connect a language model to relational memory - a knowledge graph of relationships rather than just text chunks."
+  - region:
+    - button "클립보드에 복사하기" [ref=e45]
+    - text: "Text Context\n↓\nRetrieve Relevant Relations from Graph\n↓\nRelational Memory\n↓\nLanguage Model\n↓\nMore coherent, more accurate generation"
+  - text: "The key finding: models with access to explicit relationship structures produce more coherent text and make fewer logical errors than models working from text alone.This is the scientific explanation for why Graph Engineering works. The model doesn't have to infer relationships from text. The relationships are explicit in the graph. The model uses them directly.Document 5 - KEPLER."
+  - link "direct.mit.edu/tacl/article-abstract/doi/10.1162/tacl_a_00360/98089" [ref=e47]
+  - text: "."
+  - link "github.com/THU-KEG/KEPLER" [ref=e49]
+  - text: "KEPLER combines language model training with knowledge graph embeddings. Instead of treating language understanding and factual knowledge as separate problems - KEPLER optimizes both simultaneously."
+  - region:
+    - button "클립보드에 복사하기" [ref=e50]
+    - text: "Language Model\n+\nKnowledge Embeddings\n+\nKnowledge Graph\n=\nModel that understands both language and facts"
+  - text: "The practical implication: a model that has access to a properly structured knowledge graph doesn't have to guess at relationships between entities. It looks them up. The accuracy difference on factual questions is significant.Document 6 - Anthropic and Claude in the graph."
+  - link "www.anthropic.com/customers/graph" [ref=e52]
+  - text: "."
+  - link "github.com/anthropics/anthropic-cookbook" [ref=e54]
+  - text: "."
+  - link "github.com/modelcontextprotocol" [ref=e56]
+  - text: "Anthropic doesn't have a product called \"Graph Engineering.\" What they have is three layers where Claude integrates directly into graph architecture.Layer 1 - Claude extracts the graph from text"
+  - region:
+    - button "클립보드에 복사하기" [ref=e57]
+    - text: "Documents\n↓\nClaude extracts entities and relationships\n↓\nJSON triples:\n{\n  \"subject\": \"Anthropic\",\n  \"relation\": \"created\",\n  \"object\": \"Claude\"\n}\n↓\nKnowledge Graph"
+  - text: "Claude handles entity extraction, relation extraction, deduplication, normalization and ontology drafting. The tasks that used to require specialized NLP pipelines now run through one API call.Layer 2 - Claude queries the graph"
+  - region:
+    - button "클립보드에 복사하기" [ref=e58]
+    - text: "User Question\n↓\nClaude\n↓\nCypher / SPARQL query\n↓\nKnowledge Graph\n↓\nResult\n↓\nClaude explanation in plain language"
+  - text: "Claude translates natural language into graph queries, runs them against Neo4j or any graph database and explains the results. No query language knowledge required from the user.Layer 3 - MCP connects Claude to the graph"
+  - link "github.com/modelcontextprotocol" [ref=e60]
+  - region:
+    - button "클립보드에 복사하기" [ref=e61]
+    - text: "Claude\n↓\nMCP Protocol\n↓\nGraph Database\n↓\nEntities + Relationships\n↓\nClaude with full graph context"
+  - text: "MCP is the transport layer that gives Claude permanent access to any knowledge graph without rebuilding the connection for every session.The LaunchNotes case - real production numbers"
+  - link "www.anthropic.com/customers/graph" [ref=e63]
+  - region:
+    - link [ref=e64]
+  - text: "LaunchNotes built a product called Graph that connects GitHub, Jira and Linear. Claude analyzes the relationships between engineering work across all three systems."
+  - region:
+    - button "클립보드에 복사하기" [ref=e65]
+    - text: "GitHub commits\n+\nJira tickets\n+\nLinear tasks\n↓\nGraph of Engineering Work\n↓\nClaude\n↓\nIncident Detection + Project Insights"
+  - text: "Results from the Anthropic case study:"
+  - region:
+    - button "클립보드에 복사하기" [ref=e66]
+    - text: "Incident detection     |  up to 5x faster\n Meeting time           |  approximately 50% reduction\n Release notes          |  generated automatically in seconds"
+  - text: "These numbers come from connecting structured relationship data - not just searching documents.What a knowledge graph actually is Before building one - the fundamental concept.A knowledge graph stores information as triples:"
+  - region:
+    - button "클립보드에 복사하기" [ref=e67]
+    - text: "Subject → Relation → Object"
+  - text: "Examples:"
+  - region:
+    - button "클립보드에 복사하기" [ref=e68]
+    - text: "Anthropic → created → Claude\n Claude → supports → MCP\n MCP → connects → external tools\n Microsoft → built → GraphRAG\n GraphRAG → reduces token cost by → 85%"
+  - text: "Every piece of information is an explicit relationship between two entities. Not a paragraph of text that might contain this information - an explicit, structured, queryable fact."
+  - region:
+    - button "클립보드에 복사하기" [ref=e69]
+    - text: "Regular database:\nTable of companies\n Table of products\n No explicit relationships between them\n\n Knowledge graph:\nCompany → created → Product\n Product → competes with → Other Product\n Other Product → owned by → Other Company\n Company → invested in → Other Company"
+  - text: "The graph doesn't just store facts. It stores how facts connect to each other. That's what makes complex reasoning possible.The full Graph Engineering pipeline"
+  - region:
+    - button "클립보드에 복사하기" [ref=e70]
+    - text: "Step 1  |  Collect raw documents\n        |  PDFs, emails, reports, database exports\n\n Step 2  |  Extract entities\n        |  people, companies, products, events, concepts\n\n Step 3  |  Extract relationships\n        |  who did what to whom, when, why, how\n\n Step 4  |  Build schema\n        |  define entity types and relationship types\n\n Step 5  |  Deduplicate and normalize\n        |  \"Microsoft Corp\" and \"MSFT\" are the same entity\n\n Step 6  |  Store in graph database\n        |  Neo4j, Amazon Neptune, PostgreSQL with graph extension\n\n Step 7  |  Build retrieval layer\n        |  local search for specific entities\n        |  global search for patterns across entire graph\n\n Step 8  |  Connect model\n        |  Claude queries graph via MCP or direct API\n\n Step 9  |  Update continuously\n        |  new documents expand the graph\n        |  contradictions get flagged for review"
+  - text: "The LLM-assisted Knowledge Graph Engineering paper at"
+  - link "arxiv.org/abs/2307.06917" [ref=e72]
+  - text: "benchmarks how well language models handle each of these steps. The honest finding: LLMs are excellent assistants for extraction and normalization but zero-shot graph generation is not yet reliable enough for production without human review on the schema and deduplication steps.The five prompts that run the entire pipeline Graph Engineering doesn't eliminate prompts. It uses them at each specific stage of the graph pipeline.Prompt 1 - Extraction"
+  - region:
+    - button "클립보드에 복사하기" [ref=e73]
+    - text: "Extract all organizations, people, products and events.\n\nFor each entity return:\n- canonical_name\n- type\n- description\n- source\n\n For each relationship return:\n- source_entity\n- relation_type\n- target_entity\n- evidence\n- confidence_score"
+  - text: "Prompt 2 - Normalization"
+  - region:
+    - button "클립보드에 복사하기" [ref=e74]
+    - text: "Compare the following entities.\nDetermine whether they refer to:\n- the same entity\n- related but different entities\n- unrelated entities\n\n Return canonical name and explanation.\nDo not merge entities without clear evidence."
+  - text: "Prompt 3 - Graph query"
+  - region:
+    - button "클립보드에 복사하기" [ref=e75]
+    - text: "Translate the user question into a Cypher query.\nUse only relationships present in the schema.\nDo not invent labels or properties.\nReturn the query and a short explanation of the logic."
+  - text: "Prompt 4 - Grounded answer"
+  - region:
+    - button "클립보드에 복사하기" [ref=e76]
+    - text: "Answer using only the retrieved graph paths.\nFor every conclusion:\n- identify the supporting nodes\n- identify the relationship path\n- state uncertainty clearly\n- do not infer causation from correlation"
+  - text: "Prompt 5 - Graph maintenance"
+  - region:
+    - button "클립보드에 복사하기" [ref=e77]
+    - text: "Compare new facts with the existing graph.\nClassify each fact as:\n- new\n- duplicate\n- contradiction\n- update\n- uncertain\n\n Do not overwrite existing facts without evidence."
+  - text: "As Microsoft's GraphRAG documentation shows - prompts handle extraction, relationship identification, summarization and community report generation internally. Prompt engineering is the mechanism inside graph engineering, not its competitor.Five businesses you can build on a knowledge graph 1 - Due diligence platform"
+  - region:
+    - button "클립보드에 복사하기" [ref=e78]
+    - text: "Corporate reports + founders + investors\n+ legal cases + subsidiaries + transactions\n↓\nKnowledge Graph\n↓\nClaude\n↓\nRisk analysis + hidden connections + conflict of interest detection"
+  - text: "Clients: investment funds, law firms, banks, M&A consultants. Monthly retainer $2,000-10,000 per client.2 - Sales intelligence"
+  - region:
+    - button "클립보드에 복사하기" [ref=e79]
+    - text: "Contacts + companies + roles\n+ previous emails + company problems + product\n↓\nKnowledge Graph\n↓\nWho influences the decision\n Which objections repeat\n Which case study to show this specific client\n Where the deal is blocked"
+  - text: "3 - Engineering intelligence"
+  - region:
+    - button "클립보드에 복사하기" [ref=e80]
+    - text: "GitHub commits + Jira tickets + Linear tasks\n↓\nGraph of Engineering Work\n↓\n5x faster incident detection\n 50% less meeting time\n Automatic release notes"
+  - text: "LaunchNotes already sells this. The market is every engineering team that uses more than one project management tool.4 - Research intelligence"
+  - region:
+    - button "클립보드에 복사하기" [ref=e81]
+    - text: "Papers + authors + institutions\n+ methods + datasets + results + contradictions\n↓\nKnowledge Graph\n↓\nWhich GraphRAG methods use community detection\n On which datasets they were tested\n Which papers contradict each other"
+  - text: "5 - Personal knowledge OS"
+  - region:
+    - button "클립보드에 복사하기" [ref=e82]
+    - text: "Obsidian notes + emails + calendar\n+ PDFs + contacts + tasks\n↓\nPersonal Knowledge Graph\n↓\nWho did I discuss this idea with\n Which tasks depend on one person's response\n Which decisions contradict previous agreements\n What did I promise to do this month"
+  - text: "The shift that connects Microsoft, Stanford and Anthropic"
+  - region:
+    - button "클립보드에 복사하기" [ref=e83]
+    - text: "Prompt Engineering   |  how to ask the right question\n RAG                  |  which document to find\n Graph Engineering    |  which entities exist\n                     |  how they connect\n                     |  which path leads to the answer\n                     |  what changes if one node changes"
+  - text: "LLM knows words. Knowledge graph knows relationships. The most powerful AI systems appear when both work together.Microsoft proved this in production with GraphRAG - 18% better accuracy, 85% lower costs. Stanford proved it in research with DSPy, STORM and the scaling laws paper. Anthropic proved it in the LaunchNotes case - 5x faster incident detection, 50% less meeting time.Three organizations. Three independent paths. One conclusion.The model finds text. The graph finds reality. Build the graph.Most developers will keep improving their prompts and wonder why complex questions still give bad answers. A few will spend one weekend building their first knowledge graph and never go back to searching documents. \n\n/ If this was useful - follow, the next one drops here first."
+  - separator
+  - listitem [ref=e84]:
+    - link [ref=e85]:
+      - text: "Sprytix"
+      - img "인증된 계정"
+    - link "@Sprytixl" [ref=e86]
+    - button "팔로우 @Sprytixl" [ref=e87]: "팔로우"
+    - text: "AI WRITER"
+- region "Notifications alt+T" [ref=e88]
+✔︎ Opened a new tab and set it active: tabs[6], page → X (https://x.com/vladdubchak_x/article/2079184272250765727)
+[warning] 7 tabs are open. Close tabs you do not need as you work.
+

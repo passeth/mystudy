@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Graph Engineering의 네 가지 감각(개선·실행·지식·문제) 용어를 색으로 구분해 정리한 시각 글로서리.">
+<title>Graph Engineering 시각 글로서리 · Graph Engineering v2</title>
+<style>
+:root {
+  --ink:#18201f; --muted:#5d6864; --paper:#fbfaf6; --panel:#ffffff;
+  --line:#d9ddd6; --exec:#136f63; --improve:#a23d31; --knowledge:#6b5d8e;
+  --problem:#a66b12; --soft:#eaf3ef; --warn:#fff2d6; --purple-soft:#f0edf7;
+  --brick-soft:#fae9e7; --code:#101917;
+}
+*{box-sizing:border-box} body{margin:0;color:var(--ink);background:var(--paper);font-family:ui-serif,Georgia,"Apple SD Gothic Neo","Noto Serif KR",serif;line-height:1.68}
+main{width:min(960px,calc(100% - 40px));margin:0 auto;padding:52px 0 88px}.kicker{color:var(--exec);font:700 12px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase}
+h1{margin:12px 0 14px;font-size:clamp(34px,6vw,62px);line-height:1.04}.subtitle{max-width:760px;color:var(--muted);font-size:18px}
+h2{margin-top:42px;border-bottom:1px solid var(--line);padding-bottom:8px}h3{margin-top:28px}a{color:var(--exec);text-underline-offset:3px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}.card,.quiz-card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:20px;margin:18px 0}.card h3{margin-top:0}
+.callout{border-left:4px solid var(--exec);background:var(--soft);border-radius:6px;padding:14px 16px;margin:18px 0}.callout.warn{border-left-color:var(--problem);background:var(--warn)}.callout.brick{border-left-color:var(--improve);background:var(--brick-soft)}.callout.purple{border-left-color:var(--knowledge);background:var(--purple-soft)}
+.badge,.pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:2px 9px;font:700 12px/1.7 ui-sans-serif,system-ui,sans-serif;color:var(--muted)}.badge.exec{color:var(--exec)}.badge.improve{color:var(--improve)}.badge.knowledge{color:var(--knowledge)}.badge.problem{color:var(--problem)}
+figure{margin:24px 0}.diagram{width:100%;height:auto;display:block}.diagram-frame{background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden}figcaption{margin-top:8px;color:var(--muted);font-size:14px}
+table{border-collapse:collapse;width:100%;background:var(--panel);margin:18px 0}th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}th{background:var(--soft);font-family:ui-sans-serif,system-ui,sans-serif;font-size:13px}
+pre{overflow-x:auto;background:var(--code);color:#eef7f2;border-radius:8px;padding:16px}code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.92em}
+.term{margin:14px 0}.term dt{font:700 15px/1.4 ui-sans-serif,system-ui,sans-serif;color:var(--ink)}.term dd{margin:4px 0 0;color:var(--ink)}.confuse{margin-top:6px;font-size:13.5px;color:var(--muted)}.confuse b{color:var(--ink)}
+.section-improve h2{border-bottom-color:var(--improve)}.section-exec h2{border-bottom-color:var(--exec)}.section-knowledge h2{border-bottom-color:var(--knowledge)}.section-problem h2{border-bottom-color:var(--problem)}
+.mini-svg{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px;margin:10px 0 18px}
+.diag-strip{display:flex;gap:14px;align-items:center;font:700 13px/1.4 ui-sans-serif,system-ui,sans-serif;color:var(--muted);flex-wrap:wrap;margin:10px 0}
+.source-note{font-size:14px;color:var(--muted);border-top:1px solid var(--line);padding-top:10px}footer{margin-top:54px;padding-top:24px;border-top:1px solid var(--line);color:var(--muted)}
+@media(max-width:640px){main{width:min(100% - 24px,960px);padding-top:32px}h1{font-size:34px}table{font-size:13px}.diagram text{font-size:12px}}
+@media print{body{background:#fff}main{width:auto;padding:24px}.card,figure{break-inside:avoid}a::after{content:" (" attr(href) ")";font-size:.8em;color:var(--muted)}}
+</style>
+</head>
+<body>
+<main>
+
+<header>
+<div class="kicker">Reference 0011 · Graph Engineering v2</div>
+<h1>시각 글로서리</h1>
+<p class="subtitle">"그래프 엔지니어링"이라는 한 단어 아래 섞여 있는 네 가지 구조 — 개선(governance), 실행(orchestration), 지식(temporal), 문제(decomposition) — 의 용어를 색으로 분리해 정리한다. 레슨을 읽다 막히면 여기로 돌아온다.</p>
+</header>
+
+<section class="callout">
+<strong>판별 질문 하나로 시작:</strong> "이 그래프의 노드는 무엇을 하는가?" — 통제 루프를 감시하면 <span class="badge improve">개선</span>, 작업을 실행하면 <span class="badge exec">실행</span>, 사실/관계를 저장하면 <span class="badge knowledge">지식</span>, 아직 실행되지 않는 질문이면 <span class="badge problem">문제</span> 그래프다.
+</section>
+
+<figure>
+<div class="diagram-frame">
+<svg class="diagram" viewBox="0 0 960 360" role="img" aria-labelledby="ov-title ov-desc">
+<title id="ov-title">네 가지 그래프 개요</title>
+<desc id="ov-desc">개선, 실행, 지식, 문제 네 그래프를 노드/엣지/목적으로 비교하는 4열 다이어그램</desc>
+<rect x="0" y="0" width="960" height="360" fill="#fbfaf6"/>
+<!-- column dividers -->
+<line x1="240" y1="20" x2="240" y2="340" stroke="#d9ddd6" stroke-width="1"/>
+<line x1="480" y1="20" x2="480" y2="340" stroke="#d9ddd6" stroke-width="1"/>
+<line x1="720" y1="20" x2="720" y2="340" stroke="#d9ddd6" stroke-width="1"/>
+<!-- headers -->
+<rect x="16" y="20" width="208" height="30" rx="6" fill="#a23d31"/>
+<text x="120" y="40" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="13" font-weight="700" fill="#fff">개선 그래프</text>
+<rect x="256" y="20" width="208" height="30" rx="6" fill="#136f63"/>
+<text x="360" y="40" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="13" font-weight="700" fill="#fff">실행 그래프</text>
+<rect x="496" y="20" width="208" height="30" rx="6" fill="#6b5d8e"/>
+<text x="600" y="40" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="13" font-weight="700" fill="#fff">지식 그래프</text>
+<rect x="736" y="20" width="208" height="30" rx="6" fill="#a66b12"/>
+<text x="840" y="40" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="13" font-weight="700" fill="#fff">문제 트리</text>
+<!-- col1: improvement loop icon -->
+<circle cx="120" cy="110" r="34" fill="none" stroke="#a23d31" stroke-width="3"/>
+<path d="M120 76 L128 84 M120 76 L112 84" stroke="#a23d31" stroke-width="3" fill="none"/>
+<text x="120" y="160" text-anchor="middle" font-family="ui-serif,Georgia" font-size="13" fill="#18201f">노드 = 통제 루프</text>
+<text x="120" y="178" text-anchor="middle" font-family="ui-serif,Georgia" font-size="13" fill="#18201f">엣지 = 감시·거부권</text>
+<text x="120" y="200" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="12" fill="#5d6864">목적: 지표 왜곡 방지</text>
+<text x="120" y="220" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="12" fill="#5d6864">예: Pairing, Audit</text>
+<!-- col2: execution graph icon -->
+<rect x="330" y="95" width="30" height="24" rx="4" fill="#eaf3ef" stroke="#136f63" stroke-width="2"/>
+<rect x="390" y="95" width="30" height="24" rx="4" fill="#eaf3ef" stroke="#136f63" stroke-width="2"/>
+<line x1="360" y1="107" x2="390" y2="107" stroke="#136f63" stroke-width="2" marker-end="url(#arrEx1)"/>
+<defs><marker id="arrEx1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#136f63"/></marker></defs>
+<text x="360" y="160" text-anchor="middle" font-family="ui-serif,Georgia" font-size="13" fill="#18201f">노드 = 작업 단위</text>
+<text x="360" y="178" text-anchor="middle" font-family="ui-serif,Georgia" font-size="13" fill="#18201f">엣지 = 실제 데이터 흐름</text>
+<text x="360" y="200" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="12" fill="#5d6864">목적: 병렬·검증·재개</text>
+<text x="360" y="220" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="12" fill="#5d6864">예: LangGraph, MAF</text>
+<!-- col3: knowledge graph icon -->
+<circle cx="580" cy="107" r="9" fill="#6b5d8e"/>
+<circle cx="620" cy="107" r="9" fill="#6b5d8e"/>
+<line x1="589" y1="107" x2="611" y2="107" stroke="#6b5d8e" stroke-width="2"/>
+<text x="600" y="98" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="10" fill="#6b5d8e">relation</text>
+<text x="600" y="160" text-anchor="middle" font-family="ui-serif,Georgia" font-size="13" fill="#18201f">노드 = 엔티티</text>
+<text x="600" y="178" text-anchor="middle" font-family="ui-serif,Georgia" font-size="13" fill="#18201f">엣지 = 관계 + 시간</text>
+<text x="600" y="200" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="12" fill="#5d6864">목적: multi-hop·시간질문</text>
+<text x="600" y="220" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="12" fill="#5d6864">예: GraphRAG, Graphiti</text>
+<!-- col4: issue tree icon -->
+<circle cx="840" cy="90" r="7" fill="#a66b12"/>
+<line x1="840" y1="97" x2="810" y2="120" stroke="#a66b12" stroke-width="2"/>
+<line x1="840" y1="97" x2="840" y2="120" stroke="#a66b12" stroke-width="2"/>
+<line x1="840" y1="97" x2="870" y2="120" stroke="#a66b12" stroke-width="2"/>
+<circle cx="810" cy="126" r="5" fill="#a66b12"/><circle cx="840" cy="126" r="5" fill="#a66b12"/><circle cx="870" cy="126" r="5" fill="#a66b12"/>
+<text x="840" y="160" text-anchor="middle" font-family="ui-serif,Georgia" font-size="13" fill="#18201f">노드 = 질문</text>
+<text x="840" y="178" text-anchor="middle" font-family="ui-serif,Georgia" font-size="13" fill="#18201f">엣지 = 분해(MECE)</text>
+<text x="840" y="200" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="12" fill="#5d6864">목적: 실행 전 문제 정의</text>
+<text x="840" y="220" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="12" fill="#5d6864">예: Why/What/How tree</text>
+<!-- bottom note -->
+<rect x="16" y="260" width="928" height="80" rx="8" fill="#ffffff" stroke="#d9ddd6"/>
+<text x="480" y="285" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-weight="700" font-size="13" fill="#18201f">실행되지 않는 것은 문제 트리, 실행되지만 감시 대상은 개선 그래프,</text>
+<text x="480" y="305" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-weight="700" font-size="13" fill="#18201f">데이터가 흐르며 실제로 도는 것은 실행 그래프, 시간에 따라 변하는 사실을 저장하면 지식 그래프.</text>
+<text x="480" y="325" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="12" fill="#5d6864">네 감각은 배타적이지 않다 — 하나의 시스템이 네 층을 동시에 가질 수 있다 (레슨 0001 참고)</text>
+</svg>
+</div>
+<figcaption>그림 1. 네 가지 그래프의 노드/엣지/목적 비교. 색: 개선(브릭) · 실행(틸) · 지식(퍼플) · 문제(오커).</figcaption>
+</figure>
+
+<section class="section-improve">
+<h2><span class="badge improve">개선</span> 루프 거버넌스 그래프 용어</h2>
+<p class="callout brick" style="margin-top:0">출처: Carlos E. Perez, "From Loop Engineering to Graph Engineering?" (관점/입력 자료) — 레슨 0002-0003 참고.</p>
+
+<figure class="mini-svg">
+<svg class="diagram" viewBox="0 0 400 140" role="img" aria-label="4행정 루프 미니 다이어그램">
+<circle cx="200" cy="70" r="52" fill="none" stroke="#a23d31" stroke-width="3"/>
+<text x="200" y="26" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="12" font-weight="700" fill="#a23d31">Control</text>
+<text x="252" y="70" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="12" font-weight="700" fill="#a23d31">Gap</text>
+<text x="200" y="128" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="12" font-weight="700" fill="#a23d31">Act</text>
+<text x="148" y="70" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="12" font-weight="700" fill="#a23d31">Reference</text>
+<path d="M240 40 A52 52 0 0 1 240 100" stroke="#a23d31" stroke-width="2" fill="none" marker-end="url(#arrLoop)"/>
+<defs><marker id="arrLoop" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#a23d31"/></marker></defs>
+</svg>
+</figure>
+
+<dl class="grid">
+<div class="card term"><dt>Control loop (통제 루프)</dt><dd>현재 값을 목표 기준과 비교해 차이를 줄이는 자기 반복 시스템. 온도조절기, PDCA, OKR, ML 훈련 루프가 모두 이 구조다.</dd></div>
+<div class="card term"><dt>Control / Reference / Gap / Act</dt><dd>루프의 4행정: 현재 상태를 관측(Control) → 목표와 비교(Reference) → 차이 계산(Gap) → 행동으로 좁힘(Act). 이 네 조각이 루프의 최소 단위다.</dd></div>
+<div class="card term"><dt>Goodhart (지표 왜곡)</dt><dd>지표가 목표가 되는 순간 지표는 더 이상 좋은 목표가 아니게 되는 현상. 루프가 지표는 개선하지만 실제 목적은 나빠질 수 있다.<div class="confuse">혼동 주의: <b>루프가 고장난 것</b>이 아니라 <b>루프가 설계대로 완벽히 작동해서</b> 생기는 실패다.</div></dd></div>
+<div class="card term"><dt>Blindness upward (위쪽 맹목)</dt><dd>루프가 자신의 Reference(목표값) 자체가 틀렸는지는 검증할 수단이 없는 구조적 한계. 빠른 루프일수록 심하다.</dd></div>
+<div class="card term"><dt>Loop conflict (루프 충돌)</dt><dd>서로 다른 목표를 최적화하는 두 루프가 같은 자원이나 지표를 두고 반대로 당기는 상태. 조정하는 상위 루프가 없으면 진동한다.</dd></div>
+<div class="card term"><dt>Measurement decay (측정 부패)</dt><dd>센서·로그·리포팅 경로 자체가 서서히 현실과 어긋나는데도 루프는 그 측정값을 계속 신뢰하는 실패. ERP 일배치가 "성공"을 보고하지만 실제 삽입 행이 0건인 사례가 전형적이다.</dd></div>
+<div class="card term"><dt>Pairing (짝짓기)</dt><dd>최적화 루프 옆에 그 루프를 감시하는 별도의 거울 루프를 짝지어 Goodhart를 방지하는 토폴로지.</dd></div>
+<div class="card term"><dt>Hierarchy (계층)</dt><dd>느린 상위 루프가 빠른 하위 루프의 Reference(목표) 자체를 소유하고 주기적으로 갱신하는 구조. Blindness upward의 처방.</dd></div>
+<div class="card term"><dt>Arbitration (중재)</dt><dd>서로 충돌하는 두 루프의 목표를 상위 메타 루프가 트레이드오프로 결정하는 구조. Loop conflict의 처방.</dd></div>
+<div class="card term"><dt>Audit (감사)</dt><dd>운영 루프와 독립된 별도 루프가 실제 데이터를 표본 조사해 측정 경로 자체의 신뢰성을 점검하는 구조. Measurement decay의 처방.</dd></div>
+<div class="card term"><dt>Anchor (앵커) / Frozen rule (동결 규칙)</dt><dd>어떤 루프도 스스로 수정할 수 없는 외부 기준값 또는 규칙. 은행 입금 확인, 실제 테스트 통과, 사람의 최종 승인처럼 그래프 바깥에서 와야 한다.<div class="confuse">혼동 주의: 그래프(토폴로지)를 잘 그려도 모든 루프가 서로의 대시보드만 보고 있으면 <b>원형 확증(circular confirmation)</b>에 빠질 수 있다. 진짜 축은 loop vs graph가 아니라 <b>grounded vs ungrounded</b>다.</div></dd></div>
+</dl>
+</section>
+
+<section class="section-exec">
+<h2><span class="badge exec">실행</span> 오케스트레이션 그래프 용어</h2>
+<p class="callout" style="margin-top:0">공식 근거: LangGraph, Microsoft Agent Framework, Google ADK, Claude Code 공식 문서 — 레슨 0004-0007 참고.</p>
+
+<figure class="mini-svg">
+<svg class="diagram" viewBox="0 0 400 140" role="img" aria-label="실행 그래프 미니 다이어그램">
+<rect x="20" y="55" width="80" height="34" rx="6" fill="#eaf3ef" stroke="#136f63" stroke-width="2"/>
+<text x="60" y="76" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="12" fill="#18201f">research</text>
+<rect x="160" y="20" width="80" height="34" rx="6" fill="#eaf3ef" stroke="#136f63" stroke-width="2"/>
+<text x="200" y="41" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="12" fill="#18201f">write</text>
+<rect x="160" y="90" width="80" height="34" rx="6" fill="#eaf3ef" stroke="#136f63" stroke-width="2"/>
+<text x="200" y="111" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="12" fill="#18201f">review</text>
+<rect x="300" y="55" width="80" height="34" rx="6" fill="#eaf3ef" stroke="#136f63" stroke-width="2"/>
+<text x="340" y="76" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="12" fill="#18201f">done</text>
+<line x1="100" y1="72" x2="160" y2="55" stroke="#136f63" stroke-width="2" marker-end="url(#arrEx2)"/>
+<line x1="240" y1="37" x2="290" y2="60" stroke="#136f63" stroke-width="2" marker-end="url(#arrEx2)"/>
+<line x1="240" y1="107" x2="300" y2="80" stroke="#136f63" stroke-width="2" marker-end="url(#arrEx2)" stroke-dasharray="4 3"/>
+<path d="M200 90 C 140 90 140 40 158 30" stroke="#136f63" stroke-width="2" fill="none" marker-end="url(#arrEx2)"/>
+<text x="120" y="95" font-family="ui-sans-serif,system-ui" font-size="10" fill="#5d6864">fail → 재시도</text>
+<defs><marker id="arrEx2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#136f63"/></marker></defs>
+</svg>
+</figure>
+
+<dl class="grid">
+<div class="card term"><dt>Node (노드)</dt><dd>한 가지 일만 하는 작업 단위 — 함수, LLM 호출, 특화 서브에이전트, 사람 승인 단계 중 하나. 노드 자격은 "다른 모델/도구/역할이 필요한가"로 판단한다.</dd></div>
+<div class="card term"><dt>Edge (엣지)</dt><dd>한 노드의 출력이 다른 노드의 입력으로 실제로 흘러가는 관계.<div class="confuse">혼동 주의: "그리고 나서"는 엣지가 아니다. 다음 단계가 이전 단계의 출력을 <b>읽지 않으면</b> 엣지가 아니라 그냥 실행 순서일 뿐이다.</div></dd></div>
+<div class="card term"><dt>State (상태) / Contract (계약)</dt><dd>그래프 전체가 공유하는 타입이 있는 객체. 각 노드가 어떤 필드를 읽고 쓸 수 있는지가 계약이며, 계약이 없으면 어떤 노드도 안전하게 교체할 수 없다.</dd></div>
+<div class="card term"><dt>Router (라우터)</dt><dd>이전 노드의 결과를 코드로 검사해 다음에 실행할 edge를 결정하는 노드. 판단은 모델이, 라우팅 자체는 코드가 담당하는 편이 재현 가능하다.</dd></div>
+<div class="card term"><dt>Fan-out / Fan-in</dt><dd>하나의 입력을 여러 독립 노드로 병렬 분배(fan-out)한 뒤, 전체 결과가 모였을 때만 진행하는 합류 지점(fan-in).</dd></div>
+<div class="card term"><dt>Diamond (다이아몬드)</dt><dd>분할(split) → 병렬 작업(fan-out) → 합류(reduce) → 종합(synthesize)의 표준 실행 그래프 형태. 시장조사·코드리뷰·리서치 리포트가 대부분 이 모양이다.</dd></div>
+<div class="card term"><dt>Pipeline vs Barrier</dt><dd>Pipeline은 각 아이템이 단계를 독립적으로 통과해 빠른 아이템이 먼저 끝나고, Barrier는 전체 집합이 모일 때까지 다음 단계를 막는다. 전체 집합이 필요한 경우(중복 제거, 전수 비교)만 barrier를 쓴다.</dd></div>
+<div class="card term"><dt>Bounded cycle (제한된 순환)</dt><dd>탐색 범위를 미리 알 수 없을 때 되돌아가는 edge를 두되, "K번 연속 새로운 게 없으면 종료"처럼 명시적 수렴 조건을 반드시 둔 순환.</dd></div>
+<div class="card term"><dt>Checkpoint / Durable execution</dt><dd>그래프 상태를 super-step 경계마다 저장해 재개·중단·time-travel을 지원하는 메커니즘.<div class="confuse">혼동 주의: 재개는 대부분 <b>중단된 노드 함수를 처음부터 다시 실행</b>하는 것이지, 명령어 단위로 이어지는 것이 아니다. 그래서 Idempotency가 필요하다.</div></dd></div>
+<div class="card term"><dt>Idempotency (멱등성)</dt><dd>같은 노드가 같은 입력으로 두 번 실행돼도 부작용이 한 번만 일어나는 성질. 재시도·재개가 있는 그래프에서는 필수다.</dd></div>
+<div class="card term"><dt>One-writer rule (단일 쓰기자 원칙)</dt><dd>읽기는 여러 노드가 병렬로 해도 안전하지만, 같은 자원에 대한 쓰기는 한 노드(또는 격리된 worktree)만 담당해야 충돌·오염을 막을 수 있다.</dd></div>
+<div class="card term"><dt>Human gate (사람 승인 게이트)</dt><dd>비가역적이거나 비용이 큰 edge 직전에 사람의 명시적 승인을 요구하는 노드. blast radius(영향 범위)가 클수록 게이트를 앞에 둔다.</dd></div>
+</dl>
+</section>
+
+<section class="section-knowledge">
+<h2><span class="badge knowledge">지식</span> / 시간 그래프 용어</h2>
+<p class="callout purple" style="margin-top:0">공식 근거: Microsoft GraphRAG, Graphiti 공식 문서 — 레슨 0008-0009 참고. "18%/85%" 같은 X 수치는 특정 도메인 논문 결과이며 일반화하지 않는다.</p>
+
+<figure class="mini-svg">
+<svg class="diagram" viewBox="0 0 400 140" role="img" aria-label="지식 그래프 미니 다이어그램">
+<circle cx="90" cy="70" r="26" fill="#f0edf7" stroke="#6b5d8e" stroke-width="2"/>
+<text x="90" y="74" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="11" fill="#18201f">Subject</text>
+<circle cx="310" cy="70" r="26" fill="#f0edf7" stroke="#6b5d8e" stroke-width="2"/>
+<text x="310" y="74" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="11" fill="#18201f">Object</text>
+<line x1="116" y1="70" x2="284" y2="70" stroke="#6b5d8e" stroke-width="2" marker-end="url(#arrKg)"/>
+<text x="200" y="60" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="11" font-weight="700" fill="#6b5d8e">Relation</text>
+<text x="200" y="95" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="10" fill="#5d6864">valid_from → valid_to</text>
+<defs><marker id="arrKg" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#6b5d8e"/></marker></defs>
+</svg>
+</figure>
+
+<dl class="grid">
+<div class="card term"><dt>Entity / Relation / Triple</dt><dd>지식 그래프의 최소 단위. Subject → Relation → Object 형태로 저장되는 명시적 사실. "Anthropic → created → Claude"가 한 예다.</dd></div>
+<div class="card term"><dt>Ontology / Schema</dt><dd>어떤 엔티티 타입과 관계 타입이 허용되는지 미리 정의한 설계도. 스키마 없이 추출하면 같은 개념이 다른 이름으로 중복된다.</dd></div>
+<div class="card term"><dt>Entity resolution (엔티티 해상도)</dt><dd>"Microsoft Corp"와 "MSFT"처럼 서로 다른 표기가 같은 실체를 가리키는지 판단해 정규화(canonical name)하는 과정.</dd></div>
+<div class="card term"><dt>Provenance / Confidence</dt><dd>어떤 사실이 어느 문서/발화에서 왔는지(provenance)와 얼마나 확실한지(confidence)를 사실 자체에 함께 저장하는 것. 감사와 모순 해결에 필수다.</dd></div>
+<div class="card term"><dt>Temporal edge / valid_from·valid_to</dt><dd>사실이 참이었던 시간 구간을 엣지에 함께 저장하는 방식. Graphiti는 사실이 바뀌면 지우지 않고 <b>무효화(invalidate)</b>해 "2월에는 누가 계좌 소유자였나"에 답한다.</dd></div>
+<div class="card term"><dt>Community / Community report</dt><dd>GraphRAG가 그래프를 Leiden 알고리즘으로 군집화(community)한 뒤, 각 군집을 요약한 문서(report). Global search의 재료가 된다.</dd></div>
+<div class="card term"><dt>Local search</dt><dd>특정 엔티티와 그 이웃 관계를 확장해 답하는 질문 유형. "이 거래처의 최근 계약은?" 같은 구체적 질문에 맞다.</dd></div>
+<div class="card term"><dt>Global search</dt><dd>전체 데이터셋의 테마나 패턴을 community report들을 map-reduce해 답하는 질문 유형. "전체 공급망의 주요 리스크 패턴은?" 같은 질문에 맞다.</dd></div>
+<div class="card term"><dt>DRIFT search</dt><dd>Local과 Global을 혼합해, global 커뮤니티 컨텍스트로 시작한 뒤 local 세부사항으로 좁혀가는 GraphRAG의 하이브리드 검색 방식.</dd></div>
+</dl>
+</section>
+
+<section class="section-problem">
+<h2><span class="badge problem">문제</span> 분해 트리 용어</h2>
+<p class="callout warn" style="margin-top:0">공식 근거: McKinsey 문제해결 자료(느슨한 1차 근거) — 레슨 0001, 0010 참고. Why/What/How 3분류는 유용한 교수용 taxonomy이지 McKinsey의 공식 표준 3종이라고 확정된 것은 아니다.</p>
+
+<figure class="mini-svg">
+<svg class="diagram" viewBox="0 0 400 140" role="img" aria-label="이슈 트리 미니 다이어그램">
+<circle cx="200" cy="25" r="9" fill="#a66b12"/>
+<line x1="200" y1="34" x2="120" y2="80" stroke="#a66b12" stroke-width="2"/>
+<line x1="200" y1="34" x2="200" y2="80" stroke="#a66b12" stroke-width="2"/>
+<line x1="200" y1="34" x2="280" y2="80" stroke="#a66b12" stroke-width="2"/>
+<circle cx="120" cy="88" r="7" fill="#a66b12"/><circle cx="200" cy="88" r="7" fill="#a66b12"/><circle cx="280" cy="88" r="7" fill="#a66b12"/>
+<text x="200" y="115" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="11" fill="#5d6864">MECE: 겹치지 않고 빠짐없이</text>
+</svg>
+</figure>
+
+<dl class="grid">
+<div class="card term"><dt>Issue tree (이슈 트리)</dt><dd>큰 문제를 실행 가능한 하위 질문으로 나누는 정적 분해 구조. 노드는 "질문"이며, 상태·스케줄링·체크포인트를 가진 실행 런타임이 아니다.<div class="confuse">혼동 주의: 트리 모양이 실행 그래프와 비슷해 보여도 <b>돌지 않는다</b> — 사람이 채워 넣는 계획 문서에 가깝다.</div></dd></div>
+<div class="card term"><dt>Why / What / How tree</dt><dd>원인을 찾는 Why-tree, 필요한 작업을 나열하는 What-tree, 가능한 실행 경로를 나열하는 How-tree로 나누는 교수용 분류. 어떤 답이 필요한지에 따라 골라 쓴다.</dd></div>
+<div class="card term"><dt>MECE (Mutually Exclusive, Collectively Exhaustive)</dt><dd>같은 레벨의 가지들이 서로 겹치지 않고(mutually exclusive) 빠짐없이(collectively exhaustive) 문제를 덮어야 한다는 구조적 원칙.<div class="confuse">혼동 주의: MECE는 명료함을 위한 설계 원칙이지, 현실의 인과관계를 완전하게 증명하는 formal verifier가 아니다.</div></dd></div>
+<div class="card term"><dt>Hypothesis (가설)</dt><dd>Why-tree의 최종 산출물. 검증 가능한 원인 후보 목록이며, 다음 단계는 데이터로 각 가설을 반증하거나 채택하는 것이다.</dd></div>
+<div class="card term"><dt>Workplan (작업계획)</dt><dd>What-tree의 최종 산출물. 분석/결정/합의/종합으로 나뉜 실행 순서가 있는 계획. 여기서부터 실행 그래프로 넘어갈 수 있다.</dd></div>
+</dl>
+</section>
+
+<h2>다음으로 연결</h2>
+<ul>
+<li>코스 홈: <a href="https://mystudy-rosy.vercel.app/t/graph-engineering">/t/graph-engineering</a></li>
+<li>레슨: <a href="./0001-four-graphs-map.html">0001 한 단어, 네 개의 그래프</a> · <a href="./0002-loop-four-failures.html">0002</a> · <a href="./0003-improvement-graph-anchors.html">0003</a> · <a href="./0004-execution-graph-anatomy.html">0004</a> · <a href="./0005-topology-patterns.html">0005</a></li>
+<li>레슨 계속: <a href="./0006-verification-graph.html">0006</a> · <a href="./0007-multi-agent-coordination.html">0007</a> · <a href="./0008-knowledge-temporal-graphs.html">0008</a> · <a href="./0009-graphrag-local-global.html">0009</a> · <a href="./0010-architecture-clinic.html">0010</a></li>
+<li>레퍼런스: <a href="0012-source-evidence-map.html">출처 증거 지도</a> · <a href="0013-design-pattern-playbook.html">설계 플레이북</a></li>
+</ul>
+
+<footer>
+<p class="source-note">용어 정의는 각 레슨의 Primary sources와 X bookmarks 구분을 따른다. 정확한 인용은 레퍼런스 0012 참고.</p>
+<p class="pill">Quick reference</p>
+<p class="pill">4 senses · color-coded</p>
+</footer>
+
+</main>
+</body>
+</html>

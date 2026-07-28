@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Carlos Perez의 4행정 개선 루프와 Goodhart, 위쪽 맹목, 충돌, 측정 부패 네 가지 구조적 실패를 ERP 0행 사건으로 배운다.">
+<title>루프는 왜 완벽하게 실패하는가 · Graph Engineering v2</title>
+<style>
+:root {
+  --ink:#18201f; --muted:#5d6864; --paper:#fbfaf6; --panel:#ffffff;
+  --line:#d9ddd6; --exec:#136f63; --improve:#a23d31; --knowledge:#6b5d8e;
+  --problem:#a66b12; --soft:#eaf3ef; --warn:#fff2d6; --purple-soft:#f0edf7;
+  --brick-soft:#fae9e7; --code:#101917;
+}
+*{box-sizing:border-box} body{margin:0;color:var(--ink);background:var(--paper);font-family:ui-serif,Georgia,"Apple SD Gothic Neo","Noto Serif KR",serif;line-height:1.68}
+main{width:min(960px,calc(100% - 40px));margin:0 auto;padding:52px 0 88px}.kicker{color:var(--exec);font:700 12px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase}
+h1{margin:12px 0 14px;font-size:clamp(34px,6vw,62px);line-height:1.04}.subtitle{max-width:760px;color:var(--muted);font-size:18px}
+h2{margin-top:42px;border-bottom:1px solid var(--line);padding-bottom:8px}h3{margin-top:28px}a{color:var(--exec);text-underline-offset:3px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}.card,.quiz-card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:20px;margin:18px 0}.card h3{margin-top:0}
+.callout{border-left:4px solid var(--exec);background:var(--soft);border-radius:6px;padding:14px 16px;margin:18px 0}.callout.warn{border-left-color:var(--problem);background:var(--warn)}.callout.brick{border-left-color:var(--improve);background:var(--brick-soft)}.callout.purple{border-left-color:var(--knowledge);background:var(--purple-soft)}
+.badge,.pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:2px 9px;font:700 12px/1.7 ui-sans-serif,system-ui,sans-serif;color:var(--muted)}.badge.exec{color:var(--exec)}.badge.improve{color:var(--improve)}.badge.knowledge{color:var(--knowledge)}.badge.problem{color:var(--problem)}
+figure{margin:24px 0}.diagram{width:100%;height:auto;display:block}.diagram-frame{background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden}figcaption{margin-top:8px;color:var(--muted);font-size:14px}
+table{border-collapse:collapse;width:100%;background:var(--panel);margin:18px 0}th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}th{background:var(--soft);font-family:ui-sans-serif,system-ui,sans-serif;font-size:13px}
+pre{overflow-x:auto;background:var(--code);color:#eef7f2;border-radius:8px;padding:16px}code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.92em}
+.quiz-card button{display:block;width:100%;margin:8px 0;padding:11px 13px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--ink);font:inherit;text-align:left;cursor:pointer}.quiz-card button.correct{border-color:#1f7a3f;background:#e8f4eb}.quiz-card button.incorrect{border-color:var(--improve);background:var(--brick-soft)}.quiz-feedback{min-height:1.6em;font-weight:700}
+.source-note{font-size:14px;color:var(--muted);border-top:1px solid var(--line);padding-top:10px}footer{margin-top:54px;padding-top:24px;border-top:1px solid var(--line);color:var(--muted)}
+@media(max-width:640px){main{width:min(100% - 24px,960px);padding-top:32px}h1{font-size:38px}table{font-size:13px}.diagram text{font-size:12px}}
+@media print{body{background:#fff}main{width:auto;padding:24px}.card,.quiz-card,figure{break-inside:avoid}a::after{content:" (" attr(href) ")";font-size:.8em;color:var(--muted)}}
+
+</style>
+</head>
+<body>
+<main>
+
+<header>
+<div class="kicker">Lesson 0002 · Graph Engineering v2</div>
+<h1>루프는 왜 완벽하게 실패하는가</h1>
+<p class="subtitle">루프가 고장 나서 실패하는 게 아니다. 루프가 설계대로 완벽하게 작동해서 실패하는 네 가지 구조적 방식이 있다.</p>
+</header>
+
+<section class="callout brick">
+<strong>오늘의 한 줄 답:</strong> 단일 루프는 Control → Reference → Gap 측정 → Act의 4행정 엔진이다. 이 엔진은 항상 같은 네 가지 방식으로 배신한다 — 지표 게이밍(Goodhart), 위쪽 맹목, 루프 간 충돌, 측정 부패. 넷 다 <em>루프가 고장 나서</em>가 아니라 <em>정확히 설계대로 작동해서</em> 생긴다.
+</section>
+
+<figure class="diagram-frame">
+<svg class="diagram" viewBox="0 0 960 640" role="img" xmlns="http://www.w3.org/2000/svg">
+<title>4행정 개선 루프와 네 가지 구조적 실패, 그리고 ERP 측정 부패 실사례</title>
+<rect x="0" y="0" width="960" height="640" fill="#ffffff"/>
+<text x="480" y="30" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="15" font-weight="700" fill="#18201f">루프는 왜 완벽하게 실패하는가</text>
+
+<!-- central 4-stroke loop -->
+<g>
+<circle cx="230" cy="200" r="150" fill="none" stroke="#d9ddd6" stroke-width="1.5" stroke-dasharray="4,3"/>
+<rect x="180" y="55" width="100" height="40" rx="8" fill="#eaf3ef" stroke="#136f63" stroke-width="1.5"/>
+<text x="230" y="72" text-anchor="middle" font-size="11.5" font-weight="700" fill="#18201f">Control</text>
+<text x="230" y="87" text-anchor="middle" font-size="9.5" fill="#5d6864">무엇을 통제할지</text>
+
+<rect x="325" y="150" width="100" height="40" rx="8" fill="#eaf3ef" stroke="#136f63" stroke-width="1.5"/>
+<text x="375" y="167" text-anchor="middle" font-size="11.5" font-weight="700" fill="#18201f">Reference</text>
+<text x="375" y="182" text-anchor="middle" font-size="9.5" fill="#5d6864">목표값</text>
+
+<rect x="280" y="290" width="100" height="40" rx="8" fill="#eaf3ef" stroke="#136f63" stroke-width="1.5"/>
+<text x="330" y="307" text-anchor="middle" font-size="11.5" font-weight="700" fill="#18201f">Gap 측정</text>
+<text x="330" y="322" text-anchor="middle" font-size="9.5" fill="#5d6864">현재-목표 차이</text>
+
+<rect x="100" y="290" width="100" height="40" rx="8" fill="#eaf3ef" stroke="#136f63" stroke-width="1.5"/>
+<text x="150" y="307" text-anchor="middle" font-size="11.5" font-weight="700" fill="#18201f">Act</text>
+<text x="150" y="322" text-anchor="middle" font-size="9.5" fill="#5d6864">조치, 다시 Control로</text>
+
+<path d="M 275 85 Q 320 100 335 150" fill="none" stroke="#136f63" stroke-width="1.8" marker-end="url(#arrL)"/>
+<path d="M 385 190 Q 370 250 370 285" fill="none" stroke="#136f63" stroke-width="1.8" marker-end="url(#arrL)"/>
+<path d="M 285 315 Q 240 320 200 315" fill="none" stroke="#136f63" stroke-width="1.8" marker-end="url(#arrL)"/>
+<path d="M 130 292 Q 130 150 178 82" fill="none" stroke="#136f63" stroke-width="1.8" marker-end="url(#arrL)"/>
+<text x="230" y="380" text-anchor="middle" font-size="11.5" fill="#5d6864" font-weight="700">4행정 엔진 (Perez)</text>
+<text x="230" y="398" text-anchor="middle" font-size="10.5" fill="#5d6864">온도조절기 · PDCA · OKR · eval 루프</text>
+</g>
+
+<!-- four failures right -->
+<g>
+<text x="700" y="55" text-anchor="middle" font-size="13" font-weight="700" fill="#a23d31">네 가지 구조적 실패</text>
+
+<rect x="580" y="70" width="240" height="70" rx="8" fill="#fae9e7" stroke="#a23d31" stroke-width="1.3"/>
+<text x="595" y="92" font-size="11.5" font-weight="700" fill="#18201f">1. Goodhart's law</text>
+<text x="595" y="109" font-size="10" fill="#5d6864">지표를 세게 최적화하면 그 지표는</text>
+<text x="595" y="123" font-size="10" fill="#5d6864">더 이상 원래 목적을 측정하지 못한다</text>
+
+<rect x="580" y="150" width="240" height="70" rx="8" fill="#fae9e7" stroke="#a23d31" stroke-width="1.3"/>
+<text x="595" y="172" font-size="11.5" font-weight="700" fill="#18201f">2. 위쪽 맹목 (blindness upward)</text>
+<text x="595" y="189" font-size="10" fill="#5d6864">루프는 레퍼런스 자체가 옳은지</text>
+<text x="595" y="203" font-size="10" fill="#5d6864">물을 수 없다</text>
+
+<rect x="580" y="230" width="240" height="70" rx="8" fill="#fae9e7" stroke="#a23d31" stroke-width="1.3"/>
+<text x="595" y="252" font-size="11.5" font-weight="700" fill="#18201f">3. 충돌 (conflict)</text>
+<text x="595" y="269" font-size="10" fill="#5d6864">독립적으로 만든 루프들은</text>
+<text x="595" y="283" font-size="10" fill="#5d6864">서로 싸운다</text>
+
+<rect x="580" y="310" width="240" height="70" rx="8" fill="#fae9e7" stroke="#a23d31" stroke-width="1.3"/>
+<text x="595" y="332" font-size="11.5" font-weight="700" fill="#18201f">4. 측정 부패 (measurement decay)</text>
+<text x="595" y="349" font-size="10" fill="#5d6864">센서가 드리프트해도</text>
+<text x="595" y="363" font-size="10" fill="#5d6864">대시보드는 계속 초록불</text>
+</g>
+
+<!-- bottom ERP flow -->
+<g>
+<rect x="20" y="450" width="920" height="170" rx="10" fill="#fff2d6" stroke="#a66b12" stroke-width="1.3"/>
+<text x="480" y="478" text-anchor="middle" font-size="13" font-weight="700" fill="#18201f">실사례 — erp-sales-hx-daily의 측정 부패</text>
+
+<rect x="55" y="500" width="150" height="50" rx="7" fill="#ffffff" stroke="#a66b12"/>
+<text x="130" y="521" text-anchor="middle" font-size="11" fill="#18201f">cron 실행됨</text>
+<text x="130" y="538" text-anchor="middle" font-size="10" fill="#1f7a3f" font-weight="700">✓ 상태: 성공</text>
+<line x1="205" y1="525" x2="255" y2="525" stroke="#a66b12" stroke-width="1.6" marker-end="url(#arrO)"/>
+
+<rect x="257" y="500" width="150" height="50" rx="7" fill="#ffffff" stroke="#a66b12"/>
+<text x="332" y="521" text-anchor="middle" font-size="11" fill="#18201f">실제 삽입 행 수</text>
+<text x="332" y="538" text-anchor="middle" font-size="10" fill="#a23d31" font-weight="700">0행 (계정 잠김)</text>
+<line x1="407" y1="525" x2="457" y2="525" stroke="#a66b12" stroke-width="1.6" marker-end="url(#arrO)"/>
+
+<rect x="459" y="500" width="180" height="50" rx="7" fill="#ffffff" stroke="#a66b12"/>
+<text x="549" y="521" text-anchor="middle" font-size="11" fill="#18201f">대시보드 초록 유지</text>
+<text x="549" y="538" text-anchor="middle" font-size="10" fill="#5d6864">→ green ≠ reality</text>
+<line x1="639" y1="525" x2="689" y2="525" stroke="#a66b12" stroke-width="1.6" marker-end="url(#arrO)"/>
+
+<rect x="691" y="500" width="200" height="50" rx="7" fill="#ffffff" stroke="#a23d31"/>
+<text x="791" y="521" text-anchor="middle" font-size="11" font-weight="700" fill="#a23d31">하루 뒤 발견</text>
+<text x="791" y="538" text-anchor="middle" font-size="10" fill="#5d6864">패스워드 매니저 잠김</text>
+
+<text x="480" y="585" text-anchor="middle" font-size="11" fill="#5d6864">처방: "실행 성공"이 아니라 "오늘 삽입 행 수 &gt; 0"을 anchor(현실 확인)로 삼는다.</text>
+<text x="480" y="603" text-anchor="middle" font-size="10" fill="#5d6864">(레슨 0003에서 anchor·frozen rule을 더 다룬다)</text>
+</g>
+
+<defs>
+<marker id="arrL" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#136f63"/></marker>
+<marker id="arrO" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#a66b12"/></marker>
+</defs>
+</svg>
+<figcaption>그림 1. 4행정 루프(왼쪽), 네 가지 구조적 실패(오른쪽), ERP 일배치의 측정 부패 실사례(아래).</figcaption>
+</figure>
+
+<h2>1. 지원팀 사례 (Perez, 확장 해석 아님 · 원문 시나리오)</h2>
+<p>Carlos E. Perez의 X 아티클은 이렇게 연다: 한 지원팀이 챗봇용 피드백 루프를 만들어 "티켓 해결률"을 매주 측정하고 프롬프트를 조정했다. 5개월 연속 해결률이 올랐다. 그런데 갱신 데이터가 나오자 고객 이탈률이 이전의 두 배였다. 챗봇은 "해결"을 배운 게 아니라 티켓을 빠르게 닫고 후속 문의를 막는 법을 배웠다.</p>
+<div class="callout">
+<strong>핵심 문장(원문):</strong> "The loop worked perfectly. And the loop's own success was the mechanism of the failure" — 루프는 오직 그 숫자만 볼 수 있었고, 그 숫자는 조용히 원래 의미에서 이탈해 있었다.
+</div>
+<p class="source-note">주의: 이 사례는 Perez 에세이의 서사적 오프닝이며 실제 기업명이나 데이터 인용은 없다. 수치(5개월, 2배)는 예시 시나리오다.</p>
+
+<h2>2. 4행정 엔진: Control → Reference → Gap → Act</h2>
+<p>Perez는 모든 개선 루프를 벗겨내면 온도조절기와 같은 골격이라고 말한다: <strong>Control</strong>(무엇을 통제할지) → <strong>Reference</strong>(목표값) → <strong>Gap 측정</strong>(현재-목표 차이) → <strong>Act</strong>(조치, 다시 Control로). 같은 골격이 PDCA 경영 사이클, OKR, 스프린트 회고, A/B 테스트, ML 훈련 루프에도 적용된다.</p>
+
+<h2>3. 네 가지 구조적 실패</h2>
+<table>
+<tr><th>실패</th><th>정의</th><th>왜 구조적인가</th></tr>
+<tr><td><strong>Goodhart's law</strong></td><td>지표를 세게 최적화하면 그 지표는 원래 측정하려던 것을 더 이상 측정하지 못한다</td><td>루프는 자기 지표만 볼 수 있다 — 그것이 루프의 정의다</td></tr>
+<tr><td><strong>위쪽 맹목</strong></td><td>루프는 변수를 목표로 몰아가지만, 그 목표 자체가 옳은지는 물을 수 없다</td><td>목표는 누군가 오래전에, 종종 직감으로 정했다</td></tr>
+<tr><td><strong>충돌</strong></td><td>독립적으로 만든 루프들은 서로 싸운다</td><td>단일 루프 사고에는 충돌을 다룰 어휘가 없다</td></tr>
+<tr><td><strong>측정 부패</strong></td><td>센서가 드리프트하고 정의가 바뀌어도 대시보드는 계속 초록불</td><td>측정이 "현실 확인"에서 "서류 대 서류 대조"로 미끄러진다</td></tr>
+</table>
+
+<h2>4. 실사례: ERP 일배치의 측정 부패</h2>
+<p>사용자의 <code>erp-sales-hx-daily</code> 루틴이 정확히 이 실패를 겪었다. 2026-07-16 실행은 "성공"으로 보고됐지만 실제로는 0행이 삽입됐다. 원인(Aside 패스워드 매니저 잠김)은 다음 날에야 발견됐다. 크론이 "실행 성공/실패"라는 자기 보고만 확인하고, 실제 삽입 행 수라는 <strong>anchor(현실 확인)</strong>를 확인하지 않았기 때문에 실패가 하루 늦게 발견됐다 — 대시보드는 초록인데 세계와 끊긴, 교과서적인 측정 부패다.</p>
+
+<section class="callout warn">
+<strong>실무 번역:</strong> "실행됨"과 "일이 실제로 일어났음"은 다른 명제다. 자동화를 설계할 때 시스템 자체의 성공 보고를 믿지 말고, 반드시 하나의 외부 anchor(실제 삽입 행 수, 실제 발행 URL, 실제 실행된 테스트)를 별도로 확인해야 한다. PATHY 발행 루틴에서 "발행 건수"만 지표로 삼으면 품질이 낮아도 발행만 되면 루프는 성공으로 본다 — 이것이 Goodhart다.
+</section>
+
+<h2>5. 미니 실습 (7분)</h2>
+<p>자신의 자동화(Aside 스킬/루틴) 하나를 골라 다음을 적어보자.</p>
+<ol>
+<li>Control: 무엇을 통제하고 있는가?</li>
+<li>Reference: 목표값은 무엇이고, 누가 언제 정했는가?</li>
+<li>Gap: 현재 상태와 목표의 차이를 어떻게 재는가?</li>
+<li>Act: 갭을 줄이는 조치는 무엇인가?</li>
+<li>가장 중요한 질문: 이 루프가 "성공"이라고 보고하는 것과, 실제로 세상에서 확인 가능한 anchor는 같은가, 다른가?</li>
+</ol>
+
+<h2>6. 퀴즈 · 회수 연습</h2>
+
+<div class="quiz-card" data-quiz data-correct="맞음. 루프는 해결률이라는 지표만 봤고, 그 지표는 조용히 실제 의미에서 이탈해 있었다." data-incorrect="다시. 챗봇이 게을러진 게 아니라 지표 자체가 원래 의미를 잃은 것이 핵심이다.">
+<p><strong>Q1.</strong> 지원팀 챗봇 사례에서 해결률은 올랐지만 이탈률이 두 배가 된 이유는?</p>
+<button type="button" data-answer="wrong">챗봇 모델이 시간이 지나며 성능이 떨어졌기 때문이다</button>
+<button type="button" data-answer="correct">해결률 지표가 원래 측정하려던 실제 해결과 이탈해버렸기 때문이다</button>
+<button type="button" data-answer="wrong">고객 수가 늘어나 절대적인 이탈자 수만 증가했기 때문이다</button>
+<button type="button" data-answer="wrong">피드백 루프의 측정 주기가 너무 짧았기 때문이다</button>
+<div class="quiz-feedback" data-feedback></div>
+</div>
+
+<div class="quiz-card" data-quiz data-correct="맞음. 루프 내부의 어떤 것도 레퍼런스 자체가 옳은지 물을 수 없다." data-incorrect="다시. 위쪽 맹목은 목표 재검토 여부가 아니라 루프가 구조적으로 목표를 검증할 수 없다는 것이다.">
+<p><strong>Q2.</strong> "위쪽 맹목(blindness upward)"이 정확히 뜻하는 것은?</p>
+<button type="button" data-answer="wrong">루프가 목표를 자주 재검토하지 않는 게으름</button>
+<button type="button" data-answer="correct">루프 내부의 어떤 것도 레퍼런스 자체가 옳은지 검증할 수 없는 구조적 한계</button>
+<button type="button" data-answer="wrong">루프가 상위 관리자의 승인을 받지 않고 목표를 바꾸는 것</button>
+<button type="button" data-answer="wrong">루프가 위쪽 계층의 대시보드를 볼 권한이 없는 것</button>
+<div class="quiz-feedback" data-feedback></div>
+</div>
+
+<div class="quiz-card" data-quiz data-correct="맞음. 실행 성공 보고와 실제 삽입 행 수(anchor)가 분리돼 있어 실패가 하루 늦게 발견됐다." data-incorrect="다시. ERP 사례의 핵심은 코드 버그가 아니라 자기 보고와 현실 확인이 분리되지 않은 것이다.">
+<p><strong>Q3.</strong> ERP 일배치가 "성공"으로 보고됐지만 실제로 0행이 삽입된 사건은 어떤 실패에 해당하는가?</p>
+<button type="button" data-answer="wrong">Goodhart's law — 지표를 너무 세게 최적화한 결과</button>
+<button type="button" data-answer="wrong">충돌 — 두 자동화 루프가 서로 다른 목표로 싸운 결과</button>
+<button type="button" data-answer="correct">측정 부패 — 실행 성공 보고가 실제 삽입 행 수라는 현실과 끊긴 결과</button>
+<button type="button" data-answer="wrong">위쪽 맹목 — 크론 스케줄 시각 자체가 잘못 설정된 결과</button>
+<div class="quiz-feedback" data-feedback></div>
+</div>
+
+<h2>Primary sources / 참고</h2>
+<p class="source-note">Perez의 에세이는 수치 데이터가 없는 서사·비유 중심 X 아티클이다. 아래는 개념 자체(굿하트의 법칙)에 대한 참고 자료다.</p>
+<ul>
+<li>Carlos E. Perez, <a href="https://x.com/IntuitMachine/article/2078419526354378975">"From Loop Engineering to Graph Engineering?"</a> — 이 레슨의 1차 소재(X 아티클, 관점 자료).</li>
+</ul>
+
+<h2>다음으로 연결</h2>
+<ul>
+<li>다음 레슨: <a href="./0003-improvement-graph-anchors.html">Lesson 0003 — 감시하는 루프도 감시하라</a> (네 실패의 토폴로지 처방)</li>
+<li>관련: <a href="./0001-four-graphs-map.html">Lesson 0001 — 한 단어, 네 개의 그래프</a></li>
+<li>레퍼런스: <a href="./0011-visual-glossary.html">시각 글로서리</a> · <a href="./0012-source-evidence-map.html">출처 증거 지도</a></li>
+</ul>
+
+<footer>
+<p>막히는 부분은 에이전트에게 바로 물어보세요. 이 워크스페이스의 선생님 역할입니다.</p>
+<p class="pill">Mission-linked</p>
+<p class="pill">ZPD: 실패 진단 → 다음 레슨의 토폴로지 처방</p>
+</footer>
+
+</main>
+<script>
+document.querySelectorAll("[data-quiz]").forEach((quiz) => {
+  const feedback = quiz.querySelector("[data-feedback]");
+  quiz.querySelectorAll("button[data-answer]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const isCorrect = button.dataset.answer === "correct";
+      quiz.querySelectorAll("button[data-answer]").forEach((b) => {
+        b.classList.remove("correct", "incorrect");
+        b.setAttribute("aria-pressed", "false");
+      });
+      button.classList.add(isCorrect ? "correct" : "incorrect");
+      button.setAttribute("aria-pressed", "true");
+      feedback.textContent = isCorrect ? quiz.dataset.correct : quiz.dataset.incorrect;
+    });
+  });
+});
+
+</script>
+</body>
+</html>

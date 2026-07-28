@@ -1,0 +1,162 @@
+- title: "X" [url=https://x.com/beamnxw/article/2081022966645535079]
+- heading [level=2]:
+  - text: "키보드 단축키를 보려면 물음표를 누르세요."
+  - link "키보드 단축키 보기" [ref=e1]
+- button "Grok" [ref=e2]
+- button "채팅" [ref=e3]
+- banner:
+  - button "나가기" [ref=e4]
+  - button "북마크" [ref=e5]
+- main:
+  - link [ref=e6]
+  - text: "Agent Harness Engineering vs. Loop Engineering vs. Graph Engineering"
+  - link [ref=e7]:
+    - text: "beamnxw ./"
+    - img "인증된 계정"
+  - link "@beamnxw" [ref=e8]
+  - text: "7월 25일"
+  - button "팔로우 @beamnxw" [ref=e9]: "팔로우"
+  - button [ref=e10]
+  - group "59 답글, 530 재게시, 2765 마음에 들어요, 마음에 들어 함, 6849 북마크, 701176 조회수 님 님 님 님 님":
+    - button "59 답글. 답글하기" [ref=e11]: "59"
+    - button "530 재게시. 재게시" [ref=e12]: "530"
+    - button "2765 마음에 들어요. 마음에 들어 함" [ref=e13]: "2.7천"
+    - link "701176 조회수. 게시 애널리틱스 보기" [ref=e14]: "70만"
+    - button "북마크에 추가됨" [ref=e15]
+    - button "게시물 공유하기" [ref=e16]
+  - text: "A practical guide to the three architecture layers people keep mixing together"
+  - region:
+    - separator
+  - text: "The confusion is understandable. All three ideas sit around the same model, all three influence reliability, and all three can contain \"loops.\" But they are not synonyms. They describe different engineering decisions, and the distinction matters the moment an agent leaves a demo notebook and starts touching files, APIs, customers, or production code THE 30-SECOND ANSWER"
+  - list:
+    - listitem: "Harness engineering builds the machinery around the model"
+    - listitem: "Loop engineering designs the repeated work-and-feedback cycle"
+    - listitem: "Graph engineering makes the workflow topology explicit: nodes, branches, joins, state transitions and controlled cycles"
+  - text: "The clean mental model is environment → feedback → flow"
+  - region:
+    - separator
+  - heading [level=1]: "Why these terms suddenly matter"
+  - text: "A raw language model cannot create text, maintain a state for a project, run a test suite, look at a browser, enforce an approval rule, or restart a failed job. Those capabilities come from the environment it's in. As agentic software matures, a standard engineering stack is finally coming together. At the foundation is the agent harness, the code that actually runs the models. Next are the loops, which handle the repeating execution and quality checks. Finally, graphs map out the structured paths that guide the entire process Labels are still not consistently standardized. In the current framework, the term \"agent harness\" is now starting to take on a rather specific definition. The term \"loop engineering\" arose as a newer term among practitioners in 2026. Graph engineering should be understood practically rather than as an academic field; it is just the process of creating agent workflows as explicit directed graphs or state machines. This practical distinction is helpful because it prevents a buzzword from hiding the real design question"
+  - region:
+    - link [ref=e17]
+  - region:
+    - separator
+  - heading [level=1]: "Agent Harness Engineering"
+  - list:
+    - listitem: "According to Langchain, the agent is the model plus the harness, and the harness is the code, configuration and execution logic outside the model. In practice, this includes the system prompt, tool definitions, memory, filesystems, sandboxes, model routing, handoffs, middleware hooks, compaction, permissions, logging and verification interfaces"
+    - listitem: "OpenAI's Agents SDK describes the same operational core from a runtime perspective: the runner calls the model, executes tool calls, handles handoffs, carries state and stops only when the run reaches a real terminal condition"
+  - region:
+    - link [ref=e18]
+  - text: "The word harness is useful because it shifts attention away from model worship. Two teams can use the same foundation model and get very different outcomes because one gives the model clean tools, a stable workspace, constrained permissions and observable state, while the other gives it a vague prompt and an unreliable API wrapper. The intelligence may be similar; the working conditions are not. What a serious harness usually contains:"
+  - list:
+    - listitem: "Context injection: instructions, retrieved facts, conversation state, skills and task-specific policies"
+    - listitem: "Action surfaces: APIs, browsers, shells, code interpreters, databases and MCP-compatible tools"
+    - listitem: "Persistence: files, checkpoints, sessions, progress logs, git history and long-term memory"
+    - listitem: "Execution control: timeouts, retries, budgets, model routing, sub-agent spawning and approval gates"
+    - listitem: "Safety and governance: permissions, isolation, allow lists, secret handling and human authorization"
+    - listitem: "Observability: traces, tool inputs and outputs, state transitions, cost, latency and evaluation results"
+  - region:
+    - link [ref=e19]
+  - text: "The model sits inside a wider harness of context, control, action, persistence and verification. Remove the model from your architecture diagram. Everything left is probably part of the harness: the tools, data access, state store, sandbox, middleware, evaluators, retry policy and UI Where harness engineering earns its keep Harness work is important for long-running tasks. In multi-session coding, Anthropic discovered that simply using context compaction was not sufficient. This was not a better prompt by itself, but they made a good setup that created an initializer, a progress file, git history and a discipline of incremental work that each new context can understand what happened and what is still to do. It's an improved working system with regard to the agent. Apply harness engineering when the agent doesn't have a capability, can't come back clean, loses state, accesses too much, can't be audited, or acts differently on environments"
+  - region:
+    - separator
+  - heading [level=1]: "Loop Engineering"
+  - text: "Each agent that uses a tool has an embedded small loop:"
+  - list:
+    - listitem: "call the model"
+    - listitem: "look at the results"
+    - listitem: "run the tools"
+    - listitem: "input observations into the model"
+    - listitem: "repeat until a final answer is returned"
+  - text: "When the builders intentionally build or stack new cycles around that behavior, it is the beginning of loop engineering, as OpenAI calls it. A verification loop, for instance, allows the agent to create an artifact, execute the deterministic check or a grader, receive explicit feedback and repeat only if there are evidence errors. An event-driven loop awakens the agent when a schedule, webhook, or new document is received. An improvement loop analyzes traces & failures, modifies instructions/tools, and tests if the new version works better. LangChain's 2026 framing refers to these as a stack of loops and not one magic while-statement The anatomy of a well-engineered loop:"
+  - list:
+    - listitem: "Trigger: what starts another cycle; user request, schedule, failed test, new data or evaluator feedback"
+    - listitem: "Goal: a specific state to reach, not a vague instruction to \"keep improving\""
+    - listitem: "State and memory: what the next cycle needs to know without replaying everything"
+    - listitem: "Action policy: what the agent may change, call, delegate or spend"
+    - listitem: "Evidence: tests, schema validation, citations, diffs, metrics or human review"
+    - listitem: "Feedback: a compact, actionable description of why the evidence failed"
+    - listitem: "Stopping rule: success, budget limit, timeout, irrecoverable error or human escalation"
+  - region:
+    - link [ref=e20]
+  - text: "A verification loop wraps the agent loop with an external grader and an explicit pass condition. Do not loop on confidence. Loop on evidence. \"The agent says it is done\" is not a stopping condition; \"the tests pass, the links resolve, the schema validates and the reviewer approves\" is.Why loop engineering is not just prompt engineering A prompt tells the model what to do during a call. A loop specifies what the system does after the call:how it observes results, chooses feedback, decides whether to continue, persists progress and terminates Prompt quality still matters, but the loop converts a one-shot instruction into a managed process. The main tradeoff is cost and latency. Each grader, reviewer or retry adds another model call or tool run. Anthropic's broader guidance is to prefer the simplest architecture that works and add agentic complexity only when the performance gain justifies it. The same advice applies to loops: add them where the failure cost is higher than the verification cost"
+  - region:
+    - separator
+  - heading [level=1]: "Graph Engineering"
+  - text: "Graph engineering asks a different question though: Not only what the agent does, but what component is permitted to run next. Steps are represented by nodes and allowed steps are represented by edges. These edges can be used to indicate sequence, conditional branching, parallel fan-out, joins, loops and human interrupts. The state traverses the graph, and the topology allows for the desired control flow to be checked. LangGraph is low-level orchestration infrastructure for long-running, stateful agents, with durable execution, state and human-in-the-loop control, and an explicit focus on control over agents rather than an abstraction of the workflow. Microsoft AutoGen's documentation is exceptionally straightforward: use a graph when you need exact control over agent order, different next steps for different outcomes, deterministic branching or complex multi-step processes with cycles. What graph engineers actually decide:"
+  - list:
+    - listitem: "Node boundaries: which work belongs in a deterministic function, an LLM call, a specialist agent or a human review step"
+    - listitem: "State schema: what each node may read or update, and how parallel updates are merged"
+    - listitem: "Routing conditions: which evidence sends work forward, backward, sideways or to escalate"
+    - listitem: "Concurrency: what can run in parallel, what must join, and what shared resources need coordination"
+    - listitem: "Cycles and exits: where retries are legal, how many are allowed, and what makes the cycle safe"
+    - listitem: "Durability: where checkpoints occur and how execution resumes after interruption"
+  - region:
+    - link [ref=e21]
+  - text: "The above canvas makes agents, skills and relationships inspectable as a composed system. Graph engineering here means engineering graph-based execution. It is not the same as knowledge graph engineering, where the graph represents entities and relationships in data. A workflow graph represents control and state transitions When a graph is worth the ceremony Graphs are valuable when the process has meaningful branches, parallel work, approvals, recovery paths or multiple specialist agents. They are less useful when the job is simply \"give one agent three tools and let it work.\" A graph can improve debugging, but it can also freeze assumptions too early. If the model must dynamically invent the plan, forcing every possible path into a diagram can make the system more brittle, not less How the three layers work together in one real system Consider a research-and-publishing agent responsible for producing a factual industry briefing"
+  - region:
+    - link [ref=e22]
+  - text: "Notice the nesting: the graph runs inside the harness; one or more loops live inside the graph; and the harness supplies the state, tools and evaluators those loops need. The categories overlap because software layers overlap, but each still gives the team a different lever to pull when the system fails Choose the engineering layer by diagnosing the failure"
+  - region:
+    - table: "Symptom Start with Likely fix The agent cannot access the right data or tool safely.Harness Tool contract, permissions, sandbox, context injection.The agent forgets progress across sessions.Harness Durable state, checkpointing, progress artifacts, compaction.The first attempt is often close but not reliable.Loop External grader, deterministic tests, feedback and bounded retry.The agent keeps working after success or stops before proof.Loop Evidence-based terminal states and budget-aware stop rules.Several specialists must run in a controlled order.Graph Explicit nodes, edges, routing conditions and joins.Failures are hard to locate in a multi-step process.Graph + harness Stateful traces aligned with graph nodes and transitions.The workflow changes too often for a fixed diagram.Simpler harness Keep control model-driven; delay graph formalization."
+  - region:
+    - separator
+  - heading [level=1]: "The Expensive Mistakes Behind Weak Agent Architectures"
+  - text: "Building a graph before understanding the work Teams sometimes translate a business process into dozens of nodes before they have observed how a capable agent actually solves it. Start with traces from a simpler harness, then formalize the stable paths.Letting the same model write and grade without safeguards Self-review can help, but it is vulnerable to shared blind spots. Prefer deterministic checks where possible, separate reviewer context, and require human approval for high-impact actions.Using \"keep trying\" as a loop specification An unbounded retry loop is a cost leak. Every loop needs a measurable objective, fresh evidence, maximum attempts and a named escalation path.Treating the harness as a dumping ground More tools and memory are not automatically better. A crowded toolset raises selection errors, a noisy context raises confusion, and broad permissions raise risk.Blaming the model for orchestration failures A model cannot compensate reliably for stale state, ambiguous tool schemas, broken APIs or missing exit conditions. Improve the layer that owns the failure."
+  - heading [level=2]: "A production-ready design checklist"
+  - list:
+    - listitem: "Harness: Are tools narrow, documented and observable? Is state durable? Are permissions least-privilege? Can operators pause, inspect and resume a run?"
+    - listitem: "Loop: What evidence proves success? What feedback is returned on failure? How many retries are allowed? What happens when the budget is exhausted?"
+    - listitem: "Graph: Which paths must be deterministic? Where can work run in parallel? Which state is shared? Where are the human gates and recovery routes?"
+    - listitem: "Evaluation: Can the team replay real traces, compare versions and attribute improvement to a specific change rather than intuition?"
+    - listitem: "Operations: Are cost, latency, failure rate, intervention rate and task-level success monitored in production?"
+  - heading [level=2]: "The Simplest Way to Remember the Difference"
+  - text: "Engineering something to be a model to make it operate. Loop engineering methodology is iterative, verifiable and resumable. A complex execution path is made explicit and controllable through the use of graph engineering. None of the three is substituted by any of the others. Even if the harness has lost its state, a beautifully drawn graph is no sufficient. However, even with the best harness, if there is no evidence or stop rule, it is a waste of money! Carefully crafted loops are still hard to operate when branching, parallelism and approvals are embedded in the ad-hoc code. If these three layers are designed jointly, reliable agent systems will arise, provided that the team is aware of what each layer is supposed to solve"
+  - heading [level=1]: "SEARCH TERMS READERS USE"
+  - list:
+    - listitem: "agent harness vs loop engineering"
+    - listitem: "graph engineering for AI agents"
+    - listitem: "AI agent orchestration"
+    - listitem: "LLM agent architecture"
+    - listitem: "production AI agents"
+    - listitem: "LangGraph workflows"
+    - listitem: "AutoGen GraphFlow"
+    - listitem: "agent verification loops"
+  - region:
+    - separator
+  - heading [level=2]: "Sources and Further Readings"
+  - link "The Anatomy of an Agent Harness" [ref=e24]
+  - text: "- Learn how agent harnesses transform AI models into autonomous work engines. Explore core components: filesystems, sandboxes, and memory"
+  - link "Agents SDK | OpenAI API" [ref=e26]
+  - text: "- Learn how the OpenAI Agents SDK fits together and which docs to read next"
+  - link "LangChain and LangGraph Agent Frameworks Reach v1.0 Milestones" [ref=e28]
+  - text: "- LangChain 1.0 and LangGraph 1.0 are here. Build production-ready AI agents faster with standardized tools, middleware customization, and durable state"
+  - link "GraphFlow (Workflows) - AutoGen" [ref=e30]
+  - text: "- In this section you'll learn how to create an multi-agent workflow using , or simply \"flow\" for short. It uses structured execution and precisely controls how agents interact to accomplish a task. We'll first show you how to create and run a flow"
+  - link "The Art of Loop Engineering" [ref=e32]
+  - text: "- Agents automate real-world work, but reliable performance requires more than a good model, it requires a carefully designed harness built for specific tasks. This post explores the core agent loop, how stacking and extending loops builds more effective agents, and how to instrument each level with LangChain primitives"
+  - link "Introducing AutoGen Studio from Microsoft Research" [ref=e34]
+  - text: "- AutoGen Studio, built on Microsoft's flexible open-source AutoGen framework for orchestrating AI agents, provides a user-friendly interface that enables developers to rapidly build, test, customize, & share multi-agent AI solutions, with little or no coding"
+  - link "How to Build a Custom Agent Harness" [ref=e36]
+  - text: "- Effective agents are built with harnesses that are tightly coupled with the task at hand. The easiest way to build a custom harness is with LangChain's create_agent plus middleware. This guide covers the core agent loop and how you can customize it for your agent's use case"
+  - link "A practical guide to building agents" [ref=e38]
+  - text: "- A comprehensive guide to designing, orchestrating, and deploying AI agents-covering use cases, model selection, tool design, guardrails, and multi-agent patterns"
+  - link "Building Effective AI Agents" [ref=e40]
+  - text: "- Practical advice and guidance guidance for building production-ready single and multi-agent systems from Anthropic and our customers"
+  - region:
+    - separator
+  - text: "Save this so you don't lose it Follow"
+  - link "@beamnxw" [ref=e42]
+  - text: "for more technical posts :)"
+  - link "my telegram channel" [ref=e44]
+  - region:
+    - button "동영상 재생. 동영상 길이 2초" [ref=e48]
+  - separator
+  - listitem [ref=e49]:
+    - link [ref=e50]:
+      - text: "beamnxw ./"
+      - img "인증된 계정"
+    - link "@beamnxw" [ref=e51]
+    - button "팔로우 @beamnxw" [ref=e52]: "팔로우"
+    - text: "hyperfixation on AI | always dyor"
+- region "Notifications alt+T" [ref=e53]

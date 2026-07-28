@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="GraphRAG의 local/global search와 community report, 그리고 과장된 정확도·비용 수치를 교정한다.">
+<title>RAG가 찾는 것, GraphRAG가 연결하는 것 · Graph Engineering v2</title>
+<style>
+:root {
+  --ink:#18201f; --muted:#5d6864; --paper:#fbfaf6; --panel:#ffffff;
+  --line:#d9ddd6; --exec:#136f63; --improve:#a23d31; --knowledge:#6b5d8e;
+  --problem:#a66b12; --soft:#eaf3ef; --warn:#fff2d6; --purple-soft:#f0edf7;
+  --brick-soft:#fae9e7; --code:#101917;
+}
+*{box-sizing:border-box} body{margin:0;color:var(--ink);background:var(--paper);font-family:ui-serif,Georgia,"Apple SD Gothic Neo","Noto Serif KR",serif;line-height:1.68}
+main{width:min(960px,calc(100% - 40px));margin:0 auto;padding:52px 0 88px}.kicker{color:var(--exec);font:700 12px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase}
+h1{margin:12px 0 14px;font-size:clamp(34px,6vw,62px);line-height:1.04}.subtitle{max-width:760px;color:var(--muted);font-size:18px}
+h2{margin-top:42px;border-bottom:1px solid var(--line);padding-bottom:8px}h3{margin-top:28px}a{color:var(--exec);text-underline-offset:3px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}.card,.quiz-card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:20px;margin:18px 0}.card h3{margin-top:0}
+.callout{border-left:4px solid var(--exec);background:var(--soft);border-radius:6px;padding:14px 16px;margin:18px 0}.callout.warn{border-left-color:var(--problem);background:var(--warn)}.callout.brick{border-left-color:var(--improve);background:var(--brick-soft)}.callout.purple{border-left-color:var(--knowledge);background:var(--purple-soft)}
+.badge,.pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:2px 9px;font:700 12px/1.7 ui-sans-serif,system-ui,sans-serif;color:var(--muted)}.badge.exec{color:var(--exec)}.badge.improve{color:var(--improve)}.badge.knowledge{color:var(--knowledge)}.badge.problem{color:var(--problem)}
+figure{margin:24px 0}.diagram{width:100%;height:auto;display:block}.diagram-frame{background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden}figcaption{margin-top:8px;color:var(--muted);font-size:14px}
+table{border-collapse:collapse;width:100%;background:var(--panel);margin:18px 0}th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}th{background:var(--soft);font-family:ui-sans-serif,system-ui,sans-serif;font-size:13px}
+pre{overflow-x:auto;background:var(--code);color:#eef7f2;border-radius:8px;padding:16px}code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.92em}
+.quiz-card button{display:block;width:100%;margin:8px 0;padding:11px 13px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--ink);font:inherit;text-align:left;cursor:pointer}.quiz-card button.correct{border-color:#1f7a3f;background:#e8f4eb}.quiz-card button.incorrect{border-color:var(--improve);background:var(--brick-soft)}.quiz-feedback{min-height:1.6em;font-weight:700}
+.source-note{font-size:14px;color:var(--muted);border-top:1px solid var(--line);padding-top:10px}footer{margin-top:54px;padding-top:24px;border-top:1px solid var(--line);color:var(--muted)}
+@media(max-width:640px){main{width:min(100% - 24px,960px);padding-top:32px}h1{font-size:38px}table{font-size:13px}.diagram text{font-size:12px}}
+@media print{body{background:#fff}main{width:auto;padding:24px}.card,.quiz-card,figure{break-inside:avoid}a::after{content:" (" attr(href) ")";font-size:.8em;color:var(--muted)}}
+
+</style>
+</head>
+<body>
+<main>
+
+<header>
+  <div class="kicker">Lesson 0009 · Graph Engineering v2</div>
+  <h1>RAG가 찾는 것, GraphRAG가 연결하는 것</h1>
+  <p class="subtitle">일반 RAG는 질문과 비슷한 텍스트 조각을 찾는다. GraphRAG는 그 조각들이 서로 어떻게 연결되는지도 찾는다. 다만 "18% 더 정확하고 85% 더 싸다"는 X 글의 수치는 GraphRAG 일반의 결과가 아니라, 산업 도면(P&amp;ID) 한 논문의 특정 비교였다.</p>
+</header>
+
+<section class="callout">
+  <strong>오늘의 한 줄 답:</strong> GraphRAG는 엔티티·관계를 추출해 그래프를 만들고, 촘촘히 연결된 노드 묶음(커뮤니티)마다 요약 리포트를 미리 만들어 둔다. 그래서 <em>특정 대상을 묻는 local 질문</em>과 <em>전체 패턴을 묻는 global 질문</em>을 서로 다른 전략으로 답할 수 있다 — 이것이 GraphRAG가 평범한 RAG를 이기는 지점이지, 아무 수치나 항상 이긴다는 뜻은 아니다.
+</section>
+
+<figure class="diagram-frame">
+<svg class="diagram" viewBox="0 0 960 620" role="img" aria-labelledby="svgTitle9 svgDesc9" xmlns="http://www.w3.org/2000/svg">
+<title id="svgTitle9">GraphRAG 인덱싱과 로컬/글로벌 검색 파이프라인</title>
+<desc id="svgDesc9">문서에서 그래프를 만드는 인덱싱 과정과, 특정 노드를 찾는 로컬 검색과 커뮤니티 리포트를 종합하는 글로벌 검색을 나란히 보여준다.</desc>
+<defs>
+  <marker id="arrow9" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+    <path d="M0,0 L10,5 L0,10 z" fill="#136f63"/>
+  </marker>
+</defs>
+<rect x="4" y="4" width="952" height="612" rx="10" fill="#ffffff" stroke="#d9ddd6"/>
+<text x="480" y="34" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="13" font-weight="700" fill="#5d6864" letter-spacing="1">INDEXING (한 번, 문서 → 그래프)</text>
+
+<g font-family="ui-serif,Georgia,'Noto Serif KR',serif" font-size="14" fill="#18201f">
+  <rect x="30" y="52" width="130" height="46" rx="6" fill="#eaf3ef" stroke="#136f63"/>
+  <text x="95" y="80" text-anchor="middle">문서/청크</text>
+
+  <rect x="200" y="52" width="150" height="46" rx="6" fill="#eaf3ef" stroke="#136f63"/>
+  <text x="275" y="74" text-anchor="middle">엔티티·관계·</text>
+  <text x="275" y="90" text-anchor="middle">클레임 추출</text>
+
+  <rect x="390" y="52" width="130" height="46" rx="6" fill="#eaf3ef" stroke="#136f63"/>
+  <text x="455" y="80" text-anchor="middle">그래프 구축</text>
+
+  <rect x="560" y="52" width="150" height="46" rx="6" fill="#f0edf7" stroke="#6b5d8e"/>
+  <text x="635" y="74" text-anchor="middle">Leiden 커뮤니티</text>
+  <text x="635" y="90" text-anchor="middle">탐지</text>
+
+  <rect x="750" y="52" width="170" height="46" rx="6" fill="#f0edf7" stroke="#6b5d8e"/>
+  <text x="835" y="74" text-anchor="middle">커뮤니티 리포트</text>
+  <text x="835" y="90" text-anchor="middle">생성(요약)</text>
+
+  <line x1="160" y1="75" x2="196" y2="75" stroke="#136f63" stroke-width="2" marker-end="url(#arrow9)"/>
+  <line x1="350" y1="75" x2="386" y2="75" stroke="#136f63" stroke-width="2" marker-end="url(#arrow9)"/>
+  <line x1="520" y1="75" x2="556" y2="75" stroke="#136f63" stroke-width="2" marker-end="url(#arrow9)"/>
+  <line x1="710" y1="75" x2="746" y2="75" stroke="#136f63" stroke-width="2" marker-end="url(#arrow9)"/>
+</g>
+
+<line x1="20" y1="128" x2="940" y2="128" stroke="#d9ddd6" stroke-width="1"/>
+<text x="480" y="152" text-anchor="middle" font-family="ui-sans-serif,system-ui" font-size="13" font-weight="700" fill="#5d6864" letter-spacing="1">QUERY (질문마다, 같은 그래프를 다르게 쓴다)</text>
+
+<g font-family="ui-serif,Georgia,'Noto Serif KR',serif" font-size="14" fill="#18201f">
+  <rect x="30" y="180" width="420" height="380" rx="8" fill="#fbfaf6" stroke="#136f63" stroke-width="1.5"/>
+  <text x="240" y="208" text-anchor="middle" font-weight="700" fill="#136f63">Local Search</text>
+  <text x="240" y="230" text-anchor="middle" font-size="13">“3월에 공급업체 X에</text>
+  <text x="240" y="248" text-anchor="middle" font-size="13">무슨 일이 있었나?”</text>
+  <rect x="70" y="270" width="340" height="42" rx="6" fill="#eaf3ef" stroke="#136f63"/>
+  <text x="240" y="296" text-anchor="middle">특정 엔티티(공급업체 X) 지목</text>
+  <line x1="240" y1="312" x2="240" y2="336" stroke="#136f63" stroke-width="2" marker-end="url(#arrow9)"/>
+  <rect x="70" y="336" width="340" height="42" rx="6" fill="#eaf3ef" stroke="#136f63"/>
+  <text x="240" y="362" text-anchor="middle">이웃 노드 + 연결된 관계로 확장</text>
+  <line x1="240" y1="378" x2="240" y2="402" stroke="#136f63" stroke-width="2" marker-end="url(#arrow9)"/>
+  <rect x="70" y="402" width="340" height="42" rx="6" fill="#eaf3ef" stroke="#136f63"/>
+  <text x="240" y="428" text-anchor="middle">근접 사실만으로 특정 답변</text>
+  <text x="240" y="490" text-anchor="middle" font-size="13" fill="#5d6864">한 지점을 깊게 판다</text>
+  <text x="240" y="510" text-anchor="middle" font-size="13" fill="#5d6864">(local factual question)</text>
+</g>
+
+<g font-family="ui-serif,Georgia,'Noto Serif KR',serif" font-size="14" fill="#18201f">
+  <rect x="490" y="180" width="440" height="380" rx="8" fill="#fbfaf6" stroke="#6b5d8e" stroke-width="1.5"/>
+  <text x="710" y="208" text-anchor="middle" font-weight="700" fill="#6b5d8e">Global Search</text>
+  <text x="710" y="230" text-anchor="middle" font-size="13">“전체 공급업체 관계에서</text>
+  <text x="710" y="248" text-anchor="middle" font-size="13">반복되는 위험 패턴은?”</text>
+  <rect x="530" y="270" width="360" height="42" rx="6" fill="#f0edf7" stroke="#6b5d8e"/>
+  <text x="710" y="296" text-anchor="middle">전체를 관통하는 패턴 질문(sensemaking)</text>
+  <line x1="710" y1="312" x2="710" y2="336" stroke="#6b5d8e" stroke-width="2" marker-end="url(#arrow9)"/>
+  <rect x="530" y="336" width="360" height="42" rx="6" fill="#f0edf7" stroke="#6b5d8e"/>
+  <text x="710" y="362" text-anchor="middle">커뮤니티 리포트들을 map 단계로 훑음</text>
+  <line x1="710" y1="378" x2="710" y2="402" stroke="#6b5d8e" stroke-width="2" marker-end="url(#arrow9)"/>
+  <rect x="530" y="402" width="360" height="42" rx="6" fill="#f0edf7" stroke="#6b5d8e"/>
+  <text x="710" y="428" text-anchor="middle">reduce 단계로 최종 답 종합</text>
+  <text x="710" y="490" text-anchor="middle" font-size="13" fill="#5d6864">전체를 넓게 훑는다</text>
+  <text x="710" y="510" text-anchor="middle" font-size="13" fill="#5d6864">(global sensemaking question)</text>
+</g>
+
+<rect x="30" y="576" width="900" height="34" rx="6" fill="#fff2d6" stroke="#a66b12"/>
+<text x="480" y="598" text-anchor="middle" font-size="13" fill="#18201f">같은 그래프, 다른 질문 유형 → 다른 검색 전략. “GraphRAG가 항상 더 정확·저렴”은 도메인 한정 주장이다.</text>
+</svg>
+<figcaption>그림 1. GraphRAG는 인덱싱 시점에 한 번 그래프와 커뮤니티 리포트를 만들고, 질문 시점마다 local/global 전략을 고른다. (출처: Microsoft GraphRAG 공식 아키텍처 문서 재구성)</figcaption>
+</figure>
+
+<h2>1. 일반 RAG가 막히는 지점</h2>
+<p>Sprytix의 X 글은 이렇게 대비한다: 일반 RAG는 "질문 → 문서에서 매칭 텍스트 검색 → 관련 청크 반환 → 모델이 청크로 답 생성" 순서로 동작한다. "3월에 매출이 왜 떨어졌나?"라고 물으면, 일반 RAG는 "매출"과 "3월"이 들어간 문서 조각을 찾아줄 뿐이다.</p>
+<div class="callout purple">
+  원문이 든 예시(원인의 연쇄를 답하는 장면)는 <strong>수치·출처 없는 예시적 설명</strong>이다. 실제로 검증된 것은 구조 자체다: GraphRAG는 명시적 엔티티-관계 그래프를 갖고 있어서, 여러 문서에 흩어진 사실을 연결한 "관계 사슬"을 물을 수 있는 가능성을 연다는 것.
+</div>
+
+<h2>2. GraphRAG의 공식 파이프라인</h2>
+<p>Microsoft GraphRAG 공식 아키텍처 문서 기준 순서는 다음과 같다.</p>
+<div class="grid">
+  <div class="card"><h3>1) TextUnits</h3>문서를 청크(TextUnit) 단위로 분할.</div>
+  <div class="card"><h3>2) 추출</h3>각 청크에서 엔티티·관계·핵심 클레임(claim)을 LLM으로 추출.</div>
+  <div class="card"><h3>3) 그래프 구축</h3>추출된 엔티티·관계로 지식 그래프를 조립.</div>
+  <div class="card"><h3>4) Leiden 커뮤니티 탐지</h3>그래프 안에서 촘촘히 연결된 노드 묶음(커뮤니티)을 계층적으로 발견.</div>
+  <div class="card"><h3>5) 커뮤니티 리포트</h3>각 커뮤니티를 LLM이 요약한 리포트를 미리 생성해 둔다.</div>
+  <div class="card"><h3>6) Local / Global Search</h3>질문 유형에 따라 특정 노드 주변을 보거나(local), 리포트들을 map-reduce로 종합한다(global).</div>
+</div>
+
+<h2>3. Local 질문과 Global 질문, 무엇이 다른가</h2>
+<table>
+  <tr><th>구분</th><th>질문 예시</th><th>검색 방식</th><th>강한 상황</th></tr>
+  <tr><td>Local Search</td><td>"공급업체 X에게 3월에 무슨 일이 있었나?"</td><td>특정 엔티티 + 이웃 노드로 확장</td><td>구체적 대상이 이미 정해진 질문</td></tr>
+  <tr><td>Global Search</td><td>"전체 공급업체 관계에서 반복되는 위험 패턴은?"</td><td>커뮤니티 리포트를 map 단계로 훑고 reduce로 종합</td><td>데이터셋 전체를 관통하는 주제·패턴 질문(sensemaking)</td></tr>
+</table>
+<p class="source-note">공식 문서: <a href="https://microsoft.github.io/graphrag/query/global_search/">GraphRAG Global Search</a>, <a href="https://github.com/microsoft/graphrag">GraphRAG README(Local Search)</a>.</p>
+
+<h2>4. 교정: "정확도 +18%, 비용 -85%"는 GraphRAG 일반 수치가 아니다</h2>
+<div class="callout warn">
+  <strong>과장 교정:</strong> Sprytix의 X 글은 이 수치를 "Microsoft, Stanford, Anthropic이 독립적으로 발견한 결론"처럼 제시하지만, 원문이 스스로 인용한 출처(arXiv:2603.22528, <em>ChatP&amp;ID</em> 논문)를 확인하면 이것은 <strong>산업용 배관·계장 다이어그램(P&amp;ID) 도메인</strong>에서 그래프 표현이 <em>원본 이미지 입력 대비</em> 정확도 +18%, <em>P&amp;ID 파일 직접 ingest 대비</em> 토큰 비용 -85%를 보인 결과다. 대조군 자체가 서로 다르고, Microsoft GraphRAG의 보편 성능 수치가 아니다.
+</div>
+<p>Microsoft의 원 GraphRAG 논문(arXiv:2404.16130)이 실제로 보인 것은 약 100만 토큰 규모 코퍼스의 <strong>global sensemaking·QFS(query-focused summarization) 질문</strong>에서 comprehensiveness(포괄성)와 diversity(다양성)의 개선이다. "모든 질문에서 더 정확하다"는 범용 주장은 원 논문에 없다.</p>
+
+<h2>5. GraphRAG가 항상 이기지는 않는다</h2>
+<p>그래프 인덱싱 자체에 비용이 든다. Microsoft Research 공식 실험(50개 global 질문 기준)에서 <strong>Dynamic Global Search는 static level 1 대비 평균 77% 토큰 비용을 줄였지만, level 3 dynamic 설정은 오히려 평균 +34% 더 비쌌다</strong> — community level과 비용의 관계는 단순하지 않다.</p>
+<p>반대로 <strong>LazyGraphRAG</strong>는 공식 발표에서 인덱싱 비용이 full GraphRAG의 0.1%, 동등한 global 품질 기준에서 쿼리 비용이 최대 700배 낮았다고 보고한다 — "그래프는 항상 비싸다"의 최신 반례지만, 이 역시 같은 평가 세팅 내부 결과로 한정해야 한다.</p>
+<p class="source-note">공식: <a href="https://www.microsoft.com/en-us/research/blog/graphrag-improving-global-search-via-dynamic-community-selection">GraphRAG Dynamic Community Selection</a>, <a href="https://www.microsoft.com/en-us/research/blog/lazygraphrag-setting-a-new-standard-for-quality-and-cost/">LazyGraphRAG</a>.</p>
+
+<div class="callout brick">
+  <strong>실무 번역:</strong> mystudy의 <code>memory_search</code>는 사실상 vector/local 검색에 가깝다 — "이 프로젝트에서 이 결정을 왜 했지?" 같은 국지적 질문에는 강하지만, "내가 반복적으로 만드는 실수 유형은?" 같은 전체를 관통하는 global 질문에는 별도의 요약·커뮤니티 리포트 단계 없이는 약하다. Trade Intel의 거래처 관계망도 마찬가지: "이 거래처의 최근 주문"은 local, "전체 거래처 중 반복되는 클레임 패턴"은 global 질문이다.
+</div>
+
+<h2>6. 퀴즈 · 회수 연습</h2>
+
+<div class="quiz-card" data-quiz data-correct="맞음. Local은 특정 엔티티, Global은 커뮤니티 리포트 종합이다." data-incorrect="다시. Local과 Global의 차이는 질문의 범위와 검색 전략에 있다.">
+  <p><strong>Q1.</strong> "전체 공급업체 관계에서 반복되는 위험 패턴은?" 같은 질문에 적합한 검색 방식은?</p>
+  <button type="button" data-answer="wrong">특정 엔티티 하나와 이웃 노드만 조회하는 방식</button>
+  <button type="button" data-answer="correct">커뮤니티 리포트를 map-reduce로 종합하는 방식</button>
+  <button type="button" data-answer="wrong">청크를 벡터 유사도로만 정렬하는 방식</button>
+  <button type="button" data-answer="wrong">그래프 없이 원문을 전부 다시 읽는 방식</button>
+  <div class="quiz-feedback" data-feedback></div>
+</div>
+
+<div class="quiz-card" data-quiz data-correct="맞음. 18%/85%는 산업 도면 도메인 논문의 특정 비교 결과다." data-incorrect="다시. 이 수치는 Microsoft GraphRAG의 보편 성능이 아니라 도메인 한정 논문 결과다.">
+  <p><strong>Q2.</strong> "정확도 +18%, 비용 -85%" 수치를 가장 정확하게 설명하면?</p>
+  <button type="button" data-answer="wrong">Microsoft GraphRAG가 모든 질문에서 항상 보이는 성능</button>
+  <button type="button" data-answer="correct">산업용 P&ID 도면 도메인 논문의 특정 대조군 비교 결과</button>
+  <button type="button" data-answer="wrong">Stanford와 Anthropic이 각자 재현에 성공한 공식 수치</button>
+  <button type="button" data-answer="wrong">LazyGraphRAG의 공식 인덱싱 비용 절감치</button>
+  <div class="quiz-feedback" data-feedback></div>
+</div>
+
+<div class="quiz-card" data-quiz data-correct="맞음. 인덱싱 비용과 community level에 따라 그래프가 항상 이기지 않는다." data-incorrect="다시. Dynamic level 3는 공식 실험에서 오히려 더 비쌌다.">
+  <p><strong>Q3.</strong> GraphRAG가 항상 벡터 RAG보다 저렴하지 않다는 근거로 옳은 것은?</p>
+  <button type="button" data-answer="wrong">GraphRAG는 인덱싱을 하지 않아 항상 더 느리다</button>
+  <button type="button" data-answer="correct">Dynamic Global Search level 3는 공식 실험에서 평균 +34% 더 비쌌다</button>
+  <button type="button" data-answer="wrong">커뮤니티 탐지는 항상 사람이 수동으로 해야 한다</button>
+  <button type="button" data-answer="wrong">Local Search는 그래프 없이도 항상 동일한 성능을 낸다</button>
+  <div class="quiz-feedback" data-feedback></div>
+</div>
+
+<h2>7. 미니 실습 (5-10분)</h2>
+<p>본인의 mystudy 또는 memory 폴더를 대상으로:</p>
+<ol>
+  <li>local 질문 2개를 적어보자 (특정 프로젝트/레슨 하나에 대한 사실).</li>
+  <li>global 질문 2개를 적어보자 (여러 프로젝트를 관통하는 패턴, 예: "내가 반복적으로 만드는 실수 유형은?").</li>
+  <li>지금의 <code>memory_search</code>가 이 4개 질문 중 어느 쪽에 강하고 약한지 스스로 평가해보자.</li>
+</ol>
+
+<h2>Primary sources (검증 근거)</h2>
+<ul>
+  <li><a href="https://microsoft.github.io/graphrag/index/architecture/">Microsoft GraphRAG — 공식 아키텍처</a></li>
+  <li><a href="https://microsoft.github.io/graphrag/query/global_search/">Microsoft GraphRAG — Global Search 공식 문서</a></li>
+  <li><a href="https://arxiv.org/abs/2404.16130">GraphRAG 원 논문 (arXiv:2404.16130)</a></li>
+  <li><a href="https://www.microsoft.com/en-us/research/blog/graphrag-improving-global-search-via-dynamic-community-selection">Dynamic Global Search 공식 실험</a></li>
+  <li><a href="https://www.microsoft.com/en-us/research/blog/lazygraphrag-setting-a-new-standard-for-quality-and-cost/">LazyGraphRAG 공식 발표</a></li>
+</ul>
+
+<h2>X bookmarks (관점/입력 자료 — 사실 검증 전)</h2>
+<ul>
+  <li><a href="https://x.com/Sprytixl/article/2078778799064584535">Sprytix, "Graph Engineering replaced RAG at Microsoft, Stanford and Anthropic"</a> — 개념 골격은 유용하나 18%/85% 등 정량 수치는 도메인 한정으로 재확인 필요.</li>
+</ul>
+
+<h2>다음으로 연결</h2>
+<ul>
+  <li>다음 레슨: <a href="./0010-architecture-clinic.html">Lesson 0010 — 어떤 그래프를 언제 써야 하는가</a></li>
+  <li>이전 레슨: <a href="./0008-knowledge-temporal-graphs.html">Lesson 0008 — 사실·관계·시간을 기억하는 그래프</a></li>
+  <li>레퍼런스: <a href="./0012-source-evidence-map.html">X 북마크와 검증 근거 지도</a></li>
+</ul>
+
+<footer>
+  <p>수치가 의심스러우면 언제든 에이전트에게 원 논문·공식 문서 재확인을 요청하세요.</p>
+  <p class="pill">Mission-linked</p>
+  <p class="badge knowledge">지식/시간 그래프 트랙</p>
+</footer>
+
+</main>
+<script>
+document.querySelectorAll("[data-quiz]").forEach((quiz) => {
+  const feedback = quiz.querySelector("[data-feedback]");
+  quiz.querySelectorAll("button[data-answer]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const isCorrect = button.dataset.answer === "correct";
+      quiz.querySelectorAll("button[data-answer]").forEach((b) => {
+        b.classList.remove("correct", "incorrect");
+        b.setAttribute("aria-pressed", "false");
+      });
+      button.classList.add(isCorrect ? "correct" : "incorrect");
+      button.setAttribute("aria-pressed", "true");
+      feedback.textContent = isCorrect ? quiz.dataset.correct : quiz.dataset.incorrect;
+    });
+  });
+});
+
+</script>
+</body>
+</html>

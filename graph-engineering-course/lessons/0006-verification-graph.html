@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="심판(judge)을 코드보다 먼저 만들고, 룰북과 독립 리뷰어로 실행 그래프의 산출물을 검증하는 법을 배운다.">
+<title>심판을 먼저 만들어라 · Graph Engineering v2</title>
+<style>
+:root {
+  --ink:#18201f; --muted:#5d6864; --paper:#fbfaf6; --panel:#ffffff;
+  --line:#d9ddd6; --exec:#136f63; --improve:#a23d31; --knowledge:#6b5d8e;
+  --problem:#a66b12; --soft:#eaf3ef; --warn:#fff2d6; --purple-soft:#f0edf7;
+  --brick-soft:#fae9e7; --code:#101917;
+}
+*{box-sizing:border-box} body{margin:0;color:var(--ink);background:var(--paper);font-family:ui-serif,Georgia,"Apple SD Gothic Neo","Noto Serif KR",serif;line-height:1.68}
+main{width:min(960px,calc(100% - 40px));margin:0 auto;padding:52px 0 88px}.kicker{color:var(--exec);font:700 12px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase}
+h1{margin:12px 0 14px;font-size:clamp(34px,6vw,62px);line-height:1.04}.subtitle{max-width:760px;color:var(--muted);font-size:18px}
+h2{margin-top:42px;border-bottom:1px solid var(--line);padding-bottom:8px}h3{margin-top:28px}a{color:var(--exec);text-underline-offset:3px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}.card,.quiz-card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:20px;margin:18px 0}.card h3{margin-top:0}
+.callout{border-left:4px solid var(--exec);background:var(--soft);border-radius:6px;padding:14px 16px;margin:18px 0}.callout.warn{border-left-color:var(--problem);background:var(--warn)}.callout.brick{border-left-color:var(--improve);background:var(--brick-soft)}.callout.purple{border-left-color:var(--knowledge);background:var(--purple-soft)}
+.badge,.pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:2px 9px;font:700 12px/1.7 ui-sans-serif,system-ui,sans-serif;color:var(--muted)}.badge.exec{color:var(--exec)}.badge.improve{color:var(--improve)}.badge.knowledge{color:var(--knowledge)}.badge.problem{color:var(--problem)}
+figure{margin:24px 0}.diagram{width:100%;height:auto;display:block}.diagram-frame{background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden}figcaption{margin-top:8px;color:var(--muted);font-size:14px}
+table{border-collapse:collapse;width:100%;background:var(--panel);margin:18px 0}th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}th{background:var(--soft);font-family:ui-sans-serif,system-ui,sans-serif;font-size:13px}
+pre{overflow-x:auto;background:var(--code);color:#eef7f2;border-radius:8px;padding:16px}code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.92em}
+.quiz-card button{display:block;width:100%;margin:8px 0;padding:11px 13px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--ink);font:inherit;text-align:left;cursor:pointer}.quiz-card button.correct{border-color:#1f7a3f;background:#e8f4eb}.quiz-card button.incorrect{border-color:var(--improve);background:var(--brick-soft)}.quiz-feedback{min-height:1.6em;font-weight:700}
+.source-note{font-size:14px;color:var(--muted);border-top:1px solid var(--line);padding-top:10px}footer{margin-top:54px;padding-top:24px;border-top:1px solid var(--line);color:var(--muted)}
+@media(max-width:640px){main{width:min(100% - 24px,960px);padding-top:32px}h1{font-size:38px}table{font-size:13px}.diagram text{font-size:12px}}
+@media print{body{background:#fff}main{width:auto;padding:24px}.card,.quiz-card,figure{break-inside:avoid}a::after{content:" (" attr(href) ")";font-size:.8em;color:var(--muted)}}
+</style>
+</head>
+<body>
+<main>
+
+<header>
+  <div class="kicker">Lesson 0006 · Graph Engineering v2</div>
+  <h1>심판을 먼저 만들어라</h1>
+  <p class="subtitle">에이전트는 종료 조건이 없으면 절대 끝나지 않는다. "다 된 것 같다"는 느낌이지 조건이 아니다. 그래프를 짜기 전에, 무엇이 통과인지 기계가 답할 수 있는 심판부터 만든다.</p>
+</header>
+
+<section class="callout">
+  <strong>오늘의 한 줄 답:</strong> 실행 그래프에서 진짜 어려운 일은 워커를 늘리는 게 아니라 <strong>Judge(심판)를 코드보다 먼저 만들고, 일부러 부숴서 검증하고, 룰북에 규칙을 누적시키고, 서로 못 보는 독립 리뷰어 두 명을 두는 것</strong>이다. 같은 모델이 자기 숙제를 자기가 채점하게 하지 않는 것이 전체 그래프의 신뢰도를 결정한다.
+</section>
+
+<figure class="diagram-frame">
+<svg class="diagram" viewBox="0 0 960 640" role="img" aria-labelledby="svgTitle6 svgDesc6" xmlns="http://www.w3.org/2000/svg">
+  <title id="svgTitle6">검증 그래프: Source에서 Worker, Judge, 독립 리뷰어, 비용별 체크 배치, 단일 daemon까지</title>
+  <desc id="svgDesc6">소스가 워커를 거쳐 심판을 통과하고, 실패 시 룰북을 고쳐 배치를 재생성하며, 독립된 두 리뷰어가 서로를 보지 못한 채 판정하고, 빠른 체크는 루프 안에 느린 체크는 배치 밖에 배치되며, 비싼 연산은 단일 데몬이 소유하는 구조를 보여준다.</desc>
+  <defs>
+    <marker id="arrow6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#136f63"/>
+    </marker>
+    <marker id="arrowBad6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#a23d31"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="960" height="640" fill="#ffffff" stroke="#d9ddd6" rx="8"/>
+
+  <text x="16" y="24" font-family="ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="700" letter-spacing="0.08em" fill="#136f63">1. 기본 흐름 — Source → Worker → Judge</text>
+  <g transform="translate(20,36)">
+    <rect x="0" y="0" width="110" height="46" rx="6" fill="#fbfaf6" stroke="#5d6864"/>
+    <text x="55" y="28" text-anchor="middle" font-size="12" fill="#18201f">Source</text>
+    <line x1="110" y1="23" x2="150" y2="23" stroke="#136f63" stroke-width="2" marker-end="url(#arrow6)"/>
+    <rect x="150" y="0" width="110" height="46" rx="6" fill="#eaf3ef" stroke="#136f63"/>
+    <text x="205" y="28" text-anchor="middle" font-size="12" fill="#18201f">Worker (모델)</text>
+    <line x1="260" y1="23" x2="300" y2="23" stroke="#136f63" stroke-width="2" marker-end="url(#arrow6)"/>
+    <rect x="300" y="0" width="120" height="46" rx="6" fill="#fae9e7" stroke="#a23d31"/>
+    <text x="360" y="22" text-anchor="middle" font-size="12" font-weight="700" fill="#18201f">Judge</text>
+    <text x="360" y="36" text-anchor="middle" font-size="9" fill="#5d6864">기계 판정, pass/fail</text>
+  </g>
+
+  <text x="16" y="112" font-family="ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="700" letter-spacing="0.08em" fill="#136f63">2. 실패하면 — Rulebook 수정 후 배치 재생성 (산출물은 버림)</text>
+  <g transform="translate(20,124)">
+    <rect x="0" y="0" width="120" height="46" rx="6" fill="#fae9e7" stroke="#a23d31"/>
+    <text x="60" y="20" text-anchor="middle" font-size="11" fill="#18201f">FAIL</text>
+    <text x="60" y="34" text-anchor="middle" font-size="9" fill="#5d6864">3개 샘플로 stress test</text>
+    <line x1="120" y1="23" x2="160" y2="23" stroke="#a23d31" stroke-width="2" marker-end="url(#arrowBad6)"/>
+    <rect x="160" y="0" width="150" height="46" rx="6" fill="#fff" stroke="#5d6864"/>
+    <text x="235" y="20" text-anchor="middle" font-size="11" fill="#18201f">rules/rulebook.md</text>
+    <text x="235" y="34" text-anchor="middle" font-size="9" fill="#5d6864">누적, 절대 우회 금지</text>
+    <line x1="310" y1="23" x2="350" y2="23" stroke="#136f63" stroke-width="2" marker-end="url(#arrow6)"/>
+    <rect x="350" y="0" width="150" height="46" rx="6" fill="#eaf3ef" stroke="#136f63"/>
+    <text x="425" y="20" text-anchor="middle" font-size="11" fill="#18201f">batch 재생성</text>
+    <text x="425" y="34" text-anchor="middle" font-size="9" fill="#5d6864">이전 3개 산출물은 삭제</text>
+  </g>
+
+  <text x="16" y="204" font-family="ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="700" letter-spacing="0.08em" fill="#136f63">3. 서로 못 보는 독립 리뷰어 2명 (자기 숙제 자기 채점 금지)</text>
+  <g transform="translate(20,216)">
+    <rect x="0" y="0" width="130" height="44" rx="6" fill="#eaf3ef" stroke="#136f63"/>
+    <text x="65" y="26" text-anchor="middle" font-size="12" fill="#18201f">산출물</text>
+    <line x1="130" y1="15" x2="180" y2="15" stroke="#5d6864" stroke-width="1.8" marker-end="url(#arrow6)"/>
+    <line x1="130" y1="30" x2="180" y2="30" stroke="#5d6864" stroke-width="1.8" marker-end="url(#arrow6)"/>
+    <rect x="180" y="0" width="150" height="44" rx="6" fill="#f0edf7" stroke="#6b5d8e"/>
+    <text x="255" y="18" text-anchor="middle" font-size="11" fill="#18201f">Reviewer A</text>
+    <text x="255" y="32" text-anchor="middle" font-size="9" fill="#5d6864">룰북+산출물만 봄</text>
+    <rect x="345" y="0" width="150" height="44" rx="6" fill="#f0edf7" stroke="#6b5d8e"/>
+    <text x="420" y="18" text-anchor="middle" font-size="11" fill="#18201f">Reviewer B</text>
+    <text x="420" y="32" text-anchor="middle" font-size="9" fill="#5d6864">A의 판정을 못 봄</text>
+    <line x1="255" y1="44" x2="380" y2="70" stroke="#5d6864" stroke-width="1.6" stroke-dasharray="3,3"/>
+    <line x1="420" y1="44" x2="380" y2="70" stroke="#5d6864" stroke-width="1.6" stroke-dasharray="3,3"/>
+    <rect x="320" y="70" width="120" height="34" rx="6" fill="#fff" stroke="#a23d31"/>
+    <text x="380" y="92" text-anchor="middle" font-size="10" fill="#18201f">불일치 → 룰북 수정</text>
+  </g>
+
+  <text x="16" y="342" font-family="ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="700" letter-spacing="0.08em" fill="#136f63">4. 검사 비용에 따라 배치 — 빠른 건 루프 안, 느린 건 배치 밖</text>
+  <g transform="translate(20,356)">
+    <rect x="0" y="0" width="230" height="70" rx="6" fill="#eaf3ef" stroke="#136f63"/>
+    <text x="115" y="24" text-anchor="middle" font-size="11" font-weight="700" fill="#18201f">Fast checks — inside loop</text>
+    <text x="115" y="42" text-anchor="middle" font-size="10" fill="#5d6864">lint, schema validate, unit test</text>
+    <text x="115" y="58" text-anchor="middle" font-size="10" fill="#5d6864">매 워커 호출 직후 즉시 실행</text>
+
+    <rect x="260" y="0" width="230" height="70" rx="6" fill="#fff2d6" stroke="#a66b12"/>
+    <text x="375" y="24" text-anchor="middle" font-size="11" font-weight="700" fill="#18201f">Slow checks — outside, batched</text>
+    <text x="375" y="42" text-anchor="middle" font-size="10" fill="#5d6864">컴파일러, 전체 통합 테스트</text>
+    <text x="375" y="58" text-anchor="middle" font-size="10" fill="#5d6864">큐 전체가 끝난 뒤 한 번만</text>
+  </g>
+
+  <text x="16" y="452" font-family="ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="700" letter-spacing="0.08em" fill="#136f63">5. 비싼 연산은 단일 daemon이 소유</text>
+  <g transform="translate(20,466)">
+    <rect x="0" y="0" width="120" height="40" rx="6" fill="#eaf3ef" stroke="#136f63"/>
+    <text x="60" y="24" text-anchor="middle" font-size="10" fill="#18201f">worker 1..N</text>
+    <line x1="120" y1="20" x2="170" y2="20" stroke="#136f63" stroke-width="1.8" marker-end="url(#arrow6)"/>
+    <rect x="170" y="0" width="170" height="40" rx="6" fill="#fff" stroke="#5d6864"/>
+    <text x="255" y="24" text-anchor="middle" font-size="10" fill="#18201f">rebuild_requests 큐</text>
+    <line x1="340" y1="20" x2="390" y2="20" stroke="#136f63" stroke-width="1.8" marker-end="url(#arrow6)"/>
+    <rect x="390" y="0" width="170" height="40" rx="6" fill="#fae9e7" stroke="#a23d31"/>
+    <text x="475" y="24" text-anchor="middle" font-size="10" fill="#18201f">단일 daemon: 배치 재빌드</text>
+    <text x="0" y="70" font-size="10" fill="#5d6864">10명이 각자 rebuild를 트리거하면 같은 일을 10번 지불한다 — 요청만 큐에 쓰고 daemon이 배치로 소화한다.</text>
+  </g>
+
+  <text x="480" y="600" text-anchor="middle" font-size="12" font-weight="700" fill="#18201f">핵심: 근거(evidence)로 멈춘다. "된 것 같다"는 정지 조건이 아니다.</text>
+</svg>
+</figure>
+<p class="source-note">그림 1. Judge → Worker → 실패 시 Rulebook 갱신 → 독립 Reviewer 두 명 → 비용별 체크 배치 → 단일 daemon 소유. Yarchi(@undefinedKi)의 8단계 레시피를 시각화.</p>
+
+<h2>1. 왜 심판을 코드보다 먼저 만드는가</h2>
+<p>Yarchi(@undefinedKi)의 글은 이 순서를 강조한다: 작업 내용에 대한 지시를 쓰기 전에, <strong>무엇이 통과인지 기계가 답할 수 있는 스크립트(judge.sh)</strong>부터 만든다. 파일 하나를 받아 exit code 0(통과)/1(실패)과 이유를 출력하는 스크립트다. 코드라면 테스트 실행기를 감싸고, 문서라면 필수 섹션과 금지 패턴을 확인하고, 데이터라면 스키마와 행 수를 검증한다. 너무 애매해서 스크립트로 판단할 수 없는 경우에만 모델에게 원문과 함께 예/아니오 질문을 던지고 답을 파싱한다.</p>
+
+<div class="callout">
+  <strong>판별 질문:</strong> "이게 통과했다는 걸 어떤 명령 하나로 확인할 수 있는가?" 이 질문에 답할 수 없다면 아직 심판이 없는 것이다.
+</div>
+
+<h2>2. 심판을 일부러 부숴라</h2>
+<p>절대 실패하지 않는 심판은 장식품이다. Yarchi의 2단계: 정상 산출물을 복사해 일부러 훼손한 뒤(예: 필수 섹션 제거), 심판이 그 훼손본을 반드시 FAIL로 판정하는지 확인한다. 훼손본이 통과한다면 심판이 눈멀어 있는 것이고, 그 이후의 모든 PASS 결과는 의미가 없다.</p>
+
+<h2>3. 룰북은 절대 우회하지 않는다</h2>
+<p><code>rules/rulebook.md</code>는 애매한 부분을 모델과 대화로 풀며 문장으로 축적한 규칙집이다. 두 가지 속성이 핵심이다: (1) 계속 자란다 — 리뷰어가 잡아낸, 룰북에 없던 모든 문제는 새 문장이 된다. (2) 아무것도 우회하지 않는다 — 산출물을 손으로 고치는 순간 진실의 원천이 둘이 되고, 하나는 사람 머릿속에만 있게 된다.</p>
+<p>3개 항목으로 스트레스 테스트한 뒤(룰북 있는 버전 vs 없는 버전을 diff해 차이를 룰북에 반영) 그 3개 산출물은 반드시 삭제한다 — 목표는 3개 파일이 아니라 규칙이었기 때문이다. 이 단계를 건너뛰면 처음 3개만 다른 관습을 따르는 사고가 반복된다.</p>
+
+<h2>4. 서로 못 보는 리뷰어 두 명</h2>
+<p>워커와 같은 컨텍스트에 있는 리뷰어 하나는 워커의 추론을 이미 봤기 때문에 동의하게 된다. Yarchi와 Akshay(@akshay_pachaar) 모두 같은 결론에 도달한다 — 리뷰어는 다른 모델로, 신선한 컨텍스트에서(전체 대화가 아니라 룰북과 산출물만), 그래프가 조작할 수 없는 근거(실제로 실행된 테스트, 실제로 컴파일된 코드)에 판정을 고정해야 한다. 모든 발견에 룰 조항 인용을 강제하는 디테일이 막연한 "별로다"를 재현 가능한 개선으로 바꾼다.</p>
+
+<div class="grid">
+  <div class="card">
+    <h3>적대적 검증</h3>
+    <p>N명의 독립 회의론자가 각 발견을 반박 시도. 과반수가 살아남아야 통과.</p>
+  </div>
+  <div class="card">
+    <h3>관점-다양 검증</h3>
+    <p>정확성/보안/재현성처럼 서로 다른 렌즈를 가진 리뷰어를 배치. 동일한 렌즈 N개보다 다른 실패를 잡는다.</p>
+  </div>
+  <div class="card">
+    <h3>판정단(Judge panel)</h3>
+    <p>N개 시도를 다른 각도로 생성한 뒤 병렬 심사위원이 채점하고, 우승작에 차점작의 좋은 점을 접목한다.</p>
+  </div>
+</div>
+
+<h2>5. Bun 사례로 본 "테스트 100% 통과"의 한계</h2>
+<p>이 원칙들이 실제로 쓰인 검증된 사례가 Bun의 Zig→Rust 마이그레이션이다(Anthropic·Bun 공식 사례). 정확한 범위는 다음과 같다:</p>
+<table>
+  <tr><th>항목</th><th>검증된 수치</th></tr>
+  <tr><td>이식 대상</td><td>1,448개 Zig 파일, 병합된 diff +1,009,272줄</td></tr>
+  <tr><td>기간</td><td>11일(5월 3일~14일), 6,778 커밋, 최대 동시 약 64개 Claude, 약 50개 dynamic workflow</td></tr>
+  <tr><td>비용</td><td>비캐시 입력 59억 토큰, 출력 6.9억 토큰, 캐시 입력 720억 토큰 — 공개 API 가격 환산 시 약 $165,000 (실제 청구 현금이 아니라 <strong>API 가격 환산치</strong>)</td></tr>
+  <tr><td>리뷰 구조</td><td>구현자 1명 + 적대적 리뷰어 2명 이상, 서로 다른 context에서 diff만 보고 결함 탐색</td></tr>
+  <tr><td>테스트 결과</td><td>merge 전 기존 CI 스위트 100% 통과 — 그러나 merge 이후 <strong>19건의 회귀</strong>가 추가로 발견돼 수정됨</td></tr>
+</table>
+<p>마지막 행이 이 레슨의 핵심 교훈이다: <strong>테스트 100% 통과는 무결함을 보장하지 않는다.</strong> 심판은 강력한 도구이지 완전성의 증명이 아니다. 별개로, Anthropic 내부의 Python→TypeScript 이식(165,000줄, 주말, 수백 개 에이전트, 8개 게이트, 3라운드 적대적 리뷰)은 <strong>Bun과 완전히 다른 별개 사례</strong>다 — 두 사례를 하나로 섞어 인용하면 안 된다.</p>
+
+<div class="callout warn">
+  <strong>실무 번역:</strong> mystudy 레슨 하나를 배포하기 전에도 같은 원칙이 적용된다. "레슨이 잘 만들어진 것 같다"는 정지 조건이 아니다. HTML이 파싱되는가, SVG가 실제로 들어있는가, 퀴즈가 3개인가, 출처 링크가 죽지 않았는가를 스크립트로 확인할 수 있어야 진짜 심판이다.
+</div>
+
+<h2>6. 퀴즈 · 회수 연습</h2>
+
+<div class="quiz-card" data-quiz data-correct="맞음. Yarchi의 순서는 지시문보다 판정 스크립트를 먼저 만드는 것이다." data-incorrect="다시. 원문의 1단계는 작업 지시가 아니라 기계가 판정 가능한 심판을 먼저 만드는 것이다.">
+  <p><strong>Q1.</strong> Yarchi의 8단계 레시피에서 가장 먼저 해야 하는 일은?</p>
+  <button type="button" data-answer="wrong">워커에게 작업 지시문을 상세히 작성한다</button>
+  <button type="button" data-answer="correct">통과/실패를 기계가 판정할 수 있는 judge 스크립트를 만든다</button>
+  <button type="button" data-answer="wrong">가장 비싼 모델로 워커를 먼저 실행해본다</button>
+  <button type="button" data-answer="wrong">독립 리뷰어 두 명부터 섭외한다</button>
+  <div class="quiz-feedback" data-feedback></div>
+</div>
+
+<div class="quiz-card" data-quiz data-correct="맞음. 이미 물든 리뷰어는 워커의 추론에 동의하게 되므로 신선한 컨텍스트가 필요하다." data-incorrect="다시. 정답은 같은 컨텍스트의 리뷰어가 이미 워커의 추론을 봤기 때문에 동의로 기운다는 것이다.">
+  <p><strong>Q2.</strong> 리뷰어가 워커와 같은 컨텍스트(전체 대화 기록)를 보면 안 되는 이유는?</p>
+  <button type="button" data-answer="wrong">컨텍스트 창 길이 제한 때문에</button>
+  <button type="button" data-answer="correct">워커의 추론을 이미 봤기 때문에 동의로 기울기 쉬워서</button>
+  <button type="button" data-answer="wrong">두 모델을 동시에 부르면 비용이 두 배가 되어서</button>
+  <button type="button" data-answer="wrong">룰북 내용이 컨텍스트에 중복 포함돼서</button>
+  <div class="quiz-feedback" data-feedback></div>
+</div>
+
+<div class="quiz-card" data-quiz data-correct="맞음. Bun은 merge 전 100% 테스트 통과 후에도 19건의 회귀가 추가로 발견됐다." data-incorrect="다시. Bun 사례의 정확한 검증 결과는 100% 통과 이후에도 19건의 회귀가 나왔다는 것이다.">
+  <p><strong>Q3.</strong> Bun의 Zig→Rust 마이그레이션에서 "테스트 100% 통과"가 실제로 의미했던 것은?</p>
+  <button type="button" data-answer="wrong">이후 어떤 회귀도 발견되지 않은 완전한 무결함</button>
+  <button type="button" data-answer="correct">merge 전 CI는 통과했지만 이후 19건의 회귀가 추가로 발견됨</button>
+  <button type="button" data-answer="wrong">테스트 자체를 생략하고 리뷰어 판단만으로 병합함</button>
+  <button type="button" data-answer="wrong">Python→TypeScript 이식과 동일한 테스트 스위트를 재사용함</button>
+  <div class="quiz-feedback" data-feedback></div>
+</div>
+
+<h2>7. 미니 실습 (5-10분)</h2>
+<p>이 mystudy 코스의 레슨 하나(예: 지금 읽고 있는 이 페이지)를 대상으로, 기계가 판정할 수 있는 judge 규칙 5개를 적어보자.</p>
+<ol>
+  <li>파일이 유효한 HTML로 파싱되는가?</li>
+  <li>인라인 <code>&lt;svg&gt;</code>가 정확히 1개 존재하는가?</li>
+  <li><code>data-quiz</code> 카드가 정확히 3개인가?</li>
+  <li>본문에 최소 1개 이상의 Primary source 링크와 1개 이상의 X bookmark 출처 구분 표기가 있는가?</li>
+  <li>이전/다음 레슨 링크가 깨지지 않고 존재하는가?</li>
+</ol>
+<p>이 5줄이 곧 이 코스 자체의 <code>judge.sh</code>다.</p>
+
+<h2>Primary sources</h2>
+<p>공식 문서·1차 근거 (검증 완료):</p>
+<ul>
+  <li><a href="https://bun.com/blog/bun-in-rust">Bun — "Bun in Rust"</a> — 1,448 Zig 파일, +1,009,272줄, 11일, 리뷰 구조, 19건 회귀.</li>
+  <li><a href="https://claude.com/blog/ai-code-migration">Anthropic — AI Code Migration</a> — Bun 사례와 별도의 Python→TypeScript 165k LOC 사례.</li>
+  <li><a href="https://code.claude.com/docs/en/workflows">Claude Code — Dynamic workflows</a> — 위 마이그레이션에 쓰인 workflow 실행 환경.</li>
+</ul>
+<p>X 북마크 (관점/입력):</p>
+<ul>
+  <li><a href="https://x.com/undefinedKi/article/2080992300893675775">Yarchi, "Graph Engineering: an Agent That Reviews Its Own Work"</a> — 8단계 judge-first 레시피의 원출처.</li>
+  <li><a href="https://x.com/0xCodez/article/2079165300625330317">Codez, "14-Step roadmap"</a> — 검증기를 엣지에 배치하는 패턴.</li>
+</ul>
+
+<h2>다음으로 연결</h2>
+<ul>
+  <li>이전 레슨: <a href="./0005-topology-patterns.html">Lesson 0005 — 체인에서 다이아몬드까지</a></li>
+  <li>다음 레슨: <a href="./0007-multi-agent-coordination.html">Lesson 0007 — 읽기는 병렬, 쓰기는 한 곳</a></li>
+  <li>관련 레슨: <a href="./0002-loop-four-failures.html">Lesson 0002 — 루프는 왜 완벽하게 실패하는가</a> (근거 없는 정지 조건의 위험)</li>
+  <li>레퍼런스: <a href="../reference/0012-source-evidence-map.html">X 북마크와 검증 근거 지도</a> · <a href="../reference/0013-design-pattern-playbook.html">설계 플레이북</a></li>
+</ul>
+
+<footer>
+  <p>막히는 부분은 에이전트에게 바로 물어보세요. 이 워크스페이스의 선생님 역할입니다.</p>
+  <p class="pill">Mission-linked</p>
+  <p class="pill">ZPD: 토폴로지 → 검증 가능한 실행</p>
+</footer>
+
+</main>
+<script>
+document.querySelectorAll("[data-quiz]").forEach((quiz) => {
+  const feedback = quiz.querySelector("[data-feedback]");
+  quiz.querySelectorAll("button[data-answer]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const isCorrect = button.dataset.answer === "correct";
+      quiz.querySelectorAll("button[data-answer]").forEach((b) => {
+        b.classList.remove("correct", "incorrect");
+        b.setAttribute("aria-pressed", "false");
+      });
+      button.classList.add(isCorrect ? "correct" : "incorrect");
+      button.setAttribute("aria-pressed", "true");
+      feedback.textContent = isCorrect ? quiz.dataset.correct : quiz.dataset.incorrect;
+    });
+  });
+});
+</script>
+</body>
+</html>

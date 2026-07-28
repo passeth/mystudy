@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Graph Engineering v2 - 그래프 설계 한 장 플레이북. 인쇄 가능한 12체크 설계 리뷰 시트.">
+<title>그래프 설계 한 장 플레이북 · Graph Engineering v2</title>
+<style>
+:root {
+  --ink:#18201f; --muted:#5d6864; --paper:#fbfaf6; --panel:#ffffff;
+  --line:#d9ddd6; --exec:#136f63; --improve:#a23d31; --knowledge:#6b5d8e;
+  --problem:#a66b12; --soft:#eaf3ef; --warn:#fff2d6; --purple-soft:#f0edf7;
+  --brick-soft:#fae9e7; --code:#101917;
+}
+*{box-sizing:border-box} body{margin:0;color:var(--ink);background:var(--paper);font-family:ui-serif,Georgia,"Apple SD Gothic Neo","Noto Serif KR",serif;line-height:1.68}
+main{width:min(960px,calc(100% - 40px));margin:0 auto;padding:52px 0 88px}.kicker{color:var(--exec);font:700 12px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase}
+h1{margin:12px 0 14px;font-size:clamp(34px,6vw,62px);line-height:1.04}.subtitle{max-width:760px;color:var(--muted);font-size:18px}
+h2{margin-top:42px;border-bottom:1px solid var(--line);padding-bottom:8px}h3{margin-top:28px}a{color:var(--exec);text-underline-offset:3px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}.card,.quiz-card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:20px;margin:18px 0}.card h3{margin-top:0}
+.callout{border-left:4px solid var(--exec);background:var(--soft);border-radius:6px;padding:14px 16px;margin:18px 0}.callout.warn{border-left-color:var(--problem);background:var(--warn)}.callout.brick{border-left-color:var(--improve);background:var(--brick-soft)}.callout.purple{border-left-color:var(--knowledge);background:var(--purple-soft)}
+.badge,.pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:2px 9px;font:700 12px/1.7 ui-sans-serif,system-ui,sans-serif;color:var(--muted)}.badge.exec{color:var(--exec)}.badge.improve{color:var(--improve)}.badge.knowledge{color:var(--knowledge)}.badge.problem{color:var(--problem)}
+figure{margin:24px 0}.diagram{width:100%;height:auto;display:block}.diagram-frame{background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden}figcaption{margin-top:8px;color:var(--muted);font-size:14px}
+table{border-collapse:collapse;width:100%;background:var(--panel);margin:18px 0}th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}th{background:var(--soft);font-family:ui-sans-serif,system-ui,sans-serif;font-size:13px}
+pre{overflow-x:auto;background:var(--code);color:#eef7f2;border-radius:8px;padding:16px}code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.92em}
+.quiz-card button{display:block;width:100%;margin:8px 0;padding:11px 13px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--ink);font:inherit;text-align:left;cursor:pointer}.quiz-card button.correct{border-color:#1f7a3f;background:#e8f4eb}.quiz-card button.incorrect{border-color:var(--improve);background:var(--brick-soft)}.quiz-feedback{min-height:1.6em;font-weight:700}
+.source-note{font-size:14px;color:var(--muted);border-top:1px solid var(--line);padding-top:10px}footer{margin-top:54px;padding-top:24px;border-top:1px solid var(--line);color:var(--muted)}
+@media(max-width:640px){main{width:min(100% - 24px,960px);padding-top:32px}h1{font-size:38px}table{font-size:13px}.diagram text{font-size:12px}}
+@media print{body{background:#fff}main{width:auto;padding:24px}.card,.quiz-card,figure{break-inside:avoid}a::after{content:" (" attr(href) ")";font-size:.8em;color:var(--muted)}}
+
+.worksheet-box{border:1px dashed var(--line);border-radius:8px;padding:16px;background:var(--panel)}
+.worksheet-line{border-bottom:1px solid var(--line);height:26px;margin:10px 0}
+</style>
+</head>
+<body>
+<main>
+
+<header>
+  <div class="kicker">Reference 0013 · Graph Engineering v2</div>
+  <h1>그래프 설계 한 장 플레이북</h1>
+  <p class="subtitle">10개 레슨에서 배운 것을 실제 설계 리뷰에서 쓰는 한 장짜리 체크시트로 압축했다. 인쇄해서 옆에 두고 체크하면 된다.</p>
+</header>
+
+<section class="callout">
+  <strong>쓰는 법:</strong> 새 그래프를 만들기 전엔 위쪽 결정 캐스케이드로 다섯 갈래(이슈 트리·루프·실행 그래프·지식 그래프·개선 거버넌스 그래프) 중 무엇이 필요한지, 혹은 그래프가 아예 필요 없는지 먼저 고른다. 그다음 12체크로 설계를 검증한다.
+</section>
+
+<h2>1. 결정 캐스케이드 - 어떤 그래프부터 쓸 것인가</h2>
+<figure class="diagram-frame">
+  <svg class="diagram" viewBox="0 0 960 620" role="img" aria-label="다섯 갈래 결정 캐스케이드 다이어그램">
+    <defs>
+<marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#5d6864"/></marker>
+</defs>
+<rect x="0" y="0" width="960" height="620" fill="#ffffff"/>
+<text x="24" y="34" font-size="13" font-weight="700" fill="#5d6864" letter-spacing="0.06em">DECISION CASCADE - 어떤 그래프를 먼저 쓸 것인가</text>
+<polygon points="175,48.0 305.0,90 175,132.0 45.0,90" fill="#ffffff" stroke="#5d6864" stroke-width="1.5"/><text x="175" y="88" text-anchor="middle" font-size="13" font-weight="700" fill="#18201f">무엇을 풀지</text><text x="175" y="104" text-anchor="middle" font-size="13" font-weight="700" fill="#18201f">아직 못 정했다</text>
+<rect x="560" y="62.0" width="360" height="56" rx="8" fill="#a66b1222" stroke="#a66b12" stroke-width="2"/><text x="740.0" y="89.0" text-anchor="middle" font-size="14" font-weight="700" fill="#a66b12">이슈 트리</text><text x="740.0" y="106.0" text-anchor="middle" font-size="12" fill="#18201f">문제를 MECE로 분해</text>
+<line x1="305" y1="90" x2="554" y2="90" stroke="#5d6864" stroke-width="1.6" marker-end="url(#arrow)"/><rect x="416.5" y="79.0" width="26" height="16" fill="#fbfaf6"/><text x="429.5" y="91.0" text-anchor="middle" font-size="11" font-weight="700" fill="#5d6864">예</text>
+<line x1="175" y1="132" x2="175" y2="148" stroke="#5d6864" stroke-width="1.6" marker-end="url(#arrow)"/><rect x="162.0" y="129.0" width="26" height="16" fill="#fbfaf6"/><text x="175.0" y="141.0" text-anchor="middle" font-size="11" font-weight="700" fill="#5d6864">아니오</text>
+<polygon points="175,148.0 305.0,190 175,232.0 45.0,190" fill="#ffffff" stroke="#5d6864" stroke-width="1.5"/><text x="175" y="188" text-anchor="middle" font-size="13" font-weight="700" fill="#18201f">안정된 반복 경로를</text><text x="175" y="204" text-anchor="middle" font-size="13" font-weight="700" fill="#18201f">아직 관찰 못했다</text>
+<rect x="560" y="162.0" width="360" height="56" rx="8" fill="#5d686422" stroke="#5d6864" stroke-width="2"/><text x="740.0" y="189.0" text-anchor="middle" font-size="14" font-weight="700" fill="#5d6864">루프 먼저</text><text x="740.0" y="206.0" text-anchor="middle" font-size="12" fill="#18201f">관찰하며 경로를 익힌다</text>
+<line x1="305" y1="190" x2="554" y2="190" stroke="#5d6864" stroke-width="1.6" marker-end="url(#arrow)"/><rect x="416.5" y="179.0" width="26" height="16" fill="#fbfaf6"/><text x="429.5" y="191.0" text-anchor="middle" font-size="11" font-weight="700" fill="#5d6864">예</text>
+<line x1="175" y1="232" x2="175" y2="248" stroke="#5d6864" stroke-width="1.6" marker-end="url(#arrow)"/><rect x="162.0" y="229.0" width="26" height="16" fill="#fbfaf6"/><text x="175.0" y="241.0" text-anchor="middle" font-size="11" font-weight="700" fill="#5d6864">아니오</text>
+<polygon points="175,248.0 305.0,290 175,332.0 45.0,290" fill="#ffffff" stroke="#5d6864" stroke-width="1.5"/><text x="175" y="288" text-anchor="middle" font-size="13" font-weight="700" fill="#18201f">분기·병렬·복구가</text><text x="175" y="304" text-anchor="middle" font-size="13" font-weight="700" fill="#18201f">필요한 반복 작업이다</text>
+<rect x="560" y="262.0" width="360" height="56" rx="8" fill="#136f6322" stroke="#136f63" stroke-width="2"/><text x="740.0" y="289.0" text-anchor="middle" font-size="14" font-weight="700" fill="#136f63">실행 그래프</text><text x="740.0" y="306.0" text-anchor="middle" font-size="12" fill="#18201f">노드·엣지·게이트로 공식화</text>
+<line x1="305" y1="290" x2="554" y2="290" stroke="#5d6864" stroke-width="1.6" marker-end="url(#arrow)"/><rect x="416.5" y="279.0" width="26" height="16" fill="#fbfaf6"/><text x="429.5" y="291.0" text-anchor="middle" font-size="11" font-weight="700" fill="#5d6864">예</text>
+<line x1="175" y1="332" x2="175" y2="348" stroke="#5d6864" stroke-width="1.6" marker-end="url(#arrow)"/><rect x="162.0" y="329.0" width="26" height="16" fill="#fbfaf6"/><text x="175.0" y="341.0" text-anchor="middle" font-size="11" font-weight="700" fill="#5d6864">아니오</text>
+<polygon points="175,348.0 305.0,390 175,432.0 45.0,390" fill="#ffffff" stroke="#5d6864" stroke-width="1.5"/><text x="175" y="388" text-anchor="middle" font-size="13" font-weight="700" fill="#18201f">관계·시간을 넘나드는</text><text x="175" y="404" text-anchor="middle" font-size="13" font-weight="700" fill="#18201f">다단계 질문이 필요하다</text>
+<rect x="560" y="362.0" width="360" height="56" rx="8" fill="#6b5d8e22" stroke="#6b5d8e" stroke-width="2"/><text x="740.0" y="389.0" text-anchor="middle" font-size="14" font-weight="700" fill="#6b5d8e">지식·시간 그래프</text><text x="740.0" y="406.0" text-anchor="middle" font-size="12" fill="#18201f">온톨로지+시간 유효성</text>
+<line x1="305" y1="390" x2="554" y2="390" stroke="#5d6864" stroke-width="1.6" marker-end="url(#arrow)"/><rect x="416.5" y="379.0" width="26" height="16" fill="#fbfaf6"/><text x="429.5" y="391.0" text-anchor="middle" font-size="11" font-weight="700" fill="#5d6864">예</text>
+<line x1="175" y1="432" x2="175" y2="448" stroke="#5d6864" stroke-width="1.6" marker-end="url(#arrow)"/><rect x="162.0" y="429.0" width="26" height="16" fill="#fbfaf6"/><text x="175.0" y="441.0" text-anchor="middle" font-size="11" font-weight="700" fill="#5d6864">아니오</text>
+<polygon points="175,448.0 305.0,490 175,532.0 45.0,490" fill="#ffffff" stroke="#5d6864" stroke-width="1.5"/><text x="175" y="488" text-anchor="middle" font-size="13" font-weight="700" fill="#18201f">지표·목표·검증이</text><text x="175" y="504" text-anchor="middle" font-size="13" font-weight="700" fill="#18201f">서로 충돌·게임된다</text>
+<rect x="560" y="462.0" width="360" height="56" rx="8" fill="#a23d3122" stroke="#a23d31" stroke-width="2"/><text x="740.0" y="489.0" text-anchor="middle" font-size="14" font-weight="700" fill="#a23d31">개선 거버넌스 그래프</text><text x="740.0" y="506.0" text-anchor="middle" font-size="12" fill="#18201f">pairing/audit/anchor</text>
+<line x1="305" y1="490" x2="554" y2="490" stroke="#5d6864" stroke-width="1.6" marker-end="url(#arrow)"/><rect x="416.5" y="479.0" width="26" height="16" fill="#fbfaf6"/><text x="429.5" y="491.0" text-anchor="middle" font-size="11" font-weight="700" fill="#5d6864">예</text>
+<line x1="175" y1="532" x2="175" y2="560" stroke="#5d6864" stroke-width="1.6" marker-end="url(#arrow)"/><rect x="162.0" y="535.0" width="26" height="16" fill="#fbfaf6"/><text x="175.0" y="547.0" text-anchor="middle" font-size="11" font-weight="700" fill="#5d6864">아니오</text>
+<rect x="-5" y="560" width="360" height="50" rx="8" fill="#5d686422" stroke="#5d6864" stroke-width="2"/><text x="175.0" y="584.0" text-anchor="middle" font-size="14" font-weight="700" fill="#5d6864">그래프를 쓰지 않는다</text><text x="175.0" y="601.0" text-anchor="middle" font-size="12" fill="#18201f">한 번뿐 / 기계적 judge 없음 / 냅킨에 못 그림</text>
+<text x="24" y="605" font-size="12" fill="#5d6864">체크 12는 이 다섯 갈래 중 어디를 골랐어도 마지막에 다시 통과해야 하는 공통 관문이다.</text>
+  </svg>
+  <figcaption>위에서 아래로 다섯 질문을 순서대로 통과한다. "예"가 나오는 즉시 오른쪽 그래프 종류로 확정하고, 다섯 질문 모두 "아니오"면 그래프를 쓰지 않는다.</figcaption>
+</figure>
+
+<h2>2. 12체크 - 설계 리뷰 질문</h2>
+<p style="color:var(--muted)">다섯 갈래 중 어느 것을 골랐어도, 실행하기 전 아래 12개를 통과해야 한다. 체크 12는 "지금이라도 안 쓰는 게 낫지 않은가"를 마지막에 다시 묻는 관문이다.</p>
+<table>
+  <tr><th></th><th>#</th><th>질문</th><th>관련</th></tr>
+  
+<tr>
+  <td style="width:34px;text-align:center;font-size:18px">&#9744;</td>
+  <td style="width:26px;color:var(--muted);font-weight:700">1</td>
+  <td><strong>노드는 존재 자격이 있는가</strong><br><span style="color:var(--muted);font-size:14px">다른 모델, 다른 도구, 진짜 다른 역할(예: read-only reviewer)이 아니면 노드가 아니라 인라인 코드다.</span></td>
+  <td><span class="pill">0001 · 0004</span></td>
+</tr>
+
+<tr>
+  <td style="width:34px;text-align:center;font-size:18px">&#9744;</td>
+  <td style="width:26px;color:var(--muted);font-weight:700">2</td>
+  <td><strong>엣지에 실제 데이터가 흐르는가</strong><br><span style="color:var(--muted);font-size:14px">"그리고 나서"는 edge가 아니다. 다음 노드가 이전 노드의 출력을 실제로 읽는지 확인한다.</span></td>
+  <td><span class="pill">0004</span></td>
+</tr>
+
+<tr>
+  <td style="width:34px;text-align:center;font-size:18px">&#9744;</td>
+  <td style="width:26px;color:var(--muted);font-weight:700">3</td>
+  <td><strong>state 스키마와 writer가 정해졌는가</strong><br><span style="color:var(--muted);font-size:14px">각 필드를 누가 읽고 쓰는지 명시했는가. 정해지지 않으면 두 노드가 같은 필드를 덮어쓴다.</span></td>
+  <td><span class="pill">0004 · 0007</span></td>
+</tr>
+
+<tr>
+  <td style="width:34px;text-align:center;font-size:18px">&#9744;</td>
+  <td style="width:26px;color:var(--muted);font-weight:700">4</td>
+  <td><strong>라우팅이 결정론적인가</strong><br><span style="color:var(--muted);font-size:14px">판단(분류)은 모델이 하되, 그 판단에 따른 분기 실행은 코드가 항상 같은 방식으로 처리하는가.</span></td>
+  <td><span class="pill">0004 · 0005</span></td>
+</tr>
+
+<tr>
+  <td style="width:34px;text-align:center;font-size:18px">&#9744;</td>
+  <td style="width:26px;color:var(--muted);font-weight:700">5</td>
+  <td><strong>barrier가 정말 필요한가</strong><br><span style="color:var(--muted);font-size:14px">전체 집합이 있어야만 되는 작업(전체 dedupe 등)인가, 아니면 pipeline으로 항목별 처리가 가능한가.</span></td>
+  <td><span class="pill">0005</span></td>
+</tr>
+
+<tr>
+  <td style="width:34px;text-align:center;font-size:18px">&#9744;</td>
+  <td style="width:26px;color:var(--muted);font-weight:700">6</td>
+  <td><strong>순환의 수렴 조건이 있는가</strong><br><span style="color:var(--muted);font-size:14px">무엇을 기준으로 "새로운 것 없음"을 판단하는가. 이번 라운드만이 아니라 지금까지 본 전체와 비교하는가.</span></td>
+  <td><span class="pill">0005</span></td>
+</tr>
+
+<tr>
+  <td style="width:34px;text-align:center;font-size:18px">&#9744;</td>
+  <td style="width:26px;color:var(--muted);font-weight:700">7</td>
+  <td><strong>judge가 산출물보다 먼저 정의됐는가</strong><br><span style="color:var(--muted);font-size:14px">무엇이 완료인지 기계가 판정할 수 있는 조건을 코드나 테스트로 먼저 적어뒀는가.</span></td>
+  <td><span class="pill">0006</span></td>
+</tr>
+
+<tr>
+  <td style="width:34px;text-align:center;font-size:18px">&#9744;</td>
+  <td style="width:26px;color:var(--muted);font-weight:700">8</td>
+  <td><strong>리뷰어가 독립된 컨텍스트인가</strong><br><span style="color:var(--muted);font-size:14px">작성자의 추론 과정을 보지 않고, 산출물과 규칙만 보고 채점하는 리뷰어가 최소 1명 있는가.</span></td>
+  <td><span class="pill">0006</span></td>
+</tr>
+
+<tr>
+  <td style="width:34px;text-align:center;font-size:18px">&#9744;</td>
+  <td style="width:26px;color:var(--muted);font-weight:700">9</td>
+  <td><strong>부작용이 멱등적인가</strong><br><span style="color:var(--muted);font-size:14px">같은 단계가 재실행되거나 재시도돼도 두 번 청구되거나 두 번 발송되지 않는가.</span></td>
+  <td><span class="pill">0004 · 0006</span></td>
+</tr>
+
+<tr>
+  <td style="width:34px;text-align:center;font-size:18px">&#9744;</td>
+  <td style="width:26px;color:var(--muted);font-weight:700">10</td>
+  <td><strong>checkpoint 의미를 정확히 아는가</strong><br><span style="color:var(--muted);font-size:14px">재개가 중단 지점에서 이어서 계속인지, 영향받은 노드가 처음부터 재실행되는지 런타임별로 확인했는가.</span></td>
+  <td><span class="pill">0004</span></td>
+</tr>
+
+<tr>
+  <td style="width:34px;text-align:center;font-size:18px">&#9744;</td>
+  <td style="width:26px;color:var(--muted);font-weight:700">11</td>
+  <td><strong>현실 anchor가 있는가</strong><br><span style="color:var(--muted);font-size:14px">그래프 안의 지표만 서로 확인하고 있지 않은가. 실제 행 수·실제 테스트·실제 입금 같은 외부 근거가 연결돼 있는가.</span></td>
+  <td><span class="pill">0002 · 0003</span></td>
+</tr>
+
+<tr>
+  <td style="width:34px;text-align:center;font-size:18px">&#9744;</td>
+  <td style="width:26px;color:var(--muted);font-weight:700">12</td>
+  <td><strong>그래프 없이도 되는가</strong><br><span style="color:var(--muted);font-size:14px">한 번뿐이거나, 아직 단계를 모르거나, 기계적 judge가 없거나, 냅킨에 못 그린다면 지금은 그래프를 쓰지 않는다.</span></td>
+  <td><span class="pill">0001 · 0010</span></td>
+</tr>
+</table>
+
+<h2>3. 패턴 카드 - 여덟 가지 기본 토폴로지</h2>
+<div class="grid">
+  
+<div class="card">
+  <span class="badge exec">Chain</span> <strong>체인</strong>
+  <svg class="diagram" viewBox="0 0 210 90" role="img" aria-label="체인 다이어그램"><defs><marker id="a2" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#136f63"/></marker></defs><rect x="20" y="30" width="50" height="30" rx="5" fill="none" stroke="#136f63" stroke-width="2"/><line x1="70" y1="45" x2="90" y2="45" stroke="#136f63" stroke-width="1.6" marker-end="url(#a2)"/><rect x="90" y="30" width="50" height="30" rx="5" fill="none" stroke="#136f63" stroke-width="2"/><line x1="140" y1="45" x2="160" y2="45" stroke="#136f63" stroke-width="1.6" marker-end="url(#a2)"/><rect x="160" y="30" width="50" height="30" rx="5" fill="none" stroke="#136f63" stroke-width="2"/></svg>
+  <p style="font-size:14px;color:var(--muted);margin:6px 0 0">단계마다 정확히 하나의 입력/출력. "그리고 나서"가 실제 edge인지 먼저 확인한다. <span class="pill">레슨 0004</span></p>
+</div>
+
+<div class="card">
+  <span class="badge exec">Router</span> <strong>라우터</strong>
+  <svg class="diagram" viewBox="0 0 210 90" role="img" aria-label="라우터 다이어그램"><defs><marker id="a3" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#136f63"/></marker></defs>
+    <rect x="15" y="30" width="46" height="26" rx="5" fill="none" stroke="#136f63" stroke-width="2"/>
+    <polygon points="100,20 122,43 100,66 78,43" fill="none" stroke="#5d6864" stroke-width="1.6"/>
+    <rect x="150" y="12" width="46" height="24" rx="5" fill="none" stroke="#136f63" stroke-width="2"/>
+    <rect x="150" y="52" width="46" height="24" rx="5" fill="none" stroke="#136f63" stroke-width="2"/>
+    <line x1="61" y1="43" x2="78" y2="43" stroke="#136f63" stroke-width="1.6" marker-end="url(#a3)"/>
+    <line x1="122" y1="38" x2="150" y2="26" stroke="#136f63" stroke-width="1.6" marker-end="url(#a3)"/>
+    <line x1="122" y1="48" x2="150" y2="62" stroke="#136f63" stroke-width="1.6" marker-end="url(#a3)"/></svg>
+  <p style="font-size:14px;color:var(--muted);margin:6px 0 0">분류는 모델이, 분기 실행은 코드가 결정론적으로 담당한다. <span class="pill">레슨 0004 · 0005</span></p>
+</div>
+
+<div class="card">
+  <span class="badge exec">Diamond</span> <strong>다이아몬드</strong>
+  <svg class="diagram" viewBox="0 0 210 90" role="img" aria-label="다이아몬드 다이어그램"><defs><marker id="a4" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#136f63"/></marker></defs>
+    <rect x="10" y="30" width="40" height="26" rx="5" fill="none" stroke="#136f63" stroke-width="2"/>
+    <rect x="90" y="6" width="40" height="22" rx="5" fill="none" stroke="#136f63" stroke-width="2"/>
+    <rect x="90" y="34" width="40" height="22" rx="5" fill="none" stroke="#136f63" stroke-width="2"/>
+    <rect x="90" y="62" width="40" height="22" rx="5" fill="none" stroke="#136f63" stroke-width="2"/>
+    <rect x="170" y="30" width="40" height="26" rx="5" fill="none" stroke="#136f63" stroke-width="2"/>
+    <line x1="50" y1="43" x2="90" y2="17" stroke="#136f63" stroke-width="1.4" marker-end="url(#a4)"/>
+    <line x1="50" y1="43" x2="90" y2="45" stroke="#136f63" stroke-width="1.4" marker-end="url(#a4)"/>
+    <line x1="50" y1="43" x2="90" y2="73" stroke="#136f63" stroke-width="1.4" marker-end="url(#a4)"/>
+    <line x1="130" y1="17" x2="170" y2="38" stroke="#136f63" stroke-width="1.4" marker-end="url(#a4)"/>
+    <line x1="130" y1="45" x2="170" y2="45" stroke="#136f63" stroke-width="1.4" marker-end="url(#a4)"/>
+    <line x1="130" y1="73" x2="170" y2="52" stroke="#136f63" stroke-width="1.4" marker-end="url(#a4)"/></svg>
+  <p style="font-size:14px;color:var(--muted);margin:6px 0 0">fan-out - reduce(코드) - synthesize(단일 노드). 실행 그래프의 주력 토폴로지. <span class="pill">레슨 0005</span></p>
+</div>
+
+<div class="card">
+  <span class="badge exec">Pipeline vs Barrier</span> <strong>파이프라인</strong>
+  <svg class="diagram" viewBox="0 0 210 90" role="img" aria-label="파이프라인 다이어그램"><text x="0" y="10" font-size="10" fill="#5d6864">item A/B/C가 겹쳐서 흐른다</text><rect x="20" y="15" width="24" height="14" rx="3" fill="#136f63" opacity="0.9"/><rect x="70" y="15" width="24" height="14" rx="3" fill="#136f63" opacity="0"/><rect x="120" y="15" width="24" height="14" rx="3" fill="#136f63" opacity="0"/><rect x="20" y="40" width="24" height="14" rx="3" fill="#136f63" opacity="0.65"/><rect x="70" y="40" width="24" height="14" rx="3" fill="#136f63" opacity="0.9"/><rect x="120" y="40" width="24" height="14" rx="3" fill="#136f63" opacity="0"/><rect x="20" y="65" width="24" height="14" rx="3" fill="#136f63" opacity="0.4"/><rect x="70" y="65" width="24" height="14" rx="3" fill="#136f63" opacity="0.65"/><rect x="120" y="65" width="24" height="14" rx="3" fill="#136f63" opacity="0.9"/></svg>
+  <p style="font-size:14px;color:var(--muted);margin:6px 0 0">전체 집합이 꼭 필요할 때만 barrier. 아니면 항목별로 흘려보내는 pipeline이 더 빠르다. <span class="pill">레슨 0005</span></p>
+</div>
+
+<div class="card">
+  <span class="badge exec">Bounded cycle</span> <strong>제한된 순환</strong>
+  <svg class="diagram" viewBox="0 0 210 90" role="img" aria-label="제한된 순환 다이어그램"><defs><marker id="a5" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#a23d31"/></marker></defs>
+    <circle cx="90" cy="45" r="34" fill="none" stroke="#a23d31" stroke-width="2"/>
+    <path d="M 90 11 A 34 34 0 1 1 89.9 11" fill="none" stroke="#a23d31" stroke-width="2" marker-end="url(#a5)"/>
+    <text x="90" y="50" text-anchor="middle" font-size="11" fill="#18201f">K회 연속</text>
+    <text x="90" y="63" text-anchor="middle" font-size="11" fill="#18201f">무소득 시 종료</text></svg>
+  <p style="font-size:14px;color:var(--muted);margin:6px 0 0">무엇을 기준으로 dedupe하는지 명시하고, K회 연속 무소득이면 종료한다. <span class="pill">레슨 0005</span></p>
+</div>
+
+<div class="card">
+  <span class="badge exec">Verification loop</span> <strong>검증 루프</strong>
+  <svg class="diagram" viewBox="0 0 210 90" role="img" aria-label="검증 루프 다이어그램"><defs><marker id="a6" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#136f63"/></marker></defs>
+    <rect x="10" y="30" width="50" height="26" rx="5" fill="none" stroke="#136f63" stroke-width="2"/>
+    <text x="35" y="46" text-anchor="middle" font-size="10" fill="#18201f">작업물</text>
+    <polygon points="115,17 145,43 115,69 85,43" fill="none" stroke="#a66b12" stroke-width="1.8"/>
+    <text x="115" y="47" text-anchor="middle" font-size="10" fill="#18201f">judge</text>
+    <rect x="165" y="15" width="45" height="22" rx="5" fill="none" stroke="#136f63" stroke-width="1.6"/>
+    <text x="187" y="30" text-anchor="middle" font-size="9" fill="#18201f">reviewer A</text>
+    <rect x="165" y="51" width="45" height="22" rx="5" fill="none" stroke="#136f63" stroke-width="1.6"/>
+    <text x="187" y="66" text-anchor="middle" font-size="9" fill="#18201f">reviewer B</text>
+    <line x1="60" y1="43" x2="85" y2="43" stroke="#136f63" stroke-width="1.6" marker-end="url(#a6)"/>
+    <line x1="145" y1="35" x2="165" y2="26" stroke="#136f63" stroke-width="1.4" marker-end="url(#a6)"/>
+    <line x1="145" y1="51" x2="165" y2="62" stroke="#136f63" stroke-width="1.4" marker-end="url(#a6)"/></svg>
+  <p style="font-size:14px;color:var(--muted);margin:6px 0 0">judge를 산출물보다 먼저 정의하고, 서로 못 보는 독립 리뷰어 2명을 둔다. <span class="pill">레슨 0006</span></p>
+</div>
+
+<div class="card">
+  <span class="badge exec">One-writer</span> <strong>단일 쓰기자</strong>
+  <svg class="diagram" viewBox="0 0 210 90" role="img" aria-label="단일 쓰기자 다이어그램"><defs><marker id="a7" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#136f63"/></marker></defs>
+    <rect x="10" y="10" width="46" height="20" rx="5" fill="none" stroke="#136f63" stroke-width="1.6"/>
+    <rect x="10" y="36" width="46" height="20" rx="5" fill="none" stroke="#136f63" stroke-width="1.6"/>
+    <rect x="10" y="62" width="46" height="20" rx="5" fill="none" stroke="#136f63" stroke-width="1.6"/>
+    <text x="33" y="24" text-anchor="middle" font-size="9" fill="#18201f">읽기A</text>
+    <text x="33" y="50" text-anchor="middle" font-size="9" fill="#18201f">읽기B</text>
+    <text x="33" y="76" text-anchor="middle" font-size="9" fill="#18201f">읽기C</text>
+    <rect x="120" y="34" width="70" height="24" rx="5" fill="#136f6322" stroke="#136f63" stroke-width="2"/>
+    <text x="155" y="50" text-anchor="middle" font-size="10" font-weight="700" fill="#136f63">단일 writer</text>
+    <line x1="56" y1="20" x2="120" y2="40" stroke="#136f63" stroke-width="1.4" marker-end="url(#a7)"/>
+    <line x1="56" y1="46" x2="120" y2="46" stroke="#136f63" stroke-width="1.4" marker-end="url(#a7)"/>
+    <line x1="56" y1="72" x2="120" y2="52" stroke="#136f63" stroke-width="1.4" marker-end="url(#a7)"/></svg>
+  <p style="font-size:14px;color:var(--muted);margin:6px 0 0">읽기는 병렬로 안전하지만, 쓰기는 한 곳(또는 daemon)이 소유해야 충돌이 없다. <span class="pill">레슨 0007</span></p>
+</div>
+
+<div class="card">
+  <span class="badge exec">Temporal graph</span> <strong>시간 그래프</strong>
+  <svg class="diagram" viewBox="0 0 210 90" role="img" aria-label="시간 그래프 다이어그램"><defs><marker id="a8" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#6b5d8e"/></marker></defs>
+    <circle cx="30" cy="45" r="16" fill="none" stroke="#6b5d8e" stroke-width="2"/>
+    <circle cx="120" cy="45" r="16" fill="none" stroke="#6b5d8e" stroke-width="2"/>
+    <line x1="46" y1="45" x2="104" y2="45" stroke="#6b5d8e" stroke-width="1.6" marker-end="url(#a8)"/>
+    <text x="75" y="36" text-anchor="middle" font-size="9" fill="#18201f">관계</text>
+    <text x="75" y="60" text-anchor="middle" font-size="9" fill="#6b5d8e">valid_from~to</text>
+    <text x="30" y="70" text-anchor="middle" font-size="9" fill="#18201f">엔티티A</text>
+    <text x="120" y="70" text-anchor="middle" font-size="9" fill="#18201f">엔티티B</text></svg>
+  <p style="font-size:14px;color:var(--muted);margin:6px 0 0">사실을 지우지 않고 무효화한다. 관계에 valid_from/valid_to를 붙인다. <span class="pill">레슨 0008</span></p>
+</div>
+</div>
+
+<h2>4. 실패 - 처방 매트릭스</h2>
+<table>
+  <tr><th>증상</th><th>원인</th><th>처방</th><th>관련</th></tr>
+  <tr><td>green인데 실제 결과는 비어 있다</td><td>측정 부패 / 무음 실패(silent failure)</td><td>외부 카운터-지표와 현실 anchor를 붙인다 (예: 실제 삽입 행 수)</td><td><span class="pill">0002 · 0003</span></td></tr>
+<tr><td>리뷰어가 항상 통과시킨다</td><td>같은 컨텍스트가 자기 작업을 채점(자기 숙제 자기 채점)</td><td>산출물과 규칙만 보는 독립 리뷰어로 교체한다</td><td><span class="pill">0006</span></td></tr>
+<tr><td>재시작하면 처음부터 다시 돈다</td><td>checkpoint 의미를 이어서 계속으로 오해</td><td>영향받은 노드를 멱등하게 만들고, 런타임별 정확한 재개 의미를 학습한다</td><td><span class="pill">0004</span></td></tr>
+<tr><td>두 에이전트가 같은 파일을 덮어쓴다</td><td>공유 쓰기, writer 미지정</td><td>one-writer 규칙 또는 worktree 격리를 적용한다</td><td><span class="pill">0007</span></td></tr>
+<tr><td>왜 이렇게 바뀌었는지 아무도 모른다</td><td>결정/출처(decision·provenance) 층 부재</td><td>rulebook.md 또는 결정 로그를 별도 계층으로 유지한다</td><td><span class="pill">0006 · 0008 · 0010</span></td></tr>
+<tr><td>그래프가 점점 무거워지고 다들 안 쓴다</td><td>노드·엣지 남발, fake edge 방치</td><td>체크 1·2로 노드/엣지 존재 자격을 재검사한다</td><td><span class="pill">0001 · 0004 · 0005</span></td></tr>
+</table>
+
+<h2>5. 파급력(blast radius)에 따른 human gate 배치</h2>
+<div class="grid">
+  
+<div class="card" style="border-left:4px solid #136f63">
+  <span class="badge" style="color:#136f63">낮음 파급력</span>
+  <p style="margin:8px 0 4px"><strong>예시:</strong> 내부 초안, 읽기 전용 조사, 자기 워크스페이스 안 파일</p>
+  <p style="margin:0"><strong>게이트:</strong> 게이트 없음 - 사후 검토로 충분</p>
+</div>
+
+<div class="card" style="border-left:4px solid #a66b12">
+  <span class="badge" style="color:#a66b12">중간 파급력</span>
+  <p style="margin:8px 0 4px"><strong>예시:</strong> 외부에 보일 결과물의 준비, 결제 초안, 발송 전 메시지</p>
+  <p style="margin:0"><strong>게이트:</strong> 승인 대기 큐 - 사람이 확인 후 진행</p>
+</div>
+
+<div class="card" style="border-left:4px solid #a23d31">
+  <span class="badge" style="color:#a23d31">높음 파급력</span>
+  <p style="margin:8px 0 4px"><strong>예시:</strong> 실제 발송·결제·삭제·프로덕션 배포·되돌리기 어려운 변경</p>
+  <p style="margin:0"><strong>게이트:</strong> 명시적 사람 승인 + 결정 로그 필수, 승인 전 실행 금지</p>
+</div>
+</div>
+<div class="callout warn">
+  <strong>실무 번역:</strong> 사람이 병목이 되는 지점은 항상 "높음" 항목 앞이어야 한다. "낮음"에까지 사람 승인을 요구하면 게이트 자체가 무시되기 시작한다 - 그것이 pairing/audit 실패의 시작이다(레슨 0003).
+</div>
+
+<h2>6. 인쇄용 설계 리뷰 워크시트</h2>
+<div class="worksheet-box">
+  <p><strong>프로젝트/그래프 이름:</strong></p>
+  <div class="worksheet-line"></div>
+  <p><strong>선택한 갈래</strong> (해당 항목에 표시): &#9744; 이슈 트리 &nbsp; &#9744; 루프 &nbsp; &#9744; 실행 그래프 &nbsp; &#9744; 지식·시간 그래프 &nbsp; &#9744; 개선 거버넌스 그래프 &nbsp; &#9744; 그래프 쓰지 않음</p>
+  <table>
+    <tr><th></th><th>#</th><th>체크 항목</th></tr>
+    <tr><td style="width:30px;text-align:center">&#9744;</td><td style="width:24px;color:var(--muted)">1</td><td>노드는 존재 자격이 있는가</td></tr>
+<tr><td style="width:30px;text-align:center">&#9744;</td><td style="width:24px;color:var(--muted)">2</td><td>엣지에 실제 데이터가 흐르는가</td></tr>
+<tr><td style="width:30px;text-align:center">&#9744;</td><td style="width:24px;color:var(--muted)">3</td><td>state 스키마와 writer가 정해졌는가</td></tr>
+<tr><td style="width:30px;text-align:center">&#9744;</td><td style="width:24px;color:var(--muted)">4</td><td>라우팅이 결정론적인가</td></tr>
+<tr><td style="width:30px;text-align:center">&#9744;</td><td style="width:24px;color:var(--muted)">5</td><td>barrier가 정말 필요한가</td></tr>
+<tr><td style="width:30px;text-align:center">&#9744;</td><td style="width:24px;color:var(--muted)">6</td><td>순환의 수렴 조건이 있는가</td></tr>
+<tr><td style="width:30px;text-align:center">&#9744;</td><td style="width:24px;color:var(--muted)">7</td><td>judge가 산출물보다 먼저 정의됐는가</td></tr>
+<tr><td style="width:30px;text-align:center">&#9744;</td><td style="width:24px;color:var(--muted)">8</td><td>리뷰어가 독립된 컨텍스트인가</td></tr>
+<tr><td style="width:30px;text-align:center">&#9744;</td><td style="width:24px;color:var(--muted)">9</td><td>부작용이 멱등적인가</td></tr>
+<tr><td style="width:30px;text-align:center">&#9744;</td><td style="width:24px;color:var(--muted)">10</td><td>checkpoint 의미를 정확히 아는가</td></tr>
+<tr><td style="width:30px;text-align:center">&#9744;</td><td style="width:24px;color:var(--muted)">11</td><td>현실 anchor가 있는가</td></tr>
+<tr><td style="width:30px;text-align:center">&#9744;</td><td style="width:24px;color:var(--muted)">12</td><td>그래프 없이도 되는가</td></tr>
+  </table>
+  <p><strong>남은 위험 / 다음 검토 일정:</strong></p>
+  <div class="worksheet-line"></div>
+  <div class="worksheet-line"></div>
+</div>
+
+<h2>다음으로 연결</h2>
+<ul>
+  <li>기초부터: <a href="./0001-four-graphs-map.html">Lesson 0001 - 한 단어, 네 개의 그래프</a></li>
+  <li>실행 그래프 설계: <a href="./0004-execution-graph-anatomy.html">Lesson 0004</a> · <a href="./0005-topology-patterns.html">Lesson 0005</a></li>
+  <li>검증과 협업: <a href="./0006-verification-graph.html">Lesson 0006</a> · <a href="./0007-multi-agent-coordination.html">Lesson 0007</a></li>
+  <li>클리닉으로 마무리: <a href="./0010-architecture-clinic.html">Lesson 0010</a></li>
+  <li>레퍼런스: <a href="./0011-visual-glossary.html">시각 글로서리</a> · <a href="./0012-source-evidence-map.html">X 북마크와 검증 근거 지도</a></li>
+</ul>
+
+<footer>
+  <p>이 플레이북은 X 북마크의 관점을 공식 문서로 검증한 뒤 압축한 것이다. 막히는 체크가 있으면 해당 레슨으로 돌아가거나 에이전트에게 바로 물어보면 된다.</p>
+  <p class="pill">Print-friendly</p>
+  <p class="pill">12-point review checklist</p>
+</footer>
+
+</main>
+</body>
+</html>

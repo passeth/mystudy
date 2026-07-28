@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="루프는 1노드 그래프라는 통찰에서 출발해 노드/엣지/상태/계약, 결정론적 라우팅, 체크포인트의 정확한 의미를 배운다.">
+<title>노드·엣지·상태·계약 · Graph Engineering v2</title>
+<style>
+:root {
+  --ink:#18201f; --muted:#5d6864; --paper:#fbfaf6; --panel:#ffffff;
+  --line:#d9ddd6; --exec:#136f63; --improve:#a23d31; --knowledge:#6b5d8e;
+  --problem:#a66b12; --soft:#eaf3ef; --warn:#fff2d6; --purple-soft:#f0edf7;
+  --brick-soft:#fae9e7; --code:#101917;
+}
+*{box-sizing:border-box} body{margin:0;color:var(--ink);background:var(--paper);font-family:ui-serif,Georgia,"Apple SD Gothic Neo","Noto Serif KR",serif;line-height:1.68}
+main{width:min(960px,calc(100% - 40px));margin:0 auto;padding:52px 0 88px}.kicker{color:var(--exec);font:700 12px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase}
+h1{margin:12px 0 14px;font-size:clamp(34px,6vw,62px);line-height:1.04}.subtitle{max-width:760px;color:var(--muted);font-size:18px}
+h2{margin-top:42px;border-bottom:1px solid var(--line);padding-bottom:8px}h3{margin-top:28px}a{color:var(--exec);text-underline-offset:3px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}.card,.quiz-card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:20px;margin:18px 0}.card h3{margin-top:0}
+.callout{border-left:4px solid var(--exec);background:var(--soft);border-radius:6px;padding:14px 16px;margin:18px 0}.callout.warn{border-left-color:var(--problem);background:var(--warn)}.callout.brick{border-left-color:var(--improve);background:var(--brick-soft)}.callout.purple{border-left-color:var(--knowledge);background:var(--purple-soft)}
+.badge,.pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:2px 9px;font:700 12px/1.7 ui-sans-serif,system-ui,sans-serif;color:var(--muted)}.badge.exec{color:var(--exec)}.badge.improve{color:var(--improve)}.badge.knowledge{color:var(--knowledge)}.badge.problem{color:var(--problem)}
+figure{margin:24px 0}.diagram{width:100%;height:auto;display:block}.diagram-frame{background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden}figcaption{margin-top:8px;color:var(--muted);font-size:14px}
+table{border-collapse:collapse;width:100%;background:var(--panel);margin:18px 0}th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}th{background:var(--soft);font-family:ui-sans-serif,system-ui,sans-serif;font-size:13px}
+pre{overflow-x:auto;background:var(--code);color:#eef7f2;border-radius:8px;padding:16px}code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.92em}
+.quiz-card button{display:block;width:100%;margin:8px 0;padding:11px 13px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--ink);font:inherit;text-align:left;cursor:pointer}.quiz-card button.correct{border-color:#1f7a3f;background:#e8f4eb}.quiz-card button.incorrect{border-color:var(--improve);background:var(--brick-soft)}.quiz-feedback{min-height:1.6em;font-weight:700}
+.source-note{font-size:14px;color:var(--muted);border-top:1px solid var(--line);padding-top:10px}footer{margin-top:54px;padding-top:24px;border-top:1px solid var(--line);color:var(--muted)}
+@media(max-width:640px){main{width:min(100% - 24px,960px);padding-top:32px}h1{font-size:38px}table{font-size:13px}.diagram text{font-size:12px}}
+@media print{body{background:#fff}main{width:auto;padding:24px}.card,.quiz-card,figure{break-inside:avoid}a::after{content:" (" attr(href) ")";font-size:.8em;color:var(--muted)}}
+
+</style>
+</head>
+<body>
+<main>
+<header>
+<div class="kicker">Lesson 0004 · Graph Engineering v2</div>
+<h1>노드·엣지·상태·계약</h1>
+<p class="subtitle">실행 그래프는 루프를 대체하지 않는다. 루프는 자기 자신으로 돌아가는 <strong>1노드 그래프</strong>일 뿐이다. 그래프는 통제를 모델 안에서 밖으로, 사람이 그린 구조로 옮기는 일이다.</p>
+</header>
+
+<section class="callout">
+<strong>오늘의 한 줄 답:</strong> 노드는 "한 가지 일"만 하는 작업 단위, 엣지는 "실제로 데이터가 이동하는 관계"만("그리고"는 엣지가 아니다), 상태는 모든 노드가 읽고 쓰는 공유 객체다. 라우팅은 코드가, 판단은 모델이 한다.
+</section>
+
+<figure class="diagram-frame">
+<svg viewBox="0 0 960 620" class="diagram" role="img" aria-labelledby="fig4title fig4desc" xmlns="http://www.w3.org/2000/svg">
+<title id="fig4title">research → write → review 그래프의 노드, 엣지, 상태, 체크포인트</title>
+<desc id="fig4desc">세 노드로 이뤄진 최소 실행 그래프. review 실패 시 write로 돌아가는 조건부 엣지가 곧 루프다. 오른쪽은 상태 스키마와 쓰기 권한, 하단은 체크포인트 재실행 경고.</desc>
+<defs>
+  <marker id="arrow4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+    <path d="M0,0 L10,5 L0,10 z" fill="#136f63"/>
+  </marker>
+  <marker id="arrow4b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+    <path d="M0,0 L10,5 L0,10 z" fill="#a23d31"/>
+  </marker>
+</defs>
+<rect x="0" y="0" width="960" height="620" fill="#fbfaf6"/>
+
+<text x="20" y="28" font-family="ui-sans-serif,system-ui,sans-serif" font-size="14" font-weight="700" fill="#136f63">EXECUTION GRAPH: research → write → review</text>
+
+<!-- nodes -->
+<rect x="40" y="60" width="160" height="76" rx="8" fill="#eaf3ef" stroke="#136f63" stroke-width="1.5"/>
+<text x="120" y="92" text-anchor="middle" font-family="ui-serif,Georgia,serif" font-size="15" font-weight="700" fill="#18201f">research</text>
+<text x="120" y="112" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#5d6864">한 가지 일: 자료 수집</text>
+
+<rect x="400" y="60" width="160" height="76" rx="8" fill="#eaf3ef" stroke="#136f63" stroke-width="1.5"/>
+<text x="480" y="92" text-anchor="middle" font-family="ui-serif,Georgia,serif" font-size="15" font-weight="700" fill="#18201f">write</text>
+<text x="480" y="112" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#5d6864">한 가지 일: 초안 작성</text>
+
+<rect x="760" y="60" width="160" height="76" rx="8" fill="#eaf3ef" stroke="#136f63" stroke-width="1.5"/>
+<text x="840" y="92" text-anchor="middle" font-family="ui-serif,Georgia,serif" font-size="15" font-weight="700" fill="#18201f">review</text>
+<text x="840" y="112" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#5d6864">한 가지 일: 판정</text>
+
+<!-- edges with data labels -->
+<line x1="200" y1="98" x2="398" y2="98" stroke="#136f63" stroke-width="2" marker-end="url(#arrow4)"/>
+<text x="299" y="88" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#136f63">{'{'} sources[] {'}'}</text>
+
+<line x1="560" y1="98" x2="758" y2="98" stroke="#136f63" stroke-width="2" marker-end="url(#arrow4)"/>
+<text x="659" y="88" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#136f63">{'{'} draft: string {'}'}</text>
+
+<!-- loop back edge (review fail -> write) -->
+<path d="M 840 136 Q 840 220 480 220 Q 480 220 480 138" fill="none" stroke="#a23d31" stroke-width="2" stroke-dasharray="5 3" marker-end="url(#arrow4b)"/>
+<text x="660" y="238" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#a23d31">review 실패 시: {'{'} verdict:"fail", notes {'}'} → write (이 되돌아가는 엣지 = 루프)</text>
+
+<!-- success exit -->
+<line x1="920" y1="98" x2="940" y2="98" stroke="#136f63" stroke-width="2"/>
+<line x1="940" y1="98" x2="940" y2="150" stroke="#136f63" stroke-width="2" marker-end="url(#arrow4)"/>
+<text x="940" y="168" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#136f63">pass →</text>
+
+<!-- gray-out fake edge example -->
+<rect x="40" y="280" width="880" height="60" rx="6" fill="#fff2d6" stroke="#c98210"/>
+<text x="60" y="304" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" font-weight="700" fill="#6b4a09">가짜 엣지 판별: "요약해줘, 그리고 날씨 알려줘"</text>
+<text x="60" y="322" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#6b4a09">날씨 노드는 요약 노드의 출력을 읽지 않는다 → 엣지 없음, 두 개의 독립 노드. "그리고"는 엣지가 아니다.</text>
+
+<!-- state schema box -->
+<rect x="40" y="360" width="420" height="200" rx="8" fill="#ffffff" stroke="#d9ddd6"/>
+<text x="56" y="384" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" font-weight="700" fill="#18201f">공유 State 스키마 · 쓰기 권한</text>
+<text x="56" y="410" font-family="ui-monospace,monospace" font-size="12" fill="#18201f">sources:  string[]   ← write: research</text>
+<text x="56" y="432" font-family="ui-monospace,monospace" font-size="12" fill="#18201f">draft:    string     ← write: write</text>
+<text x="56" y="454" font-family="ui-monospace,monospace" font-size="12" fill="#18201f">verdict:  "pass"|"fail" ← write: review</text>
+<text x="56" y="476" font-family="ui-monospace,monospace" font-size="12" fill="#18201f">notes:    string     ← write: review</text>
+<text x="56" y="504" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#5d6864">규칙: 각 필드는 정확히 한 노드만 쓴다. 여러 노드가 같은 필드에 쓰면</text>
+<text x="56" y="522" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#5d6864">병합(reducer) 함수가 필요하다. 라우팅은 verdict 값을 코드가 판정한다</text>
+<text x="56" y="540" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#5d6864">(결정론적 routing) — 모델은 verdict를 만들 뿐, 분기는 if/switch가 한다.</text>
+
+<!-- checkpoint warning box -->
+<rect x="480" y="360" width="440" height="200" rx="8" fill="#fae9e7" stroke="#a23d31"/>
+<text x="496" y="384" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" font-weight="700" fill="#a23d31">체크포인트 / durable execution 주의</text>
+<text x="496" y="408" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#18201f">체크포인트는 super-step 경계에 저장된다.</text>
+<text x="496" y="428" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#18201f">재개 시 영향을 받은 노드는 처음부터 다시</text>
+<text x="496" y="448" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#18201f">실행된다 ("정확히 멈춘 지점"이 아니다).</text>
+<text x="496" y="470" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#18201f" font-weight="700">그래서 부작용 있는 노드(이메일 발송 등)는</text>
+<text x="496" y="490" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#18201f" font-weight="700">반드시 재실행 안전(idempotent)해야 한다.</text>
+<text x="496" y="518" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#5d6864">출처: LangGraph 공식 docs — graph-api, durable-execution,</text>
+<text x="496" y="536" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#5d6864">persistence. node replay 의미를 "즉시 재개"로 과장하지 말 것.</text>
+
+</svg>
+<figcaption>그림 1. research→write→review 최소 실행 그래프. review 실패 시 write로 돌아가는 조건부 엣지가 곧 루프다. 오른쪽은 상태 스키마·쓰기 권한과 체크포인트 재실행 경고.</figcaption>
+</figure>
+
+<h2>1. "루프는 1노드 그래프다" — 그래프가 루프를 감싼다</h2>
+<p>Akshay Pachaar의 정리가 가장 명료하다: "A single agent loop is just a one-node graph with an edge pointing back to itself. Graphs don't replace loops. They connect and govern them." Yarchi는 같은 통찰을 다르게 표현한다: 루프에서는 통제가 모델 내부에 있어 안이 안 보이고, 그래프에서는 통제가 모델 밖 — 사람이 그린 노드 구조로 옮겨간다.</p>
+<p>beamnxw는 5층 스택으로 위치를 짚는다: <strong>prompt</strong>(보내는 말) → <strong>context</strong>(모델이 보는 모든 것) → <strong>harness</strong>(도구 실행·상태 추적·에러 처리 코드) → <strong>loop</strong>(한 에이전트를 목표로 이끄는 자율 사이클) → <strong>graph</strong>(여러 루프에 걸친 조정: 무엇이 언제 실행되고 누가 누구를 검사하는가). "각 계층은 이전 계층을 감싼다. 하위 계층을 건너뛰면 그래프는 더 복잡하게 실패할 뿐이다."</p>
+
+<h2>2. 노드 자격, 엣지 판별</h2>
+<div class="grid">
+<div class="card"><h3>노드(Node)</h3><p>작업 단위 하나 — 에이전트 호출, 순수 함수, 도구, 사람의 승인 행위 중 무엇이든 될 수 있다. Akshay의 냅킨 테스트: 그래프를 냅킨에 못 그리면 너무 복잡한 것이다.</p></div>
+<div class="card"><h3>엣지(Edge)</h3><p>Codez의 엄격한 기준: <strong>실제로 데이터가 이동할 때만</strong> 존재한다. "요약해줘, 그리고 날씨 알려줘"는 엣지가 없다 — 날씨가 요약을 소비하지 않기 때문이다. 모든 "그리고"에 대해 "다음 단계가 이전 단계의 출력을 실제로 읽는가?"를 물어야 한다.</p></div>
+<div class="card"><h3>State(상태)</h3><p>엣지를 따라 흐르는 공유 객체 — 모든 노드가 읽고 쓴다. 실패 모드는 루프의 context rot가 그래프에서는 <strong>공유 상태 오염</strong>으로 옮겨간다는 것.</p></div>
+</div>
+
+<h2>3. 타입 상태와 쓰기 권한</h2>
+<p>해법은 지루하지만 효과적이다: 상태에 타입 스키마를 부여하고, 어느 노드가 어느 필드에 쓸 수 있는지 명시적으로 결정하고, 여러 노드가 같은 필드를 갱신하면 병합(reducer) 규칙을 둔다. LangGraph 공식 문서의 <code>StateGraph</code>가 이 패턴의 대표 구현이다 — 노드가 shared state를 읽고 쓰며 <code>State → Partial&lt;State&gt;</code>로 동작한다.</p>
+
+<h2>4. 라우팅은 코드, 판단은 모델</h2>
+<p>Google ADK 2.0의 설계 원칙이 가장 깔끔하다: "예측 가능한 라우팅은 결정론적 코드가 통제하고, 모델은 실제 판단이 필요한 단계만 처리해야 한다." 모델이 경로를 직접 결정하면 유연하지만, 같은 상태가 실행마다 다른 경로를 탈 수 있어 디버깅이 괴로워진다. Codez의 코드 패턴도 같은 원칙이다: 라우터 노드가 diff 크기를 분류(모델의 판단)하되, 분류 결과에 따른 분기 자체는 <code>if/switch</code>(코드의 라우팅)로 처리한다.</p>
+
+<h2>5. 체크포인트의 정확한 의미</h2>
+<table>
+<tr><th>주장</th><th>정확한 사실</th></tr>
+<tr><td>"실패 지점에서 정확히 이어진다"</td><td>체크포인트는 super-step 경계에 저장된다. 재개 시 영향을 받은 노드는 함수 처음부터 다시 실행된다.</td></tr>
+<tr><td>"체크포인트는 아무 부작용 없이 안전하다"</td><td>interrupt 이전 side effect도 재실행될 수 있으므로, 이메일 발송 같은 노드는 반드시 idempotent해야 한다.</td></tr>
+<tr><td>"모든 프레임워크가 같은 durability를 준다"</td><td>LangGraph checkpointer는 thread의 graph-state snapshot을 저장해 resume/time-travel/HITL/fault-tolerance를 지원하지만, InMemorySaver는 프로세스 재시작을 버티지 못한다.</td></tr>
+</table>
+<p class="source-note">근거: LangGraph 공식 <a href="https://docs.langchain.com/oss/python/langgraph/graph-api">Graph API</a>, <a href="https://docs.langchain.com/oss/python/langgraph/durable-execution">Durable execution</a>, <a href="https://docs.langchain.com/oss/python/langgraph/persistence">Persistence</a> 문서. "정확히 멈춘 지점에서 이어진다"는 표현은 instruction-level continuation이 아니라 replay/checkpoint semantics로 이해해야 한다.</p>
+
+<section class="callout">
+<strong>실무 번역:</strong> Aside 서브에이전트 파이프라인을 그릴 때도 같은 원칙이 적용된다. 하나의 산출물(예: HTML 파일)을 정확히 한 서브에이전트만 쓰게 하고, 다른 서브에이전트는 읽기 전용 조사만 하게 하면 상태 오염을 피할 수 있다. 재시도가 필요한 작업(파일 쓰기, git commit)은 반드시 멱등하게 설계할 것 — 같은 호출이 두 번 실행돼도 결과가 같아야 한다.
+</section>
+
+<h2>6. 퀴즈 · 회수 연습</h2>
+
+<div class="quiz-card" data-quiz data-correct="맞음. 엣지는 다음 단계가 이전 단계의 출력을 실제로 읽을 때만 존재한다." data-incorrect="다시. 실행 순서가 아니라 데이터가 실제로 이동하는지가 엣지의 기준이다.">
+<p><strong>Q1.</strong> "요약해줘, 그리고 날씨 알려줘"에 엣지가 없다고 판단하는 근거는?</p>
+<button type="button" data-answer="wrong">두 작업이 서로 다른 도구를 쓰기 때문에</button>
+<button type="button" data-answer="correct">날씨 노드가 요약 노드의 출력을 읽지 않기 때문에</button>
+<button type="button" data-answer="wrong">두 작업의 실행 시간이 다르기 때문에</button>
+<button type="button" data-answer="wrong">사용자가 한 문장으로 요청했기 때문에</button>
+<div class="quiz-feedback" data-feedback></div>
+</div>
+
+<div class="quiz-card" data-quiz data-correct="맞음. ADK 2.0 원칙은 결정론적 코드가 라우팅하고 모델은 판단만 한다는 것이다." data-incorrect="다시. 모델이 라우팅을 전담하면 실행마다 다른 경로를 타 디버깅이 어려워진다.">
+<p><strong>Q2.</strong> 신뢰할 수 있는 라우팅을 만드는 설계 원칙은?</p>
+<button type="button" data-answer="wrong">항상 모델이 다음 노드를 자유롭게 선택하게 한다</button>
+<button type="button" data-answer="correct">체크 가능한 조건은 코드가 라우팅하고 모델은 판단만 한다</button>
+<button type="button" data-answer="wrong">라우팅 규칙을 매번 랜덤하게 바꿔 유연성을 높인다</button>
+<button type="button" data-answer="wrong">모든 라우팅을 사람이 매번 수동 승인한다</button>
+<div class="quiz-feedback" data-feedback></div>
+</div>
+
+<div class="quiz-card" data-quiz data-correct="맞음. 재개 시 노드가 처음부터 재실행되므로 부작용은 멱등해야 한다." data-incorrect="다시. LangGraph 공식 문서는 체크포인트가 super-step 경계에 저장되며 노드가 재실행될 수 있다고 명시한다.">
+<p><strong>Q3.</strong> 체크포인트 재개에 대해 정확한 설명은?</p>
+<button type="button" data-answer="wrong">중단된 함수 내부의 정확한 명령어에서 이어진다</button>
+<button type="button" data-answer="correct">영향받은 노드가 처음부터 재실행되므로 부작용은 멱등해야 한다</button>
+<button type="button" data-answer="wrong">체크포인트는 모든 프레임워크에서 동일하게 동작한다</button>
+<button type="button" data-answer="wrong">체크포인트가 있으면 idempotency는 필요 없다</button>
+<div class="quiz-feedback" data-feedback></div>
+</div>
+
+<h2>7. 미니 실습 (5-10분)</h2>
+<p>자신의 선형 프로세스(예: X 북마크 조사 → 정리 → 발행) 5단계를 종이에 적어보자.</p>
+<ol>
+<li>각 화살표("그리고 나서")마다 "다음 단계가 이전 단계의 출력을 실제로 읽는가?"를 물어본다.</li>
+<li>읽지 않는 화살표는 지운다 — 그것은 가짜 엣지였다.</li>
+<li>남은 진짜 엣지만으로 그래프를 다시 그린다. 몇 개가 사실은 독립적으로 병렬 실행 가능했는지 확인한다.</li>
+</ol>
+
+<h2>Primary sources</h2>
+<ul>
+<li><a href="https://docs.langchain.com/oss/python/langgraph/graph-api">LangGraph — Graph API</a> (State, Nodes, Edges 공식 정의)</li>
+<li><a href="https://docs.langchain.com/oss/python/langgraph/durable-execution">LangGraph — Durable execution</a></li>
+<li><a href="https://docs.langchain.com/oss/python/langgraph/persistence">LangGraph — Persistence</a></li>
+<li><a href="https://learn.microsoft.com/en-us/agent-framework/overview">Microsoft Agent Framework — Overview</a></li>
+<li><a href="https://adk.dev/graphs">Google ADK 2.0 — Graphs</a></li>
+</ul>
+
+<h2>X bookmarks used (관점/입력 자료)</h2>
+<ul>
+<li><a href="https://x.com/akshay_pachaar/article/2081089131808243999">Akshay Pachaar, "Graph Engineering Clearly Explained"</a> — 1노드 그래프, 5층 스택, 냅킨 테스트.</li>
+<li><a href="https://x.com/beamnxw/article/2081022966645535079">beamnxw, "Agent Harness Engineering vs. Loop Engineering vs. Graph Engineering"</a> — environment→feedback→flow, 6대 설계 결정.</li>
+<li><a href="https://x.com/0xCodez/article/2079165300625330317">Codez, "Graph Engineering with Claude: 14-Step Roadmap"</a> — 엣지 판별 규칙. 특정 CLI 세부 기능은 공식 문서로 별도 검증됨(레퍼런스 0012 참고).</li>
+</ul>
+
+<h2>다음으로 연결</h2>
+<ul>
+<li>이전 레슨: <a href="./0003-improvement-graph-anchors.html">Lesson 0003 — 감시하는 루프도 감시하라</a></li>
+<li>다음 레슨: <a href="./0005-topology-patterns.html">Lesson 0005 — 체인에서 다이아몬드까지</a></li>
+<li>레퍼런스: <a href="./0011-visual-glossary.html">시각 글로서리</a> · <a href="./0012-source-evidence-map.html">출처 검증 지도</a> · <a href="./0013-design-pattern-playbook.html">설계 플레이북</a></li>
+</ul>
+
+<footer>
+<p>막히는 부분은 에이전트에게 바로 물어보세요. 이 워크스페이스의 선생님 역할입니다.</p>
+<p class="pill">Mission-linked</p>
+<p class="pill">ZPD: 개선 그래프 → 실행 그래프 문법</p>
+</footer>
+
+</main>
+<script>
+document.querySelectorAll("[data-quiz]").forEach((quiz) => {
+  const feedback = quiz.querySelector("[data-feedback]");
+  quiz.querySelectorAll("button[data-answer]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const isCorrect = button.dataset.answer === "correct";
+      quiz.querySelectorAll("button[data-answer]").forEach((b) => {
+        b.classList.remove("correct", "incorrect");
+        b.setAttribute("aria-pressed", "false");
+      });
+      button.classList.add(isCorrect ? "correct" : "incorrect");
+      button.setAttribute("aria-pressed", "true");
+      feedback.textContent = isCorrect ? quiz.dataset.correct : quiz.dataset.incorrect;
+    });
+  });
+});
+
+</script>
+</body>
+</html>
