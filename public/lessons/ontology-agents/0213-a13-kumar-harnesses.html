@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="[A] 하네스의 이름은 신뢰성이다. 에이전트가 로그인 페이지에서 패닉해도 “성공”으로 보고하는 계층을 의심하라.">
+<title>A13 스터디 · Harnesses in AI: A Deep Dive — Tejas Kumar, IBM · Ontology Agents</title>
+<style>:root {
+  --ink:#18201f; --muted:#5d6864; --paper:#fbfaf6; --panel:#ffffff;
+  --line:#d9ddd6; --exec:#136f63; --improve:#a23d31; --knowledge:#6b5d8e;
+  --problem:#a66b12; --soft:#eaf3ef; --warn:#fff2d6; --purple-soft:#f0edf7;
+  --brick-soft:#fae9e7; --code:#101917; --skill:#0f4c81;
+}
+*{box-sizing:border-box} body{margin:0;color:var(--ink);background:var(--paper);font-family:ui-serif,Georgia,"Apple SD Gothic Neo","Noto Serif KR",serif;line-height:1.68}
+main{width:min(960px,calc(100% - 40px));margin:0 auto;padding:52px 0 88px}
+.kicker{color:var(--exec);font:700 12px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase}
+h1{margin:12px 0 14px;font-size:clamp(32px,5.8vw,58px);line-height:1.05}
+.subtitle{max-width:760px;color:var(--muted);font-size:18px}
+h2{margin-top:42px;border-bottom:1px solid var(--line);padding-bottom:8px}
+h3{margin-top:26px}
+a{color:var(--exec);text-underline-offset:3px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.card,.quiz-card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:20px;margin:18px 0}
+.card h3{margin-top:0}
+.callout{border-left:4px solid var(--exec);background:var(--soft);border-radius:6px;padding:14px 16px;margin:18px 0}
+.callout.warn{border-left-color:var(--problem);background:var(--warn)}
+.callout.brick{border-left-color:var(--improve);background:var(--brick-soft)}
+.callout.purple{border-left-color:var(--knowledge);background:var(--purple-soft)}
+.badge,.pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:2px 9px;font:700 12px/1.7 ui-sans-serif,system-ui,sans-serif;color:var(--muted);margin:0 4px 4px 0}
+.badge.exec{color:var(--exec);border-color:var(--exec)}
+.badge.improve{color:var(--improve);border-color:var(--improve)}
+.badge.knowledge{color:var(--knowledge);border-color:var(--knowledge)}
+.badge.problem{color:var(--problem);border-color:var(--problem)}
+.badge.skill{color:var(--skill);border-color:var(--skill)}
+figure{margin:24px 0}
+.diagram{width:100%;height:auto;display:block}
+.diagram-frame{background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden;padding:8px}
+figcaption{margin-top:8px;color:var(--muted);font-size:14px}
+table{border-collapse:collapse;width:100%;background:var(--panel);margin:18px 0;font-size:14.5px}
+th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+th{background:var(--soft);font-family:ui-sans-serif,system-ui,sans-serif;font-size:13px}
+pre,code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+pre{overflow-x:auto;background:var(--code);color:#eef7f2;border-radius:8px;padding:16px}
+.quiz-card button{display:block;width:100%;margin:8px 0;padding:11px 13px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--ink);font:inherit;text-align:left;cursor:pointer}
+.quiz-card button.correct{border-color:#1f7a3f;background:#e8f4eb}
+.quiz-card button.incorrect{border-color:var(--improve);background:var(--brick-soft)}
+.quiz-feedback{min-height:1.6em;font-weight:700}
+.video{margin:22px 0;background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.video-meta{padding:12px 14px;border-bottom:1px solid var(--line);font-family:ui-sans-serif,system-ui,sans-serif;font-size:13.5px;color:var(--muted)}
+.video-meta strong{color:var(--ink);display:block;font-size:14.5px;margin-bottom:4px}
+.video-frame{position:relative;width:100%;padding-top:56.25%;background:#101917}
+.video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.video-actions{padding:10px 14px;display:flex;gap:12px;flex-wrap:wrap;font-size:13.5px}
+.watch-note{font-size:14px;color:var(--muted);margin:8px 0 0}
+ol.tight li,ul.tight li{margin:6px 0}
+.source-note{font-size:14px;color:var(--muted);border-top:1px solid var(--line);padding-top:10px}
+footer{margin-top:54px;padding-top:24px;border-top:1px solid var(--line);color:var(--muted)}
+.lesson-nav a{margin-right:10px}
+@media(max-width:640px){main{width:min(100% - 24px,960px);padding-top:32px}h1{font-size:34px}table{font-size:13px}}
+@media print{body{background:#fff}.video-frame{display:none}.card,.quiz-card,figure{break-inside:avoid}}
+</style>
+</head>
+<body>
+<main>
+  <p class="kicker">VIDEO STUDY · A13 · TIER A</p>
+  <h1>Harnesses in AI: A Deep Dive — Tejas Kumar, IBM</h1>
+  <p class="subtitle">하네스의 이름은 신뢰성이다. 에이전트가 로그인 페이지에서 패닉해도 “성공”으로 보고하는 계층을 의심하라.</p>
+  
+<p class="pill tier-a">TIER A</p>
+<p class="pill">Loop layer</p>
+<p class="pill">A13</p>
+<div class="callout"><strong>한 줄 핵심</strong><br>하네스의 이름은 신뢰성이다. 에이전트가 로그인 페이지에서 패닉해도 “성공”으로 보고하는 계층을 의심하라.</div>
+
+<div class="video">
+  <div class="video-meta"><strong>Harnesses in AI: A Deep Dive — Tejas Kumar, IBM</strong>AI Engineer · 약 20분 · 하네스의 이름은 신뢰성이다. 에이전트가 로그인 페이지에서 패닉해도 “성공”으로 보고하는 계층을 의심하라.</div>
+  <div class="video-frame">
+    <iframe src="https://www.youtube-nocookie.com/embed/C_GG5g38vLU" title="Harnesses in AI: A Deep Dive — Tejas Kumar, IBM" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
+  </div>
+  <div class="video-actions">
+    <a href="https://www.youtube.com/watch?v=C_GG5g38vLU" target="_blank" rel="noopener">YouTube에서 열기</a>
+    <span class="pill">1차 소스</span>
+  </div>
+</div>
+<p class="watch-note">인쇄 시 iframe 숨김. 토크 수치·데모는 사례 범위로만 읽고 우리 도메인에 재작성할 것.</p>
+
+
+<figure><div class="diagram-frame">
+<svg class="diagram" viewBox="0 0 920 200" role="img" aria-label="Harness">
+  <rect width="920" height="200" fill="#fbfaf6"/>
+  <text x="24" y="28" font-size="14" font-weight="700" fill="#18201f" font-family="ui-sans-serif,system-ui">Harness</text>
+  <rect x="30" y="55" width="390" height="110" rx="10" fill="#fff" stroke="#136f63" stroke-width="2"/>
+  <text x="225" y="100" text-anchor="middle" font-size="13" fill="#18201f" font-family="ui-sans-serif,system-ui">Model self-report</text>
+  <rect x="500" y="55" width="390" height="110" rx="10" fill="#fff" stroke="#a23d31" stroke-width="2"/>
+  <text x="695" y="100" text-anchor="middle" font-size="13" fill="#18201f" font-family="ui-sans-serif,system-ui">External reality check</text>
+  <path d="M420 110 H500" stroke="#5d6864" stroke-width="2"/>
+</svg></div>
+<figcaption>그림. Harness</figcaption></figure>
+
+<h2>0. 보기 전에 (2분)</h2>
+<ul class="tight"><li>우리 자동화에서 성공 리포트의 정의 한 줄</li></ul>
+<h2>1. 토크 논지</h2>
+<ul class="tight"><li>Harness = reliability layer around the model</li><li>등산 하네스 비유: 무엇에 자신을 묶는가</li><li>데모: 로그인 벽에 부딪히고도 upvote 성공 보고 같은 실패</li><li>컨텍스트 창 한계와 관측 가능성</li></ul>
+<p class="quote">How many of you are like confident in your understanding of AI harnesses?</p><p class="quote">And then you get a context window that&#x27;s limited and you get like, you know, you you don&#x27;t get the full hog, so to speak.</p>
+
+<div class="study-grid">
+  <div class="card"><h3>가져올 것</h3><ul class="tight"><li>성공 정의의 외부 검증</li><li>관측 가능성</li><li>tool 결과 신뢰</li></ul></div>
+  <div class="card"><h3>남길 것 / 경계</h3><ul class="tight"><li>에이전트 self-report 신뢰</li><li>로그 없는 자동화</li></ul></div>
+</div>
+<h2>2. 우리 파이프라인 번역</h2>
+<div class="study-grid">
+  <div class="card"><h3>RISELAB · claim-review</h3><ul class="tight"><li>CPSR/클레임 파이프라인 exit code ≠ 업무 성공</li></ul></div>
+  <div class="card"><h3>Trade Intel · reorder-risk</h3><ul class="tight"><li>erp-sales-hx 0행 성공 오보 방지</li></ul></div>
+</div>
+<h2>3. 미니 실습</h2>
+<ul class="tight"><li>성공 정의를 “외부 관측 가능한 조건”으로 재작성</li></ul>
+<h2>4. 회수 퀴즈</h2>
+<div class="quiz-card" data-quiz="A13q1" data-correct="신뢰성." data-incorrect="다시 생각해 보세요."><p><strong>하네스 목적?</strong></p><button type="button" data-answer="wrong">예쁨</button><button type="button" data-answer="correct">reliability</button><button type="button" data-answer="wrong">마케팅</button><button type="button" data-answer="wrong">DNS</button><p class="quiz-feedback" data-feedback aria-live="polite"></p></div><div class="quiz-card" data-quiz="A13q2" data-correct="거짓 성공." data-incorrect="다시 생각해 보세요."><p><strong>전형 실패?</strong></p><button type="button" data-answer="wrong">테스트 통과</button><button type="button" data-answer="correct">성공 보고 but 부수효과 없음</button><button type="button" data-answer="wrong">문서화</button><button type="button" data-answer="wrong">리뷰</button><p class="quiz-feedback" data-feedback aria-live="polite"></p></div><div class="quiz-card" data-quiz="A13q3" data-correct="관측." data-incorrect="다시 생각해 보세요."><p><strong>고칠 곳?</strong></p><button type="button" data-answer="wrong">모델 시만</button><button type="button" data-answer="correct">보고/관측 계층</button><button type="button" data-answer="wrong">폰트</button><button type="button" data-answer="wrong">테마</button><p class="quiz-feedback" data-feedback aria-live="polite"></p></div>
+<div class="callout">
+<strong>파이프라인 편입 게이트</strong><br>
+이 토크의 아이디어를 쓰려면 0008 클리닉 체크리스트를 통과한 뒤,
+<code>ontology.slice.md</code> / <code>checks.md</code> / decision trace 스키마 중 어디에 넣는지 파일 경로를 적는다.
+</div>
+
+  <h2>다음으로 연결</h2>
+  <div class="lesson-nav"><a href="./0212-a12-mistele-loop-engineering.html">← 이전 영상 스터디</a> · <a href="./0011-video-study-index.html">스터디 인덱스</a> · <a href="./0214-a14-vinoth-harness-did.html">다음 영상 스터디 →</a></div>
+  <p class="source-note"><a href="./0000-course-home.html">코스 홈</a> · <a href="./0008-architecture-clinic.html">클리닉</a> · <a href="./0009-glossary.html">용어집</a> · <a href="https://www.youtube.com/watch?v=C_GG5g38vLU" target="_blank" rel="noopener">원본 YouTube</a></p>
+  <footer>
+    <p>막히는 부분은 에이전트에게 바로 물어보세요.</p>
+    <p class="pill">Mission-linked video study</p>
+  </footer>
+</main>
+<script>document.querySelectorAll("[data-quiz]").forEach((quiz) => {
+  const feedback = quiz.querySelector("[data-feedback]");
+  quiz.querySelectorAll("button[data-answer]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const isCorrect = button.dataset.answer === "correct";
+      quiz.querySelectorAll("button[data-answer]").forEach((b) => {
+        b.classList.remove("correct", "incorrect");
+        b.setAttribute("aria-pressed", "false");
+      });
+      button.classList.add(isCorrect ? "correct" : "incorrect");
+      button.setAttribute("aria-pressed", "true");
+      feedback.textContent = isCorrect ? quiz.dataset.correct : quiz.dataset.incorrect;
+    });
+  });
+});
+</script>
+</body>
+</html>

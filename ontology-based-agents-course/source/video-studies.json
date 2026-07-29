@@ -1,0 +1,186 @@
+[
+  {
+    "code": "S01",
+    "tier": "S",
+    "order": 101,
+    "slug": "s01-barrasa-ontology-playbook",
+    "layer": "Ontology",
+    "one": "온톨로지는 사전이 아니라 에이전트가 따라갈 playbook이다."
+  },
+  {
+    "code": "S02",
+    "tier": "S",
+    "order": 102,
+    "slug": "s02-blumenfeld-decision-traces",
+    "layer": "Decision",
+    "one": "문서 KB는 위험 요인을 말하고, context graph는 거절/승인 결정 이력을 말한다."
+  },
+  {
+    "code": "S03",
+    "tier": "S",
+    "order": 103,
+    "slug": "s03-kollegger-context-graphs",
+    "layer": "Decision",
+    "one": "행동 전 “내가 어느 집단(reference class)인가”를 검증하라. 99% 규칙이 1%에서 치명적일 수 있다."
+  },
+  {
+    "code": "S04",
+    "tier": "S",
+    "order": 104,
+    "slug": "s04-chin-crabrag-graph-memory",
+    "layer": "Memory",
+    "one": "같은 사실이라도 벡터 더미와 그래프 메모리는 multi-hop 질의에서 갈린다. 토큰을 늘려도 관계가 생기진 않는다."
+  },
+  {
+    "code": "S05",
+    "tier": "S",
+    "order": 105,
+    "slug": "s05-chin-connecting-dots",
+    "layer": "Memory",
+    "one": "일반 조언 RAG와 개인 이력 그래프는 다른 처방한다. 비즈니스 결정에는 연결된 이력이 필요하다."
+  },
+  {
+    "code": "S06",
+    "tier": "S",
+    "order": 106,
+    "slug": "s06-chin-agentic-graphrag",
+    "layer": "Memory",
+    "one": "에이전틱 시스템을 키우기 전에, 도메인 태스크에 맞는 retrieval(정확도·설명·비용)을 고르라."
+  },
+  {
+    "code": "A01",
+    "tier": "A",
+    "order": 201,
+    "slug": "a01-eifrem-graphrag-marriage",
+    "layer": "Memory",
+    "one": "LLM은 풍부한 컨텍스트에서 강하고, 지식그래프는 컨텍스트를 담는 데 강하다. 둘의 결혼이 GraphRAG 프레이밍."
+  },
+  {
+    "code": "A02",
+    "tier": "A",
+    "order": 202,
+    "slug": "a02-practical-graphrag-neo4j",
+    "layer": "Memory",
+    "one": "GraphRAG 성공 패턴: 도메인 지식을 정확·맥락적·설명 가능하게 넣는 설계."
+  },
+  {
+    "code": "A03",
+    "tier": "A",
+    "order": 203,
+    "slug": "a03-blumenthal-graphrag-workshop",
+    "layer": "Memory",
+    "one": "100분 워크숍: 그래프 디자인 패턴 + retrieval 전략. 주말 심화용 — 한 번에 다 먹지 말고 패턴 목록만 먼저."
+  },
+  {
+    "code": "A04",
+    "tier": "A",
+    "order": 204,
+    "slug": "a04-lyon-kg-mullet",
+    "layer": "Ontology",
+    "one": "Property graph(앞) + RDF/ontology(뒤) 하이브리드로 GraphRAG 복잡도를 깎는다. 순수론 전쟁 금지."
+  },
+  {
+    "code": "A05",
+    "tier": "A",
+    "order": 205,
+    "slug": "a05-chin-context-engineering",
+    "layer": "Memory",
+    "one": "큰 컨텍스트 창 ≠ 주의(attention). 정보 아키텍트처럼 모델 컨텍스트를 설계하라."
+  },
+  {
+    "code": "A06",
+    "tier": "A",
+    "order": 206,
+    "slug": "a06-bain-memory-masterclass",
+    "layer": "Memory",
+    "one": "메모리 도구(Neo4j/Cognee/Graphiti/Mem0)를 구경하되, 선택 기준은 temporal·provenance·조회 API 계약이다."
+  },
+  {
+    "code": "A07",
+    "tier": "A",
+    "order": 207,
+    "slug": "a07-anthropic-skills",
+    "layer": "Skills",
+    "one": "스캐폴딩은 수렴했다. 갭은 도메인 전문성 → Skills로 포장하라."
+  },
+  {
+    "code": "A08",
+    "tier": "A",
+    "order": 208,
+    "slug": "a08-anthropic-effective-agents",
+    "layer": "Skills",
+    "one": "모든 곳에 에이전트를 만들지 마라. Workflow(미리 정한 흐름)와 Agent(환경 피드백으로 경로 결정)를 구분하라."
+  },
+  {
+    "code": "A09",
+    "tier": "A",
+    "order": 209,
+    "slug": "a09-horthy-12-factor-agents",
+    "layer": "Loop",
+    "one": "프레임워크 미로를 빠져나와, 신뢰 가능한 LLM 앱의 요인(12-factor)으로 프로덕션 바를 올려라."
+  },
+  {
+    "code": "A10",
+    "tier": "A",
+    "order": 210,
+    "slug": "a10-horthy-no-vibes",
+    "layer": "Loop",
+    "one": "복잡한 코드베이스에서 바이브 코딩은 부채 공장이다. 고급 컨텍스트 엔지니어링과 궤적 재시작이 필요하다."
+  },
+  {
+    "code": "A11",
+    "tier": "A",
+    "order": 211,
+    "slug": "a11-horthy-harness-not-enough",
+    "layer": "Loop",
+    "one": "하네스/루프/리뷰 봇만으로 “불 끈 소프트웨어 팩토리”는 무너진다. 사람이 읽는 책임이 남는다."
+  },
+  {
+    "code": "A12",
+    "tier": "A",
+    "order": 212,
+    "slug": "a12-mistele-loop-engineering",
+    "layer": "Loop",
+    "one": "더 나은 프롬프트가 아니라 더 나은 루프(목표-오차-보정)를 설계하라. 제어 이론 감각."
+  },
+  {
+    "code": "A13",
+    "tier": "A",
+    "order": 213,
+    "slug": "a13-kumar-harnesses",
+    "layer": "Loop",
+    "one": "하네스의 이름은 신뢰성이다. 에이전트가 로그인 페이지에서 패닉해도 “성공”으로 보고하는 계층을 의심하라."
+  },
+  {
+    "code": "A14",
+    "tier": "A",
+    "order": 214,
+    "slug": "a14-vinoth-harness-did",
+    "layer": "Loop",
+    "one": "모델이 환각한 게 아니라 하네스가 stale state를 먹였다. 세션 쓰기 경쟁을 의심하라. (자막 비활성 — description 기반)"
+  },
+  {
+    "code": "A15",
+    "tier": "A",
+    "order": 215,
+    "slug": "a15-alvoeiro-multiagent-ships",
+    "layer": "Loop",
+    "one": "멀티에이전트는 유행이 아니라 분산 시스템이다. 프로덕션에서 쓰는 taxonomy를 보고, 지금은 역할 분리가 필요할 때만."
+  },
+  {
+    "code": "A16",
+    "tier": "A",
+    "order": 216,
+    "slug": "a16-bhaumik-orchestration",
+    "layer": "Loop",
+    "one": "에이전트 1개는 기능, 5개는 레이스·스테일·추적 불능 결정의 분산 시스템. 안무(choreography)와 오케스트레이션을 구분하라."
+  },
+  {
+    "code": "A17",
+    "tier": "A",
+    "order": 217,
+    "slug": "a17-kiela-rag-agents-prod",
+    "layer": "Memory",
+    "one": "에이전틱 능력은 엔터프라이즈 데이터에 닿을 때만 가치다. 프로덕션 RAG 에이전트 10 lessons로 hybrid 현실을 점검하라."
+  }
+]

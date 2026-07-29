@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Tier S·A AI Engineer 영상 23편의 개별 학습 노트 인덱스. 임베드·논지·파이프라인 번역·퀴즈.">
+<title>Video Study Index · Tier S & A · Ontology Agents</title>
+<style>:root {
+  --ink:#18201f; --muted:#5d6864; --paper:#fbfaf6; --panel:#ffffff;
+  --line:#d9ddd6; --exec:#136f63; --improve:#a23d31; --knowledge:#6b5d8e;
+  --problem:#a66b12; --soft:#eaf3ef; --warn:#fff2d6; --purple-soft:#f0edf7;
+  --brick-soft:#fae9e7; --code:#101917; --skill:#0f4c81;
+}
+*{box-sizing:border-box} body{margin:0;color:var(--ink);background:var(--paper);font-family:ui-serif,Georgia,"Apple SD Gothic Neo","Noto Serif KR",serif;line-height:1.68}
+main{width:min(960px,calc(100% - 40px));margin:0 auto;padding:52px 0 88px}
+.kicker{color:var(--exec);font:700 12px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase}
+h1{margin:12px 0 14px;font-size:clamp(32px,5.8vw,58px);line-height:1.05}
+.subtitle{max-width:760px;color:var(--muted);font-size:18px}
+h2{margin-top:42px;border-bottom:1px solid var(--line);padding-bottom:8px}
+h3{margin-top:26px}
+a{color:var(--exec);text-underline-offset:3px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.card,.quiz-card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:20px;margin:18px 0}
+.card h3{margin-top:0}
+.callout{border-left:4px solid var(--exec);background:var(--soft);border-radius:6px;padding:14px 16px;margin:18px 0}
+.callout.warn{border-left-color:var(--problem);background:var(--warn)}
+.callout.brick{border-left-color:var(--improve);background:var(--brick-soft)}
+.callout.purple{border-left-color:var(--knowledge);background:var(--purple-soft)}
+.badge,.pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:2px 9px;font:700 12px/1.7 ui-sans-serif,system-ui,sans-serif;color:var(--muted);margin:0 4px 4px 0}
+.badge.exec{color:var(--exec);border-color:var(--exec)}
+.badge.improve{color:var(--improve);border-color:var(--improve)}
+.badge.knowledge{color:var(--knowledge);border-color:var(--knowledge)}
+.badge.problem{color:var(--problem);border-color:var(--problem)}
+.badge.skill{color:var(--skill);border-color:var(--skill)}
+figure{margin:24px 0}
+.diagram{width:100%;height:auto;display:block}
+.diagram-frame{background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden;padding:8px}
+figcaption{margin-top:8px;color:var(--muted);font-size:14px}
+table{border-collapse:collapse;width:100%;background:var(--panel);margin:18px 0;font-size:14.5px}
+th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+th{background:var(--soft);font-family:ui-sans-serif,system-ui,sans-serif;font-size:13px}
+pre,code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+pre{overflow-x:auto;background:var(--code);color:#eef7f2;border-radius:8px;padding:16px}
+.quiz-card button{display:block;width:100%;margin:8px 0;padding:11px 13px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--ink);font:inherit;text-align:left;cursor:pointer}
+.quiz-card button.correct{border-color:#1f7a3f;background:#e8f4eb}
+.quiz-card button.incorrect{border-color:var(--improve);background:var(--brick-soft)}
+.quiz-feedback{min-height:1.6em;font-weight:700}
+.video{margin:22px 0;background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.video-meta{padding:12px 14px;border-bottom:1px solid var(--line);font-family:ui-sans-serif,system-ui,sans-serif;font-size:13.5px;color:var(--muted)}
+.video-meta strong{color:var(--ink);display:block;font-size:14.5px;margin-bottom:4px}
+.video-frame{position:relative;width:100%;padding-top:56.25%;background:#101917}
+.video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.video-actions{padding:10px 14px;display:flex;gap:12px;flex-wrap:wrap;font-size:13.5px}
+.watch-note{font-size:14px;color:var(--muted);margin:8px 0 0}
+ol.tight li,ul.tight li{margin:6px 0}
+.source-note{font-size:14px;color:var(--muted);border-top:1px solid var(--line);padding-top:10px}
+footer{margin-top:54px;padding-top:24px;border-top:1px solid var(--line);color:var(--muted)}
+.lesson-nav a{margin-right:10px}
+@media(max-width:640px){main{width:min(100% - 24px,960px);padding-top:32px}h1{font-size:34px}table{font-size:13px}}
+@media print{body{background:#fff}.video-frame{display:none}.card,.quiz-card,figure{break-inside:avoid}}
+</style>
+</head>
+<body>
+<main>
+  <p class="kicker">REFERENCE · VIDEO STUDIES</p>
+  <h1>Tier S · A 영상 스터디 인덱스</h1>
+  <p class="subtitle">각 영상마다 임베드 + 논지 + 가져올 것/남길 것 + RISELAB/Trade Intel 번역 + 실습 + 퀴즈.</p>
+  <div class="callout">
+    <strong>사용법</strong><br>
+    1) 인덱스에서 Tier S를 순서대로 → 2) 필요 층만 Tier A → 3) 아이디어는 클리닉 게이트 통과 후에만 파이프라인 편입.<br>
+    트랜스크립트 기반 정리(2026-07-29). A14는 자막 비활성으로 description 기반.
+  </div>
+  <h2>Tier S — 핵심 6</h2>
+  <table><tr><th>코드</th><th>영상</th><th>길이</th><th>층</th><th>한 줄</th></tr>
+  <tr><td><span class="pill tier-s">S01</span></td><td><a href="./0101-s01-barrasa-ontology-playbook.html">Why Your Agent’s Brain Needs a Playbook: Practical Wins from Using Ont</a></td><td>14분</td><td>Ontology</td><td>온톨로지는 사전이 아니라 에이전트가 따라갈 playbook이다.</td></tr><tr><td><span class="pill tier-s">S02</span></td><td><a href="./0102-s02-blumenfeld-decision-traces.html">Why your agents need decision traces, not just documents — Zach Blumen</a></td><td>20분</td><td>Decision</td><td>문서 KB는 위험 요인을 말하고, context graph는 거절/승인 결정 이력을 말한다.</td></tr><tr><td><span class="pill tier-s">S03</span></td><td><a href="./0103-s03-kollegger-context-graphs.html">Context Graphs for Explainable, Decision-Aware AI Agents — Andreas Kol</a></td><td>17분</td><td>Decision</td><td>행동 전 “내가 어느 집단(reference class)인가”를 검증하라. 99% 규칙이 1%에서 치명적일 수 있다.</td></tr><tr><td><span class="pill tier-s">S04</span></td><td><a href="./0104-s04-chin-crabrag-graph-memory.html">CrabRAG: Why Automated Assistants Need Graph Memory, Not More Tokens —</a></td><td>21분</td><td>Memory</td><td>같은 사실이라도 벡터 더미와 그래프 메모리는 multi-hop 질의에서 갈린다. 토큰을 늘려도 관계가 생기진 않는다.</td></tr><tr><td><span class="pill tier-s">S05</span></td><td><a href="./0105-s05-chin-connecting-dots.html">Connecting the Dots with Context Graphs — Stephen Chin, Neo4j</a></td><td>18분</td><td>Memory</td><td>일반 조언 RAG와 개인 이력 그래프는 다른 처방한다. 비즈니스 결정에는 연결된 이력이 필요하다.</td></tr><tr><td><span class="pill tier-s">S06</span></td><td><a href="./0106-s06-chin-agentic-graphrag.html">Agentic GraphRAG: AI’s Logical Edge — Stephen Chin, Neo4j</a></td><td>15분</td><td>Memory</td><td>에이전틱 시스템을 키우기 전에, 도메인 태스크에 맞는 retrieval(정확도·설명·비용)을 고르라.</td></tr></table>
+  <h2>Tier A — 심화 17</h2>
+  <table><tr><th>코드</th><th>영상</th><th>길이</th><th>층</th><th>한 줄</th></tr>
+  <tr><td><span class="pill tier-a">A01</span></td><td><a href="./0201-a01-eifrem-graphrag-marriage.html">GraphRAG: The Marriage of Knowledge Graphs and RAG: Emil Eifrem</a></td><td>19분</td><td>Memory</td><td>LLM은 풍부한 컨텍스트에서 강하고, 지식그래프는 컨텍스트를 담는 데 강하다. 둘의 결혼이 GraphRAG 프레이밍.</td></tr><tr><td><span class="pill tier-a">A02</span></td><td><a href="./0202-a02-practical-graphrag-neo4j.html">Practical GraphRAG: Making LLMs smarter with Knowledge Graphs — Michae</a></td><td>20분</td><td>Memory</td><td>GraphRAG 성공 패턴: 도메인 지식을 정확·맥락적·설명 가능하게 넣는 설계.</td></tr><tr><td><span class="pill tier-a">A03</span></td><td><a href="./0203-a03-blumenthal-graphrag-workshop.html">Knowledge Graphs &amp; GraphRAG: Techniques for Building Effective GenAI A</a></td><td>100분</td><td>Memory</td><td>100분 워크숍: 그래프 디자인 패턴 + retrieval 전략. 주말 심화용 — 한 번에 다 먹지 말고 패턴 목록만 먼저.</td></tr><tr><td><span class="pill tier-a">A04</span></td><td><a href="./0204-a04-lyon-kg-mullet.html">The Knowledge Graph Mullet: Trimming GraphRAG Complexity - William Lyo</a></td><td>33분</td><td>Ontology</td><td>Property graph(앞) + RDF/ontology(뒤) 하이브리드로 GraphRAG 복잡도를 깎는다. 순수론 전쟁 금</td></tr><tr><td><span class="pill tier-a">A05</span></td><td><a href="./0205-a05-chin-context-engineering.html">Context Engineering: Connecting the Dots with Graphs — Stephen Chin, N</a></td><td>27분</td><td>Memory</td><td>큰 컨텍스트 창 ≠ 주의(attention). 정보 아키텍트처럼 모델 컨텍스트를 설계하라.</td></tr><tr><td><span class="pill tier-a">A06</span></td><td><a href="./0206-a06-bain-memory-masterclass.html">Memory Masterclass: Make Your AI Agents Remember What They Do! — Mark </a></td><td>51분</td><td>Memory</td><td>메모리 도구(Neo4j/Cognee/Graphiti/Mem0)를 구경하되, 선택 기준은 temporal·provenance·조</td></tr><tr><td><span class="pill tier-a">A07</span></td><td><a href="./0207-a07-anthropic-skills.html">Don&#x27;t Build Agents, Build Skills Instead – Barry Zhang &amp; Mahesh Murag,</a></td><td>16분</td><td>Skills</td><td>스캐폴딩은 수렴했다. 갭은 도메인 전문성 → Skills로 포장하라.</td></tr><tr><td><span class="pill tier-a">A08</span></td><td><a href="./0208-a08-anthropic-effective-agents.html">How We Build Effective Agents: Barry Zhang, Anthropic</a></td><td>15분</td><td>Skills</td><td>모든 곳에 에이전트를 만들지 마라. Workflow(미리 정한 흐름)와 Agent(환경 피드백으로 경로 결정)를 구분하라.</td></tr><tr><td><span class="pill tier-a">A09</span></td><td><a href="./0209-a09-horthy-12-factor-agents.html">12-Factor Agents: Patterns of reliable LLM applications — Dex Horthy, </a></td><td>17분</td><td>Loop</td><td>프레임워크 미로를 빠져나와, 신뢰 가능한 LLM 앱의 요인(12-factor)으로 프로덕션 바를 올려라.</td></tr><tr><td><span class="pill tier-a">A10</span></td><td><a href="./0210-a10-horthy-no-vibes.html">No Vibes Allowed: Solving Hard Problems in Complex Codebases – Dex Hor</a></td><td>21분</td><td>Loop</td><td>복잡한 코드베이스에서 바이브 코딩은 부채 공장이다. 고급 컨텍스트 엔지니어링과 궤적 재시작이 필요하다.</td></tr><tr><td><span class="pill tier-a">A11</span></td><td><a href="./0211-a11-horthy-harness-not-enough.html">Harness Engineering is not Enough: Why Software Factories Fail — Dex H</a></td><td>19분</td><td>Loop</td><td>하네스/루프/리뷰 봇만으로 “불 끈 소프트웨어 팩토리”는 무너진다. 사람이 읽는 책임이 남는다.</td></tr><tr><td><span class="pill tier-a">A12</span></td><td><a href="./0212-a12-mistele-loop-engineering.html">Loop Engineering from First Principles — Kyle Mistele, HumanLayer</a></td><td>18분</td><td>Loop</td><td>더 나은 프롬프트가 아니라 더 나은 루프(목표-오차-보정)를 설계하라. 제어 이론 감각.</td></tr><tr><td><span class="pill tier-a">A13</span></td><td><a href="./0213-a13-kumar-harnesses.html">Harnesses in AI: A Deep Dive — Tejas Kumar, IBM</a></td><td>20분</td><td>Loop</td><td>하네스의 이름은 신뢰성이다. 에이전트가 로그인 페이지에서 패닉해도 “성공”으로 보고하는 계층을 의심하라.</td></tr><tr><td><span class="pill tier-a">A14</span></td><td><a href="./0214-a14-vinoth-harness-did.html">Your Agent Didn&#x27;t Fail. Your Harness Did. — Vinoth Govindarajan, OpenA</a></td><td>?분</td><td>Loop</td><td>모델이 환각한 게 아니라 하네스가 stale state를 먹였다. 세션 쓰기 경쟁을 의심하라. (자막 비활성 — descrip</td></tr><tr><td><span class="pill tier-a">A15</span></td><td><a href="./0215-a15-alvoeiro-multiagent-ships.html">The Multi-Agent Architecture That Actually Ships — Luke Alvoeiro, Fact</a></td><td>19분</td><td>Loop</td><td>멀티에이전트는 유행이 아니라 분산 시스템이다. 프로덕션에서 쓰는 taxonomy를 보고, 지금은 역할 분리가 필요할 때만.</td></tr><tr><td><span class="pill tier-a">A16</span></td><td><a href="./0216-a16-bhaumik-orchestration.html">From Chaos to Choreography: Multi-Agent Orchestration Patterns That Ac</a></td><td>26분</td><td>Loop</td><td>에이전트 1개는 기능, 5개는 레이스·스테일·추적 불능 결정의 분산 시스템. 안무(choreography)와 오케스트레이션을 </td></tr><tr><td><span class="pill tier-a">A17</span></td><td><a href="./0217-a17-kiela-rag-agents-prod.html">RAG Agents in Prod: 10 Lessons We Learned — Douwe Kiela, creator of RA</a></td><td>17분</td><td>Memory</td><td>에이전틱 능력은 엔터프라이즈 데이터에 닿을 때만 가치다. 프로덕션 RAG 에이전트 10 lessons로 hybrid 현실을 점</td></tr></table>
+  <h2>추천 경로</h2>
+  <ol>
+    <li>S01→S02→S03→S04 (온톨로지·트레이스·메모리) ≈ 72분 + 노트</li>
+    <li>A07→A08 (스킬·절제) ≈ 31분</li>
+    <li>A12→A13→A09 (루프·하네스·12-factor) ≈ 55분</li>
+    <li>A06 Graphiti 구간 + S 복습 후 클리닉</li>
+  </ol>
+  <p><a href="./0000-course-home.html">← 코스 홈</a> · <a href="./0010-source-watch-map.html">기존 소스 맵</a> · <a href="./0101-s01-barrasa-ontology-playbook.html">S01부터 시작 →</a></p>
+  <footer><p class="pill">23 video study sheets</p></footer>
+</main>
+</body>
+</html>

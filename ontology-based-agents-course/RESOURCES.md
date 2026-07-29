@@ -113,3 +113,9 @@
 6. Anthropic Effective Agents (15)
 7. Mistele Loop Engineering (18)
 8. Bain Memory Masterclass — Graphiti 구간 위주 (선택 51)
+
+## Per-video study sheets (mystudy)
+
+- Index: `lessons/0011-video-study-index.html` (live `/t/ontology-agents` → 0011)
+- Files: `lessons/0101-…` (Tier S) and `0201-…` (Tier A), one HTML per talk with embed + notes + quiz
+- Generated from AI Engineer transcripts (2026-07-29); A14 description-only (captions disabled)

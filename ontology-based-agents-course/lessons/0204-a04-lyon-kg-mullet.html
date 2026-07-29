@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="[A] Property graph(앞) + RDF/ontology(뒤) 하이브리드로 GraphRAG 복잡도를 깎는다. 순수론 전쟁 금지.">
+<title>A04 스터디 · The Knowledge Graph Mullet: Trimming GraphRAG Complexity - W · Ontology Agents</title>
+<style>:root {
+  --ink:#18201f; --muted:#5d6864; --paper:#fbfaf6; --panel:#ffffff;
+  --line:#d9ddd6; --exec:#136f63; --improve:#a23d31; --knowledge:#6b5d8e;
+  --problem:#a66b12; --soft:#eaf3ef; --warn:#fff2d6; --purple-soft:#f0edf7;
+  --brick-soft:#fae9e7; --code:#101917; --skill:#0f4c81;
+}
+*{box-sizing:border-box} body{margin:0;color:var(--ink);background:var(--paper);font-family:ui-serif,Georgia,"Apple SD Gothic Neo","Noto Serif KR",serif;line-height:1.68}
+main{width:min(960px,calc(100% - 40px));margin:0 auto;padding:52px 0 88px}
+.kicker{color:var(--exec);font:700 12px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase}
+h1{margin:12px 0 14px;font-size:clamp(32px,5.8vw,58px);line-height:1.05}
+.subtitle{max-width:760px;color:var(--muted);font-size:18px}
+h2{margin-top:42px;border-bottom:1px solid var(--line);padding-bottom:8px}
+h3{margin-top:26px}
+a{color:var(--exec);text-underline-offset:3px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.card,.quiz-card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:20px;margin:18px 0}
+.card h3{margin-top:0}
+.callout{border-left:4px solid var(--exec);background:var(--soft);border-radius:6px;padding:14px 16px;margin:18px 0}
+.callout.warn{border-left-color:var(--problem);background:var(--warn)}
+.callout.brick{border-left-color:var(--improve);background:var(--brick-soft)}
+.callout.purple{border-left-color:var(--knowledge);background:var(--purple-soft)}
+.badge,.pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:2px 9px;font:700 12px/1.7 ui-sans-serif,system-ui,sans-serif;color:var(--muted);margin:0 4px 4px 0}
+.badge.exec{color:var(--exec);border-color:var(--exec)}
+.badge.improve{color:var(--improve);border-color:var(--improve)}
+.badge.knowledge{color:var(--knowledge);border-color:var(--knowledge)}
+.badge.problem{color:var(--problem);border-color:var(--problem)}
+.badge.skill{color:var(--skill);border-color:var(--skill)}
+figure{margin:24px 0}
+.diagram{width:100%;height:auto;display:block}
+.diagram-frame{background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden;padding:8px}
+figcaption{margin-top:8px;color:var(--muted);font-size:14px}
+table{border-collapse:collapse;width:100%;background:var(--panel);margin:18px 0;font-size:14.5px}
+th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+th{background:var(--soft);font-family:ui-sans-serif,system-ui,sans-serif;font-size:13px}
+pre,code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+pre{overflow-x:auto;background:var(--code);color:#eef7f2;border-radius:8px;padding:16px}
+.quiz-card button{display:block;width:100%;margin:8px 0;padding:11px 13px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--ink);font:inherit;text-align:left;cursor:pointer}
+.quiz-card button.correct{border-color:#1f7a3f;background:#e8f4eb}
+.quiz-card button.incorrect{border-color:var(--improve);background:var(--brick-soft)}
+.quiz-feedback{min-height:1.6em;font-weight:700}
+.video{margin:22px 0;background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.video-meta{padding:12px 14px;border-bottom:1px solid var(--line);font-family:ui-sans-serif,system-ui,sans-serif;font-size:13.5px;color:var(--muted)}
+.video-meta strong{color:var(--ink);display:block;font-size:14.5px;margin-bottom:4px}
+.video-frame{position:relative;width:100%;padding-top:56.25%;background:#101917}
+.video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.video-actions{padding:10px 14px;display:flex;gap:12px;flex-wrap:wrap;font-size:13.5px}
+.watch-note{font-size:14px;color:var(--muted);margin:8px 0 0}
+ol.tight li,ul.tight li{margin:6px 0}
+.source-note{font-size:14px;color:var(--muted);border-top:1px solid var(--line);padding-top:10px}
+footer{margin-top:54px;padding-top:24px;border-top:1px solid var(--line);color:var(--muted)}
+.lesson-nav a{margin-right:10px}
+@media(max-width:640px){main{width:min(100% - 24px,960px);padding-top:32px}h1{font-size:34px}table{font-size:13px}}
+@media print{body{background:#fff}.video-frame{display:none}.card,.quiz-card,figure{break-inside:avoid}}
+</style>
+</head>
+<body>
+<main>
+  <p class="kicker">VIDEO STUDY · A04 · TIER A</p>
+  <h1>The Knowledge Graph Mullet: Trimming GraphRAG Complexity - William Lyon</h1>
+  <p class="subtitle">Property graph(앞) + RDF/ontology(뒤) 하이브리드로 GraphRAG 복잡도를 깎는다. 순수론 전쟁 금지.</p>
+  
+<p class="pill tier-a">TIER A</p>
+<p class="pill">Ontology layer</p>
+<p class="pill">A04</p>
+<div class="callout"><strong>한 줄 핵심</strong><br>Property graph(앞) + RDF/ontology(뒤) 하이브리드로 GraphRAG 복잡도를 깎는다. 순수론 전쟁 금지.</div>
+
+<div class="video">
+  <div class="video-meta"><strong>The Knowledge Graph Mullet: Trimming GraphRAG Complexity - William Lyon</strong>AI Engineer · 약 33분 · Property graph(앞) + RDF/ontology(뒤) 하이브리드로 GraphRAG 복잡도를 깎는다. 순수론 전쟁 금지.</div>
+  <div class="video-frame">
+    <iframe src="https://www.youtube-nocookie.com/embed/tYCu_57jzL8" title="The Knowledge Graph Mullet: Trimming GraphRAG Complexity - William Lyon" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
+  </div>
+  <div class="video-actions">
+    <a href="https://www.youtube.com/watch?v=tYCu_57jzL8" target="_blank" rel="noopener">YouTube에서 열기</a>
+    <span class="pill">1차 소스</span>
+  </div>
+</div>
+<p class="watch-note">인쇄 시 iframe 숨김. 토크 수치·데모는 사례 범위로만 읽고 우리 도메인에 재작성할 것.</p>
+
+
+<figure><div class="diagram-frame">
+<svg class="diagram" viewBox="0 0 920 200" role="img" aria-label="KG mullet">
+  <rect width="920" height="200" fill="#fbfaf6"/>
+  <text x="24" y="28" font-size="14" font-weight="700" fill="#18201f" font-family="ui-sans-serif,system-ui">KG mullet</text>
+  <rect x="30" y="55" width="390" height="110" rx="10" fill="#fff" stroke="#136f63" stroke-width="2"/>
+  <text x="225" y="100" text-anchor="middle" font-size="13" fill="#18201f" font-family="ui-sans-serif,system-ui">Property graph ops</text>
+  <rect x="500" y="55" width="390" height="110" rx="10" fill="#fff" stroke="#6b5d8e" stroke-width="2"/>
+  <text x="695" y="100" text-anchor="middle" font-size="13" fill="#18201f" font-family="ui-sans-serif,system-ui">RDF/ontology shared meaning</text>
+  <path d="M420 110 H500" stroke="#5d6864" stroke-width="2"/>
+</svg></div>
+<figcaption>그림. KG mullet</figcaption></figure>
+
+<h2>0. 보기 전에 (2분)</h2>
+<ul class="tight"><li>우리가 Cypher 쪽인지 OWL/SPARQL 쪽인지 감 적기</li></ul>
+<h2>1. 토크 논지</h2>
+<ul class="tight"><li>Mullet: property graph in the front, RDF triples in the back</li><li>두 패러다임은 라이벌이 아니라 워크플로 최적화 지점이 다름</li><li>PG: nodes/rels/properties, Cypher traversal</li><li>RDF: triples, SPARQL, formal ontologies</li><li>하이브리드로 복잡도·표현력 균형</li></ul>
+<p class="quote">Hey everyone, my name is Will and in this talk we&#x27;re going to be learning all about the knowledge graph mullet and how it can trim graph rag complexity.</p><p class="quote">And if we extend that analogy to knowledge graphs, that gives us the knowledge graph mullet, which is all about property graph in the front and RDF triples in the back.</p>
+
+<div class="study-grid">
+  <div class="card"><h3>가져올 것</h3><ul class="tight"><li>패러다임 전쟁 대신 역할 분담</li><li>과도한 형식 온톨로지 경계</li><li>실무 쿼리성(PG) vs 공유 스키마/추론(RDF)</li></ul></div>
+  <div class="card"><h3>남길 것 / 경계</h3><ul class="tight"><li>처음부터 전사 OWL만</li><li>온톨로지 순수주의로 파일럿 지연</li></ul></div>
+</div>
+<h2>2. 우리 파이프라인 번역</h2>
+<div class="study-grid">
+  <div class="card"><h3>RISELAB · claim-review</h3><ul class="tight"><li>운영 쿼리 PG, 규제 개념 정렬은 가벼운 스키마 문서부터</li></ul></div>
+  <div class="card"><h3>Trade Intel · reorder-risk</h3><ul class="tight"><li>운영 경로는 PG, 공유 용어는 용어집/슬라이스 MD</li></ul></div>
+</div>
+<h2>3. 미니 실습</h2>
+<ul class="tight"><li>우리 파일럿에 PG-only로 충분한지 Yes/No + 이유</li></ul>
+<h2>4. 회수 퀴즈</h2>
+<div class="quiz-card" data-quiz="A04q1" data-correct="하이브리드." data-incorrect="다시 생각해 보세요."><p><strong>Mullet 비유는?</strong></p><button type="button" data-answer="wrong">헤어 유행만</button><button type="button" data-answer="correct">PG front + RDF back 하이브리드</button><button type="button" data-answer="wrong">GPU</button><button type="button" data-answer="wrong">CSS</button><p class="quiz-feedback" data-feedback aria-live="polite"></p></div><div class="quiz-card" data-quiz="A04q2" data-correct="최소." data-incorrect="다시 생각해 보세요."><p><strong>파일럿 기본 추천?</strong></p><button type="button" data-answer="wrong">전사 OWL</button><button type="button" data-answer="correct">결정에 충분한 PG+문서 스키마</button><button type="button" data-answer="wrong">50 RDF 추론기</button><button type="button" data-answer="wrong">무시</button><p class="quiz-feedback" data-feedback aria-live="polite"></p></div><div class="quiz-card" data-quiz="A04q3" data-correct="종교전쟁." data-incorrect="다시 생각해 보세요."><p><strong>피해야 할 것?</strong></p><button type="button" data-answer="wrong">역할 분담</button><button type="button" data-answer="correct">패러다임 종교전쟁</button><button type="button" data-answer="wrong">hybrid</button><button type="button" data-answer="wrong">Cypher</button><p class="quiz-feedback" data-feedback aria-live="polite"></p></div>
+<div class="callout">
+<strong>파이프라인 편입 게이트</strong><br>
+이 토크의 아이디어를 쓰려면 0008 클리닉 체크리스트를 통과한 뒤,
+<code>ontology.slice.md</code> / <code>checks.md</code> / decision trace 스키마 중 어디에 넣는지 파일 경로를 적는다.
+</div>
+
+  <h2>다음으로 연결</h2>
+  <div class="lesson-nav"><a href="./0203-a03-blumenthal-graphrag-workshop.html">← 이전 영상 스터디</a> · <a href="./0011-video-study-index.html">스터디 인덱스</a> · <a href="./0205-a05-chin-context-engineering.html">다음 영상 스터디 →</a></div>
+  <p class="source-note"><a href="./0000-course-home.html">코스 홈</a> · <a href="./0008-architecture-clinic.html">클리닉</a> · <a href="./0009-glossary.html">용어집</a> · <a href="https://www.youtube.com/watch?v=tYCu_57jzL8" target="_blank" rel="noopener">원본 YouTube</a></p>
+  <footer>
+    <p>막히는 부분은 에이전트에게 바로 물어보세요.</p>
+    <p class="pill">Mission-linked video study</p>
+  </footer>
+</main>
+<script>document.querySelectorAll("[data-quiz]").forEach((quiz) => {
+  const feedback = quiz.querySelector("[data-feedback]");
+  quiz.querySelectorAll("button[data-answer]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const isCorrect = button.dataset.answer === "correct";
+      quiz.querySelectorAll("button[data-answer]").forEach((b) => {
+        b.classList.remove("correct", "incorrect");
+        b.setAttribute("aria-pressed", "false");
+      });
+      button.classList.add(isCorrect ? "correct" : "incorrect");
+      button.setAttribute("aria-pressed", "true");
+      feedback.textContent = isCorrect ? quiz.dataset.correct : quiz.dataset.incorrect;
+    });
+  });
+});
+</script>
+</body>
+</html>

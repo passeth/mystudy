@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-29T00:16:28.293Z",
+  "generatedAt": "2026-07-29T00:46:15.795Z",
   "topics": [
     {
       "id": "pif-cpsr",
@@ -559,6 +559,150 @@
           "title": "소스·시청 지도 · Ontology Agents",
           "subtitle": "AI Engineer 영상과 레슨·파이프라인 층 매핑표.",
           "file": "lessons/ontology-agents/0010-source-watch-map.html"
+        },
+        {
+          "id": "0011-video-study-index",
+          "title": "Video Study Index · Tier S & A · Ontology Agents",
+          "subtitle": "Tier S·A AI Engineer 영상 23편의 개별 학습 노트 인덱스. 임베드·논지·파이프라인 번역·퀴즈.",
+          "file": "lessons/ontology-agents/0011-video-study-index.html"
+        },
+        {
+          "id": "0101-s01-barrasa-ontology-playbook",
+          "title": "S01 스터디 · Why Your Agent’s Brain Needs a Playbook: Practical Wins from · Ontology Agents",
+          "subtitle": "[S] 온톨로지는 사전이 아니라 에이전트가 따라갈 playbook이다.",
+          "file": "lessons/ontology-agents/0101-s01-barrasa-ontology-playbook.html"
+        },
+        {
+          "id": "0102-s02-blumenfeld-decision-traces",
+          "title": "S02 스터디 · Why your agents need decision traces, not just documents — Z · Ontology Agents",
+          "subtitle": "[S] 문서 KB는 위험 요인을 말하고, context graph는 거절/승인 결정 이력을 말한다.",
+          "file": "lessons/ontology-agents/0102-s02-blumenfeld-decision-traces.html"
+        },
+        {
+          "id": "0103-s03-kollegger-context-graphs",
+          "title": "S03 스터디 · Context Graphs for Explainable, Decision-Aware AI Agents — A · Ontology Agents",
+          "subtitle": "[S] 행동 전 “내가 어느 집단(reference class)인가”를 검증하라. 99% 규칙이 1%에서 치명적일 수 있다.",
+          "file": "lessons/ontology-agents/0103-s03-kollegger-context-graphs.html"
+        },
+        {
+          "id": "0104-s04-chin-crabrag-graph-memory",
+          "title": "S04 스터디 · CrabRAG: Why Automated Assistants Need Graph Memory, Not Mor · Ontology Agents",
+          "subtitle": "[S] 같은 사실이라도 벡터 더미와 그래프 메모리는 multi-hop 질의에서 갈린다. 토큰을 늘려도 관계가 생기진 않는다.",
+          "file": "lessons/ontology-agents/0104-s04-chin-crabrag-graph-memory.html"
+        },
+        {
+          "id": "0105-s05-chin-connecting-dots",
+          "title": "S05 스터디 · Connecting the Dots with Context Graphs — Stephen Chin, Neo4 · Ontology Agents",
+          "subtitle": "[S] 일반 조언 RAG와 개인 이력 그래프는 다른 처방한다. 비즈니스 결정에는 연결된 이력이 필요하다.",
+          "file": "lessons/ontology-agents/0105-s05-chin-connecting-dots.html"
+        },
+        {
+          "id": "0106-s06-chin-agentic-graphrag",
+          "title": "S06 스터디 · Agentic GraphRAG: AI’s Logical Edge — Stephen Chin, Neo4j · Ontology Agents",
+          "subtitle": "[S] 에이전틱 시스템을 키우기 전에, 도메인 태스크에 맞는 retrieval(정확도·설명·비용)을 고르라.",
+          "file": "lessons/ontology-agents/0106-s06-chin-agentic-graphrag.html"
+        },
+        {
+          "id": "0201-a01-eifrem-graphrag-marriage",
+          "title": "A01 스터디 · GraphRAG: The Marriage of Knowledge Graphs and RAG: Emil Eif · Ontology Agents",
+          "subtitle": "[A] LLM은 풍부한 컨텍스트에서 강하고, 지식그래프는 컨텍스트를 담는 데 강하다. 둘의 결혼이 GraphRAG 프레이밍.",
+          "file": "lessons/ontology-agents/0201-a01-eifrem-graphrag-marriage.html"
+        },
+        {
+          "id": "0202-a02-practical-graphrag-neo4j",
+          "title": "A02 스터디 · Practical GraphRAG: Making LLMs smarter with Knowledge Graph · Ontology Agents",
+          "subtitle": "[A] GraphRAG 성공 패턴: 도메인 지식을 정확·맥락적·설명 가능하게 넣는 설계.",
+          "file": "lessons/ontology-agents/0202-a02-practical-graphrag-neo4j.html"
+        },
+        {
+          "id": "0203-a03-blumenthal-graphrag-workshop",
+          "title": "A03 스터디 · Knowledge Graphs & GraphRAG: Techniques for Building Effecti · Ontology Agents",
+          "subtitle": "[A] 100분 워크숍: 그래프 디자인 패턴 + retrieval 전략. 주말 심화용 — 한 번에 다 먹지 말고 패턴 목록만 먼저.",
+          "file": "lessons/ontology-agents/0203-a03-blumenthal-graphrag-workshop.html"
+        },
+        {
+          "id": "0204-a04-lyon-kg-mullet",
+          "title": "A04 스터디 · The Knowledge Graph Mullet: Trimming GraphRAG Complexity - W · Ontology Agents",
+          "subtitle": "[A] Property graph(앞) + RDF/ontology(뒤) 하이브리드로 GraphRAG 복잡도를 깎는다. 순수론 전쟁 금지.",
+          "file": "lessons/ontology-agents/0204-a04-lyon-kg-mullet.html"
+        },
+        {
+          "id": "0205-a05-chin-context-engineering",
+          "title": "A05 스터디 · Context Engineering: Connecting the Dots with Graphs — Steph · Ontology Agents",
+          "subtitle": "[A] 큰 컨텍스트 창 ≠ 주의(attention). 정보 아키텍트처럼 모델 컨텍스트를 설계하라.",
+          "file": "lessons/ontology-agents/0205-a05-chin-context-engineering.html"
+        },
+        {
+          "id": "0206-a06-bain-memory-masterclass",
+          "title": "A06 스터디 · Memory Masterclass: Make Your AI Agents Remember What They D · Ontology Agents",
+          "subtitle": "[A] 메모리 도구(Neo4j/Cognee/Graphiti/Mem0)를 구경하되, 선택 기준은 temporal·provenance·조회 API 계약이다.",
+          "file": "lessons/ontology-agents/0206-a06-bain-memory-masterclass.html"
+        },
+        {
+          "id": "0207-a07-anthropic-skills",
+          "title": "A07 스터디 · Don&#x27;t Build Agents, Build Skills Instead – Barry Zhang & Mah · Ontology Agents",
+          "subtitle": "[A] 스캐폴딩은 수렴했다. 갭은 도메인 전문성 → Skills로 포장하라.",
+          "file": "lessons/ontology-agents/0207-a07-anthropic-skills.html"
+        },
+        {
+          "id": "0208-a08-anthropic-effective-agents",
+          "title": "A08 스터디 · How We Build Effective Agents: Barry Zhang, Anthropic · Ontology Agents",
+          "subtitle": "[A] 모든 곳에 에이전트를 만들지 마라. Workflow(미리 정한 흐름)와 Agent(환경 피드백으로 경로 결정)를 구분하라.",
+          "file": "lessons/ontology-agents/0208-a08-anthropic-effective-agents.html"
+        },
+        {
+          "id": "0209-a09-horthy-12-factor-agents",
+          "title": "A09 스터디 · 12-Factor Agents: Patterns of reliable LLM applications — De · Ontology Agents",
+          "subtitle": "[A] 프레임워크 미로를 빠져나와, 신뢰 가능한 LLM 앱의 요인(12-factor)으로 프로덕션 바를 올려라.",
+          "file": "lessons/ontology-agents/0209-a09-horthy-12-factor-agents.html"
+        },
+        {
+          "id": "0210-a10-horthy-no-vibes",
+          "title": "A10 스터디 · No Vibes Allowed: Solving Hard Problems in Complex Codebases · Ontology Agents",
+          "subtitle": "[A] 복잡한 코드베이스에서 바이브 코딩은 부채 공장이다. 고급 컨텍스트 엔지니어링과 궤적 재시작이 필요하다.",
+          "file": "lessons/ontology-agents/0210-a10-horthy-no-vibes.html"
+        },
+        {
+          "id": "0211-a11-horthy-harness-not-enough",
+          "title": "A11 스터디 · Harness Engineering is not Enough: Why Software Factories Fa · Ontology Agents",
+          "subtitle": "[A] 하네스/루프/리뷰 봇만으로 “불 끈 소프트웨어 팩토리”는 무너진다. 사람이 읽는 책임이 남는다.",
+          "file": "lessons/ontology-agents/0211-a11-horthy-harness-not-enough.html"
+        },
+        {
+          "id": "0212-a12-mistele-loop-engineering",
+          "title": "A12 스터디 · Loop Engineering from First Principles — Kyle Mistele, Human · Ontology Agents",
+          "subtitle": "[A] 더 나은 프롬프트가 아니라 더 나은 루프(목표-오차-보정)를 설계하라. 제어 이론 감각.",
+          "file": "lessons/ontology-agents/0212-a12-mistele-loop-engineering.html"
+        },
+        {
+          "id": "0213-a13-kumar-harnesses",
+          "title": "A13 스터디 · Harnesses in AI: A Deep Dive — Tejas Kumar, IBM · Ontology Agents",
+          "subtitle": "[A] 하네스의 이름은 신뢰성이다. 에이전트가 로그인 페이지에서 패닉해도 “성공”으로 보고하는 계층을 의심하라.",
+          "file": "lessons/ontology-agents/0213-a13-kumar-harnesses.html"
+        },
+        {
+          "id": "0214-a14-vinoth-harness-did",
+          "title": "A14 스터디 · Your Agent Didn&#x27;t Fail. Your Harness Did. — Vinoth Govindara · Ontology Agents",
+          "subtitle": "[A] 모델이 환각한 게 아니라 하네스가 stale state를 먹였다. 세션 쓰기 경쟁을 의심하라. (자막 비활성 — description 기반)",
+          "file": "lessons/ontology-agents/0214-a14-vinoth-harness-did.html"
+        },
+        {
+          "id": "0215-a15-alvoeiro-multiagent-ships",
+          "title": "A15 스터디 · The Multi-Agent Architecture That Actually Ships — Luke Alvo · Ontology Agents",
+          "subtitle": "[A] 멀티에이전트는 유행이 아니라 분산 시스템이다. 프로덕션에서 쓰는 taxonomy를 보고, 지금은 역할 분리가 필요할 때만.",
+          "file": "lessons/ontology-agents/0215-a15-alvoeiro-multiagent-ships.html"
+        },
+        {
+          "id": "0216-a16-bhaumik-orchestration",
+          "title": "A16 스터디 · From Chaos to Choreography: Multi-Agent Orchestration Patter · Ontology Agents",
+          "subtitle": "[A] 에이전트 1개는 기능, 5개는 레이스·스테일·추적 불능 결정의 분산 시스템. 안무(choreography)와 오케스트레이션을 구분하라.",
+          "file": "lessons/ontology-agents/0216-a16-bhaumik-orchestration.html"
+        },
+        {
+          "id": "0217-a17-kiela-rag-agents-prod",
+          "title": "A17 스터디 · RAG Agents in Prod: 10 Lessons We Learned — Douwe Kiela, cre · Ontology Agents",
+          "subtitle": "[A] 에이전틱 능력은 엔터프라이즈 데이터에 닿을 때만 가치다. 프로덕션 RAG 에이전트 10 lessons로 hybrid 현실을 점검하라.",
+          "file": "lessons/ontology-agents/0217-a17-kiela-rag-agents-prod.html"
         }
       ]
     },
