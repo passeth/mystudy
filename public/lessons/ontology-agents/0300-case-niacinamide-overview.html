@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="성분·시장 인사이트·클레임·온톨로지 경로를 한 제품으로 연습하는 화장품 케이스 스터디 홈">
+<title>케이스 스터디: 나이아신아마이드 세럼 · Ontology Agents</title>
+<style>
+:root {
+  --ink:#18201f; --muted:#5d6864; --paper:#fbfaf6; --panel:#ffffff;
+  --line:#d9ddd6; --exec:#136f63; --improve:#a23d31; --knowledge:#6b5d8e;
+  --problem:#a66b12; --soft:#eaf3ef; --warn:#fff2d6; --purple-soft:#f0edf7;
+  --brick-soft:#fae9e7; --code:#101917; --skill:#0f4c81;
+}
+*{box-sizing:border-box} body{margin:0;color:var(--ink);background:var(--paper);font-family:ui-serif,Georgia,"Apple SD Gothic Neo","Noto Serif KR",serif;line-height:1.68}
+main{width:min(960px,calc(100% - 40px));margin:0 auto;padding:52px 0 88px}
+.kicker{color:var(--exec);font:700 12px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase}
+h1{margin:12px 0 14px;font-size:clamp(32px,5.8vw,58px);line-height:1.05}
+.subtitle{max-width:760px;color:var(--muted);font-size:18px}
+h2{margin-top:42px;border-bottom:1px solid var(--line);padding-bottom:8px}
+h3{margin-top:26px}
+a{color:var(--exec);text-underline-offset:3px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.card,.quiz-card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:20px;margin:18px 0}
+.card h3{margin-top:0}
+.callout{border-left:4px solid var(--exec);background:var(--soft);border-radius:6px;padding:14px 16px;margin:18px 0}
+.callout.warn{border-left-color:var(--problem);background:var(--warn)}
+.callout.brick{border-left-color:var(--improve);background:var(--brick-soft)}
+.callout.purple{border-left-color:var(--knowledge);background:var(--purple-soft)}
+.badge,.pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:2px 9px;font:700 12px/1.7 ui-sans-serif,system-ui,sans-serif;color:var(--muted);margin:0 4px 4px 0}
+.badge.exec{color:var(--exec);border-color:var(--exec)}
+.badge.improve{color:var(--improve);border-color:var(--improve)}
+.badge.knowledge{color:var(--knowledge);border-color:var(--knowledge)}
+.badge.problem{color:var(--problem);border-color:var(--problem)}
+.badge.skill{color:var(--skill);border-color:var(--skill)}
+figure{margin:24px 0}
+.diagram{width:100%;height:auto;display:block}
+.diagram-frame{background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden;padding:8px}
+figcaption{margin-top:8px;color:var(--muted);font-size:14px}
+table{border-collapse:collapse;width:100%;background:var(--panel);margin:18px 0;font-size:14.5px}
+th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+th{background:var(--soft);font-family:ui-sans-serif,system-ui,sans-serif;font-size:13px}
+pre,code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+pre{overflow-x:auto;background:var(--code);color:#eef7f2;border-radius:8px;padding:16px}
+.quiz-card button{display:block;width:100%;margin:8px 0;padding:11px 13px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--ink);font:inherit;text-align:left;cursor:pointer}
+.quiz-card button.correct{border-color:#1f7a3f;background:#e8f4eb}
+.quiz-card button.incorrect{border-color:var(--improve);background:var(--brick-soft)}
+.quiz-feedback{min-height:1.6em;font-weight:700}
+.video{margin:22px 0;background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.video-meta{padding:12px 14px;border-bottom:1px solid var(--line);font-family:ui-sans-serif,system-ui,sans-serif;font-size:13.5px;color:var(--muted)}
+.video-meta strong{color:var(--ink);display:block;font-size:14.5px;margin-bottom:4px}
+.video-frame{position:relative;width:100%;padding-top:56.25%;background:#101917}
+.video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.video-actions{padding:10px 14px;display:flex;gap:12px;flex-wrap:wrap;font-size:13.5px}
+.watch-note{font-size:14px;color:var(--muted);margin:8px 0 0}
+ol.tight li,ul.tight li{margin:6px 0}
+.source-note{font-size:14px;color:var(--muted);border-top:1px solid var(--line);padding-top:10px}
+footer{margin-top:54px;padding-top:24px;border-top:1px solid var(--line);color:var(--muted)}
+.lesson-nav a{margin-right:10px}
+@media(max-width:640px){main{width:min(100% - 24px,960px);padding-top:32px}h1{font-size:34px}table{font-size:13px}}
+@media print{body{background:#fff}.video-frame{display:none}.card,.quiz-card,figure{break-inside:avoid}}
+
+</style>
+</head>
+<body>
+<main>
+<p class="kicker">CASE STUDY · COSMETIC INGREDIENT</p>
+<h1>케이스 스터디: 나이아신아마이드 세럼</h1>
+<p class="subtitle">Aura B3 Serum (Niacinamide 5%) — 아이디어와 판정을 분리해 배우는 실전 연습</p>
+
+<div class="callout">
+<strong>이 케이스 스터디는 무엇인가</strong><br>
+가상의 K-뷰티 세럼 <em>Aura B3 Serum</em>(나이아신아마이드 5%)을 가지고,
+성분 이해 → 시장 인사이트 → 클레임 후보 → 국가별 판정 → 온톨로지 경로 → decision trace까지
+<strong>한 바퀴</strong> 도는 학습 트랙입니다. 법률 자문이 아니라 <em>사고 훈련</em>입니다.
+</div>
+
+<figure><div class="diagram-frame">
+<svg class="diagram" viewBox="0 0 960 420" role="img" aria-label="케이스 스터디 전체 지도">
+  <rect width="960" height="420" fill="#fbfaf6"/>
+  <text x="28" y="36" font-size="16" font-weight="700" fill="#18201f" font-family="ui-sans-serif,system-ui">케이스: 나이아신아마이드 5% 세럼 · 세 시장 클레임</text>
+  <text x="28" y="58" font-size="12" fill="#5d6864" font-family="ui-sans-serif,system-ui">가상의 K-뷰티 제품으로 claim-review 온톨로지 슬라이스를 끝까지 연습한다</text>
+
+  <rect x="40" y="90" width="200" height="100" rx="12" fill="#f0edf7" stroke="#6b5d8e" stroke-width="2"/>
+  <text x="140" y="130" text-anchor="middle" font-size="14" font-weight="700" fill="#6b5d8e" font-family="ui-sans-serif,system-ui">1. 성분</text>
+  <text x="140" y="155" text-anchor="middle" font-size="12" fill="#18201f" font-family="ui-sans-serif,system-ui">Niacinamide 5%</text>
+  <text x="140" y="175" text-anchor="middle" font-size="11" fill="#5d6864" font-family="ui-sans-serif,system-ui">INCI · 역할 · 농도</text>
+
+  <rect x="280" y="90" width="200" height="100" rx="12" fill="#eaf3ef" stroke="#136f63" stroke-width="2"/>
+  <text x="380" y="130" text-anchor="middle" font-size="14" font-weight="700" fill="#136f63" font-family="ui-sans-serif,system-ui">2. 시장 인사이트</text>
+  <text x="380" y="155" text-anchor="middle" font-size="12" fill="#18201f" font-family="ui-sans-serif,system-ui">KR · EU · US 수요</text>
+  <text x="380" y="175" text-anchor="middle" font-size="11" fill="#5d6864" font-family="ui-sans-serif,system-ui">경쟁 클레임 패턴</text>
+
+  <rect x="520" y="90" width="200" height="100" rx="12" fill="#fae9e7" stroke="#a23d31" stroke-width="2"/>
+  <text x="620" y="130" text-anchor="middle" font-size="14" font-weight="700" fill="#a23d31" font-family="ui-sans-serif,system-ui">3. 클레임 후보</text>
+  <text x="620" y="155" text-anchor="middle" font-size="12" fill="#18201f" font-family="ui-sans-serif,system-ui">톤·모공·미백 표현</text>
+  <text x="620" y="175" text-anchor="middle" font-size="11" fill="#5d6864" font-family="ui-sans-serif,system-ui">위험도 다른 3문장</text>
+
+  <rect x="760" y="90" width="160" height="100" rx="12" fill="#fff2d6" stroke="#a66b12" stroke-width="2"/>
+  <text x="840" y="130" text-anchor="middle" font-size="14" font-weight="700" fill="#a66b12" font-family="ui-sans-serif,system-ui">4. 판정</text>
+  <text x="840" y="155" text-anchor="middle" font-size="12" fill="#18201f" font-family="ui-sans-serif,system-ui">allow/restrict</text>
+  <text x="840" y="175" text-anchor="middle" font-size="11" fill="#5d6864" font-family="ui-sans-serif,system-ui">forbid + trace</text>
+
+  <path d="M240 140 H280" stroke="#5d6864" stroke-width="2"/>
+  <path d="M480 140 H520" stroke="#5d6864" stroke-width="2"/>
+  <path d="M720 140 H760" stroke="#5d6864" stroke-width="2"/>
+
+  <rect x="40" y="230" width="880" height="150" rx="12" fill="#fff" stroke="#d9ddd6"/>
+  <text x="60" y="265" font-size="14" font-weight="700" fill="#18201f" font-family="ui-sans-serif,system-ui">학습 목표 (이 케이스를 끝내면)</text>
+  <text x="60" y="295" font-size="13" fill="#5d6864" font-family="ui-sans-serif,system-ui">1) 성분 사실을 온톨로지 노드로 적을 수 있다</text>
+  <text x="60" y="320" font-size="13" fill="#5d6864" font-family="ui-sans-serif,system-ui">2) 시장 인사이트를 “클레임 후보 생성”과 “규제 판정”으로 분리할 수 있다</text>
+  <text x="60" y="345" font-size="13" fill="#5d6864" font-family="ui-sans-serif,system-ui">3) 같은 문구가 KR/EU/US에서 다른 판정이 나는 경로를 그릴 수 있다</text>
+  <text x="60" y="370" font-size="13" fill="#5d6864" font-family="ui-sans-serif,system-ui">4) decision trace 한 건을 Case/Decision/Reason/Evidence로 남길 수 있다</text>
+</svg></div>
+<figcaption>그림 1. 케이스 전체 흐름. 시장 인사이트는 아이디어 원천이지, 곧바로 허용 판정이 아니다.</figcaption>
+</figure>
+
+<div class="callout warn">
+<strong>중요 구분</strong><br>
+시장에서 “잘 먹히는 말”과 규제상 “쓸 수 있는 말”은 다릅니다.
+에이전트 파이프라인에서는 이 둘을 다른 층으로 둬야 합니다.
+</div>
+<h2>레슨 목록</h2>
+<ol>
+<li><a href="./0301-case-ingredient-niacinamide.html">성분 해부 — 나이아신아마이드를 노드로</a></li>
+<li><a href="./0302-case-market-insight.html">시장 인사이트 — 후보를 만들되 판정하지 않기</a></li>
+<li><a href="./0303-case-claims-three-markets.html">클레임 3문장 × 시장 3곳</a></li>
+<li><a href="./0304-case-ontology-path.html">온톨로지 경로로 판정 걷기</a></li>
+<li><a href="./0305-case-decision-trace-worksheet.html">Decision trace 워크시트 (직접 쓰기)</a></li>
+</ol>
+<div class="grid">
+<div class="card"><h3>선수</h3><p><a href="./0002-ontology-as-playbook.html">온톨로지 플레이북</a> · <a href="./0003-decision-traces.html">결정 트레이스</a></p></div>
+<div class="card"><h3>슬라이스</h3><p>skill-drafts/claim-review/ontology.slice.md</p></div>
+<div class="card"><h3>산출물</h3><p>채워진 판정 표 1장 + trace 1건</p></div>
+</div>
+
+<h2>다음으로 연결</h2>
+<div class="lesson-nav"><a href="./0301-case-ingredient-niacinamide.html">다음: 성분 해부</a></div>
+<footer>
+<p>막히는 부분은 에이전트에게 바로 물어보세요. 이 워크스페이스의 선생님 역할입니다.</p>
+<p class="pill">케이스 스터디 · 한국어</p>
+<p class="pill">성분 → 시장 → 클레임 → 온톨로지 경로</p>
+</footer>
+</main>
+<script>
+document.querySelectorAll("[data-quiz]").forEach((quiz) => {
+  const feedback = quiz.querySelector("[data-feedback]");
+  quiz.querySelectorAll("button[data-answer]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const isCorrect = button.dataset.answer === "correct";
+      quiz.querySelectorAll("button[data-answer]").forEach((b) => {
+        b.classList.remove("correct", "incorrect");
+        b.setAttribute("aria-pressed", "false");
+      });
+      button.classList.add(isCorrect ? "correct" : "incorrect");
+      button.setAttribute("aria-pressed", "true");
+      feedback.textContent = isCorrect ? quiz.dataset.correct : quiz.dataset.incorrect;
+    });
+  });
+});
+
+</script>
+</body>
+</html>

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="나이아신아마이드 5%를 Ingredient/Formula 관계로 분해하고 클레임과 섞지 않는 법을 배운다.">
+<title>성분 해부: 나이아신아마이드를 노드로 · Ontology Agents</title>
+<style>
+:root {
+  --ink:#18201f; --muted:#5d6864; --paper:#fbfaf6; --panel:#ffffff;
+  --line:#d9ddd6; --exec:#136f63; --improve:#a23d31; --knowledge:#6b5d8e;
+  --problem:#a66b12; --soft:#eaf3ef; --warn:#fff2d6; --purple-soft:#f0edf7;
+  --brick-soft:#fae9e7; --code:#101917; --skill:#0f4c81;
+}
+*{box-sizing:border-box} body{margin:0;color:var(--ink);background:var(--paper);font-family:ui-serif,Georgia,"Apple SD Gothic Neo","Noto Serif KR",serif;line-height:1.68}
+main{width:min(960px,calc(100% - 40px));margin:0 auto;padding:52px 0 88px}
+.kicker{color:var(--exec);font:700 12px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase}
+h1{margin:12px 0 14px;font-size:clamp(32px,5.8vw,58px);line-height:1.05}
+.subtitle{max-width:760px;color:var(--muted);font-size:18px}
+h2{margin-top:42px;border-bottom:1px solid var(--line);padding-bottom:8px}
+h3{margin-top:26px}
+a{color:var(--exec);text-underline-offset:3px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.card,.quiz-card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:20px;margin:18px 0}
+.card h3{margin-top:0}
+.callout{border-left:4px solid var(--exec);background:var(--soft);border-radius:6px;padding:14px 16px;margin:18px 0}
+.callout.warn{border-left-color:var(--problem);background:var(--warn)}
+.callout.brick{border-left-color:var(--improve);background:var(--brick-soft)}
+.callout.purple{border-left-color:var(--knowledge);background:var(--purple-soft)}
+.badge,.pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:2px 9px;font:700 12px/1.7 ui-sans-serif,system-ui,sans-serif;color:var(--muted);margin:0 4px 4px 0}
+.badge.exec{color:var(--exec);border-color:var(--exec)}
+.badge.improve{color:var(--improve);border-color:var(--improve)}
+.badge.knowledge{color:var(--knowledge);border-color:var(--knowledge)}
+.badge.problem{color:var(--problem);border-color:var(--problem)}
+.badge.skill{color:var(--skill);border-color:var(--skill)}
+figure{margin:24px 0}
+.diagram{width:100%;height:auto;display:block}
+.diagram-frame{background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden;padding:8px}
+figcaption{margin-top:8px;color:var(--muted);font-size:14px}
+table{border-collapse:collapse;width:100%;background:var(--panel);margin:18px 0;font-size:14.5px}
+th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+th{background:var(--soft);font-family:ui-sans-serif,system-ui,sans-serif;font-size:13px}
+pre,code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+pre{overflow-x:auto;background:var(--code);color:#eef7f2;border-radius:8px;padding:16px}
+.quiz-card button{display:block;width:100%;margin:8px 0;padding:11px 13px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--ink);font:inherit;text-align:left;cursor:pointer}
+.quiz-card button.correct{border-color:#1f7a3f;background:#e8f4eb}
+.quiz-card button.incorrect{border-color:var(--improve);background:var(--brick-soft)}
+.quiz-feedback{min-height:1.6em;font-weight:700}
+.video{margin:22px 0;background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.video-meta{padding:12px 14px;border-bottom:1px solid var(--line);font-family:ui-sans-serif,system-ui,sans-serif;font-size:13.5px;color:var(--muted)}
+.video-meta strong{color:var(--ink);display:block;font-size:14.5px;margin-bottom:4px}
+.video-frame{position:relative;width:100%;padding-top:56.25%;background:#101917}
+.video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.video-actions{padding:10px 14px;display:flex;gap:12px;flex-wrap:wrap;font-size:13.5px}
+.watch-note{font-size:14px;color:var(--muted);margin:8px 0 0}
+ol.tight li,ul.tight li{margin:6px 0}
+.source-note{font-size:14px;color:var(--muted);border-top:1px solid var(--line);padding-top:10px}
+footer{margin-top:54px;padding-top:24px;border-top:1px solid var(--line);color:var(--muted)}
+.lesson-nav a{margin-right:10px}
+@media(max-width:640px){main{width:min(100% - 24px,960px);padding-top:32px}h1{font-size:34px}table{font-size:13px}}
+@media print{body{background:#fff}.video-frame{display:none}.card,.quiz-card,figure{break-inside:avoid}}
+
+</style>
+</head>
+<body>
+<main>
+<p class="kicker">CASE 0301 · INGREDIENT</p>
+<h1>성분 해부: 나이아신아마이드를 노드로</h1>
+<p class="subtitle">식별 · 농도 · 역할 · 별칭. 효과 광고 문장은 여기에 두지 않는다.</p>
+
+<div class="callout purple"><strong>오늘의 한 줄</strong><br>
+“나이아신아마이드가 미백에 좋다”는 문장은 성분 사실이 아니라 <em>클레임 후보</em>다.
+</div>
+
+<figure><div class="diagram-frame">
+<svg class="diagram" viewBox="0 0 960 360" role="img" aria-label="성분 노드 분해">
+  <rect width="960" height="360" fill="#fbfaf6"/>
+  <text x="28" y="34" font-size="16" font-weight="700" fill="#18201f" font-family="ui-sans-serif,system-ui">성분을 “마케팅 이름”이 아니라 그래프 노드로</text>
+
+  <circle cx="160" cy="180" r="70" fill="#f0edf7" stroke="#6b5d8e" stroke-width="2"/>
+  <text x="160" y="175" text-anchor="middle" font-size="13" font-weight="700" fill="#6b5d8e" font-family="ui-sans-serif,system-ui">Ingredient</text>
+  <text x="160" y="198" text-anchor="middle" font-size="12" fill="#18201f" font-family="ui-sans-serif,system-ui">Niacinamide</text>
+
+  <rect x="280" y="70" width="200" height="70" rx="10" fill="#fff" stroke="#d9ddd6"/>
+  <text x="380" y="100" text-anchor="middle" font-size="12" font-weight="700" fill="#18201f" font-family="ui-sans-serif,system-ui">INCI / 식별</text>
+  <text x="380" y="120" text-anchor="middle" font-size="11" fill="#5d6864" font-family="ui-sans-serif,system-ui">Niacinamide · CAS 98-92-0</text>
+
+  <rect x="520" y="70" width="200" height="70" rx="10" fill="#fff" stroke="#d9ddd6"/>
+  <text x="620" y="100" text-anchor="middle" font-size="12" font-weight="700" fill="#18201f" font-family="ui-sans-serif,system-ui">Formula 안 역할</text>
+  <text x="620" y="120" text-anchor="middle" font-size="11" fill="#5d6864" font-family="ui-sans-serif,system-ui">active · 5% · w/w</text>
+
+  <rect x="760" y="70" width="160" height="70" rx="10" fill="#fff" stroke="#d9ddd6"/>
+  <text x="840" y="100" text-anchor="middle" font-size="12" font-weight="700" fill="#18201f" font-family="ui-sans-serif,system-ui">별칭</text>
+  <text x="840" y="120" text-anchor="middle" font-size="11" fill="#5d6864" font-family="ui-sans-serif,system-ui">vitamin B3 등</text>
+
+  <rect x="280" y="180" width="200" height="70" rx="10" fill="#eaf3ef" stroke="#136f63"/>
+  <text x="380" y="210" text-anchor="middle" font-size="12" font-weight="700" fill="#136f63" font-family="ui-sans-serif,system-ui">기능 사실 (문헌)</text>
+  <text x="380" y="230" text-anchor="middle" font-size="11" fill="#5d6864" font-family="ui-sans-serif,system-ui">장벽·톤·피지 관련 연구</text>
+
+  <rect x="520" y="180" width="200" height="70" rx="10" fill="#fae9e7" stroke="#a23d31"/>
+  <text x="620" y="210" text-anchor="middle" font-size="12" font-weight="700" fill="#a23d31" font-family="ui-sans-serif,system-ui">클레임 후보 ≠ 사실</text>
+  <text x="620" y="230" text-anchor="middle" font-size="11" fill="#5d6864" font-family="ui-sans-serif,system-ui">“미백한다”는 별도 노드</text>
+
+  <rect x="760" y="180" width="160" height="70" rx="10" fill="#fff2d6" stroke="#a66b12"/>
+  <text x="840" y="210" text-anchor="middle" font-size="12" font-weight="700" fill="#a66b12" font-family="ui-sans-serif,system-ui">규제 훅</text>
+  <text x="840" y="230" text-anchor="middle" font-size="11" fill="#5d6864" font-family="ui-sans-serif,system-ui">국가별 표현 제한</text>
+
+  <text x="40" y="310" font-size="13" fill="#5d6864" font-family="ui-sans-serif,system-ui">핵심: Ingredient 노드에는 “효과 광고 문장”을 넣지 않는다. 문장은 Claim 노드다.</text>
+  <text x="40" y="335" font-size="13" fill="#5d6864" font-family="ui-sans-serif,system-ui">농도·역할은 Formula-contains-Ingredient 엣지 속성으로 둔다.</text>
+</svg></div>
+<figcaption>그림 1. 나이아신아마이드를 엔티티로 분해. 사실·농도·클레임·규제를 한 문장에 섞지 않는다.</figcaption>
+</figure>
+
+<h2>1. 제품 설정 (가상)</h2>
+<table>
+<tr><th>항목</th><th>값</th></tr>
+<tr><td>제품명</td><td>Aura B3 Serum</td></tr>
+<tr><td>카테고리</td><td>페이스 세럼 (leave-on)</td></tr>
+<tr><td>핵심 성분</td><td>Niacinamide 5% (w/w)</td></tr>
+<tr><td>기타 (요약)</td><td>보습 베이스, 향 없음, 알코올 프리 표기 희망</td></tr>
+<tr><td>목표 시장</td><td>KR 출시 → EU/US 확장 검토</td></tr>
+</table>
+<h2>2. 성분 카드를 온톨로지 언어로</h2>
+<pre>Ingredient
+  id: INCI-niacinamide
+  inci: Niacinamide
+  cas: 98-92-0
+  aliases: [vitamin B3, nicotinamide]
+
+Formula v1
+  -contains-> Ingredient
+      concentration: 5
+      unit: % w/w
+      role: active
+</pre>
+<div class="callout">
+<strong>왜 이렇게 쪼개나</strong><br>
+나중에 “5%라서 괜찮다/안 된다”는 <em>엣지 속성</em> 문제이고,
+“미백한다”는 <em>Claim 노드</em> 문제입니다. 한 셀에 섞으면 쿼리도, 감사도, 에이전트도 망가집니다.
+</div>
+<h2>3. 성분이 말해 주는 것 / 말 못 하는 것</h2>
+<div class="study-grid">
+<div class="card">
+<h3>말해 줄 수 있는 것</h3>
+<ul class="tight">
+<li>무엇인가 (식별)</li>
+<li>얼마나 들어 있나 (농도)</li>
+<li>처방에서 역할</li>
+<li>문헌상 연구된 기능 영역(장벽, 톤 등) — Evidence로 연결</li>
+</ul>
+</div>
+<div class="card">
+<h3>말 못 하는 것 (여기 넣지 말 것)</h3>
+<ul class="tight">
+<li>우리 제품이 병을 고친다</li>
+<li>경쟁사보다 무조건 우월하다</li>
+<li>모든 국가에서 동일 광고 가능</li>
+<li>임상 없이 “임상적으로 입증”</li>
+</ul>
+</div>
+</div>
+<h2>4. 미니 실습</h2>
+<div class="ws-box">
+<p>아래를 채워 보세요.</p>
+<p>1) Ingredient 한 줄 정의:</p><div class="ws-line"></div>
+<p>2) Formula.contains 속성 3개:</p><div class="ws-line"></div>
+<p>3) 잘못 섞인 문장 하나를 고치고, 어느 노드로 옮길지:</p><div class="ws-line"></div>
+</div>
+<h2>5. 퀴즈</h2>
+<div class="quiz-card" data-quiz="c1q1" data-correct="맞아요. 효과 약속 문장이 Claim입니다." data-incorrect="다시: 성분 이름과 효과 문장을 분리하세요.">
+<p><strong>“모공을 없애 주는 나이아신아마이드”에서 Claim에 해당하는 부분은?</strong></p><button type="button" data-answer="wrong">Niacinamide라는 이름</button><button type="button" data-answer="wrong">CAS 번호</button><button type="button" data-answer="correct">모공을 없애 준다는 표현</button><button type="button" data-answer="wrong">5%라는 숫자만</button>
+<p class="quiz-feedback" data-feedback aria-live="polite"></p></div>
+<div class="quiz-card" data-quiz="c1q2" data-correct="맞아요. 처방 관계의 속성입니다." data-incorrect="다시: 농도는 포함 관계의 속성입니다.">
+<p><strong>농도 5%는 어디에 두는 것이 좋은가?</strong></p><button type="button" data-answer="wrong">Brand 로고</button><button type="button" data-answer="correct">Formula-contains-Ingredient 엣지 속성</button><button type="button" data-answer="wrong">Country 이름</button><button type="button" data-answer="wrong">UI 테마</button>
+<p class="quiz-feedback" data-feedback aria-live="polite"></p></div>
+<div class="quiz-card" data-quiz="c1q3" data-correct="맞아요. 치료 문장은 Claim+규제 문제입니다." data-incorrect="다시: 치료 암시는 성분 사실이 아닙니다.">
+<p><strong>성분 노드에 넣으면 안 되는 것은?</strong></p><button type="button" data-answer="wrong">INCI</button><button type="button" data-answer="correct">치료한다(disease claim) 문장</button><button type="button" data-answer="wrong">CAS</button><button type="button" data-answer="wrong">alias</button>
+<p class="quiz-feedback" data-feedback aria-live="polite"></p></div>
+
+<h2>다음으로 연결</h2>
+<div class="lesson-nav"><a href="./0300-case-niacinamide-overview.html">케이스 홈</a> · <a href="./0302-case-market-insight.html">다음: 시장 인사이트</a></div>
+<footer>
+<p>막히는 부분은 에이전트에게 바로 물어보세요. 이 워크스페이스의 선생님 역할입니다.</p>
+<p class="pill">케이스 스터디 · 한국어</p>
+<p class="pill">성분 → 시장 → 클레임 → 온톨로지 경로</p>
+</footer>
+</main>
+<script>
+document.querySelectorAll("[data-quiz]").forEach((quiz) => {
+  const feedback = quiz.querySelector("[data-feedback]");
+  quiz.querySelectorAll("button[data-answer]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const isCorrect = button.dataset.answer === "correct";
+      quiz.querySelectorAll("button[data-answer]").forEach((b) => {
+        b.classList.remove("correct", "incorrect");
+        b.setAttribute("aria-pressed", "false");
+      });
+      button.classList.add(isCorrect ? "correct" : "incorrect");
+      button.setAttribute("aria-pressed", "true");
+      feedback.textContent = isCorrect ? quiz.dataset.correct : quiz.dataset.incorrect;
+    });
+  });
+});
+
+</script>
+</body>
+</html>

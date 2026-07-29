@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="C1~C3 클레임을 KR·EU·US에서 비교 판정하며 status_in과 restrict 수정안을 연습한다.">
+<title>클레임 3문장 × 시장 3곳 · Ontology Agents</title>
+<style>
+:root {
+  --ink:#18201f; --muted:#5d6864; --paper:#fbfaf6; --panel:#ffffff;
+  --line:#d9ddd6; --exec:#136f63; --improve:#a23d31; --knowledge:#6b5d8e;
+  --problem:#a66b12; --soft:#eaf3ef; --warn:#fff2d6; --purple-soft:#f0edf7;
+  --brick-soft:#fae9e7; --code:#101917; --skill:#0f4c81;
+}
+*{box-sizing:border-box} body{margin:0;color:var(--ink);background:var(--paper);font-family:ui-serif,Georgia,"Apple SD Gothic Neo","Noto Serif KR",serif;line-height:1.68}
+main{width:min(960px,calc(100% - 40px));margin:0 auto;padding:52px 0 88px}
+.kicker{color:var(--exec);font:700 12px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase}
+h1{margin:12px 0 14px;font-size:clamp(32px,5.8vw,58px);line-height:1.05}
+.subtitle{max-width:760px;color:var(--muted);font-size:18px}
+h2{margin-top:42px;border-bottom:1px solid var(--line);padding-bottom:8px}
+h3{margin-top:26px}
+a{color:var(--exec);text-underline-offset:3px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.card,.quiz-card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:20px;margin:18px 0}
+.card h3{margin-top:0}
+.callout{border-left:4px solid var(--exec);background:var(--soft);border-radius:6px;padding:14px 16px;margin:18px 0}
+.callout.warn{border-left-color:var(--problem);background:var(--warn)}
+.callout.brick{border-left-color:var(--improve);background:var(--brick-soft)}
+.callout.purple{border-left-color:var(--knowledge);background:var(--purple-soft)}
+.badge,.pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:2px 9px;font:700 12px/1.7 ui-sans-serif,system-ui,sans-serif;color:var(--muted);margin:0 4px 4px 0}
+.badge.exec{color:var(--exec);border-color:var(--exec)}
+.badge.improve{color:var(--improve);border-color:var(--improve)}
+.badge.knowledge{color:var(--knowledge);border-color:var(--knowledge)}
+.badge.problem{color:var(--problem);border-color:var(--problem)}
+.badge.skill{color:var(--skill);border-color:var(--skill)}
+figure{margin:24px 0}
+.diagram{width:100%;height:auto;display:block}
+.diagram-frame{background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden;padding:8px}
+figcaption{margin-top:8px;color:var(--muted);font-size:14px}
+table{border-collapse:collapse;width:100%;background:var(--panel);margin:18px 0;font-size:14.5px}
+th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+th{background:var(--soft);font-family:ui-sans-serif,system-ui,sans-serif;font-size:13px}
+pre,code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+pre{overflow-x:auto;background:var(--code);color:#eef7f2;border-radius:8px;padding:16px}
+.quiz-card button{display:block;width:100%;margin:8px 0;padding:11px 13px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--ink);font:inherit;text-align:left;cursor:pointer}
+.quiz-card button.correct{border-color:#1f7a3f;background:#e8f4eb}
+.quiz-card button.incorrect{border-color:var(--improve);background:var(--brick-soft)}
+.quiz-feedback{min-height:1.6em;font-weight:700}
+.video{margin:22px 0;background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.video-meta{padding:12px 14px;border-bottom:1px solid var(--line);font-family:ui-sans-serif,system-ui,sans-serif;font-size:13.5px;color:var(--muted)}
+.video-meta strong{color:var(--ink);display:block;font-size:14.5px;margin-bottom:4px}
+.video-frame{position:relative;width:100%;padding-top:56.25%;background:#101917}
+.video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.video-actions{padding:10px 14px;display:flex;gap:12px;flex-wrap:wrap;font-size:13.5px}
+.watch-note{font-size:14px;color:var(--muted);margin:8px 0 0}
+ol.tight li,ul.tight li{margin:6px 0}
+.source-note{font-size:14px;color:var(--muted);border-top:1px solid var(--line);padding-top:10px}
+footer{margin-top:54px;padding-top:24px;border-top:1px solid var(--line);color:var(--muted)}
+.lesson-nav a{margin-right:10px}
+@media(max-width:640px){main{width:min(100% - 24px,960px);padding-top:32px}h1{font-size:34px}table{font-size:13px}}
+@media print{body{background:#fff}.video-frame{display:none}.card,.quiz-card,figure{break-inside:avoid}}
+
+</style>
+</head>
+<body>
+<main>
+<p class="kicker">CASE 0303 · CLAIMS × MARKETS</p>
+<h1>클레임 3문장 × 시장 3곳</h1>
+<p class="subtitle">allow / restrict / forbid를 표로 고정하고, 위험 문장은 순화안까지 남긴다.</p>
+
+<div class="callout brick"><strong>오늘의 한 줄</strong><br>
+같은 성분·같은 문장이어도 Country가 바뀌면 <code>Claim.status_in</code>이 바뀐다.
+</div>
+
+<figure><div class="diagram-frame">
+<svg class="diagram" viewBox="0 0 960 420" role="img" aria-label="세 시장 판정 비교">
+  <rect width="960" height="420" fill="#fbfaf6"/>
+  <text x="28" y="34" font-size="16" font-weight="700" fill="#18201f" font-family="ui-sans-serif,system-ui">같은 성분·같은 제품, 다른 시장 = 다른 Claim.status</text>
+  <text x="28" y="56" font-size="12" fill="#5d6864" font-family="ui-sans-serif,system-ui">교육용 시나리오 (실제 법률 자문 아님). 판정 논리 연습에 집중.</text>
+
+  <rect x="40" y="90" width="280" height="280" rx="12" fill="#fff" stroke="#136f63" stroke-width="2"/>
+  <text x="180" y="125" text-anchor="middle" font-size="15" font-weight="700" fill="#136f63" font-family="ui-sans-serif,system-ui">KR</text>
+  <text x="60" y="160" font-size="12" fill="#18201f" font-family="ui-sans-serif,system-ui">후보A 피부결 케어 → allow 경향</text>
+  <text x="60" y="190" font-size="12" fill="#18201f" font-family="ui-sans-serif,system-ui">후보B 모공 케어 → 표현 순화 검토</text>
+  <text x="60" y="220" font-size="12" fill="#a23d31" font-family="ui-sans-serif,system-ui">후보C 미백/잡티 제거 → 고위험</text>
+  <text x="60" y="260" font-size="12" fill="#5d6864" font-family="ui-sans-serif,system-ui">참고 축: 화장품 광고·기능성</text>
+  <text x="60" y="290" font-size="12" fill="#5d6864" font-family="ui-sans-serif,system-ui">화장품 범위 vs 의약 암시</text>
+  <text x="60" y="330" font-size="13" font-weight="700" fill="#136f63" font-family="ui-sans-serif,system-ui">연습 초점: 표현 강도</text>
+
+  <rect x="340" y="90" width="280" height="280" rx="12" fill="#fff" stroke="#6b5d8e" stroke-width="2"/>
+  <text x="480" y="125" text-anchor="middle" font-size="15" font-weight="700" fill="#6b5d8e" font-family="ui-sans-serif,system-ui">EU</text>
+  <text x="360" y="160" font-size="12" fill="#18201f" font-family="ui-sans-serif,system-ui">후보A 보습·피부 편안 → 상대적으로 안전</text>
+  <text x="360" y="190" font-size="12" fill="#18201f" font-family="ui-sans-serif,system-ui">후보B pore erase류 → restrict</text>
+  <text x="360" y="220" font-size="12" fill="#a23d31" font-family="ui-sans-serif,system-ui">후보C whitening/cure → forbid 쪽</text>
+  <text x="360" y="260" font-size="12" fill="#5d6864" font-family="ui-sans-serif,system-ui">참고 축: Reg 1223/2009</text>
+  <text x="360" y="290" font-size="12" fill="#5d6864" font-family="ui-sans-serif,system-ui">common criteria for claims</text>
+  <text x="360" y="330" font-size="13" font-weight="700" fill="#6b5d8e" font-family="ui-sans-serif,system-ui">연습 초점: 증거·정직성</text>
+
+  <rect x="640" y="90" width="280" height="280" rx="12" fill="#fff" stroke="#a66b12" stroke-width="2"/>
+  <text x="780" y="125" text-anchor="middle" font-size="15" font-weight="700" fill="#a66b12" font-family="ui-sans-serif,system-ui">US</text>
+  <text x="660" y="160" font-size="12" fill="#18201f" font-family="ui-sans-serif,system-ui">구조/외관 케어 표현 여지</text>
+  <text x="660" y="190" font-size="12" fill="#18201f" font-family="ui-sans-serif,system-ui">disease/treatment 암시 즉시 위험</text>
+  <text x="660" y="220" font-size="12" fill="#a23d31" font-family="ui-sans-serif,system-ui">“treats acne/melasma” 금지선</text>
+  <text x="660" y="260" font-size="12" fill="#5d6864" font-family="ui-sans-serif,system-ui">참고 축: cosmetic vs drug</text>
+  <text x="660" y="290" font-size="12" fill="#5d6864" font-family="ui-sans-serif,system-ui">intended use 문장</text>
+  <text x="660" y="330" font-size="13" font-weight="700" fill="#a66b12" font-family="ui-sans-serif,system-ui">연습 초점: intended use</text>
+</svg></div>
+<figcaption>그림 1. Country가 다르면 Claim.status_in 엣지가 달라진다. 제품·성분이 같아도 된다.</figcaption>
+</figure>
+
+<h2>1. 판정 연습 표 (교육용 모범 답안)</h2>
+<p>실제 출시 전 규제/법무 검토 필수. 여기서는 <strong>사고 경로</strong>를 고정합니다.</p>
+<table>
+<tr><th>Claim</th><th>KR</th><th>EU</th><th>US</th><th>공통 Reason 키</th></tr>
+<tr>
+<td><strong>C1</strong> 피부결을 정돈하고 생기 있는 톤으로 가꿔줍니다</td>
+<td><span class="badge exec">allow 후보</span></td>
+<td><span class="badge exec">allow 후보</span></td>
+<td><span class="badge exec">allow 후보</span></td>
+<td>외관/케어 수준, 질병 암시 약함</td>
+</tr>
+<tr>
+<td><strong>C2</strong> 모공 고민을 케어하고 매끈해 보이게 합니다</td>
+<td><span class="badge problem">restrict</span> (단정·과장 순화)</td>
+<td><span class="badge problem">restrict</span> (look of / appearance 권장)</td>
+<td><span class="badge problem">restrict</span> (appearance 언어로)</td>
+<td>절대적 제거 암시 위험 → 외관 언어로</td>
+</tr>
+<tr>
+<td><strong>C3</strong> 기미·잡티를 치료하고 미백합니다</td>
+<td><span class="badge improve">forbid/보류</span></td>
+<td><span class="badge improve">forbid</span></td>
+<td><span class="badge improve">forbid</span></td>
+<td>치료/질병·약물 의도 언어</td>
+</tr>
+</table>
+<h2>2. restrict일 때 하는 일</h2>
+<ul class="tight">
+<li>문장 폐기만이 아니라 <strong>suggested_fix</strong>를 남긴다.</li>
+<li>예: C2 → “모공이 <em>없어져 보이게</em>” / “look of pores” 계열로 순화 제안</li>
+<li>어떤 규칙 ID가 발화했는지 trace에 기록</li>
+</ul>
+<pre>Decision
+  claim: C2
+  country: EU
+  status: restrict
+  because: [absolute_removal_risk, prefer_appearance_language]
+  suggested_fix: "Helps skin look smoother and refined"
+  based_on: [Evidence:market_note, RegRef:claims-principles]
+</pre>
+<h2>3. reference class 한 방울</h2>
+<p>C3는 “미백 키워드가 시장에서 강하다”는 평균 인사이트(99%)에 속해도,
+<strong>치료 언어 + 색소 질환 암시</strong>라는 1% 치명 클래스일 수 있습니다.
+Kollegger 토크의 reference class validation을 여기 적용하세요.</p>
+<h2>4. 미니 실습</h2>
+<ol class="tight">
+<li>C2를 세 시장 각각에 맞게 순화 문장 1개씩 쓰세요.</li>
+<li>C3를 완전히 버릴지, 증거 확보 후 약한 톤으로 내릴지 선택하고 이유 한 줄.</li>
+<li>“인사이트가 강해서 allow”라고 말한 문장을 찾아 교정하세요. (자기 초안 포함)</li>
+</ol>
+<h2>5. 퀴즈</h2>
+<div class="quiz-card" data-quiz="c3q1" data-correct="맞아요. 국가별 상태 엣지." data-incorrect="다시: status_in Country.">
+<p><strong>Country가 바뀌면 달라지는 핵심 엣지는?</strong></p><button type="button" data-answer="wrong">Brand-logo</button><button type="button" data-answer="correct">Claim.status_in Country</button><button type="button" data-answer="wrong">CSS</button><button type="button" data-answer="wrong">DNS</button>
+<p class="quiz-feedback" data-feedback aria-live="polite"></p></div>
+<div class="quiz-card" data-quiz="c3q2" data-correct="맞아요. intended use 문제." data-incorrect="다시: treat/cure 계열.">
+<p><strong>C3가 위험한 가장 큰 이유?</strong></p><button type="button" data-answer="wrong">글자 수</button><button type="button" data-answer="correct">치료/질병 의도 언어</button><button type="button" data-answer="wrong">세럼 제형</button><button type="button" data-answer="wrong">펌프 용기</button>
+<p class="quiz-feedback" data-feedback aria-live="polite"></p></div>
+<div class="quiz-card" data-quiz="c3q3" data-correct="맞아요. 수정 제안과 근거." data-incorrect="다시: 고치자는 제안이 필요.">
+<p><strong>restrict의 좋은 산출물은?</strong></p><button type="button" data-answer="wrong">침묵</button><button type="button" data-answer="correct">suggested_fix + 규칙 ID</button><button type="button" data-answer="wrong">서버 재시작</button><button type="button" data-answer="wrong">로고 변경</button>
+<p class="quiz-feedback" data-feedback aria-live="polite"></p></div>
+
+<h2>다음으로 연결</h2>
+<div class="lesson-nav"><a href="./0302-case-market-insight.html">이전: 인사이트</a> · <a href="./0304-case-ontology-path.html">다음: 온톨로지 경로</a></div>
+<footer>
+<p>막히는 부분은 에이전트에게 바로 물어보세요. 이 워크스페이스의 선생님 역할입니다.</p>
+<p class="pill">케이스 스터디 · 한국어</p>
+<p class="pill">성분 → 시장 → 클레임 → 온톨로지 경로</p>
+</footer>
+</main>
+<script>
+document.querySelectorAll("[data-quiz]").forEach((quiz) => {
+  const feedback = quiz.querySelector("[data-feedback]");
+  quiz.querySelectorAll("button[data-answer]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const isCorrect = button.dataset.answer === "correct";
+      quiz.querySelectorAll("button[data-answer]").forEach((b) => {
+        b.classList.remove("correct", "incorrect");
+        b.setAttribute("aria-pressed", "false");
+      });
+      button.classList.add(isCorrect ? "correct" : "incorrect");
+      button.setAttribute("aria-pressed", "true");
+      feedback.textContent = isCorrect ? quiz.dataset.correct : quiz.dataset.incorrect;
+    });
+  });
+});
+
+</script>
+</body>
+</html>

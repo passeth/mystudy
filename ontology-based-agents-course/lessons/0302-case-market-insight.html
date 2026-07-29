@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="KR·EU·US 가상 인사이트로 클레임 후보를 만들되 규제 판정과 분리하는 법을 배운다.">
+<title>시장 인사이트: 후보를 만들되 판정하지 않기 · Ontology Agents</title>
+<style>
+:root {
+  --ink:#18201f; --muted:#5d6864; --paper:#fbfaf6; --panel:#ffffff;
+  --line:#d9ddd6; --exec:#136f63; --improve:#a23d31; --knowledge:#6b5d8e;
+  --problem:#a66b12; --soft:#eaf3ef; --warn:#fff2d6; --purple-soft:#f0edf7;
+  --brick-soft:#fae9e7; --code:#101917; --skill:#0f4c81;
+}
+*{box-sizing:border-box} body{margin:0;color:var(--ink);background:var(--paper);font-family:ui-serif,Georgia,"Apple SD Gothic Neo","Noto Serif KR",serif;line-height:1.68}
+main{width:min(960px,calc(100% - 40px));margin:0 auto;padding:52px 0 88px}
+.kicker{color:var(--exec);font:700 12px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase}
+h1{margin:12px 0 14px;font-size:clamp(32px,5.8vw,58px);line-height:1.05}
+.subtitle{max-width:760px;color:var(--muted);font-size:18px}
+h2{margin-top:42px;border-bottom:1px solid var(--line);padding-bottom:8px}
+h3{margin-top:26px}
+a{color:var(--exec);text-underline-offset:3px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.card,.quiz-card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:20px;margin:18px 0}
+.card h3{margin-top:0}
+.callout{border-left:4px solid var(--exec);background:var(--soft);border-radius:6px;padding:14px 16px;margin:18px 0}
+.callout.warn{border-left-color:var(--problem);background:var(--warn)}
+.callout.brick{border-left-color:var(--improve);background:var(--brick-soft)}
+.callout.purple{border-left-color:var(--knowledge);background:var(--purple-soft)}
+.badge,.pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:2px 9px;font:700 12px/1.7 ui-sans-serif,system-ui,sans-serif;color:var(--muted);margin:0 4px 4px 0}
+.badge.exec{color:var(--exec);border-color:var(--exec)}
+.badge.improve{color:var(--improve);border-color:var(--improve)}
+.badge.knowledge{color:var(--knowledge);border-color:var(--knowledge)}
+.badge.problem{color:var(--problem);border-color:var(--problem)}
+.badge.skill{color:var(--skill);border-color:var(--skill)}
+figure{margin:24px 0}
+.diagram{width:100%;height:auto;display:block}
+.diagram-frame{background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden;padding:8px}
+figcaption{margin-top:8px;color:var(--muted);font-size:14px}
+table{border-collapse:collapse;width:100%;background:var(--panel);margin:18px 0;font-size:14.5px}
+th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+th{background:var(--soft);font-family:ui-sans-serif,system-ui,sans-serif;font-size:13px}
+pre,code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+pre{overflow-x:auto;background:var(--code);color:#eef7f2;border-radius:8px;padding:16px}
+.quiz-card button{display:block;width:100%;margin:8px 0;padding:11px 13px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--ink);font:inherit;text-align:left;cursor:pointer}
+.quiz-card button.correct{border-color:#1f7a3f;background:#e8f4eb}
+.quiz-card button.incorrect{border-color:var(--improve);background:var(--brick-soft)}
+.quiz-feedback{min-height:1.6em;font-weight:700}
+.video{margin:22px 0;background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.video-meta{padding:12px 14px;border-bottom:1px solid var(--line);font-family:ui-sans-serif,system-ui,sans-serif;font-size:13.5px;color:var(--muted)}
+.video-meta strong{color:var(--ink);display:block;font-size:14.5px;margin-bottom:4px}
+.video-frame{position:relative;width:100%;padding-top:56.25%;background:#101917}
+.video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.video-actions{padding:10px 14px;display:flex;gap:12px;flex-wrap:wrap;font-size:13.5px}
+.watch-note{font-size:14px;color:var(--muted);margin:8px 0 0}
+ol.tight li,ul.tight li{margin:6px 0}
+.source-note{font-size:14px;color:var(--muted);border-top:1px solid var(--line);padding-top:10px}
+footer{margin-top:54px;padding-top:24px;border-top:1px solid var(--line);color:var(--muted)}
+.lesson-nav a{margin-right:10px}
+@media(max-width:640px){main{width:min(100% - 24px,960px);padding-top:32px}h1{font-size:34px}table{font-size:13px}}
+@media print{body{background:#fff}.video-frame{display:none}.card,.quiz-card,figure{break-inside:avoid}}
+
+</style>
+</head>
+<body>
+<main>
+<p class="kicker">CASE 0302 · MARKET INSIGHT</p>
+<h1>시장 인사이트: 후보를 만들되 판정하지 않기</h1>
+<p class="subtitle">잘 팔리는 말과 쓸 수 있는 말을 다른 층으로 둔다.</p>
+
+<div class="callout"><strong>오늘의 한 줄</strong><br>
+시장 인사이트는 <em>무슨 말을 시험해 볼지</em>를 주고, 규제 판정은 <em>무슨 말을 남길지</em>를 준다.
+</div>
+
+<figure><div class="diagram-frame">
+<svg class="diagram" viewBox="0 0 960 400" role="img" aria-label="시장 인사이트와 판정 분리">
+  <rect width="960" height="400" fill="#fbfaf6"/>
+  <text x="28" y="34" font-size="16" font-weight="700" fill="#18201f" font-family="ui-sans-serif,system-ui">시장 인사이트 ≠ 규제 허용</text>
+
+  <rect x="40" y="70" width="420" height="280" rx="12" fill="#eaf3ef" stroke="#136f63" stroke-width="2"/>
+  <text x="60" y="105" font-size="14" font-weight="700" fill="#136f63" font-family="ui-sans-serif,system-ui">A. 시장 인사이트 (아이디어 층)</text>
+  <text x="60" y="140" font-size="13" fill="#18201f" font-family="ui-sans-serif,system-ui">· 검색/리뷰에서 “모공·톤·광채” 키워드 강함</text>
+  <text x="60" y="168" font-size="13" fill="#18201f" font-family="ui-sans-serif,system-ui">· 경쟁 제품 다수가 5% 나이아신 강조</text>
+  <text x="60" y="196" font-size="13" fill="#18201f" font-family="ui-sans-serif,system-ui">· “glass skin / barrier” 영문 수요</text>
+  <text x="60" y="224" font-size="13" fill="#18201f" font-family="ui-sans-serif,system-ui">· 미백·미백 유사 표현은 클릭 높음</text>
+  <text x="60" y="260" font-size="13" fill="#5d6864" font-family="ui-sans-serif,system-ui">산출물: 클레임 후보 문장 리스트</text>
+  <text x="60" y="288" font-size="13" fill="#5d6864" font-family="ui-sans-serif,system-ui">질문: 고객이 무엇을 듣고 싶어 하나?</text>
+  <text x="60" y="320" font-size="13" fill="#136f63" font-family="ui-sans-serif,system-ui">온톨로지 위치: 아직 Claim 초안</text>
+
+  <rect x="500" y="70" width="420" height="280" rx="12" fill="#fae9e7" stroke="#a23d31" stroke-width="2"/>
+  <text x="520" y="105" font-size="14" font-weight="700" fill="#a23d31" font-family="ui-sans-serif,system-ui">B. 규제·증거 판정 (허용 층)</text>
+  <text x="520" y="140" font-size="13" fill="#18201f" font-family="ui-sans-serif,system-ui">· 국가/관할은 어디인가?</text>
+  <text x="520" y="168" font-size="13" fill="#18201f" font-family="ui-sans-serif,system-ui">· 표현이 화장품 범위를 넘는가?</text>
+  <text x="520" y="196" font-size="13" fill="#18201f" font-family="ui-sans-serif,system-ui">· 필요 증거(임상/문헌)가 있는가?</text>
+  <text x="520" y="224" font-size="13" fill="#18201f" font-family="ui-sans-serif,system-ui">· 유사 과거 거절 trace가 있는가?</text>
+  <text x="520" y="260" font-size="13" fill="#5d6864" font-family="ui-sans-serif,system-ui">산출물: allow / restrict / forbid</text>
+  <text x="520" y="288" font-size="13" fill="#5d6864" font-family="ui-sans-serif,system-ui">질문: 이 문장을 이 시장에 써도 되나?</text>
+  <text x="520" y="320" font-size="13" fill="#a23d31" font-family="ui-sans-serif,system-ui">온톨로지 위치: Claim.status_in Country</text>
+</svg></div>
+<figcaption>그림 1. 인사이트로 후보를 만들고, 판정으로 걸러낸다. 두 층을 한 문장에 섞으면 에이전트가 광고 카피를 규정으로 착각한다.</figcaption>
+</figure>
+
+<h2>1. 교육용 시장 스냅샷 (가상 요약)</h2>
+<p>아래 표는 학습을 위한 <strong>가상 압축 인사이트</strong>입니다. 실제 출시 전에는 1차 데이터로 다시 검증하세요.</p>
+<table>
+<tr><th>시장</th><th>잘 반응하는 언어 (insight)</th><th>자주 보이는 경쟁 클레임</th><th>함정</th></tr>
+<tr><td>KR</td><td>결, 톤, 환절기 장벽, 수분광</td><td>5% 나이아신, 잡티 케어, 모공 케어</td><td>미백·개선 강표현 유혹</td></tr>
+<tr><td>EU</td><td>barrier, glow, uneven tone 완화 톤</td><td>clinical-looking, dermatologically tested</td><td>whitening/cure/erase 계열</td></tr>
+<tr><td>US</td><td>texture, look of pores, radiance</td><td>brightening, blemish appearance</td><td>treat/acne/melasma 등 drug 언어</td></tr>
+</table>
+<h2>2. 인사이트 → 후보 문장 (아직 판정 전)</h2>
+<p>인사이트 팀/에이전트가 먼저 만드는 산출물은 판정이 아니라 <strong>Claim 초안 리스트</strong>입니다.</p>
+<table>
+<tr><th>ID</th><th>후보 문장</th><th>인사이트 출처</th><th>직감 위험</th></tr>
+<tr><td>C1</td><td>피부결을 정돈하고 생기 있는 톤으로 가꿔줍니다</td><td>KR/EU 공통 안전 쪽 언어</td><td>낮음~중</td></tr>
+<tr><td>C2</td><td>모공 고민을 케어하고 매끈해 보이게 합니다</td><td>KR·US 검색 다수</td><td>중 (절대표현 주의)</td></tr>
+<tr><td>C3</td><td>기미·잡티를 치료하고 미백합니다</td><td>클릭은 높음</td><td>매우 높음</td></tr>
+</table>
+<div class="callout warn">
+<strong>에이전트 설계 포인트</strong><br>
+“인사이트 에이전트”와 “클레임 심사 에이전트”를 한 프롬프트에 섞지 마세요.
+앞은 발산, 뒤는 수렴(판정)입니다.
+</div>
+<h2>3. 인사이트를 온톨로지에 어디에 붙이나</h2>
+<ul class="tight">
+<li>검색 키워드 리포트 → Evidence(kind=market_note) 또는 별도 ResearchNote (파일럿에선 Evidence로 단순화 가능)</li>
+<li>경쟁 클레임 캡처 → 경쟁 Claim 예시(참고), 우리 Claim과 혼동 금지</li>
+<li>우리 문장 채택 시 → 비로소 Product-makes_claim->Claim</li>
+</ul>
+<h2>4. 미니 실습</h2>
+<ol class="tight">
+<li>위 C1~C3 외에 인사이트 기반 후보를 2개 더 만드세요. (판정하지 말 것)</li>
+<li>각 후보 옆에 “발산 이유” 한 줄만.</li>
+<li>가장 위험해 보이는 문장에 빨간 표시.</li>
+</ol>
+<h2>5. 퀴즈</h2>
+<div class="quiz-card" data-quiz="c2q1" data-correct="맞아요. 후보지 생성 단계입니다." data-incorrect="다시: 인사이트는 발산 단계입니다.">
+<p><strong>시장 인사이트 산출물로 가장 알맞은 것은?</strong></p><button type="button" data-answer="wrong">최종 allow 도장</button><button type="button" data-answer="correct">클레임 후보 문장 리스트</button><button type="button" data-answer="wrong">CPNP 제출 완료</button><button type="button" data-answer="wrong">서버 로그</button>
+<p class="quiz-feedback" data-feedback aria-live="polite"></p></div>
+<div class="quiz-card" data-quiz="c2q2" data-correct="맞아요. 인사이트≠허용." data-incorrect="다시: 두 층을 분리하세요.">
+<p><strong>클릭이 높은 미백 치료 표현을 바로 allow 하면?</strong></p><button type="button" data-answer="wrong">항상 올바름</button><button type="button" data-answer="correct">규제 층 생략 오류</button><button type="button" data-answer="wrong">온톨로지 완성</button><button type="button" data-answer="wrong">무해</button>
+<p class="quiz-feedback" data-feedback aria-live="polite"></p></div>
+<div class="quiz-card" data-quiz="c2q3" data-correct="맞아요. 역할 분리." data-incorrect="다시: 발산/수렴 분리.">
+<p><strong>인사이트 에이전트와 심사 에이전트를 한 프롬프트에 섞으면?</strong></p><button type="button" data-answer="wrong">더 정확</button><button type="button" data-answer="correct">발산과 수렴이 오염됨</button><button type="button" data-answer="wrong">항상 저렴</button><button type="button" data-answer="wrong">SVG 개선</button>
+<p class="quiz-feedback" data-feedback aria-live="polite"></p></div>
+
+<h2>다음으로 연결</h2>
+<div class="lesson-nav"><a href="./0301-case-ingredient-niacinamide.html">이전: 성분</a> · <a href="./0303-case-claims-three-markets.html">다음: 세 시장 클레임</a></div>
+<footer>
+<p>막히는 부분은 에이전트에게 바로 물어보세요. 이 워크스페이스의 선생님 역할입니다.</p>
+<p class="pill">케이스 스터디 · 한국어</p>
+<p class="pill">성분 → 시장 → 클레임 → 온톨로지 경로</p>
+</footer>
+</main>
+<script>
+document.querySelectorAll("[data-quiz]").forEach((quiz) => {
+  const feedback = quiz.querySelector("[data-feedback]");
+  quiz.querySelectorAll("button[data-answer]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const isCorrect = button.dataset.answer === "correct";
+      quiz.querySelectorAll("button[data-answer]").forEach((b) => {
+        b.classList.remove("correct", "incorrect");
+        b.setAttribute("aria-pressed", "false");
+      });
+      button.classList.add(isCorrect ? "correct" : "incorrect");
+      button.setAttribute("aria-pressed", "true");
+      feedback.textContent = isCorrect ? quiz.dataset.correct : quiz.dataset.incorrect;
+    });
+  });
+});
+
+</script>
+</body>
+</html>

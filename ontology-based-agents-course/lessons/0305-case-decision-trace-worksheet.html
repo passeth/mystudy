@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Aura B3 케이스로 decision trace를 직접 채우고 5점 자기 채점한다.">
+<title>Decision trace 워크시트 · Ontology Agents</title>
+<style>
+:root {
+  --ink:#18201f; --muted:#5d6864; --paper:#fbfaf6; --panel:#ffffff;
+  --line:#d9ddd6; --exec:#136f63; --improve:#a23d31; --knowledge:#6b5d8e;
+  --problem:#a66b12; --soft:#eaf3ef; --warn:#fff2d6; --purple-soft:#f0edf7;
+  --brick-soft:#fae9e7; --code:#101917; --skill:#0f4c81;
+}
+*{box-sizing:border-box} body{margin:0;color:var(--ink);background:var(--paper);font-family:ui-serif,Georgia,"Apple SD Gothic Neo","Noto Serif KR",serif;line-height:1.68}
+main{width:min(960px,calc(100% - 40px));margin:0 auto;padding:52px 0 88px}
+.kicker{color:var(--exec);font:700 12px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase}
+h1{margin:12px 0 14px;font-size:clamp(32px,5.8vw,58px);line-height:1.05}
+.subtitle{max-width:760px;color:var(--muted);font-size:18px}
+h2{margin-top:42px;border-bottom:1px solid var(--line);padding-bottom:8px}
+h3{margin-top:26px}
+a{color:var(--exec);text-underline-offset:3px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.card,.quiz-card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:20px;margin:18px 0}
+.card h3{margin-top:0}
+.callout{border-left:4px solid var(--exec);background:var(--soft);border-radius:6px;padding:14px 16px;margin:18px 0}
+.callout.warn{border-left-color:var(--problem);background:var(--warn)}
+.callout.brick{border-left-color:var(--improve);background:var(--brick-soft)}
+.callout.purple{border-left-color:var(--knowledge);background:var(--purple-soft)}
+.badge,.pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:2px 9px;font:700 12px/1.7 ui-sans-serif,system-ui,sans-serif;color:var(--muted);margin:0 4px 4px 0}
+.badge.exec{color:var(--exec);border-color:var(--exec)}
+.badge.improve{color:var(--improve);border-color:var(--improve)}
+.badge.knowledge{color:var(--knowledge);border-color:var(--knowledge)}
+.badge.problem{color:var(--problem);border-color:var(--problem)}
+.badge.skill{color:var(--skill);border-color:var(--skill)}
+figure{margin:24px 0}
+.diagram{width:100%;height:auto;display:block}
+.diagram-frame{background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden;padding:8px}
+figcaption{margin-top:8px;color:var(--muted);font-size:14px}
+table{border-collapse:collapse;width:100%;background:var(--panel);margin:18px 0;font-size:14.5px}
+th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+th{background:var(--soft);font-family:ui-sans-serif,system-ui,sans-serif;font-size:13px}
+pre,code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+pre{overflow-x:auto;background:var(--code);color:#eef7f2;border-radius:8px;padding:16px}
+.quiz-card button{display:block;width:100%;margin:8px 0;padding:11px 13px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--ink);font:inherit;text-align:left;cursor:pointer}
+.quiz-card button.correct{border-color:#1f7a3f;background:#e8f4eb}
+.quiz-card button.incorrect{border-color:var(--improve);background:var(--brick-soft)}
+.quiz-feedback{min-height:1.6em;font-weight:700}
+.video{margin:22px 0;background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.video-meta{padding:12px 14px;border-bottom:1px solid var(--line);font-family:ui-sans-serif,system-ui,sans-serif;font-size:13.5px;color:var(--muted)}
+.video-meta strong{color:var(--ink);display:block;font-size:14.5px;margin-bottom:4px}
+.video-frame{position:relative;width:100%;padding-top:56.25%;background:#101917}
+.video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.video-actions{padding:10px 14px;display:flex;gap:12px;flex-wrap:wrap;font-size:13.5px}
+.watch-note{font-size:14px;color:var(--muted);margin:8px 0 0}
+ol.tight li,ul.tight li{margin:6px 0}
+.source-note{font-size:14px;color:var(--muted);border-top:1px solid var(--line);padding-top:10px}
+footer{margin-top:54px;padding-top:24px;border-top:1px solid var(--line);color:var(--muted)}
+.lesson-nav a{margin-right:10px}
+@media(max-width:640px){main{width:min(100% - 24px,960px);padding-top:32px}h1{font-size:34px}table{font-size:13px}}
+@media print{body{background:#fff}.video-frame{display:none}.card,.quiz-card,figure{break-inside:avoid}}
+
+</style>
+</head>
+<body>
+<main>
+<p class="kicker">CASE 0305 · TRACE WORKSHEET</p>
+<h1>Decision trace 워크시트</h1>
+<p class="subtitle">이해에서 산출물로. trace 한 건을 남긴다.</p>
+
+<div class="callout"><strong>오늘의 한 줄</strong><br>
+끝까지 가면 “이해했다”가 아니라 <em>trace 한 건이 파일로 남는다</em>.
+</div>
+
+<figure><div class="diagram-frame">
+<svg class="diagram" viewBox="0 0 960 300" role="img" aria-label="결정 트레이스">
+  <rect width="960" height="300" fill="#fbfaf6"/>
+  <text x="28" y="34" font-size="16" font-weight="700" fill="#18201f" font-family="ui-sans-serif,system-ui">이 케이스에서 남길 Decision trace</text>
+  <circle cx="120" cy="160" r="40" fill="#fff" stroke="#6b5d8e" stroke-width="2"/>
+  <text x="120" y="165" text-anchor="middle" font-size="12" fill="#18201f" font-family="ui-sans-serif,system-ui">Case</text>
+  <circle cx="300" cy="160" r="40" fill="#fff" stroke="#a23d31" stroke-width="2"/>
+  <text x="300" y="165" text-anchor="middle" font-size="12" fill="#18201f" font-family="ui-sans-serif,system-ui">Decision</text>
+  <circle cx="480" cy="100" r="40" fill="#fff" stroke="#a66b12" stroke-width="2"/>
+  <text x="480" y="105" text-anchor="middle" font-size="12" fill="#18201f" font-family="ui-sans-serif,system-ui">Reason</text>
+  <circle cx="480" cy="220" r="40" fill="#fff" stroke="#136f63" stroke-width="2"/>
+  <text x="480" y="225" text-anchor="middle" font-size="12" fill="#18201f" font-family="ui-sans-serif,system-ui">Evidence</text>
+  <circle cx="680" cy="160" r="40" fill="#fff" stroke="#0f4c81" stroke-width="2"/>
+  <text x="680" y="165" text-anchor="middle" font-size="12" fill="#18201f" font-family="ui-sans-serif,system-ui">Outcome</text>
+  <path d="M160 160 H260" stroke="#5d6864" stroke-width="2"/>
+  <path d="M340 145 L440 110" stroke="#5d6864" stroke-width="2"/>
+  <path d="M340 175 L440 210" stroke="#5d6864" stroke-width="2"/>
+  <path d="M340 160 H640" stroke="#5d6864" stroke-width="2"/>
+  <text x="760" y="150" font-size="12" fill="#5d6864" font-family="ui-sans-serif,system-ui">later:</text>
+  <text x="760" y="175" font-size="12" fill="#5d6864" font-family="ui-sans-serif,system-ui">카피 수정·채택</text>
+</svg></div>
+<figcaption>그림 1. 문서 요약만 남기지 말고, 판정 구조를 남긴다.</figcaption>
+</figure>
+
+<h2>1. 채워 넣을 Decision trace (복사해서 사용)</h2>
+<pre># case-aura-b3-C3-EU.yaml  (형식은 자유, 필드만 유지)
+case:
+  id: CASE-aura-C3-EU
+  product: Aura B3 Serum
+  formula_version: v1
+  ingredient_focus: Niacinamide 5%
+  claim_text: "기미·잡티를 치료하고 미백합니다"
+  country: EU
+  market_insight_ref: EV-mkt-2026q1  # optional inspired_by
+decision:
+  status: forbid          # allow | restrict | forbid | needs_human
+  because:
+    - therapeutic_or_disease_language
+    - cosmetic_scope_exceeded
+  based_on:
+    - RegRef: claims-common-criteria-note
+    - Evidence: EV-mkt-2026q1  # 참고일 뿐, allow 근거 아님을 명시
+  suggested_fix: null   # forbid면 보통 null 또는 완전 다른 톤 제안
+  decided_by: human       # 파일럿 단계 권장
+  decided_at: YYYY-MM-DD
+outcome:                  # 나중에
+  adopted: false
+  final_copy: ""
+  incident: false
+</pre>
+<h2>2. 워크시트 (직접 작성)</h2>
+<div class="ws-box">
+<p><strong>A. 내가 고른 조합</strong> (C1/C2/C3 × KR/EU/US 중 하나)</p>
+<div class="ws-line"></div>
+<p><strong>B. status</strong></p>
+<div class="ws-line"></div>
+<p><strong>C. because (규칙 2개)</strong></p>
+<div class="ws-line"></div>
+<div class="ws-line"></div>
+<p><strong>D. based_on (증거/규정 메모 ID)</strong></p>
+<div class="ws-line"></div>
+<p><strong>E. suggested_fix</strong> (restrict일 때)</p>
+<div class="ws-line"></div>
+<p><strong>F. 인사이트를 allow 근거로 쓰지 않은 이유 한 줄</strong></p>
+<div class="ws-line"></div>
+</div>
+<h2>3. 자기 채점 (5점)</h2>
+<table>
+<tr><th>항목</th><th>통과 기준</th><th>Y/N</th></tr>
+<tr><td>성분과 클레임 분리</td><td>농도/INCI와 광고 문장이 다른 필드</td><td></td></tr>
+<tr><td>시장 분리</td><td>Country가 명시</td><td></td></tr>
+<tr><td>인사이트 분리</td><td>inspired ≠ allowed</td><td></td></tr>
+<tr><td>규칙 발화</td><td>because에 기계적 규칙명</td><td></td></tr>
+<tr><td>다음 재사용</td><td>다른 사람이 읽고 같은 결론 가능</td><td></td></tr>
+</table>
+<h2>4. 퀴즈 (최종 회수)</h2>
+<div class="quiz-card" data-quiz="c5q1" data-correct="맞아요. 재사용 가능한 판정 기록." data-incorrect="다시: trace가 산출물.">
+<p><strong>이 케이스 스터디의 최종 산출물은?</strong></p><button type="button" data-answer="wrong">예쁜 배너</button><button type="button" data-answer="correct">decision trace 1건</button><button type="button" data-answer="wrong">GPU 벤치</button><button type="button" data-answer="wrong">팔로워 수</button>
+<p class="quiz-feedback" data-feedback aria-live="polite"></p></div>
+<div class="quiz-card" data-quiz="c5q2" data-correct="맞아요. side effect/확정은 사람." data-incorrect="다시: HITL.">
+<p><strong>파일럿에서 decided_by를 human으로 두는 이유?</strong></p><button type="button" data-answer="wrong">귀찮아서</button><button type="button" data-answer="correct">외부 리스크 게이트</button><button type="button" data-answer="wrong">CSS</button><button type="button" data-answer="wrong">DNS</button>
+<p class="quiz-feedback" data-feedback aria-live="polite"></p></div>
+<div class="quiz-card" data-quiz="c5q3" data-correct="맞아요. 좁은 스킬을 닫기." data-incorrect="다시: 슬라이스 다음 파일.">
+<p><strong>다음 학습으로 자연스러운 것?</strong></p><button type="button" data-answer="wrong">전사 온톨로지 플랫폼 즉시 구축</button><button type="button" data-answer="correct">tools.md/checks.md로 스킬 패키지 완성</button><button type="button" data-answer="wrong">멀티에이전트 50개</button><button type="button" data-answer="wrong">무시</button>
+<p class="quiz-feedback" data-feedback aria-live="polite"></p></div>
+<div class="callout">
+<strong>완료 후</strong><br>
+<a href="./0300-case-niacinamide-overview.html">케이스 홈</a>으로 돌아가 목표 4개를 체크하세요.
+막히면 claim-review ontology.slice.md의 open questions를 먼저 닫으세요.
+</div>
+
+<h2>다음으로 연결</h2>
+<div class="lesson-nav"><a href="./0304-case-ontology-path.html">이전: 온톨로지 경로</a> · <a href="./0300-case-niacinamide-overview.html">케이스 홈</a></div>
+<footer>
+<p>막히는 부분은 에이전트에게 바로 물어보세요. 이 워크스페이스의 선생님 역할입니다.</p>
+<p class="pill">케이스 스터디 · 한국어</p>
+<p class="pill">성분 → 시장 → 클레임 → 온톨로지 경로</p>
+</footer>
+</main>
+<script>
+document.querySelectorAll("[data-quiz]").forEach((quiz) => {
+  const feedback = quiz.querySelector("[data-feedback]");
+  quiz.querySelectorAll("button[data-answer]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const isCorrect = button.dataset.answer === "correct";
+      quiz.querySelectorAll("button[data-answer]").forEach((b) => {
+        b.classList.remove("correct", "incorrect");
+        b.setAttribute("aria-pressed", "false");
+      });
+      button.classList.add(isCorrect ? "correct" : "incorrect");
+      button.setAttribute("aria-pressed", "true");
+      feedback.textContent = isCorrect ? quiz.dataset.correct : quiz.dataset.incorrect;
+    });
+  });
+});
+
+</script>
+</body>
+</html>

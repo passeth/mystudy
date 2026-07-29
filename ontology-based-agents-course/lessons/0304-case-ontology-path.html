@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Aura B3 케이스를 claim-review 슬라이스 엔티티·규칙·Evidence 훅에 매핑한다.">
+<title>온톨로지 경로로 판정 걷기 · Ontology Agents</title>
+<style>
+:root {
+  --ink:#18201f; --muted:#5d6864; --paper:#fbfaf6; --panel:#ffffff;
+  --line:#d9ddd6; --exec:#136f63; --improve:#a23d31; --knowledge:#6b5d8e;
+  --problem:#a66b12; --soft:#eaf3ef; --warn:#fff2d6; --purple-soft:#f0edf7;
+  --brick-soft:#fae9e7; --code:#101917; --skill:#0f4c81;
+}
+*{box-sizing:border-box} body{margin:0;color:var(--ink);background:var(--paper);font-family:ui-serif,Georgia,"Apple SD Gothic Neo","Noto Serif KR",serif;line-height:1.68}
+main{width:min(960px,calc(100% - 40px));margin:0 auto;padding:52px 0 88px}
+.kicker{color:var(--exec);font:700 12px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase}
+h1{margin:12px 0 14px;font-size:clamp(32px,5.8vw,58px);line-height:1.05}
+.subtitle{max-width:760px;color:var(--muted);font-size:18px}
+h2{margin-top:42px;border-bottom:1px solid var(--line);padding-bottom:8px}
+h3{margin-top:26px}
+a{color:var(--exec);text-underline-offset:3px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.card,.quiz-card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:20px;margin:18px 0}
+.card h3{margin-top:0}
+.callout{border-left:4px solid var(--exec);background:var(--soft);border-radius:6px;padding:14px 16px;margin:18px 0}
+.callout.warn{border-left-color:var(--problem);background:var(--warn)}
+.callout.brick{border-left-color:var(--improve);background:var(--brick-soft)}
+.callout.purple{border-left-color:var(--knowledge);background:var(--purple-soft)}
+.badge,.pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:2px 9px;font:700 12px/1.7 ui-sans-serif,system-ui,sans-serif;color:var(--muted);margin:0 4px 4px 0}
+.badge.exec{color:var(--exec);border-color:var(--exec)}
+.badge.improve{color:var(--improve);border-color:var(--improve)}
+.badge.knowledge{color:var(--knowledge);border-color:var(--knowledge)}
+.badge.problem{color:var(--problem);border-color:var(--problem)}
+.badge.skill{color:var(--skill);border-color:var(--skill)}
+figure{margin:24px 0}
+.diagram{width:100%;height:auto;display:block}
+.diagram-frame{background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden;padding:8px}
+figcaption{margin-top:8px;color:var(--muted);font-size:14px}
+table{border-collapse:collapse;width:100%;background:var(--panel);margin:18px 0;font-size:14.5px}
+th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+th{background:var(--soft);font-family:ui-sans-serif,system-ui,sans-serif;font-size:13px}
+pre,code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+pre{overflow-x:auto;background:var(--code);color:#eef7f2;border-radius:8px;padding:16px}
+.quiz-card button{display:block;width:100%;margin:8px 0;padding:11px 13px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--ink);font:inherit;text-align:left;cursor:pointer}
+.quiz-card button.correct{border-color:#1f7a3f;background:#e8f4eb}
+.quiz-card button.incorrect{border-color:var(--improve);background:var(--brick-soft)}
+.quiz-feedback{min-height:1.6em;font-weight:700}
+.video{margin:22px 0;background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.video-meta{padding:12px 14px;border-bottom:1px solid var(--line);font-family:ui-sans-serif,system-ui,sans-serif;font-size:13.5px;color:var(--muted)}
+.video-meta strong{color:var(--ink);display:block;font-size:14.5px;margin-bottom:4px}
+.video-frame{position:relative;width:100%;padding-top:56.25%;background:#101917}
+.video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.video-actions{padding:10px 14px;display:flex;gap:12px;flex-wrap:wrap;font-size:13.5px}
+.watch-note{font-size:14px;color:var(--muted);margin:8px 0 0}
+ol.tight li,ul.tight li{margin:6px 0}
+.source-note{font-size:14px;color:var(--muted);border-top:1px solid var(--line);padding-top:10px}
+footer{margin-top:54px;padding-top:24px;border-top:1px solid var(--line);color:var(--muted)}
+.lesson-nav a{margin-right:10px}
+@media(max-width:640px){main{width:min(100% - 24px,960px);padding-top:32px}h1{font-size:34px}table{font-size:13px}}
+@media print{body{background:#fff}.video-frame{display:none}.card,.quiz-card,figure{break-inside:avoid}}
+
+</style>
+</head>
+<body>
+<main>
+<p class="kicker">CASE 0304 · ONTOLOGY PATH</p>
+<h1>온톨로지 경로로 판정 걷기</h1>
+<p class="subtitle">이야기(케이스)를 도로(슬라이스) 위에 올린다.</p>
+
+<div class="callout purple"><strong>오늘의 한 줄</strong><br>
+케이스는 이야기고, 온톨로지는 그 이야기가 걷는 <em>도로</em>다.
+</div>
+
+<figure><div class="diagram-frame">
+<svg class="diagram" viewBox="0 0 960 380" role="img" aria-label="온톨로지 경로">
+  <rect width="960" height="380" fill="#fbfaf6"/>
+  <text x="28" y="34" font-size="16" font-weight="700" fill="#18201f" font-family="ui-sans-serif,system-ui">claim-review 슬라이스 위의 한 경로</text>
+
+  <rect x="30" y="80" width="110" height="50" rx="8" fill="#eaf3ef" stroke="#136f63"/>
+  <text x="85" y="110" text-anchor="middle" font-size="12" fill="#18201f" font-family="ui-sans-serif,system-ui">Product</text>
+  <rect x="170" y="80" width="110" height="50" rx="8" fill="#eaf3ef" stroke="#136f63"/>
+  <text x="225" y="110" text-anchor="middle" font-size="12" fill="#18201f" font-family="ui-sans-serif,system-ui">Formula</text>
+  <rect x="310" y="80" width="120" height="50" rx="8" fill="#f0edf7" stroke="#6b5d8e"/>
+  <text x="370" y="110" text-anchor="middle" font-size="12" fill="#18201f" font-family="ui-sans-serif,system-ui">Ingredient</text>
+  <rect x="460" y="80" width="100" height="50" rx="8" fill="#fff2d6" stroke="#a66b12"/>
+  <text x="510" y="110" text-anchor="middle" font-size="12" fill="#18201f" font-family="ui-sans-serif,system-ui">Country</text>
+  <rect x="590" y="80" width="130" height="50" rx="8" fill="#fae9e7" stroke="#a23d31"/>
+  <text x="655" y="110" text-anchor="middle" font-size="12" fill="#18201f" font-family="ui-sans-serif,system-ui">Claim</text>
+  <rect x="750" y="80" width="170" height="50" rx="8" fill="#e8eef6" stroke="#0f4c81"/>
+  <text x="835" y="110" text-anchor="middle" font-size="12" fill="#18201f" font-family="ui-sans-serif,system-ui">Evidence / RegRef</text>
+
+  <path d="M140 105 H170" stroke="#5d6864" stroke-width="2"/>
+  <path d="M280 105 H310" stroke="#5d6864" stroke-width="2"/>
+  <path d="M430 105 H460" stroke="#5d6864" stroke-width="2"/>
+  <path d="M560 105 H590" stroke="#5d6864" stroke-width="2"/>
+  <path d="M720 105 H750" stroke="#5d6864" stroke-width="2"/>
+
+  <rect x="30" y="180" width="900" height="160" rx="12" fill="#fff" stroke="#d9ddd6"/>
+  <text x="50" y="215" font-size="13" font-weight="700" fill="#18201f" font-family="ui-sans-serif,system-ui">인스턴스 예 (교육용)</text>
+  <text x="50" y="245" font-size="13" fill="#5d6864" font-family="ui-sans-serif,system-ui">Product: Aura B3 Serum → Formula:v1 -contains-> Niacinamide 5%</text>
+  <text x="50" y="275" font-size="13" fill="#5d6864" font-family="ui-sans-serif,system-ui">Claim C3: “기미를 치료한다” → Country:EU → status forbid</text>
+  <text x="50" y="305" font-size="13" fill="#5d6864" font-family="ui-sans-serif,system-ui">Reason: disease/treatment 암시 + 화장품 범위 초과 · Evidence: claims common criteria 메모</text>
+  <text x="50" y="335" font-size="13" fill="#a23d31" font-family="ui-sans-serif,system-ui">Decision trace 저장 → 다음 유사 미백 치료 표현에 escalate</text>
+</svg></div>
+<figcaption>그림 1. 케이스가 온톨로지 슬라이스 위에서 실제로 걷는 길.</figcaption>
+</figure>
+
+<h2>1. claim-review 슬라이스 매핑</h2>
+<table>
+<tr><th>케이스 요소</th><th>슬라이스 엔티티</th><th>예 값</th></tr>
+<tr><td>Aura B3 Serum</td><td>Product</td><td>PRD-aura-b3</td></tr>
+<tr><td>처방 v1</td><td>Formula</td><td>FML-v1</td></tr>
+<tr><td>나이아신아마이드</td><td>Ingredient</td><td>INCI-niacinamide</td></tr>
+<tr><td>5%</td><td>contains 속성</td><td>concentration=5</td></tr>
+<tr><td>KR/EU/US</td><td>Country</td><td>KR, EU, US</td></tr>
+<tr><td>C1~C3</td><td>Claim</td><td>텍스트+claim_type</td></tr>
+<tr><td>가이드/문헌 메모</td><td>Evidence / RegulationRef</td><td>교육용 메모 ID</td></tr>
+</table>
+<h2>2. 규칙 발화 시뮬레이션</h2>
+<pre>C1 × EU
+  rules fired: none critical
+  → allow (human 최종 확인)
+
+C2 × US
+  rules fired: absolute_or_erase_risk
+  → restrict + suggested_fix
+
+C3 × any
+  rules fired: therapeutic_or_disease_language
+  → forbid | needs_human
+  → prior similar forbid traces escalate
+</pre>
+<h2>3. 시장 인사이트 Evidence 연결</h2>
+<p>인사이트 PDF/노트가 있다면:</p>
+<pre>Evidence:EV-mkt-2026q1
+  kind: market_note
+  summary: "미백 키워드 CTR 높음"
+Claim:C3 -inspired_by-> Evidence:EV-mkt-2026q1   # 선택 관계
+# 그러나 inspired_by ≠ allowed_by
+</pre>
+<div class="callout warn">
+<strong>혼동 금지</strong><br>
+<code>inspired_by</code>(인사이트)와 <code>supported_by</code>(규제·효능 증거)를 같은 엣지로 쓰지 마세요.
+</div>
+<h2>4. 미니 실습</h2>
+<ol class="tight">
+<li>C2×EU 경로를 노드 5개 이상으로 손으로 그리세요.</li>
+<li>발화 규칙 이름을 스스로 2개 붙이세요. (영문 snake_case)</li>
+<li>인사이트 Evidence를 붙이되 allow 근거로 쓰지 않았음을 한 줄로 명시.</li>
+</ol>
+<h2>5. 퀴즈</h2>
+<div class="quiz-card" data-quiz="c4q1" data-correct="맞아요. 출처 아이디어일 뿐." data-incorrect="다시: 허용 근거가 아닙니다.">
+<p><strong>inspired_by 시장 노트의 의미는?</strong></p><button type="button" data-answer="wrong">자동 allow</button><button type="button" data-answer="correct">후보가 거기에서 왔다</button><button type="button" data-answer="wrong">CPNP 완료</button><button type="button" data-answer="wrong">농도 5% 보장</button>
+<p class="quiz-feedback" data-feedback aria-live="polite"></p></div>
+<div class="quiz-card" data-quiz="c4q2" data-correct="맞아요. 처방 포함 관계." data-incorrect="다시: contains 속성.">
+<p><strong>농도 정보는 어느 관계?</strong></p><button type="button" data-answer="wrong">Claim-status_in</button><button type="button" data-answer="correct">Formula-contains-Ingredient</button><button type="button" data-answer="wrong">Brand-owns</button><button type="button" data-answer="wrong">User-likes</button>
+<p class="quiz-feedback" data-feedback aria-live="polite"></p></div>
+<div class="quiz-card" data-quiz="c4q3" data-correct="맞아요. 과거 판정 재사용." data-incorrect="다시: trace.">
+<p><strong>C3 forbid 후 다음 유사 문장에 필요한 것?</strong></p><button type="button" data-answer="wrong">무시</button><button type="button" data-answer="correct">decision trace로 escalate</button><button type="button" data-answer="wrong">로고 변경</button><button type="button" data-answer="wrong">GPU</button>
+<p class="quiz-feedback" data-feedback aria-live="polite"></p></div>
+
+<h2>다음으로 연결</h2>
+<div class="lesson-nav"><a href="./0303-case-claims-three-markets.html">이전: 세 시장</a> · <a href="./0305-case-decision-trace-worksheet.html">다음: 트레이스 워크시트</a></div>
+<footer>
+<p>막히는 부분은 에이전트에게 바로 물어보세요. 이 워크스페이스의 선생님 역할입니다.</p>
+<p class="pill">케이스 스터디 · 한국어</p>
+<p class="pill">성분 → 시장 → 클레임 → 온톨로지 경로</p>
+</footer>
+</main>
+<script>
+document.querySelectorAll("[data-quiz]").forEach((quiz) => {
+  const feedback = quiz.querySelector("[data-feedback]");
+  quiz.querySelectorAll("button[data-answer]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const isCorrect = button.dataset.answer === "correct";
+      quiz.querySelectorAll("button[data-answer]").forEach((b) => {
+        b.classList.remove("correct", "incorrect");
+        b.setAttribute("aria-pressed", "false");
+      });
+      button.classList.add(isCorrect ? "correct" : "incorrect");
+      button.setAttribute("aria-pressed", "true");
+      feedback.textContent = isCorrect ? quiz.dataset.correct : quiz.dataset.incorrect;
+    });
+  });
+});
+
+</script>
+</body>
+</html>

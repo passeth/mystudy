@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-29T00:46:15.795Z",
+  "generatedAt": "2026-07-29T01:55:06.989Z",
   "topics": [
     {
       "id": "pif-cpsr",
@@ -703,6 +703,42 @@
           "title": "A17 스터디 · RAG Agents in Prod: 10 Lessons We Learned — Douwe Kiela, cre · Ontology Agents",
           "subtitle": "[A] 에이전틱 능력은 엔터프라이즈 데이터에 닿을 때만 가치다. 프로덕션 RAG 에이전트 10 lessons로 hybrid 현실을 점검하라.",
           "file": "lessons/ontology-agents/0217-a17-kiela-rag-agents-prod.html"
+        },
+        {
+          "id": "0300-case-niacinamide-overview",
+          "title": "케이스 스터디: 나이아신아마이드 세럼 · Ontology Agents",
+          "subtitle": "성분·시장 인사이트·클레임·온톨로지 경로를 한 제품으로 연습하는 화장품 케이스 스터디 홈",
+          "file": "lessons/ontology-agents/0300-case-niacinamide-overview.html"
+        },
+        {
+          "id": "0301-case-ingredient-niacinamide",
+          "title": "성분 해부: 나이아신아마이드를 노드로 · Ontology Agents",
+          "subtitle": "나이아신아마이드 5%를 Ingredient/Formula 관계로 분해하고 클레임과 섞지 않는 법을 배운다.",
+          "file": "lessons/ontology-agents/0301-case-ingredient-niacinamide.html"
+        },
+        {
+          "id": "0302-case-market-insight",
+          "title": "시장 인사이트: 후보를 만들되 판정하지 않기 · Ontology Agents",
+          "subtitle": "KR·EU·US 가상 인사이트로 클레임 후보를 만들되 규제 판정과 분리하는 법을 배운다.",
+          "file": "lessons/ontology-agents/0302-case-market-insight.html"
+        },
+        {
+          "id": "0303-case-claims-three-markets",
+          "title": "클레임 3문장 × 시장 3곳 · Ontology Agents",
+          "subtitle": "C1~C3 클레임을 KR·EU·US에서 비교 판정하며 status_in과 restrict 수정안을 연습한다.",
+          "file": "lessons/ontology-agents/0303-case-claims-three-markets.html"
+        },
+        {
+          "id": "0304-case-ontology-path",
+          "title": "온톨로지 경로로 판정 걷기 · Ontology Agents",
+          "subtitle": "Aura B3 케이스를 claim-review 슬라이스 엔티티·규칙·Evidence 훅에 매핑한다.",
+          "file": "lessons/ontology-agents/0304-case-ontology-path.html"
+        },
+        {
+          "id": "0305-case-decision-trace-worksheet",
+          "title": "Decision trace 워크시트 · Ontology Agents",
+          "subtitle": "Aura B3 케이스로 decision trace를 직접 채우고 5점 자기 채점한다.",
+          "file": "lessons/ontology-agents/0305-case-decision-trace-worksheet.html"
         }
       ]
     },
