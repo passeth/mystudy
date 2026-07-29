@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-28T15:46:12.152Z",
+  "generatedAt": "2026-07-29T00:16:28.293Z",
   "topics": [
     {
       "id": "pif-cpsr",
@@ -488,11 +488,86 @@
       ]
     },
     {
+      "id": "ontology-agents",
+      "title": "Ontology-based Agents",
+      "subtitle": "AI Engineer 토크 임베드 + 인포그래픽으로 온톨로지→메모리→결정 트레이스→스킬→루프 파이프라인 설계",
+      "color": "navy",
+      "order": 9,
+      "lessons": [
+        {
+          "id": "0000-course-home",
+          "title": "Ontology-based Domain Agents · Ontology Agents",
+          "subtitle": "온톨로지·결정 트레이스·스킬·루프로 도메인 에이전트 파이프라인을 설계하는 코스 홈",
+          "file": "lessons/ontology-agents/0000-course-home.html"
+        },
+        {
+          "id": "0001-agent-pipeline-map",
+          "title": "한 결정을 닫는 다섯 층 파이프라인 · Ontology Agents",
+          "subtitle": "온톨로지·메모리·결정 트레이스·스킬·루프로 도메인 에이전트 파이프라인을 지도로 잡는다.",
+          "file": "lessons/ontology-agents/0001-agent-pipeline-map.html"
+        },
+        {
+          "id": "0002-ontology-as-playbook",
+          "title": "온톨로지는 에이전트의 플레이북이다 · Ontology Agents",
+          "subtitle": "Barrasa 토크를 중심으로 온톨로지를 경직 워크플로와 자유 LLM 사이의 playbook으로 이해한다.",
+          "file": "lessons/ontology-agents/0002-ontology-as-playbook.html"
+        },
+        {
+          "id": "0003-decision-traces",
+          "title": "결정 트레이스와 컨텍스트 그래프 · Ontology Agents",
+          "subtitle": "문서 KB를 넘어 결정·이유·결과를 그래프로 남겨 다음 행동의 근거로 쓰는 법을 배운다.",
+          "file": "lessons/ontology-agents/0003-decision-traces.html"
+        },
+        {
+          "id": "0004-graph-memory",
+          "title": "그래프 메모리, 토큰 더미 아님 · Ontology Agents",
+          "subtitle": "벡터/토큰 확장과 그래프 메모리의 차이를 보고 multi-hop 업무 질의에 맞는 저장을 고른다.",
+          "file": "lessons/ontology-agents/0004-graph-memory.html"
+        },
+        {
+          "id": "0005-skills-not-agents",
+          "title": "에이전트 대신 스킬을 묶어라 · Ontology Agents",
+          "subtitle": "Anthropic 토크를 바탕으로 도메인 전문성을 스킬 패키지로 포장하고 에이전트 남용을 절제한다.",
+          "file": "lessons/ontology-agents/0005-skills-not-agents.html"
+        },
+        {
+          "id": "0006-loop-and-harness",
+          "title": "루프와 하네스: 오차를 설계하라 · Ontology Agents",
+          "subtitle": "Loop/Harness 토크를 우리 ERP·승인·자동화 실패 모드로 번역하고 최소 검증 루프를 만든다.",
+          "file": "lessons/ontology-agents/0006-loop-and-harness.html"
+        },
+        {
+          "id": "0007-temporal-memory",
+          "title": "시간 메모리: 무효화하고 지우지 마라 · Ontology Agents",
+          "subtitle": "Graphiti식 temporal validity를 Trade Intel/RISELAB 질의로 번역한다.",
+          "file": "lessons/ontology-agents/0007-temporal-memory.html"
+        },
+        {
+          "id": "0008-architecture-clinic",
+          "title": "아키텍처 클리닉: 첫 에이전트 고르기 · Ontology Agents",
+          "subtitle": "체크리스트로 claim-review vs reorder-risk를 고르고 1주 파일럿 설계를 끝낸다.",
+          "file": "lessons/ontology-agents/0008-architecture-clinic.html"
+        },
+        {
+          "id": "0009-glossary",
+          "title": "시각·실무 용어집 · Ontology Agents",
+          "subtitle": "온톨로지 에이전트 파이프라인 공통 용어 정의.",
+          "file": "lessons/ontology-agents/0009-glossary.html"
+        },
+        {
+          "id": "0010-source-watch-map",
+          "title": "소스·시청 지도 · Ontology Agents",
+          "subtitle": "AI Engineer 영상과 레슨·파이프라인 층 매핑표.",
+          "file": "lessons/ontology-agents/0010-source-watch-map.html"
+        }
+      ]
+    },
+    {
       "id": "reference",
       "title": "레퍼런스",
       "subtitle": "용어집·패키징 소재 지도·시스템 치트시트 등 상시 참고 자료",
       "color": "cream",
-      "order": 9,
+      "order": 10,
       "lessons": [
         {
           "id": "appguardrail-git-onboard-map",

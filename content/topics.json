@@ -60,6 +60,13 @@
     "title": "레퍼런스",
     "subtitle": "용어집·패키징 소재 지도·시스템 치트시트 등 상시 참고 자료",
     "color": "cream",
+    "order": 10
+  },
+  {
+    "id": "ontology-agents",
+    "title": "Ontology-based Agents",
+    "subtitle": "AI Engineer 토크 임베드 + 인포그래픽으로 온톨로지→메모리→결정 트레이스→스킬→루프 파이프라인 설계",
+    "color": "navy",
     "order": 9
   }
 ]

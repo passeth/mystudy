@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="온톨로지·결정 트레이스·스킬·루프로 도메인 에이전트 파이프라인을 설계하는 코스 홈">
+<title>Ontology-based Domain Agents · Ontology Agents</title>
+<style>
+
+:root {
+  --ink:#18201f; --muted:#5d6864; --paper:#fbfaf6; --panel:#ffffff;
+  --line:#d9ddd6; --exec:#136f63; --improve:#a23d31; --knowledge:#6b5d8e;
+  --problem:#a66b12; --soft:#eaf3ef; --warn:#fff2d6; --purple-soft:#f0edf7;
+  --brick-soft:#fae9e7; --code:#101917; --skill:#0f4c81;
+}
+*{box-sizing:border-box} body{margin:0;color:var(--ink);background:var(--paper);font-family:ui-serif,Georgia,"Apple SD Gothic Neo","Noto Serif KR",serif;line-height:1.68}
+main{width:min(960px,calc(100% - 40px));margin:0 auto;padding:52px 0 88px}
+.kicker{color:var(--exec);font:700 12px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase}
+h1{margin:12px 0 14px;font-size:clamp(32px,5.8vw,58px);line-height:1.05}
+.subtitle{max-width:760px;color:var(--muted);font-size:18px}
+h2{margin-top:42px;border-bottom:1px solid var(--line);padding-bottom:8px}
+h3{margin-top:26px}
+a{color:var(--exec);text-underline-offset:3px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.card,.quiz-card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:20px;margin:18px 0}
+.card h3{margin-top:0}
+.callout{border-left:4px solid var(--exec);background:var(--soft);border-radius:6px;padding:14px 16px;margin:18px 0}
+.callout.warn{border-left-color:var(--problem);background:var(--warn)}
+.callout.brick{border-left-color:var(--improve);background:var(--brick-soft)}
+.callout.purple{border-left-color:var(--knowledge);background:var(--purple-soft)}
+.badge,.pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:2px 9px;font:700 12px/1.7 ui-sans-serif,system-ui,sans-serif;color:var(--muted);margin:0 4px 4px 0}
+.badge.exec{color:var(--exec);border-color:var(--exec)}
+.badge.improve{color:var(--improve);border-color:var(--improve)}
+.badge.knowledge{color:var(--knowledge);border-color:var(--knowledge)}
+.badge.problem{color:var(--problem);border-color:var(--problem)}
+.badge.skill{color:var(--skill);border-color:var(--skill)}
+figure{margin:24px 0}
+.diagram{width:100%;height:auto;display:block}
+.diagram-frame{background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden;padding:8px}
+figcaption{margin-top:8px;color:var(--muted);font-size:14px}
+table{border-collapse:collapse;width:100%;background:var(--panel);margin:18px 0;font-size:14.5px}
+th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+th{background:var(--soft);font-family:ui-sans-serif,system-ui,sans-serif;font-size:13px}
+pre,code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+pre{overflow-x:auto;background:var(--code);color:#eef7f2;border-radius:8px;padding:16px}
+.quiz-card button{display:block;width:100%;margin:8px 0;padding:11px 13px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--ink);font:inherit;text-align:left;cursor:pointer}
+.quiz-card button.correct{border-color:#1f7a3f;background:#e8f4eb}
+.quiz-card button.incorrect{border-color:var(--improve);background:var(--brick-soft)}
+.quiz-feedback{min-height:1.6em;font-weight:700}
+.video{margin:22px 0;background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.video-meta{padding:12px 14px;border-bottom:1px solid var(--line);font-family:ui-sans-serif,system-ui,sans-serif;font-size:13.5px;color:var(--muted)}
+.video-meta strong{color:var(--ink);display:block;font-size:14.5px;margin-bottom:4px}
+.video-frame{position:relative;width:100%;padding-top:56.25%;background:#101917}
+.video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.video-actions{padding:10px 14px;display:flex;gap:12px;flex-wrap:wrap;font-size:13.5px}
+.watch-note{font-size:14px;color:var(--muted);margin:8px 0 0}
+ol.tight li,ul.tight li{margin:6px 0}
+.source-note{font-size:14px;color:var(--muted);border-top:1px solid var(--line);padding-top:10px}
+footer{margin-top:54px;padding-top:24px;border-top:1px solid var(--line);color:var(--muted)}
+.lesson-nav a{margin-right:10px}
+@media(max-width:640px){main{width:min(100% - 24px,960px);padding-top:32px}h1{font-size:34px}table{font-size:13px}}
+@media print{body{background:#fff}.video-frame{display:none}.card,.quiz-card,figure{break-inside:avoid}}
+
+</style>
+</head>
+<body>
+<main>
+  <p class="kicker">COURSE HOME · ONTOLOGY AGENTS</p>
+  <h1>Ontology-based Domain Agents</h1>
+  <p class="subtitle">AI Engineer 토크를 임베드한 시각 학습 코스. 목표는 회사 온톨로지 플랫폼이 아니라 닫히는 업무 에이전트 하나.</p>
+  
+<div class="callout">
+  <strong>이 코스의 한 줄</strong><br>
+  온톨로지를 연구하는 코스가 아니라, <em>온톨로지 → 시간 메모리 → 결정 트레이스 → 스킬 → 루프</em>로
+  RISELAB/Trade Intel 업무 결정을 닫는 에이전트 파이프라인을 설계하는 코스다.
+</div>
+
+<figure>
+<div class="diagram-frame">
+<svg class="diagram" viewBox="0 0 960 420" role="img" aria-label="온톨로지 기반 에이전트 파이프라인 5층">
+  <rect width="960" height="420" fill="#fbfaf6"/>
+  <text x="28" y="36" font-family="ui-sans-serif,system-ui" font-size="16" font-weight="700" fill="#18201f">온톨로지 기반 도메인 에이전트 파이프라인</text>
+  <text x="28" y="58" font-family="ui-sans-serif,system-ui" font-size="12" fill="#5d6864">한 업무 결정(decision)을 끝까지 수행하는 최소 스택 — 회사 전체 플랫폼 아님</text>
+  <rect x="30" y="90" width="160" height="90" rx="10" fill="#f0edf7" stroke="#6b5d8e" stroke-width="2"/>
+  <text x="110" y="125" text-anchor="middle" font-size="14" font-weight="700" fill="#6b5d8e" font-family="ui-sans-serif,system-ui">1. Ontology</text>
+  <text x="110" y="148" text-anchor="middle" font-size="12" fill="#18201f" font-family="ui-sans-serif,system-ui">무엇이 무엇인가</text>
+  <text x="110" y="166" text-anchor="middle" font-size="11" fill="#5d6864" font-family="ui-sans-serif,system-ui">entity · relation · rule</text>
+  <rect x="220" y="90" width="160" height="90" rx="10" fill="#eaf3ef" stroke="#136f63" stroke-width="2"/>
+  <text x="300" y="125" text-anchor="middle" font-size="14" font-weight="700" fill="#136f63" font-family="ui-sans-serif,system-ui">2. Memory Graph</text>
+  <text x="300" y="148" text-anchor="middle" font-size="12" fill="#18201f" font-family="ui-sans-serif,system-ui">언제 참이었나</text>
+  <text x="300" y="166" text-anchor="middle" font-size="11" fill="#5d6864" font-family="ui-sans-serif,system-ui">temporal · provenance</text>
+  <rect x="410" y="90" width="160" height="90" rx="10" fill="#fae9e7" stroke="#a23d31" stroke-width="2"/>
+  <text x="490" y="125" text-anchor="middle" font-size="14" font-weight="700" fill="#a23d31" font-family="ui-sans-serif,system-ui">3. Decision Trace</text>
+  <text x="490" y="148" text-anchor="middle" font-size="12" fill="#18201f" font-family="ui-sans-serif,system-ui">왜 그렇게 봤나</text>
+  <text x="490" y="166" text-anchor="middle" font-size="11" fill="#5d6864" font-family="ui-sans-serif,system-ui">context graph · cases</text>
+  <rect x="600" y="90" width="160" height="90" rx="10" fill="#e8eef6" stroke="#0f4c81" stroke-width="2"/>
+  <text x="680" y="125" text-anchor="middle" font-size="14" font-weight="700" fill="#0f4c81" font-family="ui-sans-serif,system-ui">4. Skills</text>
+  <text x="680" y="148" text-anchor="middle" font-size="12" fill="#18201f" font-family="ui-sans-serif,system-ui">도메인 전문성 포장</text>
+  <text x="680" y="166" text-anchor="middle" font-size="11" fill="#5d6864" font-family="ui-sans-serif,system-ui">playbook · tools · SOP</text>
+  <rect x="790" y="90" width="140" height="90" rx="10" fill="#fff2d6" stroke="#a66b12" stroke-width="2"/>
+  <text x="860" y="125" text-anchor="middle" font-size="14" font-weight="700" fill="#a66b12" font-family="ui-sans-serif,system-ui">5. Loop</text>
+  <text x="860" y="148" text-anchor="middle" font-size="12" fill="#18201f" font-family="ui-sans-serif,system-ui">실행·검증·승인</text>
+  <text x="860" y="166" text-anchor="middle" font-size="11" fill="#5d6864" font-family="ui-sans-serif,system-ui">harness · judge · HITL</text>
+  <path d="M190 135 H220" stroke="#5d6864" stroke-width="2"/>
+  <path d="M380 135 H410" stroke="#5d6864" stroke-width="2"/>
+  <path d="M570 135 H600" stroke="#5d6864" stroke-width="2"/>
+  <path d="M760 135 H790" stroke="#5d6864" stroke-width="2"/>
+  <rect x="30" y="220" width="440" height="160" rx="10" fill="#fff" stroke="#d9ddd6"/>
+  <text x="50" y="250" font-size="14" font-weight="700" fill="#136f63" font-family="ui-sans-serif,system-ui">RISELAB · claim-review</text>
+  <text x="50" y="278" font-size="13" fill="#18201f" font-family="ui-sans-serif,system-ui">Product → Formula → Ingredient → Country → Regulation → Claim</text>
+  <text x="50" y="304" font-size="13" fill="#5d6864" font-family="ui-sans-serif,system-ui">결정: 이 클레임을 이 국가에 써도 되는가?</text>
+  <text x="50" y="330" font-size="13" fill="#5d6864" font-family="ui-sans-serif,system-ui">trace: 유사 성분·농도·과거 거절 사유</text>
+  <text x="50" y="356" font-size="13" fill="#5d6864" font-family="ui-sans-serif,system-ui">loop: 초안 → 규정 조회 → judge → 사람 승인</text>
+  <rect x="490" y="220" width="440" height="160" rx="10" fill="#fff" stroke="#d9ddd6"/>
+  <text x="510" y="250" font-size="14" font-weight="700" fill="#a23d31" font-family="ui-sans-serif,system-ui">Trade Intel · reorder-risk</text>
+  <text x="510" y="278" font-size="13" fill="#18201f" font-family="ui-sans-serif,system-ui">Buyer → Contact → Product → Order → Message → Shipment</text>
+  <text x="510" y="304" font-size="13" fill="#5d6864" font-family="ui-sans-serif,system-ui">결정: 이 바이어를 이번 주에 먼저 연락할 것인가?</text>
+  <text x="510" y="330" font-size="13" fill="#5d6864" font-family="ui-sans-serif,system-ui">temporal: 담당자 변경, 마지막 PDRN 문의 시점</text>
+  <text x="510" y="356" font-size="13" fill="#5d6864" font-family="ui-sans-serif,system-ui">loop: 신호 수집 → 위험 점수 → 메시지 초안 → 사람 발송</text>
+</svg>
+</div>
+<figcaption>그림 1. 다섯 층 파이프라인과 두 후보 도메인. 노드는 한 결정에 필요한 최소 집합이다.</figcaption>
+</figure>
+
+<div class="grid">
+  <div class="card"><h3>선수 코스</h3><p><a href="/t/ai-agents">AI Agents in Depth</a> · <a href="/t/graph-engineering">Graph Engineering v2</a></p></div>
+  <div class="card"><h3>1차 소스</h3><p>AI Engineer 채널 Neo4j / Anthropic / HumanLayer 토크 (각 레슨에 임베드)</p></div>
+  <div class="card"><h3>산출물</h3><p>최소 온톨로지 1개 + decision loop 설계 + 스킬 패키지 초안</p></div>
+</div>
+<h2>레슨 목록</h2>
+<ol>
+<li><a href="./0001-agent-pipeline-map.html">파이프라인 지도</a> — 다섯 층을 한 장으로</li>
+<li><a href="./0002-ontology-as-playbook.html">온톨로지 = 플레이북</a> — Barrasa</li>
+<li><a href="./0003-decision-traces.html">결정 트레이스</a> — context graph</li>
+<li><a href="./0004-graph-memory.html">그래프 메모리</a> — CrabRAG</li>
+<li><a href="./0005-skills-not-agents.html">스킬이 에이전트다</a> — Anthropic</li>
+<li><a href="./0006-loop-and-harness.html">루프와 하네스</a> — Mistele / Dex / Tejas</li>
+<li><a href="./0007-temporal-memory.html">시간 메모리</a> — Graphiti 축</li>
+<li><a href="./0008-architecture-clinic.html">아키텍처 클리닉</a> — 첫 에이전트 고르기</li>
+<li><a href="./0009-glossary.html">용어집</a></li>
+<li><a href="./0010-source-watch-map.html">소스·시청 지도</a></li>
+</ol>
+<div class="callout warn">
+  <strong>연구 규율</strong><br>
+  토크 안의 데모 수치·비유는 관점 자료다. 우리 파이프라인에 넣기 전에 “우리 결정 / 우리 데이터 / 우리 실패 모드”로 다시 쓴다.
+</div>
+
+  <h2>다음으로 연결</h2>
+  <div class="lesson-nav"><a href="./0001-agent-pipeline-map.html">다음: 파이프라인 지도</a></div>
+  <footer>
+    <p>막히는 부분은 에이전트에게 바로 물어보세요. 이 워크스페이스의 선생님 역할입니다.</p>
+    <p class="pill">Mission-linked</p>
+    <p class="pill">Ontology → Memory → Decision → Skill → Loop</p>
+  </footer>
+</main>
+<script>
+
+document.querySelectorAll("[data-quiz]").forEach((quiz) => {
+  const feedback = quiz.querySelector("[data-feedback]");
+  quiz.querySelectorAll("button[data-answer]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const isCorrect = button.dataset.answer === "correct";
+      quiz.querySelectorAll("button[data-answer]").forEach((b) => {
+        b.classList.remove("correct", "incorrect");
+        b.setAttribute("aria-pressed", "false");
+      });
+      button.classList.add(isCorrect ? "correct" : "incorrect");
+      button.setAttribute("aria-pressed", "true");
+      feedback.textContent = isCorrect ? quiz.dataset.correct : quiz.dataset.incorrect;
+    });
+  });
+});
+
+</script>
+</body>
+</html>

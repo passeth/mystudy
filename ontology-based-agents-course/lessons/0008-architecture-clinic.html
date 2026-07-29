@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="체크리스트로 claim-review vs reorder-risk를 고르고 1주 파일럿 설계를 끝낸다.">
+<title>아키텍처 클리닉: 첫 에이전트 고르기 · Ontology Agents</title>
+<style>
+
+:root {
+  --ink:#18201f; --muted:#5d6864; --paper:#fbfaf6; --panel:#ffffff;
+  --line:#d9ddd6; --exec:#136f63; --improve:#a23d31; --knowledge:#6b5d8e;
+  --problem:#a66b12; --soft:#eaf3ef; --warn:#fff2d6; --purple-soft:#f0edf7;
+  --brick-soft:#fae9e7; --code:#101917; --skill:#0f4c81;
+}
+*{box-sizing:border-box} body{margin:0;color:var(--ink);background:var(--paper);font-family:ui-serif,Georgia,"Apple SD Gothic Neo","Noto Serif KR",serif;line-height:1.68}
+main{width:min(960px,calc(100% - 40px));margin:0 auto;padding:52px 0 88px}
+.kicker{color:var(--exec);font:700 12px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase}
+h1{margin:12px 0 14px;font-size:clamp(32px,5.8vw,58px);line-height:1.05}
+.subtitle{max-width:760px;color:var(--muted);font-size:18px}
+h2{margin-top:42px;border-bottom:1px solid var(--line);padding-bottom:8px}
+h3{margin-top:26px}
+a{color:var(--exec);text-underline-offset:3px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.card,.quiz-card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:20px;margin:18px 0}
+.card h3{margin-top:0}
+.callout{border-left:4px solid var(--exec);background:var(--soft);border-radius:6px;padding:14px 16px;margin:18px 0}
+.callout.warn{border-left-color:var(--problem);background:var(--warn)}
+.callout.brick{border-left-color:var(--improve);background:var(--brick-soft)}
+.callout.purple{border-left-color:var(--knowledge);background:var(--purple-soft)}
+.badge,.pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:2px 9px;font:700 12px/1.7 ui-sans-serif,system-ui,sans-serif;color:var(--muted);margin:0 4px 4px 0}
+.badge.exec{color:var(--exec);border-color:var(--exec)}
+.badge.improve{color:var(--improve);border-color:var(--improve)}
+.badge.knowledge{color:var(--knowledge);border-color:var(--knowledge)}
+.badge.problem{color:var(--problem);border-color:var(--problem)}
+.badge.skill{color:var(--skill);border-color:var(--skill)}
+figure{margin:24px 0}
+.diagram{width:100%;height:auto;display:block}
+.diagram-frame{background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden;padding:8px}
+figcaption{margin-top:8px;color:var(--muted);font-size:14px}
+table{border-collapse:collapse;width:100%;background:var(--panel);margin:18px 0;font-size:14.5px}
+th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+th{background:var(--soft);font-family:ui-sans-serif,system-ui,sans-serif;font-size:13px}
+pre,code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+pre{overflow-x:auto;background:var(--code);color:#eef7f2;border-radius:8px;padding:16px}
+.quiz-card button{display:block;width:100%;margin:8px 0;padding:11px 13px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--ink);font:inherit;text-align:left;cursor:pointer}
+.quiz-card button.correct{border-color:#1f7a3f;background:#e8f4eb}
+.quiz-card button.incorrect{border-color:var(--improve);background:var(--brick-soft)}
+.quiz-feedback{min-height:1.6em;font-weight:700}
+.video{margin:22px 0;background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.video-meta{padding:12px 14px;border-bottom:1px solid var(--line);font-family:ui-sans-serif,system-ui,sans-serif;font-size:13.5px;color:var(--muted)}
+.video-meta strong{color:var(--ink);display:block;font-size:14.5px;margin-bottom:4px}
+.video-frame{position:relative;width:100%;padding-top:56.25%;background:#101917}
+.video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.video-actions{padding:10px 14px;display:flex;gap:12px;flex-wrap:wrap;font-size:13.5px}
+.watch-note{font-size:14px;color:var(--muted);margin:8px 0 0}
+ol.tight li,ul.tight li{margin:6px 0}
+.source-note{font-size:14px;color:var(--muted);border-top:1px solid var(--line);padding-top:10px}
+footer{margin-top:54px;padding-top:24px;border-top:1px solid var(--line);color:var(--muted)}
+.lesson-nav a{margin-right:10px}
+@media(max-width:640px){main{width:min(100% - 24px,960px);padding-top:32px}h1{font-size:34px}table{font-size:13px}}
+@media print{body{background:#fff}.video-frame{display:none}.card,.quiz-card,figure{break-inside:avoid}}
+
+</style>
+</head>
+<body>
+<main>
+  <p class="kicker">LESSON 0008 · CLINIC</p>
+  <h1>아키텍처 클리닉: 첫 에이전트 고르기</h1>
+  <p class="subtitle">One closed decision. Not a platform.</p>
+  
+<div class="callout"><strong>오늘의 한 줄</strong><br>첫 에이전트는 플랫폼이 아니다. <em>예/아니오/보류로 끝나는 결정 하나</em>다.</div>
+
+<figure>
+<div class="diagram-frame">
+<svg class="diagram" viewBox="0 0 960 400" role="img" aria-label="첫 에이전트 선택 클리닉">
+  <rect width="960" height="400" fill="#fbfaf6"/>
+  <text x="28" y="34" font-size="16" font-weight="700" fill="#18201f" font-family="ui-sans-serif,system-ui">Architecture clinic · pick ONE closed decision</text>
+  <rect x="40" y="70" width="280" height="280" rx="12" fill="#eaf3ef" stroke="#136f63" stroke-width="2"/>
+  <text x="180" y="110" text-anchor="middle" font-size="14" font-weight="700" fill="#136f63" font-family="ui-sans-serif,system-ui">Claim-review</text>
+  <text x="60" y="145" font-size="12" fill="#18201f" font-family="ui-sans-serif,system-ui">Decision: claim allowed?</text>
+  <text x="60" y="170" font-size="12" fill="#5d6864" font-family="ui-sans-serif,system-ui">Ontology: product-ing-reg-claim</text>
+  <text x="60" y="195" font-size="12" fill="#5d6864" font-family="ui-sans-serif,system-ui">Trace: past reject reasons</text>
+  <text x="60" y="220" font-size="12" fill="#5d6864" font-family="ui-sans-serif,system-ui">Skill: check + draft note</text>
+  <text x="60" y="245" font-size="12" fill="#5d6864" font-family="ui-sans-serif,system-ui">Loop: judge → human approve</text>
+  <text x="60" y="290" font-size="12" fill="#136f63" font-family="ui-sans-serif,system-ui">Fit: RISELAB depth</text>
+  <rect x="340" y="70" width="280" height="280" rx="12" fill="#fae9e7" stroke="#a23d31" stroke-width="2"/>
+  <text x="480" y="110" text-anchor="middle" font-size="14" font-weight="700" fill="#a23d31" font-family="ui-sans-serif,system-ui">Reorder-risk</text>
+  <text x="360" y="145" font-size="12" fill="#18201f" font-family="ui-sans-serif,system-ui">Decision: outreach now?</text>
+  <text x="360" y="170" font-size="12" fill="#5d6864" font-family="ui-sans-serif,system-ui">Ontology: buyer-order-msg</text>
+  <text x="360" y="195" font-size="12" fill="#5d6864" font-family="ui-sans-serif,system-ui">Temporal: contact changes</text>
+  <text x="360" y="220" font-size="12" fill="#5d6864" font-family="ui-sans-serif,system-ui">Skill: score + draft</text>
+  <text x="360" y="245" font-size="12" fill="#5d6864" font-family="ui-sans-serif,system-ui">Loop: weekly scan → HITL</text>
+  <text x="360" y="290" font-size="12" fill="#a23d31" font-family="ui-sans-serif,system-ui">Fit: Sales Agent P0</text>
+  <rect x="640" y="70" width="280" height="280" rx="12" fill="#fff" stroke="#d9ddd6" stroke-dasharray="6 4"/>
+  <text x="780" y="110" text-anchor="middle" font-size="14" font-weight="700" fill="#5d6864" font-family="ui-sans-serif,system-ui">Not yet</text>
+  <text x="660" y="150" font-size="12" fill="#5d6864" font-family="ui-sans-serif,system-ui">company-wide ontology platform</text>
+  <text x="660" y="175" font-size="12" fill="#5d6864" font-family="ui-sans-serif,system-ui">50-agent orchestration</text>
+  <text x="660" y="200" font-size="12" fill="#5d6864" font-family="ui-sans-serif,system-ui">generic memory OS</text>
+  <text x="660" y="225" font-size="12" fill="#5d6864" font-family="ui-sans-serif,system-ui">finetune-first</text>
+  <text x="660" y="290" font-size="12" fill="#a23d31" font-family="ui-sans-serif,system-ui">activity without closure</text>
+</svg>
+</div>
+<figcaption>그림 1. 첫 에이전트는 닫히는 결정 하나. 플랫폼은 그 다음이다.</figcaption>
+</figure>
+
+
+<figure>
+<div class="diagram-frame">
+<svg class="diagram" viewBox="0 0 960 420" role="img" aria-label="온톨로지 기반 에이전트 파이프라인 5층">
+  <rect width="960" height="420" fill="#fbfaf6"/>
+  <text x="28" y="36" font-family="ui-sans-serif,system-ui" font-size="16" font-weight="700" fill="#18201f">온톨로지 기반 도메인 에이전트 파이프라인</text>
+  <text x="28" y="58" font-family="ui-sans-serif,system-ui" font-size="12" fill="#5d6864">한 업무 결정(decision)을 끝까지 수행하는 최소 스택 — 회사 전체 플랫폼 아님</text>
+  <rect x="30" y="90" width="160" height="90" rx="10" fill="#f0edf7" stroke="#6b5d8e" stroke-width="2"/>
+  <text x="110" y="125" text-anchor="middle" font-size="14" font-weight="700" fill="#6b5d8e" font-family="ui-sans-serif,system-ui">1. Ontology</text>
+  <text x="110" y="148" text-anchor="middle" font-size="12" fill="#18201f" font-family="ui-sans-serif,system-ui">무엇이 무엇인가</text>
+  <text x="110" y="166" text-anchor="middle" font-size="11" fill="#5d6864" font-family="ui-sans-serif,system-ui">entity · relation · rule</text>
+  <rect x="220" y="90" width="160" height="90" rx="10" fill="#eaf3ef" stroke="#136f63" stroke-width="2"/>
+  <text x="300" y="125" text-anchor="middle" font-size="14" font-weight="700" fill="#136f63" font-family="ui-sans-serif,system-ui">2. Memory Graph</text>
+  <text x="300" y="148" text-anchor="middle" font-size="12" fill="#18201f" font-family="ui-sans-serif,system-ui">언제 참이었나</text>
+  <text x="300" y="166" text-anchor="middle" font-size="11" fill="#5d6864" font-family="ui-sans-serif,system-ui">temporal · provenance</text>
+  <rect x="410" y="90" width="160" height="90" rx="10" fill="#fae9e7" stroke="#a23d31" stroke-width="2"/>
+  <text x="490" y="125" text-anchor="middle" font-size="14" font-weight="700" fill="#a23d31" font-family="ui-sans-serif,system-ui">3. Decision Trace</text>
+  <text x="490" y="148" text-anchor="middle" font-size="12" fill="#18201f" font-family="ui-sans-serif,system-ui">왜 그렇게 봤나</text>
+  <text x="490" y="166" text-anchor="middle" font-size="11" fill="#5d6864" font-family="ui-sans-serif,system-ui">context graph · cases</text>
+  <rect x="600" y="90" width="160" height="90" rx="10" fill="#e8eef6" stroke="#0f4c81" stroke-width="2"/>
+  <text x="680" y="125" text-anchor="middle" font-size="14" font-weight="700" fill="#0f4c81" font-family="ui-sans-serif,system-ui">4. Skills</text>
+  <text x="680" y="148" text-anchor="middle" font-size="12" fill="#18201f" font-family="ui-sans-serif,system-ui">도메인 전문성 포장</text>
+  <text x="680" y="166" text-anchor="middle" font-size="11" fill="#5d6864" font-family="ui-sans-serif,system-ui">playbook · tools · SOP</text>
+  <rect x="790" y="90" width="140" height="90" rx="10" fill="#fff2d6" stroke="#a66b12" stroke-width="2"/>
+  <text x="860" y="125" text-anchor="middle" font-size="14" font-weight="700" fill="#a66b12" font-family="ui-sans-serif,system-ui">5. Loop</text>
+  <text x="860" y="148" text-anchor="middle" font-size="12" fill="#18201f" font-family="ui-sans-serif,system-ui">실행·검증·승인</text>
+  <text x="860" y="166" text-anchor="middle" font-size="11" fill="#5d6864" font-family="ui-sans-serif,system-ui">harness · judge · HITL</text>
+  <path d="M190 135 H220" stroke="#5d6864" stroke-width="2"/>
+  <path d="M380 135 H410" stroke="#5d6864" stroke-width="2"/>
+  <path d="M570 135 H600" stroke="#5d6864" stroke-width="2"/>
+  <path d="M760 135 H790" stroke="#5d6864" stroke-width="2"/>
+  <rect x="30" y="220" width="440" height="160" rx="10" fill="#fff" stroke="#d9ddd6"/>
+  <text x="50" y="250" font-size="14" font-weight="700" fill="#136f63" font-family="ui-sans-serif,system-ui">RISELAB · claim-review</text>
+  <text x="50" y="278" font-size="13" fill="#18201f" font-family="ui-sans-serif,system-ui">Product → Formula → Ingredient → Country → Regulation → Claim</text>
+  <text x="50" y="304" font-size="13" fill="#5d6864" font-family="ui-sans-serif,system-ui">결정: 이 클레임을 이 국가에 써도 되는가?</text>
+  <text x="50" y="330" font-size="13" fill="#5d6864" font-family="ui-sans-serif,system-ui">trace: 유사 성분·농도·과거 거절 사유</text>
+  <text x="50" y="356" font-size="13" fill="#5d6864" font-family="ui-sans-serif,system-ui">loop: 초안 → 규정 조회 → judge → 사람 승인</text>
+  <rect x="490" y="220" width="440" height="160" rx="10" fill="#fff" stroke="#d9ddd6"/>
+  <text x="510" y="250" font-size="14" font-weight="700" fill="#a23d31" font-family="ui-sans-serif,system-ui">Trade Intel · reorder-risk</text>
+  <text x="510" y="278" font-size="13" fill="#18201f" font-family="ui-sans-serif,system-ui">Buyer → Contact → Product → Order → Message → Shipment</text>
+  <text x="510" y="304" font-size="13" fill="#5d6864" font-family="ui-sans-serif,system-ui">결정: 이 바이어를 이번 주에 먼저 연락할 것인가?</text>
+  <text x="510" y="330" font-size="13" fill="#5d6864" font-family="ui-sans-serif,system-ui">temporal: 담당자 변경, 마지막 PDRN 문의 시점</text>
+  <text x="510" y="356" font-size="13" fill="#5d6864" font-family="ui-sans-serif,system-ui">loop: 신호 수집 → 위험 점수 → 메시지 초안 → 사람 발송</text>
+</svg>
+</div>
+<figcaption>그림 1. 다섯 층 파이프라인과 두 후보 도메인. 노드는 한 결정에 필요한 최소 집합이다.</figcaption>
+</figure>
+
+<h2>1. 선택 체크리스트 (인쇄용)</h2>
+<table>
+<tr><th>#</th><th>질문</th><th>통과 기준</th></tr>
+<tr><td>1</td><td>결정 문장이 한 줄인가?</td><td>“~인가?”로 끝남</td></tr>
+<tr><td>2</td><td>엔티티 ≤ 7인가?</td><td>초과 시 잘라냄</td></tr>
+<tr><td>3</td><td>시간 변하는 관계 ≥ 1인가?</td><td>없으면 그래프 가치 재고</td></tr>
+<tr><td>4</td><td>외부 side effect 게이트가 있는가?</td><td>HITL 명시</td></tr>
+<tr><td>5</td><td>judge가 artifact보다 먼저인가?</td><td>checks.md 존재</td></tr>
+<tr><td>6</td><td>decision trace 저장 위치는?</td><td>경로/테이블 이름</td></tr>
+<tr><td>7</td><td>1주 안에 수동 파일럿 가능한가?</td><td>데이터 접근 가능</td></tr>
+</table>
+<h2>2. 두 후보</h2>
+<div class="grid">
+  <div class="card">
+    <h3>Claim-review (RISELAB)</h3>
+    <p>데이터: 처방·성분·규정 문서<br>가치: 규제 리스크 감소<br>난이도: 온톨로지 깊이 높음</p>
+  </div>
+  <div class="card">
+    <h3>Reorder-risk (Trade Intel)</h3>
+    <p>데이터: 주문·메시지·담당자<br>가치: 매출 타이밍<br>난이도: temporal + CRM 지저분함</p>
+  </div>
+</div>
+<h2>3. 연구 복습 영상 (선택)</h2>
+
+<div class="video">
+  <div class="video-meta">
+    <strong>Why Your Agent’s Brain Needs a Playbook (Ontologies) — Jesús Barrasa, Neo4j</strong>
+    AI Engineer · 약 14분 · 핵심 시청 포인트: 온톨로지 playbook 재확인
+  </div>
+  <div class="video-frame">
+    <iframe src="https://www.youtube-nocookie.com/embed/CbiR9xS2skQ" title="Why Your Agent’s Brain Needs a Playbook (Ontologies) — Jesús Barrasa, Neo4j" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
+  </div>
+  <div class="video-actions">
+    <a href="https://www.youtube.com/watch?v=CbiR9xS2skQ" target="_blank" rel="noopener">YouTube에서 열기</a>
+    <span class="pill">1차 소스 · 컨퍼런스 토크</span>
+  </div>
+</div>
+<p class="watch-note">인쇄본에서는 iframe이 숨겨집니다. 위 링크로 시청하세요. 토크 수치는 사례 범위로만 읽고 우리 도메인에 그대로 이식하지 마세요.</p>
+
+
+<div class="video">
+  <div class="video-meta">
+    <strong>Why your agents need decision traces, not just documents — Zach Blumenfeld, Neo4j</strong>
+    AI Engineer · 약 20분 · 핵심 시청 포인트: trace 재확인
+  </div>
+  <div class="video-frame">
+    <iframe src="https://www.youtube-nocookie.com/embed/B9h9ovW5H9U" title="Why your agents need decision traces, not just documents — Zach Blumenfeld, Neo4j" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
+  </div>
+  <div class="video-actions">
+    <a href="https://www.youtube.com/watch?v=B9h9ovW5H9U" target="_blank" rel="noopener">YouTube에서 열기</a>
+    <span class="pill">1차 소스 · 컨퍼런스 토크</span>
+  </div>
+</div>
+<p class="watch-note">인쇄본에서는 iframe이 숨겨집니다. 위 링크로 시청하세요. 토크 수치는 사례 범위로만 읽고 우리 도메인에 그대로 이식하지 마세요.</p>
+
+
+<div class="video">
+  <div class="video-meta">
+    <strong>Don&#x27;t Build Agents, Build Skills Instead — Anthropic</strong>
+    AI Engineer · 약 16분 · 핵심 시청 포인트: 스킬 경계 재확인
+  </div>
+  <div class="video-frame">
+    <iframe src="https://www.youtube-nocookie.com/embed/CEvIs9y1uog" title="Don&#x27;t Build Agents, Build Skills Instead — Anthropic" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
+  </div>
+  <div class="video-actions">
+    <a href="https://www.youtube.com/watch?v=CEvIs9y1uog" target="_blank" rel="noopener">YouTube에서 열기</a>
+    <span class="pill">1차 소스 · 컨퍼런스 토크</span>
+  </div>
+</div>
+<p class="watch-note">인쇄본에서는 iframe이 숨겨집니다. 위 링크로 시청하세요. 토크 수치는 사례 범위로만 읽고 우리 도메인에 그대로 이식하지 마세요.</p>
+
+<h2>4. 미니 실습 · 한 장 설계</h2>
+<ol class="tight">
+<li>후보 하나를 고른다.</li>
+<li>Ontology slice 7노드 이내</li>
+<li>Loop 6단계 채우기 (0006 레시피)</li>
+<li>Skill 폴더 파일 6개 이름</li>
+<li>성공 기준 1개 (예: 주 10건 중 오판 0 + 사람 수정률 &lt; 30%)</li>
+</ol>
+<h2>5. 퀴즈</h2>
+
+<div class="quiz-card" data-quiz="q1" data-correct="맞아요. 플랫폼은 아직입니다." data-incorrect="다시: 닫히는 결정만 통과입니다.">
+  <p><strong>클리닉이 탈락시키는 목표는?</strong></p>
+  <button type="button" data-answer="wrong">한 결정 에이전트</button><button type="button" data-answer="correct">회사 전체 온톨로지 플랫폼</button><button type="button" data-answer="wrong">HITL 루프</button><button type="button" data-answer="wrong">7노드 스키마</button>
+  <p class="quiz-feedback" data-feedback aria-live="polite"></p>
+</div>
+
+
+<div class="quiz-card" data-quiz="q2" data-correct="맞아요. 업무 품질 지표입니다." data-incorrect="다시: 미학 지표가 아닙니다.">
+  <p><strong>파일럿 성공 기준으로 좋은 것은?</strong></p>
+  <button type="button" data-answer="wrong">슬라이드 장수</button><button type="button" data-answer="correct">측정 가능한 오판/수정률</button><button type="button" data-answer="wrong">팔로워 수</button><button type="button" data-answer="wrong">테마 색</button>
+  <p class="quiz-feedback" data-feedback aria-live="polite"></p>
+</div>
+
+
+<div class="quiz-card" data-quiz="q3" data-correct="맞아요. 그래프는 수단입니다." data-incorrect="다시: 수단 고착을 피하세요.">
+  <p><strong>시간 관계 없는 결정이면?</strong></p>
+  <button type="button" data-answer="wrong">무조건 Neo4j</button><button type="button" data-answer="correct">그래프 가치를 재고하고 단순 워크플로 검토</button><button type="button" data-answer="wrong">무조건 멀티에이전트</button><button type="button" data-answer="wrong">무조건 파인튜닝</button>
+  <p class="quiz-feedback" data-feedback aria-live="polite"></p>
+</div>
+
+
+  <h2>다음으로 연결</h2>
+  <div class="lesson-nav"><a href="./0007-temporal-memory.html">이전</a> · <a href="./0009-glossary.html">다음: 용어집</a></div>
+  <footer>
+    <p>막히는 부분은 에이전트에게 바로 물어보세요. 이 워크스페이스의 선생님 역할입니다.</p>
+    <p class="pill">Mission-linked</p>
+    <p class="pill">Ontology → Memory → Decision → Skill → Loop</p>
+  </footer>
+</main>
+<script>
+
+document.querySelectorAll("[data-quiz]").forEach((quiz) => {
+  const feedback = quiz.querySelector("[data-feedback]");
+  quiz.querySelectorAll("button[data-answer]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const isCorrect = button.dataset.answer === "correct";
+      quiz.querySelectorAll("button[data-answer]").forEach((b) => {
+        b.classList.remove("correct", "incorrect");
+        b.setAttribute("aria-pressed", "false");
+      });
+      button.classList.add(isCorrect ? "correct" : "incorrect");
+      button.setAttribute("aria-pressed", "true");
+      feedback.textContent = isCorrect ? quiz.dataset.correct : quiz.dataset.incorrect;
+    });
+  });
+});
+
+</script>
+</body>
+</html>

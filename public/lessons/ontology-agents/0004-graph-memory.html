@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="벡터/토큰 확장과 그래프 메모리의 차이를 보고 multi-hop 업무 질의에 맞는 저장을 고른다.">
+<title>그래프 메모리, 토큰 더미 아님 · Ontology Agents</title>
+<style>
+
+:root {
+  --ink:#18201f; --muted:#5d6864; --paper:#fbfaf6; --panel:#ffffff;
+  --line:#d9ddd6; --exec:#136f63; --improve:#a23d31; --knowledge:#6b5d8e;
+  --problem:#a66b12; --soft:#eaf3ef; --warn:#fff2d6; --purple-soft:#f0edf7;
+  --brick-soft:#fae9e7; --code:#101917; --skill:#0f4c81;
+}
+*{box-sizing:border-box} body{margin:0;color:var(--ink);background:var(--paper);font-family:ui-serif,Georgia,"Apple SD Gothic Neo","Noto Serif KR",serif;line-height:1.68}
+main{width:min(960px,calc(100% - 40px));margin:0 auto;padding:52px 0 88px}
+.kicker{color:var(--exec);font:700 12px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase}
+h1{margin:12px 0 14px;font-size:clamp(32px,5.8vw,58px);line-height:1.05}
+.subtitle{max-width:760px;color:var(--muted);font-size:18px}
+h2{margin-top:42px;border-bottom:1px solid var(--line);padding-bottom:8px}
+h3{margin-top:26px}
+a{color:var(--exec);text-underline-offset:3px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.card,.quiz-card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:20px;margin:18px 0}
+.card h3{margin-top:0}
+.callout{border-left:4px solid var(--exec);background:var(--soft);border-radius:6px;padding:14px 16px;margin:18px 0}
+.callout.warn{border-left-color:var(--problem);background:var(--warn)}
+.callout.brick{border-left-color:var(--improve);background:var(--brick-soft)}
+.callout.purple{border-left-color:var(--knowledge);background:var(--purple-soft)}
+.badge,.pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:2px 9px;font:700 12px/1.7 ui-sans-serif,system-ui,sans-serif;color:var(--muted);margin:0 4px 4px 0}
+.badge.exec{color:var(--exec);border-color:var(--exec)}
+.badge.improve{color:var(--improve);border-color:var(--improve)}
+.badge.knowledge{color:var(--knowledge);border-color:var(--knowledge)}
+.badge.problem{color:var(--problem);border-color:var(--problem)}
+.badge.skill{color:var(--skill);border-color:var(--skill)}
+figure{margin:24px 0}
+.diagram{width:100%;height:auto;display:block}
+.diagram-frame{background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden;padding:8px}
+figcaption{margin-top:8px;color:var(--muted);font-size:14px}
+table{border-collapse:collapse;width:100%;background:var(--panel);margin:18px 0;font-size:14.5px}
+th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+th{background:var(--soft);font-family:ui-sans-serif,system-ui,sans-serif;font-size:13px}
+pre,code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+pre{overflow-x:auto;background:var(--code);color:#eef7f2;border-radius:8px;padding:16px}
+.quiz-card button{display:block;width:100%;margin:8px 0;padding:11px 13px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--ink);font:inherit;text-align:left;cursor:pointer}
+.quiz-card button.correct{border-color:#1f7a3f;background:#e8f4eb}
+.quiz-card button.incorrect{border-color:var(--improve);background:var(--brick-soft)}
+.quiz-feedback{min-height:1.6em;font-weight:700}
+.video{margin:22px 0;background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.video-meta{padding:12px 14px;border-bottom:1px solid var(--line);font-family:ui-sans-serif,system-ui,sans-serif;font-size:13.5px;color:var(--muted)}
+.video-meta strong{color:var(--ink);display:block;font-size:14.5px;margin-bottom:4px}
+.video-frame{position:relative;width:100%;padding-top:56.25%;background:#101917}
+.video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.video-actions{padding:10px 14px;display:flex;gap:12px;flex-wrap:wrap;font-size:13.5px}
+.watch-note{font-size:14px;color:var(--muted);margin:8px 0 0}
+ol.tight li,ul.tight li{margin:6px 0}
+.source-note{font-size:14px;color:var(--muted);border-top:1px solid var(--line);padding-top:10px}
+footer{margin-top:54px;padding-top:24px;border-top:1px solid var(--line);color:var(--muted)}
+.lesson-nav a{margin-right:10px}
+@media(max-width:640px){main{width:min(100% - 24px,960px);padding-top:32px}h1{font-size:34px}table{font-size:13px}}
+@media print{body{background:#fff}.video-frame{display:none}.card,.quiz-card,figure{break-inside:avoid}}
+
+</style>
+</head>
+<body>
+<main>
+  <p class="kicker">LESSON 0004 · MEMORY</p>
+  <h1>그래프 메모리, 토큰 더미 아님</h1>
+  <p class="subtitle">Graph memory makes relations traversable.</p>
+  
+<div class="callout"><strong>오늘의 한 줄</strong><br>토큰을 늘리는 것은 메모리가 아니다. <em>관계가 순회 가능해야</em> 메모리다.</div>
+
+<figure>
+<div class="diagram-frame">
+<svg class="diagram" viewBox="0 0 960 340" role="img" aria-label="벡터 메모리와 그래프 메모리 비교">
+  <rect width="960" height="340" fill="#fbfaf6"/>
+  <text x="28" y="34" font-size="16" font-weight="700" fill="#18201f" font-family="ui-sans-serif,system-ui">Same facts, different memory shape</text>
+  <text x="28" y="56" font-size="12" fill="#5d6864" font-family="ui-sans-serif,system-ui">CrabRAG: 동일 사실을 벡터 vs 그래프에 넣고 multi-hop 질의</text>
+  <rect x="40" y="90" width="420" height="210" rx="12" fill="#fff" stroke="#d9ddd6"/>
+  <text x="60" y="125" font-size="14" font-weight="700" fill="#5d6864" font-family="ui-sans-serif,system-ui">Vector memory</text>
+  <rect x="70" y="145" width="110" height="50" rx="8" fill="#eaf3ef"/><text x="125" y="175" text-anchor="middle" font-size="12" fill="#18201f" font-family="ui-sans-serif,system-ui">chunk A</text>
+  <rect x="195" y="145" width="110" height="50" rx="8" fill="#eaf3ef"/><text x="250" y="175" text-anchor="middle" font-size="12" fill="#18201f" font-family="ui-sans-serif,system-ui">chunk B</text>
+  <rect x="320" y="145" width="110" height="50" rx="8" fill="#eaf3ef"/><text x="375" y="175" text-anchor="middle" font-size="12" fill="#18201f" font-family="ui-sans-serif,system-ui">chunk C</text>
+  <text x="60" y="230" font-size="13" fill="#5d6864" font-family="ui-sans-serif,system-ui">유사도 검색 → 가까운 문장</text>
+  <text x="60" y="255" font-size="13" fill="#a23d31" font-family="ui-sans-serif,system-ui">약점: A-B-C 연결 질의</text>
+  <text x="60" y="280" font-size="13" fill="#5d6864" font-family="ui-sans-serif,system-ui">토큰을 늘려도 관계가 생기지 않음</text>
+  <rect x="500" y="90" width="420" height="210" rx="12" fill="#f0edf7" stroke="#6b5d8e" stroke-width="2"/>
+  <text x="520" y="125" font-size="14" font-weight="700" fill="#6b5d8e" font-family="ui-sans-serif,system-ui">Graph memory</text>
+  <circle cx="580" cy="190" r="34" fill="#fff" stroke="#6b5d8e" stroke-width="2"/><text x="580" y="195" text-anchor="middle" font-size="12" fill="#18201f" font-family="ui-sans-serif,system-ui">Buyer</text>
+  <circle cx="710" cy="160" r="34" fill="#fff" stroke="#136f63" stroke-width="2"/><text x="710" y="165" text-anchor="middle" font-size="12" fill="#18201f" font-family="ui-sans-serif,system-ui">Contact</text>
+  <circle cx="840" cy="190" r="34" fill="#fff" stroke="#a23d31" stroke-width="2"/><text x="840" y="195" text-anchor="middle" font-size="12" fill="#18201f" font-family="ui-sans-serif,system-ui">Product</text>
+  <path d="M614 180 L676 165" stroke="#5d6864" stroke-width="2"/>
+  <path d="M744 165 L806 180" stroke="#5d6864" stroke-width="2"/>
+  <text x="650" y="150" font-size="11" fill="#5d6864" font-family="ui-sans-serif,system-ui">since 2024</text>
+  <text x="520" y="255" font-size="13" fill="#18201f" font-family="ui-sans-serif,system-ui">관계·시간·제약을 직접 순회</text>
+  <text x="520" y="280" font-size="13" fill="#6b5d8e" font-family="ui-sans-serif,system-ui">강점: multi-hop + explainable path</text>
+</svg>
+</div>
+<figcaption>그림 1. 메모리는 더 긴 컨텍스트가 아니라 관계가 살아있는 구조다.</figcaption>
+</figure>
+
+<h2>1. 핵심 영상</h2>
+
+<div class="video">
+  <div class="video-meta">
+    <strong>CrabRAG: Graph Memory, Not More Tokens — Stephen Chin, Neo4j</strong>
+    AI Engineer · 약 21분 · 핵심 시청 포인트: 동일 사실·다른 저장 형태 / multi-hop 실패 데모 구조
+  </div>
+  <div class="video-frame">
+    <iframe src="https://www.youtube-nocookie.com/embed/Q0VkgCyNVUg" title="CrabRAG: Graph Memory, Not More Tokens — Stephen Chin, Neo4j" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
+  </div>
+  <div class="video-actions">
+    <a href="https://www.youtube.com/watch?v=Q0VkgCyNVUg" target="_blank" rel="noopener">YouTube에서 열기</a>
+    <span class="pill">1차 소스 · 컨퍼런스 토크</span>
+  </div>
+</div>
+<p class="watch-note">인쇄본에서는 iframe이 숨겨집니다. 위 링크로 시청하세요. 토크 수치는 사례 범위로만 읽고 우리 도메인에 그대로 이식하지 마세요.</p>
+
+
+<div class="video">
+  <div class="video-meta">
+    <strong>Connecting the Dots with Context Graphs — Stephen Chin, Neo4j</strong>
+    AI Engineer · 약 18분 · 핵심 시청 포인트: 개인 이력 그래프가 일반 조언과 어떻게 다른지
+  </div>
+  <div class="video-frame">
+    <iframe src="https://www.youtube-nocookie.com/embed/eW_vxrjvERk" title="Connecting the Dots with Context Graphs — Stephen Chin, Neo4j" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
+  </div>
+  <div class="video-actions">
+    <a href="https://www.youtube.com/watch?v=eW_vxrjvERk" target="_blank" rel="noopener">YouTube에서 열기</a>
+    <span class="pill">1차 소스 · 컨퍼런스 토크</span>
+  </div>
+</div>
+<p class="watch-note">인쇄본에서는 iframe이 숨겨집니다. 위 링크로 시청하세요. 토크 수치는 사례 범위로만 읽고 우리 도메인에 그대로 이식하지 마세요.</p>
+
+
+<div class="video">
+  <div class="video-meta">
+    <strong>Agentic GraphRAG — Stephen Chin, Neo4j</strong>
+    AI Engineer · 약 15분 · 핵심 시청 포인트: 도메인 태스크에서 retrieval 선택(정확도·설명·비용)
+  </div>
+  <div class="video-frame">
+    <iframe src="https://www.youtube-nocookie.com/embed/AvVoJBxgSQk" title="Agentic GraphRAG — Stephen Chin, Neo4j" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
+  </div>
+  <div class="video-actions">
+    <a href="https://www.youtube.com/watch?v=AvVoJBxgSQk" target="_blank" rel="noopener">YouTube에서 열기</a>
+    <span class="pill">1차 소스 · 컨퍼런스 토크</span>
+  </div>
+</div>
+<p class="watch-note">인쇄본에서는 iframe이 숨겨집니다. 위 링크로 시청하세요. 토크 수치는 사례 범위로만 읽고 우리 도메인에 그대로 이식하지 마세요.</p>
+
+<h2>2. 우리 파이프라인 번역</h2>
+<table>
+<tr><th>질의</th><th>벡터만</th><th>그래프 메모리</th></tr>
+<tr><td>PDRN 관련 규정 문장</td><td>유사 문단 검색 OK</td><td>증거 노드로 연결</td></tr>
+<tr><td>이 바이어 현재 담당자 + 마지막 문의 제품</td><td>쉽게 끊김</td><td>temporal path</td></tr>
+<tr><td>같은 성분·다른 국가 클레임 상태</td><td>혼합·환각 위험</td><td>country edge로 분리</td></tr>
+</table>
+<div class="callout warn">벡터를 버리라는 뜻이 아니다. <strong>관계는 그래프, 서술은 벡터/문서</strong>로 나누는 hybrid가 기본이다.</div>
+<h2>3. 미니 실습</h2>
+<ol class="tight">
+<li>업무 질의 5개를 적는다.</li>
+<li>각 질의가 유사 문장으로 풀리는지 / 경로 순회가 필요한지 표시한다.</li>
+<li>경로 순회가 2개 이상이면 그래프 메모리 후보로 승격한다.</li>
+</ol>
+<h2>4. 퀴즈</h2>
+
+<div class="quiz-card" data-quiz="q1" data-correct="맞아요. 형태(shape) 차이를 분리합니다." data-incorrect="다시: 사실이 아니라 저장 형태를 비교합니다.">
+  <p><strong>CrabRAG 비교 실험의 핵심 변수는?</strong></p>
+  <button type="button" data-answer="wrong">서로 다른 사실 집합</button><button type="button" data-answer="correct">동일 사실, 다른 메모리 형태</button><button type="button" data-answer="wrong">다른 UI 테마</button><button type="button" data-answer="wrong">다른 키보드</button>
+  <p class="quiz-feedback" data-feedback aria-live="polite"></p>
+</div>
+
+
+<div class="quiz-card" data-quiz="q2" data-correct="맞아요. 경로가 있어야 hop이 됩니다." data-incorrect="다시: 토큰 길이와 hop은 다릅니다.">
+  <p><strong>multi-hop 질의에 강한 쪽은?</strong></p>
+  <button type="button" data-answer="wrong">순수 토큰 덤프</button><button type="button" data-answer="correct">관계 순회가 되는 그래프 메모리</button><button type="button" data-answer="wrong">더 큰 폰트</button><button type="button" data-answer="wrong">더 짧은 프롬프트만</button>
+  <p class="quiz-feedback" data-feedback aria-live="polite"></p>
+</div>
+
+
+<div class="quiz-card" data-quiz="q3" data-correct="맞아요. 역할 분담이 기본입니다." data-incorrect="다시: 둘 중 하나만 고집할 필요 없습니다.">
+  <p><strong>하이브리드의 실무 기본값은?</strong></p>
+  <button type="button" data-answer="wrong">벡터 전면 삭제</button><button type="button" data-answer="correct">관계는 그래프, 서술은 문서/벡터</button><button type="button" data-answer="wrong">모든 문장을 RDF로만</button><button type="button" data-answer="wrong">이미지만 사용</button>
+  <p class="quiz-feedback" data-feedback aria-live="polite"></p>
+</div>
+
+
+  <h2>다음으로 연결</h2>
+  <div class="lesson-nav"><a href="./0003-decision-traces.html">이전</a> · <a href="./0005-skills-not-agents.html">다음: 스킬</a></div>
+  <footer>
+    <p>막히는 부분은 에이전트에게 바로 물어보세요. 이 워크스페이스의 선생님 역할입니다.</p>
+    <p class="pill">Mission-linked</p>
+    <p class="pill">Ontology → Memory → Decision → Skill → Loop</p>
+  </footer>
+</main>
+<script>
+
+document.querySelectorAll("[data-quiz]").forEach((quiz) => {
+  const feedback = quiz.querySelector("[data-feedback]");
+  quiz.querySelectorAll("button[data-answer]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const isCorrect = button.dataset.answer === "correct";
+      quiz.querySelectorAll("button[data-answer]").forEach((b) => {
+        b.classList.remove("correct", "incorrect");
+        b.setAttribute("aria-pressed", "false");
+      });
+      button.classList.add(isCorrect ? "correct" : "incorrect");
+      button.setAttribute("aria-pressed", "true");
+      feedback.textContent = isCorrect ? quiz.dataset.correct : quiz.dataset.incorrect;
+    });
+  });
+});
+
+</script>
+</body>
+</html>

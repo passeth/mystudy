@@ -1,0 +1,72 @@
+{
+  "barrasa": {
+    "id": "CbiR9xS2skQ",
+    "title": "Why Your Agent’s Brain Needs a Playbook (Ontologies) — Jesús Barrasa, Neo4j",
+    "min": 14
+  },
+  "traces": {
+    "id": "B9h9ovW5H9U",
+    "title": "Why your agents need decision traces, not just documents — Zach Blumenfeld, Neo4j",
+    "min": 20
+  },
+  "context": {
+    "id": "abvQEhvRI_c",
+    "title": "Context Graphs for Explainable, Decision-Aware AI Agents — Kollegger & Zaim, Neo4j",
+    "min": 17
+  },
+  "crab": {
+    "id": "Q0VkgCyNVUg",
+    "title": "CrabRAG: Graph Memory, Not More Tokens — Stephen Chin, Neo4j",
+    "min": 21
+  },
+  "dots": {
+    "id": "eW_vxrjvERk",
+    "title": "Connecting the Dots with Context Graphs — Stephen Chin, Neo4j",
+    "min": 18
+  },
+  "skills": {
+    "id": "CEvIs9y1uog",
+    "title": "Don't Build Agents, Build Skills Instead — Anthropic",
+    "min": 16
+  },
+  "effective": {
+    "id": "D7_ipDqhtwk",
+    "title": "How We Build Effective Agents — Barry Zhang, Anthropic",
+    "min": 15
+  },
+  "loop": {
+    "id": "xIt_mTQp6mY",
+    "title": "Loop Engineering from First Principles — Kyle Mistele, HumanLayer",
+    "min": 18
+  },
+  "harness": {
+    "id": "C_GG5g38vLU",
+    "title": "Harnesses in AI: A Deep Dive — Tejas Kumar, IBM",
+    "min": 20
+  },
+  "factory": {
+    "id": "Ib5GBkD555M",
+    "title": "Harness Engineering is not Enough — Dex Horthy, HumanLayer",
+    "min": 19
+  },
+  "memory": {
+    "id": "gsedOXz8FX4",
+    "title": "Memory Masterclass — Mark Bain (Graphiti/Mem0/Neo4j)",
+    "min": 51
+  },
+  "agentic_graphrag": {
+    "id": "AvVoJBxgSQk",
+    "title": "Agentic GraphRAG — Stephen Chin, Neo4j",
+    "min": 15
+  },
+  "twelve": {
+    "id": "8kMaTybvDUw",
+    "title": "12-Factor Agents — Dex Horthy, HumanLayer",
+    "min": 17
+  },
+  "graphrag_eifrem": {
+    "id": "knDDGYHnnSI",
+    "title": "GraphRAG: KG + RAG — Emil Eifrem",
+    "min": 19
+  }
+}

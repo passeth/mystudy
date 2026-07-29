@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Anthropic 토크를 바탕으로 도메인 전문성을 스킬 패키지로 포장하고 에이전트 남용을 절제한다.">
+<title>에이전트 대신 스킬을 묶어라 · Ontology Agents</title>
+<style>
+
+:root {
+  --ink:#18201f; --muted:#5d6864; --paper:#fbfaf6; --panel:#ffffff;
+  --line:#d9ddd6; --exec:#136f63; --improve:#a23d31; --knowledge:#6b5d8e;
+  --problem:#a66b12; --soft:#eaf3ef; --warn:#fff2d6; --purple-soft:#f0edf7;
+  --brick-soft:#fae9e7; --code:#101917; --skill:#0f4c81;
+}
+*{box-sizing:border-box} body{margin:0;color:var(--ink);background:var(--paper);font-family:ui-serif,Georgia,"Apple SD Gothic Neo","Noto Serif KR",serif;line-height:1.68}
+main{width:min(960px,calc(100% - 40px));margin:0 auto;padding:52px 0 88px}
+.kicker{color:var(--exec);font:700 12px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase}
+h1{margin:12px 0 14px;font-size:clamp(32px,5.8vw,58px);line-height:1.05}
+.subtitle{max-width:760px;color:var(--muted);font-size:18px}
+h2{margin-top:42px;border-bottom:1px solid var(--line);padding-bottom:8px}
+h3{margin-top:26px}
+a{color:var(--exec);text-underline-offset:3px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.card,.quiz-card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:20px;margin:18px 0}
+.card h3{margin-top:0}
+.callout{border-left:4px solid var(--exec);background:var(--soft);border-radius:6px;padding:14px 16px;margin:18px 0}
+.callout.warn{border-left-color:var(--problem);background:var(--warn)}
+.callout.brick{border-left-color:var(--improve);background:var(--brick-soft)}
+.callout.purple{border-left-color:var(--knowledge);background:var(--purple-soft)}
+.badge,.pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:2px 9px;font:700 12px/1.7 ui-sans-serif,system-ui,sans-serif;color:var(--muted);margin:0 4px 4px 0}
+.badge.exec{color:var(--exec);border-color:var(--exec)}
+.badge.improve{color:var(--improve);border-color:var(--improve)}
+.badge.knowledge{color:var(--knowledge);border-color:var(--knowledge)}
+.badge.problem{color:var(--problem);border-color:var(--problem)}
+.badge.skill{color:var(--skill);border-color:var(--skill)}
+figure{margin:24px 0}
+.diagram{width:100%;height:auto;display:block}
+.diagram-frame{background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden;padding:8px}
+figcaption{margin-top:8px;color:var(--muted);font-size:14px}
+table{border-collapse:collapse;width:100%;background:var(--panel);margin:18px 0;font-size:14.5px}
+th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+th{background:var(--soft);font-family:ui-sans-serif,system-ui,sans-serif;font-size:13px}
+pre,code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+pre{overflow-x:auto;background:var(--code);color:#eef7f2;border-radius:8px;padding:16px}
+.quiz-card button{display:block;width:100%;margin:8px 0;padding:11px 13px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--ink);font:inherit;text-align:left;cursor:pointer}
+.quiz-card button.correct{border-color:#1f7a3f;background:#e8f4eb}
+.quiz-card button.incorrect{border-color:var(--improve);background:var(--brick-soft)}
+.quiz-feedback{min-height:1.6em;font-weight:700}
+.video{margin:22px 0;background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.video-meta{padding:12px 14px;border-bottom:1px solid var(--line);font-family:ui-sans-serif,system-ui,sans-serif;font-size:13.5px;color:var(--muted)}
+.video-meta strong{color:var(--ink);display:block;font-size:14.5px;margin-bottom:4px}
+.video-frame{position:relative;width:100%;padding-top:56.25%;background:#101917}
+.video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.video-actions{padding:10px 14px;display:flex;gap:12px;flex-wrap:wrap;font-size:13.5px}
+.watch-note{font-size:14px;color:var(--muted);margin:8px 0 0}
+ol.tight li,ul.tight li{margin:6px 0}
+.source-note{font-size:14px;color:var(--muted);border-top:1px solid var(--line);padding-top:10px}
+footer{margin-top:54px;padding-top:24px;border-top:1px solid var(--line);color:var(--muted)}
+.lesson-nav a{margin-right:10px}
+@media(max-width:640px){main{width:min(100% - 24px,960px);padding-top:32px}h1{font-size:34px}table{font-size:13px}}
+@media print{body{background:#fff}.video-frame{display:none}.card,.quiz-card,figure{break-inside:avoid}}
+
+</style>
+</head>
+<body>
+<main>
+  <p class="kicker">LESSON 0005 · SKILLS</p>
+  <h1>에이전트 대신 스킬을 묶어라</h1>
+  <p class="subtitle">Scaffolding converged; package expertise as skills.</p>
+  
+<div class="callout" style="border-left-color:#0f4c81;background:#e8eef6"><strong>오늘의 한 줄</strong><br>스캐폴딩은 수렴했다. 부족한 것은 도메인 전문성 — 그걸 <em>Skill</em>로 포장한다.</div>
+
+<figure>
+<div class="diagram-frame">
+<svg class="diagram" viewBox="0 0 960 340" role="img" aria-label="에이전트 스캐폴딩과 스킬 패키지">
+  <rect width="960" height="340" fill="#fbfaf6"/>
+  <text x="28" y="34" font-size="16" font-weight="700" fill="#18201f" font-family="ui-sans-serif,system-ui">Scaffolding converged · Expertise is the gap</text>
+  <rect x="40" y="70" width="280" height="230" rx="12" fill="#eaf3ef" stroke="#136f63" stroke-width="2"/>
+  <text x="180" y="110" text-anchor="middle" font-size="14" font-weight="700" fill="#136f63" font-family="ui-sans-serif,system-ui">Agent scaffold</text>
+  <text x="180" y="145" text-anchor="middle" font-size="13" fill="#18201f" font-family="ui-sans-serif,system-ui">model · tools · loop</text>
+  <text x="180" y="170" text-anchor="middle" font-size="13" fill="#18201f" font-family="ui-sans-serif,system-ui">MCP · permissions</text>
+  <text x="180" y="195" text-anchor="middle" font-size="13" fill="#18201f" font-family="ui-sans-serif,system-ui">session memory</text>
+  <text x="180" y="250" text-anchor="middle" font-size="12" fill="#5d6864" font-family="ui-sans-serif,system-ui">점점 표준화됨</text>
+  <rect x="360" y="70" width="560" height="230" rx="12" fill="#e8eef6" stroke="#0f4c81" stroke-width="2"/>
+  <text x="640" y="110" text-anchor="middle" font-size="14" font-weight="700" fill="#0f4c81" font-family="ui-sans-serif,system-ui">Skills = packaged domain expertise</text>
+  <rect x="390" y="135" width="150" height="120" rx="8" fill="#fff" stroke="#0f4c81"/>
+  <text x="465" y="175" text-anchor="middle" font-size="12" font-weight="700" fill="#18201f" font-family="ui-sans-serif,system-ui">claim-review</text>
+  <text x="465" y="200" text-anchor="middle" font-size="11" fill="#5d6864" font-family="ui-sans-serif,system-ui">ontology slice</text>
+  <text x="465" y="220" text-anchor="middle" font-size="11" fill="#5d6864" font-family="ui-sans-serif,system-ui">tools · checks</text>
+  <rect x="565" y="135" width="150" height="120" rx="8" fill="#fff" stroke="#0f4c81"/>
+  <text x="640" y="175" text-anchor="middle" font-size="12" font-weight="700" fill="#18201f" font-family="ui-sans-serif,system-ui">reorder-risk</text>
+  <text x="640" y="200" text-anchor="middle" font-size="11" fill="#5d6864" font-family="ui-sans-serif,system-ui">signals · SOP</text>
+  <text x="640" y="220" text-anchor="middle" font-size="11" fill="#5d6864" font-family="ui-sans-serif,system-ui">message draft</text>
+  <rect x="740" y="135" width="150" height="120" rx="8" fill="#fff" stroke="#0f4c81"/>
+  <text x="815" y="175" text-anchor="middle" font-size="12" font-weight="700" fill="#18201f" font-family="ui-sans-serif,system-ui">new-SKU fit</text>
+  <text x="815" y="200" text-anchor="middle" font-size="11" fill="#5d6864" font-family="ui-sans-serif,system-ui">market x reg</text>
+  <text x="815" y="220" text-anchor="middle" font-size="11" fill="#5d6864" font-family="ui-sans-serif,system-ui">buyer demand</text>
+</svg>
+</div>
+<figcaption>그림 1. 범용 에이전트보다 한 결정용 스킬로 온톨로지·도구·검증을 묶는다.</figcaption>
+</figure>
+
+<h2>1. 핵심 영상</h2>
+
+<div class="video">
+  <div class="video-meta">
+    <strong>Don&#x27;t Build Agents, Build Skills Instead — Anthropic</strong>
+    AI Engineer · 약 16분 · 핵심 시청 포인트: agents에서 skills로 전환 이유 / 도메인 전문성 패키징
+  </div>
+  <div class="video-frame">
+    <iframe src="https://www.youtube-nocookie.com/embed/CEvIs9y1uog" title="Don&#x27;t Build Agents, Build Skills Instead — Anthropic" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
+  </div>
+  <div class="video-actions">
+    <a href="https://www.youtube.com/watch?v=CEvIs9y1uog" target="_blank" rel="noopener">YouTube에서 열기</a>
+    <span class="pill">1차 소스 · 컨퍼런스 토크</span>
+  </div>
+</div>
+<p class="watch-note">인쇄본에서는 iframe이 숨겨집니다. 위 링크로 시청하세요. 토크 수치는 사례 범위로만 읽고 우리 도메인에 그대로 이식하지 마세요.</p>
+
+
+<div class="video">
+  <div class="video-meta">
+    <strong>How We Build Effective Agents — Barry Zhang, Anthropic</strong>
+    AI Engineer · 약 15분 · 핵심 시청 포인트: 모든 곳에 에이전트를 만들지 말 것, workflow vs agent
+  </div>
+  <div class="video-frame">
+    <iframe src="https://www.youtube-nocookie.com/embed/D7_ipDqhtwk" title="How We Build Effective Agents — Barry Zhang, Anthropic" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
+  </div>
+  <div class="video-actions">
+    <a href="https://www.youtube.com/watch?v=D7_ipDqhtwk" target="_blank" rel="noopener">YouTube에서 열기</a>
+    <span class="pill">1차 소스 · 컨퍼런스 토크</span>
+  </div>
+</div>
+<p class="watch-note">인쇄본에서는 iframe이 숨겨집니다. 위 링크로 시청하세요. 토크 수치는 사례 범위로만 읽고 우리 도메인에 그대로 이식하지 마세요.</p>
+
+<h2>2. 스킬 패키지 내용물 (우리 정의)</h2>
+<pre>skill/
+  MISSION.md          # 닫을 결정
+  ontology.slice.md   # 최소 엔티티·제약
+  tools.md            # 허용 도구·쓰기 권한
+  checks.md           # judge / 금지 패턴
+  examples/           # decision traces 샘플
+  prompts/            # 고정 시스템 지침</pre>
+<p>Aside skill, Claude skill, 내부 패키지 — 형식은 달라도 <strong>결정 단위로 묶는다</strong>는 원칙은 같다.</p>
+<div class="callout warn">더 똑똑한 범용 에이전트를 키우다 보면 온톨로지·권한이 흐려진다. 스킬 경계가 곧 안전 경계다.</div>
+<h2>3. 미니 실습</h2>
+<ol class="tight">
+<li>claim-review 또는 reorder-risk 중 하나를 고른다.</li>
+<li>위 폴더 트리에 실제 파일명 6개를 채운다.</li>
+<li>사람이 반드시 승인할 쓰기 동작 1개를 tools.md에 denied by default로 표시한다.</li>
+</ol>
+<h2>4. 퀴즈</h2>
+
+<div class="quiz-card" data-quiz="q1" data-correct="맞아요. 지능/스캐폴딩 다음 병목은 전문성입니다." data-incorrect="다시: 하드웨어가 아니라 expertise 패키징입니다.">
+  <p><strong>Anthropic 토크가 말하는 현재 갭은?</strong></p>
+  <button type="button" data-answer="wrong">디스플레이 해상도</button><button type="button" data-answer="correct">도메인 전문성·특수 지식</button><button type="button" data-answer="wrong">이더넷 속도</button><button type="button" data-answer="wrong">아이콘 세트</button>
+  <p class="quiz-feedback" data-feedback aria-live="polite"></p>
+</div>
+
+
+<div class="quiz-card" data-quiz="q2" data-correct="맞아요. 단순 워크플로를 이기지 못하면 에이전트 금지." data-incorrect="다시: 에이전트는 기본값이 아닙니다.">
+  <p><strong>Effective Agents의 기본 절제는?</strong></p>
+  <button type="button" data-answer="wrong">모든 버튼을 에이전트로</button><button type="button" data-answer="correct">필요한 곳에만, 단순한 workflow 우선</button><button type="button" data-answer="wrong">항상 50 에이전트</button><button type="button" data-answer="wrong">평가 없이 배포</button>
+  <p class="quiz-feedback" data-feedback aria-live="polite"></p>
+</div>
+
+
+<div class="quiz-card" data-quiz="q3" data-correct="맞아요. 스킬은 안전/의미의 단위입니다." data-incorrect="다시: 미적 폴더 구조 이상의 의미입니다.">
+  <p><strong>스킬 경계가 중요한 이유는?</strong></p>
+  <button type="button" data-answer="wrong">파일 수가 예뻐서</button><button type="button" data-answer="correct">권한·온톨로지·검증 범위가 함께 닫히므로</button><button type="button" data-answer="wrong">CSS 재사용</button><button type="button" data-answer="wrong">깃 훅 단축</button>
+  <p class="quiz-feedback" data-feedback aria-live="polite"></p>
+</div>
+
+
+  <h2>다음으로 연결</h2>
+  <div class="lesson-nav"><a href="./0004-graph-memory.html">이전</a> · <a href="./0006-loop-and-harness.html">다음: 루프·하네스</a></div>
+  <footer>
+    <p>막히는 부분은 에이전트에게 바로 물어보세요. 이 워크스페이스의 선생님 역할입니다.</p>
+    <p class="pill">Mission-linked</p>
+    <p class="pill">Ontology → Memory → Decision → Skill → Loop</p>
+  </footer>
+</main>
+<script>
+
+document.querySelectorAll("[data-quiz]").forEach((quiz) => {
+  const feedback = quiz.querySelector("[data-feedback]");
+  quiz.querySelectorAll("button[data-answer]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const isCorrect = button.dataset.answer === "correct";
+      quiz.querySelectorAll("button[data-answer]").forEach((b) => {
+        b.classList.remove("correct", "incorrect");
+        b.setAttribute("aria-pressed", "false");
+      });
+      button.classList.add(isCorrect ? "correct" : "incorrect");
+      button.setAttribute("aria-pressed", "true");
+      feedback.textContent = isCorrect ? quiz.dataset.correct : quiz.dataset.incorrect;
+    });
+  });
+});
+
+</script>
+</body>
+</html>
