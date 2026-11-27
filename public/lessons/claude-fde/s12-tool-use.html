@@ -4,28 +4,71 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="5. Claude Platform 101 · 20분">
+<meta name="color-scheme" content="light">
 <title>S12. 도구 사용 (tool use)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,700;12..96,800&family=Cutive+Mono&family=Gowun+Batang:wght@400;700&family=Instrument+Serif:ital@0;1&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap">
 <link rel="stylesheet" href="fde.css">
 </head>
 <body data-session="S12">
-<!-- 자동 생성 파일: scripts/sync-fde.mjs 가 만들어요. 직접 고치지 말고 원본 노트를 고친 뒤 npm run fde:sync 하세요. -->
-<main class="wrap">
-
-<nav class="crumbs"><a href="/t/claude-fde/0000-course-home" target="_top">← 코스 홈</a><span>5. Claude Platform 101</span></nav>
-<header class="head">
-  <span class="eyebrow">Claude FDE 스터디 · 세션 12 / 42</span>
-  <h1>S12. 도구 사용 (tool use)</h1>
-  <div class="meta"><span>20분</span><span class="pill pill-draft">노트 초안</span></div>
-  <p class="official">공식 경로에서 해당하는 부분: Teaching your Agent &gt; What is tool use?</p>
+<!-- 자동 생성 파일: scripts/sync-fde.mjs 가 만들어요. 직접 고치지 말고 원본 노트나 claude-fde-course/ 를 고친 뒤 npm run fde:render 하세요. -->
+<nav class="hud" aria-label="코스">
+  <a href="/t/claude-fde/0000-course-home" target="_top" class="brand">Claude FDE 스터디 <span class="dot" aria-hidden="true"></span><span class="long">비공식 노트</span></a>
+  <a class="pill" href="#timetable">세션 12 / 42 <i aria-hidden="true"></i></a>
+</nav>
+<main>
+<header class="room hero type" style="--wall:var(--cobalt);--floor:var(--beige);--text:var(--paper);--serc:var(--pink);--line:78%">
+  <div class="copy">
+    <span class="mark land"><b>##</b> 코스 5 · Claude Platform 101</span>
+    <h1 class="land l2"><span class="ser">도구</span> 사용 (tool use)</h1>
+    <div class="lines land l3"><span>도구 사용을 &quot;모델은 요청하고, 실행은 바깥에서 한다&quot;는 계약으로 설명할 수 있다.</span><span>20분 · 확인 문제 5개 · 복습 카드 5장</span><span>노트 초안 · 비공식</span></div>
+    <span class="by">S12 · 도구 사용 (tool use)</span>
+  </div>
+  <span class="numeral" aria-hidden="true">12</span>
 </header>
 
-
-<article class="note">
-<section class="sec sec-goals"><h2>오늘의 목표</h2><ul><li>도구 사용을 &quot;모델은 요청하고, 실행은 바깥에서 한다&quot;는 계약으로 설명할 수 있다.</li><li>도구 정의의 세 요소(이름, 설명, 입력 스키마)를 쓰고, 좋은 설명의 조건을 말할 수 있다.</li><li>도구를 실행되는 곳에 따라 세 종류로 구분하고, 도구가 필요한 일과 필요 없는 일을 가를 수 있다.</li></ul></section>
-<section class="sec "><h2>핵심 정리</h2><h3>도구 사용은 계약이다</h3>
-<p>S11에서 루프가 도는 모양을 봤으니, 오늘은 그 안에서 오가는 도구예요. <strong>도구 사용</strong>(tool use, 함수 호출이라고도 해요)은 내가 정의했거나 Anthropic이 제공하는 함수를 Claude가 부르게 하는 기능이에요. 공식 문서는 이걸 애플리케이션과 모델 사이의 계약이라고 설명해요. 나는 가능한 작업과 입출력의 모양을 정하고, Claude는 언제 어떻게 부를지를 정해요. 모델은 스스로 아무것도 실행하지 않아요. 구조화된 요청을 내놓을 뿐이고, 실행은 내 코드나 Anthropic 서버가 해요. S01에서 &quot;도구로 받쳐 준다&quot;고 했던 것의 실체예요.</p>
-<h3>도구 정의: 이름, 설명, 입력 스키마</h3>
-<p>도구 하나는 세 가지로 정의해요.</p>
+<section class="room r-video iris" style="--wall:var(--ink);--floor:var(--lilac);--text:var(--paper);--serc:var(--pink);--line:80%;--ix:81%" aria-labelledby="h-v">
+  <div class="inner">
+    <span class="mark"><b>##</b> 오늘의 강의</span>
+    <h2 id="h-v" class="title">영상은 <span class="ser">준비 중</span>, 노트부터 봐요</h2>
+    <div class="screen rise"><div class="ph">
+      <span class="ph-id" aria-hidden="true">S12</span>
+      <span class="ph-pill">영상 준비 중</span>
+    </div></div>
+    <div class="under"><span>20분 세션 · 대본 장면 10개</span><span>노트 먼저</span></div>
+    <details class="next"><summary>영상 대본 펼치기</summary><div class="script md"><h3>장면 1 · 오늘의 질문 (약 25초)</h3>
+<p><strong>화면:</strong> 클로드 아이콘 앞에 공구 상자가 놓임. 상자 뚜껑에 물음표. 제목 &quot;도구를 쥐여 준다는 건 정확히 무슨 뜻일까?&quot;<br><strong>내레이션:</strong> 클로드에게 도구를 붙인다는 말을 자주 들어요. 그런데 정확히 무엇을 주는 걸까요? 오늘은 도구 사용의 속을 들여다볼게요.</p>
+<h3>장면 2 · 계약 (약 40초)</h3>
+<p><strong>화면:</strong> 가운데 계약서 한 장. 왼쪽 서명란 &quot;나: 가능한 작업과 입출력의 모양&quot;, 오른쪽 서명란 &quot;클로드: 언제, 어떻게 부를지&quot;. 계약서 아래에 화살표 세 개: &quot;요청 → 실행 → 결과&quot;. &quot;실행&quot; 화살표만 클로드 바깥쪽 영역에 그려짐.<br><strong>내레이션:</strong> 도구 사용은 계약이에요. 나는 어떤 작업이 가능한지 정해요. 클로드는 언제 부를지 정해요. 그리고 클로드는 요청만 해요. 실행은 언제나 모델 바깥에서 일어나요.</p>
+<h3>장면 3 · 도구 정의 세 요소 (약 40초)</h3>
+<p><strong>화면:</strong> 명함 한 장이 확대됨. 세 줄: &quot;이름: 주문 상태 조회&quot;, &quot;설명: 무엇을, 언제&quot;, &quot;입력: 주문 번호(글자)&quot;. 명함 뒷면에는 &quot;구현 코드&quot;가 있지만 클로드 쪽에서는 앞면만 보임.<br><strong>내레이션:</strong> 도구는 명함 한 장으로 소개해요. 이름, 설명, 그리고 어떤 입력을 받는지예요. 클로드는 이 명함만 봐요. 뒷면에 있는 내 코드는 보지 못해요.</p>
+<h3>장면 4 · 설명이 가장 중요하다 (약 40초)</h3>
+<p><strong>화면:</strong> 명함 두 장 비교. 왼쪽 &quot;설명: 주문 조회&quot; 아래에 갈팡질팡하는 화살표. 오른쪽 설명 네 줄 &quot;무엇을 한다 / 언제 쓴다 / 입력의 뜻 / 돌려주지 않는 것&quot; 아래에 곧은 화살표.<br><strong>내레이션:</strong> 세 요소 중에 설명이 가장 중요해요. 무엇을 하는지, 언제 쓰고 언제 쓰지 않는지, 무엇은 돌려주지 않는지 적어요. 서너 문장은 써야 해요. 도구 설명도 프롬프트거든요.</p>
+<h3>장면 5 · 요청과 결과는 짝 (약 40초)</h3>
+<p><strong>화면:</strong> 클로드에게서 쪽지가 나옴: &quot;번호표 7 · 주문 상태 조회 · 주문 번호 에이 천일&quot;. 내 코드가 처리한 뒤 답 쪽지를 보냄: &quot;번호표 7 · 배송 중, 내일 도착&quot;. 두 쪽지의 번호표가 반짝이며 이어짐.<br><strong>내레이션:</strong> 클로드가 도구를 부르면 쪽지가 와요. 번호표, 도구 이름, 입력이 적혀 있어요. 내 코드는 실행한 뒤 같은 번호표를 붙여 결과를 돌려줘요. 번호표가 맞아야 짝이 이어져요.</p>
+<h3>장면 6 · 실패도 돌려준다 (약 35초)</h3>
+<p><strong>화면:</strong> 내 코드가 주문 시스템을 두드리지만 &quot;응답 없음&quot;. 답 쪽지 두 장 비교: 왼쪽 &quot;실패&quot; 한 단어에 엑스 표시, 오른쪽 &quot;오류 · 주문 시스템 응답 없음 · 30초 뒤 다시 시도&quot;에 체크 표시.<br><strong>내레이션:</strong> 도구가 실패해도 결과는 돌려줘요. 오류라고 표시하고, 무엇이 잘못됐는지와 다음에 해 볼 일을 적어요. 그래야 클로드가 다시 시도할지, 사용자에게 알릴지 정할 수 있어요.</p>
+<h3>장면 7 · 어디서 실행되나 (약 45초)</h3>
+<p><strong>화면:</strong> 세로 세 칸 표. 첫 칸 &quot;내가 만든 도구 · 내 코드에서 실행&quot;, 둘째 칸 &quot;앤트로픽이 모양을 정한 도구 · 내 코드에서 실행&quot;, 셋째 칸 &quot;서버 실행 도구 · 앤트로픽 서버에서 실행&quot;. 셋째 칸에는 지구본(웹 검색) 아이콘.<br><strong>내레이션:</strong> 도구는 실행되는 곳에 따라 세 종류예요. 내가 만든 도구는 내 코드에서 돌아요. 모양만 앤트로픽이 정해 둔 도구도 내 코드에서 돌아요. 웹 검색 같은 서버 실행 도구는 앤트로픽 쪽에서 돌고, 결과만 받아요.</p>
+<h3>장면 8 · 쓸 때와 안 쓸 때 (약 40초)</h3>
+<p><strong>화면:</strong> 왼쪽 &quot;도구가 필요&quot;: 메일 보내기, 오늘 재고, 정해진 칸의 표, 사내 시스템. 오른쪽 &quot;도구가 필요 없음&quot;: 요약, 번역, 일반 지식. 오른쪽 아래에 &quot;왕복이 늘면 느려진다&quot;.<br><strong>내레이션:</strong> 도구는 글만으로 안 되는 일에 써요. 무언가를 실제로 바꾸는 행동, 오늘의 데이터, 모양이 정해진 출력이 그래요. 요약이나 번역에는 필요 없어요. 부를 때마다 왕복이 늘어서 느려지거든요.</p>
+<h3>장면 9 · 고객 앞에서 (약 35초)</h3>
+<p><strong>화면:</strong> 회의실 그림. 고객 말풍선 &quot;데이터베이스 권한을 통째로 주면 되죠?&quot; 에프디이가 카드 두 장을 내밈: &quot;주문 조회 · 읽기 전용&quot;, &quot;배송 조회 · 읽기 전용&quot;. 뒤쪽에 흐릿한 카드 &quot;기록 수정 · 승인 필요 · 다음 단계&quot;.<br><strong>내레이션:</strong> 고객이 권한을 통째로 주자고 하면 이렇게 답하세요. 넓은 권한보다 좁은 도구가 안전하고 정확해요. 읽기 전용 도구 두어 개로 시작해요. 기록을 바꾸는 도구는 승인을 거치게 하고 다음 단계로 미뤄요.</p>
+<h3>장면 10 · 요약과 예고 (약 25초)</h3>
+<p><strong>화면:</strong> 세 줄 요약이 한 줄씩 나타남: &quot;1. 모델은 요청, 실행은 바깥 2. 설명이 도구의 품질 3. 좁은 도구부터&quot;. 아래에 &quot;다음: S13 확장 사고&quot;.<br><strong>내레이션:</strong> 정리할게요. 모델은 요청하고 실행은 바깥에서 해요. 도구의 품질은 설명이 정해요. 좁은 도구부터 시작해요. 다음 시간에는 클로드가 답하기 전에 깊이 생각하는 기능, 확장 사고를 볼게요.</p></div></details>
+  </div>
+</section>
+<section class="zoom" style="--zc:var(--sky);--zfill:var(--sky)" aria-label="핵심 단어: 도구">
+  <div class="stage"><span class="word" aria-hidden="true" style="font-size:clamp(4rem, 30.0vw, 26rem)">도구</span><span class="cap">&gt; 글자 속으로 들어가 볼까요</span></div>
+</section>
+<section class="room r-core" style="--wall:var(--sky);--floor:var(--bottle);--text:var(--ink);--serc:var(--ink);--line:86%" aria-labelledby="h-core">
+  <div class="inner">
+    <span class="mark"><b>##</b> 핵심 정리</span>
+    <h2 id="h-core" class="title">네 장만 기억해요</h2>
+    
+    <div class="bubbles"><article class="bubble rise"><span class="n">01</span><h3>도구 사용은 계약이다</h3><div class="md"><p>S11에서 루프가 도는 모양을 봤으니, 오늘은 그 안에서 오가는 도구예요. <strong>도구 사용</strong>(tool use, 함수 호출이라고도 해요)은 내가 정의했거나 Anthropic이 제공하는 함수를 Claude가 부르게 하는 기능이에요. 공식 문서는 이걸 애플리케이션과 모델 사이의 계약이라고 설명해요. 나는 가능한 작업과 입출력의 모양을 정하고, Claude는 언제 어떻게 부를지를 정해요. 모델은 스스로 아무것도 실행하지 않아요. 구조화된 요청을 내놓을 뿐이고, 실행은 내 코드나 Anthropic 서버가 해요. S01에서 &quot;도구로 받쳐 준다&quot;고 했던 것의 실체예요.</p></div></article>
+<article class="bubble rise wide"><span class="n">02</span><h3>도구 정의: 이름, 설명, 입력 스키마</h3><div class="md"><p>도구 하나는 세 가지로 정의해요.</p>
 <pre class="code" data-lang="typescript"><code>const tools: Anthropic.Tool[] = [
   {
     name: &quot;get_order_status&quot;,
@@ -41,66 +84,108 @@
   },
 ];</code></pre>
 <p>Claude가 받는 건 내 코드가 아니라 이 정의와, 나중에 돌려주는 결과뿐이에요. 그래서 <strong>설명</strong>이 가장 중요하고, 공식 문서도 도구 성능에 가장 큰 영향을 주는 요소로 꼽아요. 좋은 설명에는 무엇을 하는지, 언제 쓰고 언제 쓰지 않는지, 각 입력의 뜻, 돌려주지 않는 것이 들어가요. 문서의 권장은 도구 하나에 서너 문장 이상이에요. 도구 설명도 프롬프트라서, S05의 설명(Description)이 그대로 적용돼요.</p>
-<p>Claude가 도구를 부르면 응답에 <code>id</code>, <code>name</code>, <code>input</code>이 담긴 <code>tool_use</code> 블록이 와요. 내 코드는 실행한 뒤 <code>tool_result</code> 블록에 <code>tool_use_id</code>와 결과를 담아 돌려줘요. 실패했을 때도 돌려줘요. <code>is_error: true</code>를 붙이고, &quot;실패&quot; 한 단어 대신 &quot;주문 시스템 응답 없음. 30초 뒤 다시 시도&quot;처럼 무엇이 잘못됐고 다음에 무엇을 해 볼지 적어요.</p>
-<h3>어디서 실행되나: 세 종류</h3>
-<div class="table-scroll"><table><thead><tr><th>종류</th><th>스키마를 정하는 쪽</th><th>실행하는 쪽</th><th>예</th></tr></thead><tbody><tr><td>사용자 정의 도구</td><td>나</td><td>내 코드</td><td>주문 조회, 사내 API 호출</td></tr><tr><td>Anthropic 스키마 도구</td><td>Anthropic</td><td>내 코드</td><td><code>bash</code>, <code>text_editor</code>, <code>memory</code>, <code>computer</code></td></tr><tr><td>서버 실행 도구</td><td>Anthropic</td><td>Anthropic 서버</td><td><code>web_search</code>, <code>web_fetch</code>, <code>code_execution</code></td></tr></tbody></table></div>
-<p>앞의 둘은 S11의 루프를 내 코드가 돌려요. 서버 실행 도구는 요청에 켜 두기만 하면 Anthropic 쪽에서 실행하고 결과가 응답에 담겨 와서, 내가 <code>tool_result</code>를 만들 일이 없어요. 웹 검색은 <code>tools: [{ type: &quot;web_search_20260209&quot;, name: &quot;web_search&quot; }]</code> 한 줄로 켜요. 내장 도구는 S14에서 자세히 봅니다.</p>
-<h3>쓸 때와 쓰지 않을 때</h3>
-<p>도구가 맞는 일은 글만으로는 안 되는 일이에요.</p>
+<p>Claude가 도구를 부르면 응답에 <code>id</code>, <code>name</code>, <code>input</code>이 담긴 <code>tool_use</code> 블록이 와요. 내 코드는 실행한 뒤 <code>tool_result</code> 블록에 <code>tool_use_id</code>와 결과를 담아 돌려줘요. 실패했을 때도 돌려줘요. <code>is_error: true</code>를 붙이고, &quot;실패&quot; 한 단어 대신 &quot;주문 시스템 응답 없음. 30초 뒤 다시 시도&quot;처럼 무엇이 잘못됐고 다음에 무엇을 해 볼지 적어요.</p></div></article>
+<article class="bubble rise wide"><span class="n">03</span><h3>어디서 실행되나: 세 종류</h3><div class="md"><div class="table-scroll"><table><thead><tr><th>종류</th><th>스키마를 정하는 쪽</th><th>실행하는 쪽</th><th>예</th></tr></thead><tbody><tr><td>사용자 정의 도구</td><td>나</td><td>내 코드</td><td>주문 조회, 사내 API 호출</td></tr><tr><td>Anthropic 스키마 도구</td><td>Anthropic</td><td>내 코드</td><td><code>bash</code>, <code>text_editor</code>, <code>memory</code>, <code>computer</code></td></tr><tr><td>서버 실행 도구</td><td>Anthropic</td><td>Anthropic 서버</td><td><code>web_search</code>, <code>web_fetch</code>, <code>code_execution</code></td></tr></tbody></table></div>
+<p>앞의 둘은 S11의 루프를 내 코드가 돌려요. 서버 실행 도구는 요청에 켜 두기만 하면 Anthropic 쪽에서 실행하고 결과가 응답에 담겨 와서, 내가 <code>tool_result</code>를 만들 일이 없어요. 웹 검색은 <code>tools: [{ type: &quot;web_search_20260209&quot;, name: &quot;web_search&quot; }]</code> 한 줄로 켜요. 내장 도구는 S14에서 자세히 봅니다.</p></div></article>
+<article class="bubble rise"><span class="n">04</span><h3>쓸 때와 쓰지 않을 때</h3><div class="md"><p>도구가 맞는 일은 글만으로는 안 되는 일이에요.</p>
 <ul><li>메일 보내기, 기록 수정처럼 <strong>실제로 무언가를 바꾸는 행동</strong></li><li>오늘 가격, 재고, 우리 DB처럼 <strong>학습 데이터 밖의 정보</strong></li><li>정해진 칸이 있는 JSON처럼 <strong>모양이 보장돼야 하는 출력</strong></li><li>사내 API, 파일 시스템 같은 <strong>기존 시스템 호출</strong></li></ul>
-<p>요약, 번역, 일반 지식 질문처럼 모델이 혼자 답할 수 있는 일에는 도구가 필요 없어요. 부를 때마다 왕복이 한 번 늘어서, 가벼운 일에서는 오히려 느려져요.</p></section>
-<section class="sec sec-try callout warm"><h2>직접 해 보기 (5분)</h2><p>S11의 <code>loop.ts</code>에서 도구 정의의 <code>description</code>만 바꿔 가며 실행해 보세요.</p>
-<ol><li>설명을 위 예시(환불 정보는 돌려주지 않는다는 문장 포함)로 바꾸고, 질문을 &quot;주문 A-1001 환불 처리됐어?&quot;로 해 보세요. Claude가 도구를 부르는지, 부른 뒤 무엇을 알 수 없다고 말하는지 보세요.</li><li>설명을 &quot;주문 조회&quot; 네 글자로 줄이고 같은 질문을 해 보세요. 도구를 부르는 판단과 답이 어떻게 달라지는지 비교하세요. 여러 번 돌려 봐야 차이가 보여요(S01의 뽑기).</li></ol></section>
-<section class="sec sec-quiz"><h2>확인 문제</h2><ol class="quiz"><li value="1" class="q"><div class="q-body">도구 사용에서 Claude가 실제로 하는 일은?
-<ul><li>(a) 내 서버에 접속해 함수를 직접 실행한다</li><li>(b) 어떤 도구를 어떤 입력으로 부를지 구조화된 요청을 낸다</li><li>(c) 도구의 코드를 읽고 고친다</li></ul></div>
-<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">(b). 모델은 <code>tool_use</code> 블록으로 요청만 해요. 실행은 내 코드나 Anthropic 서버가 해요.</div></details></li>
-<li value="2" class="q"><div class="q-body">공식 문서가 도구 성능에 가장 큰 영향을 준다고 꼽는 것은?
-<ul><li>(a) 도구 이름의 길이</li><li>(b) 상세한 설명</li><li>(c) 도구를 최대한 많이 붙이는 것</li></ul></div>
-<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">(b). 문서는 상세한 설명을 가장 중요한 요소로 꼽아요. 도구를 많이 붙이는 것(c)은 오히려 고르기 어렵게 만들고 컨텍스트를 차지해요.</div></details></li>
-<li value="3" class="q"><div class="q-body"><code>web_search</code> 같은 서버 실행 도구의 특징은?
-<ul><li>(a) 내 코드가 실행하고 <code>tool_result</code>를 만들어 보낸다</li><li>(b) Anthropic 서버가 실행하고 결과가 응답에 담겨 온다</li><li>(c) 브라우저 확장을 설치해야 쓸 수 있다</li></ul></div>
-<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">(b). 서버 실행 도구는 요청에 켜 두기만 하면 Anthropic 쪽에서 실행돼요. (a)는 사용자 정의 도구와 Anthropic 스키마 도구의 방식이에요.</div></details></li>
-<li value="4" class="q"><div class="q-body">(서술형) 도구 실행이 실패했을 때 Claude에게 무엇을 어떻게 돌려줘야 하나요? 좋은 예와 나쁜 예를 하나씩 들어 보세요.</div>
-<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">예시 답: 실패해도 <code>tool_result</code>를 반드시 돌려주고 <code>is_error: true</code>를 붙인다. 내용에는 무엇이 잘못됐는지와 다음에 무엇을 해 볼 수 있는지를 적는다. 좋은 예: &quot;주문 시스템 응답 없음. 30초 뒤 다시 시도하세요.&quot; 나쁜 예: &quot;실패&quot;. 나쁜 예로는 Claude가 다시 부를지, 다른 방법을 쓸지, 사용자에게 알릴지 판단할 근거가 없다. 그리고 Claude가 다시 시도할 수 있으니 재시도 횟수에 상한을 둔다.</div></details></li>
-<li value="5" class="q"><div class="q-body">(상황형) 고객사 운영팀장이 말해요. &quot;Claude한테 우리 ERP 데이터베이스 접속 권한을 통째로 주면 알아서 다 하겠죠?&quot; 어떻게 답하고, 무엇을 제안할까요?</div>
-<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">예시 답: &quot;Claude는 데이터베이스에 직접 들어가지 않고, 우리가 만들어 준 도구를 불러 달라고 요청만 해요. 그래서 무엇을 할 수 있는지는 우리가 도구로 정해요&quot;라고 설명한다. 통째로 권한을 주는 대신, 업무에 필요한 조회를 좁은 도구 몇 개(예: 주문 조회, 재고 조회)로 만들고 읽기 전용 계정으로 연결하자고 제안한다. 기록을 바꾸는 작업은 사람의 승인을 거치는 도구로 따로 만들어 다음 단계에 넣는다. 도구 설명은 운영팀과 함께 쓰고, 호출 기록을 남겨 검토한다.</div></details></li></ol></section>
-<section class="sec sec-fde callout cool"><h2>FDE 관점</h2><p>현장에서 &quot;Claude가 무엇을 할 수 있나요?&quot;라는 질문의 답은 결국 도구 목록이에요. 어떤 도구를, 어떤 권한으로 붙였는지가 파일럿의 실제 범위거든요. 그래서 FDE는 첫 출시 범위를 도구로 적어요. 예를 들어 &quot;주문 조회와 배송 조회, 둘 다 읽기 전용&quot;처럼요. 기록을 바꾸는 도구는 사람의 승인을 거치게 하고 다음 단계로 미뤄요. 도구 설명은 개발자 혼자 쓰지 말고 현장 담당자와 함께 쓰세요. &quot;언제 쓰고 언제 쓰지 않는지&quot;는 그 업무를 하는 사람이 가장 잘 알아요. 성공 지표도 도구에서 나와요. 불러야 할 때 부른 비율, 틀린 입력으로 부른 횟수를 기준선과 함께 재 두면 개선할 곳이 보여요.</p></section>
-<section class="sec sec-cards"><h2>복습 카드</h2><div class="cards"><details class="card"><summary>도구 사용에서 모델이 하는 일과 하지 않는 일은?</summary><div class="card-a">어떤 도구를 어떤 입력으로 부를지 요청한다. 실행은 하지 않는다.</div></details><details class="card"><summary>도구 정의의 세 요소는?</summary><div class="card-a">이름(<code>name</code>), 설명(<code>description</code>), 입력 스키마(<code>input_schema</code>).</div></details><details class="card"><summary>좋은 도구 설명에 들어갈 것은?</summary><div class="card-a">무엇을 하는지, 언제 쓰고 쓰지 않는지, 각 입력의 뜻, 돌려주지 않는 것.</div></details><details class="card"><summary>도구가 실패하면?</summary><div class="card-a"><code>tool_result</code>에 <code>is_error: true</code>와 함께, 무엇이 잘못됐고 다음에 무엇을 해 볼지 적어 돌려준다.</div></details><details class="card"><summary>도구의 세 종류는?</summary><div class="card-a">사용자 정의 도구, Anthropic 스키마 도구(둘 다 내 코드가 실행), 서버 실행 도구(Anthropic이 실행).</div></details></div></section>
-<section class="sec sec-script"><h2>영상 대본</h2><details class="script"><summary>영상 대본 펼치기 <span class="muted">· 장면별 화면과 내레이션</span></summary><div class="script-body"><h4>장면 1 · 오늘의 질문 (약 25초)</h4>
-<p><strong>화면:</strong> 클로드 아이콘 앞에 공구 상자가 놓임. 상자 뚜껑에 물음표. 제목 &quot;도구를 쥐여 준다는 건 정확히 무슨 뜻일까?&quot;<br><strong>내레이션:</strong> 클로드에게 도구를 붙인다는 말을 자주 들어요. 그런데 정확히 무엇을 주는 걸까요? 오늘은 도구 사용의 속을 들여다볼게요.</p>
-<h4>장면 2 · 계약 (약 40초)</h4>
-<p><strong>화면:</strong> 가운데 계약서 한 장. 왼쪽 서명란 &quot;나: 가능한 작업과 입출력의 모양&quot;, 오른쪽 서명란 &quot;클로드: 언제, 어떻게 부를지&quot;. 계약서 아래에 화살표 세 개: &quot;요청 → 실행 → 결과&quot;. &quot;실행&quot; 화살표만 클로드 바깥쪽 영역에 그려짐.<br><strong>내레이션:</strong> 도구 사용은 계약이에요. 나는 어떤 작업이 가능한지 정해요. 클로드는 언제 부를지 정해요. 그리고 클로드는 요청만 해요. 실행은 언제나 모델 바깥에서 일어나요.</p>
-<h4>장면 3 · 도구 정의 세 요소 (약 40초)</h4>
-<p><strong>화면:</strong> 명함 한 장이 확대됨. 세 줄: &quot;이름: 주문 상태 조회&quot;, &quot;설명: 무엇을, 언제&quot;, &quot;입력: 주문 번호(글자)&quot;. 명함 뒷면에는 &quot;구현 코드&quot;가 있지만 클로드 쪽에서는 앞면만 보임.<br><strong>내레이션:</strong> 도구는 명함 한 장으로 소개해요. 이름, 설명, 그리고 어떤 입력을 받는지예요. 클로드는 이 명함만 봐요. 뒷면에 있는 내 코드는 보지 못해요.</p>
-<h4>장면 4 · 설명이 가장 중요하다 (약 40초)</h4>
-<p><strong>화면:</strong> 명함 두 장 비교. 왼쪽 &quot;설명: 주문 조회&quot; 아래에 갈팡질팡하는 화살표. 오른쪽 설명 네 줄 &quot;무엇을 한다 / 언제 쓴다 / 입력의 뜻 / 돌려주지 않는 것&quot; 아래에 곧은 화살표.<br><strong>내레이션:</strong> 세 요소 중에 설명이 가장 중요해요. 무엇을 하는지, 언제 쓰고 언제 쓰지 않는지, 무엇은 돌려주지 않는지 적어요. 서너 문장은 써야 해요. 도구 설명도 프롬프트거든요.</p>
-<h4>장면 5 · 요청과 결과는 짝 (약 40초)</h4>
-<p><strong>화면:</strong> 클로드에게서 쪽지가 나옴: &quot;번호표 7 · 주문 상태 조회 · 주문 번호 에이 천일&quot;. 내 코드가 처리한 뒤 답 쪽지를 보냄: &quot;번호표 7 · 배송 중, 내일 도착&quot;. 두 쪽지의 번호표가 반짝이며 이어짐.<br><strong>내레이션:</strong> 클로드가 도구를 부르면 쪽지가 와요. 번호표, 도구 이름, 입력이 적혀 있어요. 내 코드는 실행한 뒤 같은 번호표를 붙여 결과를 돌려줘요. 번호표가 맞아야 짝이 이어져요.</p>
-<h4>장면 6 · 실패도 돌려준다 (약 35초)</h4>
-<p><strong>화면:</strong> 내 코드가 주문 시스템을 두드리지만 &quot;응답 없음&quot;. 답 쪽지 두 장 비교: 왼쪽 &quot;실패&quot; 한 단어에 엑스 표시, 오른쪽 &quot;오류 · 주문 시스템 응답 없음 · 30초 뒤 다시 시도&quot;에 체크 표시.<br><strong>내레이션:</strong> 도구가 실패해도 결과는 돌려줘요. 오류라고 표시하고, 무엇이 잘못됐는지와 다음에 해 볼 일을 적어요. 그래야 클로드가 다시 시도할지, 사용자에게 알릴지 정할 수 있어요.</p>
-<h4>장면 7 · 어디서 실행되나 (약 45초)</h4>
-<p><strong>화면:</strong> 세로 세 칸 표. 첫 칸 &quot;내가 만든 도구 · 내 코드에서 실행&quot;, 둘째 칸 &quot;앤트로픽이 모양을 정한 도구 · 내 코드에서 실행&quot;, 셋째 칸 &quot;서버 실행 도구 · 앤트로픽 서버에서 실행&quot;. 셋째 칸에는 지구본(웹 검색) 아이콘.<br><strong>내레이션:</strong> 도구는 실행되는 곳에 따라 세 종류예요. 내가 만든 도구는 내 코드에서 돌아요. 모양만 앤트로픽이 정해 둔 도구도 내 코드에서 돌아요. 웹 검색 같은 서버 실행 도구는 앤트로픽 쪽에서 돌고, 결과만 받아요.</p>
-<h4>장면 8 · 쓸 때와 안 쓸 때 (약 40초)</h4>
-<p><strong>화면:</strong> 왼쪽 &quot;도구가 필요&quot;: 메일 보내기, 오늘 재고, 정해진 칸의 표, 사내 시스템. 오른쪽 &quot;도구가 필요 없음&quot;: 요약, 번역, 일반 지식. 오른쪽 아래에 &quot;왕복이 늘면 느려진다&quot;.<br><strong>내레이션:</strong> 도구는 글만으로 안 되는 일에 써요. 무언가를 실제로 바꾸는 행동, 오늘의 데이터, 모양이 정해진 출력이 그래요. 요약이나 번역에는 필요 없어요. 부를 때마다 왕복이 늘어서 느려지거든요.</p>
-<h4>장면 9 · 고객 앞에서 (약 35초)</h4>
-<p><strong>화면:</strong> 회의실 그림. 고객 말풍선 &quot;데이터베이스 권한을 통째로 주면 되죠?&quot; 에프디이가 카드 두 장을 내밈: &quot;주문 조회 · 읽기 전용&quot;, &quot;배송 조회 · 읽기 전용&quot;. 뒤쪽에 흐릿한 카드 &quot;기록 수정 · 승인 필요 · 다음 단계&quot;.<br><strong>내레이션:</strong> 고객이 권한을 통째로 주자고 하면 이렇게 답하세요. 넓은 권한보다 좁은 도구가 안전하고 정확해요. 읽기 전용 도구 두어 개로 시작해요. 기록을 바꾸는 도구는 승인을 거치게 하고 다음 단계로 미뤄요.</p>
-<h4>장면 10 · 요약과 예고 (약 25초)</h4>
-<p><strong>화면:</strong> 세 줄 요약이 한 줄씩 나타남: &quot;1. 모델은 요청, 실행은 바깥 2. 설명이 도구의 품질 3. 좁은 도구부터&quot;. 아래에 &quot;다음: S13 확장 사고&quot;.<br><strong>내레이션:</strong> 정리할게요. 모델은 요청하고 실행은 바깥에서 해요. 도구의 품질은 설명이 정해요. 좁은 도구부터 시작해요. 다음 시간에는 클로드가 답하기 전에 깊이 생각하는 기능, 확장 사고를 볼게요.</p></div></details></section>
-<section class="sec sec-sources"><h2>출처</h2><ul><li>Claude 문서, Tool use with Claude(정의, 클라이언트 도구와 서버 도구, 웹 검색 예): <a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview" target="_blank" rel="noopener noreferrer">https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview</a></li><li>Claude 문서, How tool use works(계약, 세 종류, 쓸 때와 쓰지 않을 때): <a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/how-tool-use-works" target="_blank" rel="noopener noreferrer">https://platform.claude.com/docs/en/agents-and-tools/tool-use/how-tool-use-works</a></li><li>Claude 문서, Define tools(도구 정의와 설명 작성 권장 사항): <a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/define-tools" target="_blank" rel="noopener noreferrer">https://platform.claude.com/docs/en/agents-and-tools/tool-use/define-tools</a></li><li>Claude 문서, Handle tool calls(<code>tool_use</code>, <code>tool_result</code>, <code>is_error</code>): <a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/handle-tool-calls" target="_blank" rel="noopener noreferrer">https://platform.claude.com/docs/en/agents-and-tools/tool-use/handle-tool-calls</a></li><li>Claude 문서, Features overview(도구 관련 기능 목록): <a href="https://platform.claude.com/docs/en/build-with-claude/overview" target="_blank" rel="noopener noreferrer">https://platform.claude.com/docs/en/build-with-claude/overview</a></li><li>Claude Forward Deployed Engineer 학습 경로, 코스 5 소개와 목차(개요 사본 <code>_official-outline-2026-11-27.txt</code>): <a href="https://anthropic-partners.skilljar.com/path/claude-fde" target="_blank" rel="noopener noreferrer">https://anthropic-partners.skilljar.com/path/claude-fde</a></li><li>도구 정의 예시는 공식 문서의 예를 주문 조회 상황으로 바꿔 쓴 것이에요. <code>@anthropic-ai/sdk</code> 1.14.0 기준으로 타입 검사는 통과했고, 실제 API 호출은 이 노트를 쓰면서 실행하지 않았어요. 주문 번호와 오류 문구는 지어낸 예시예요.</li></ul></section>
-</article>
-<section class="done-box">
-  <label><input type="checkbox" data-done="S12"> 이 세션을 다 했어요 <span class="muted">(이 브라우저에만 저장돼요)</span></label>
+<p>요약, 번역, 일반 지식 질문처럼 모델이 혼자 답할 수 있는 일에는 도구가 필요 없어요. 부를 때마다 왕복이 한 번 늘어서, 가벼운 일에서는 오히려 느려져요.</p></div></article></div>
+  </div>
 </section>
-<nav class="pager">
-  <a href="/t/claude-fde/s11-agent-loop" target="_top" class="prev"><small>이전</small><span>S11 · 에이전트 루프</span></a>
-  <a href="/t/claude-fde/s13-thinking" target="_top" class="next"><small>다음</small><span>S13 · 확장 사고 (thinking)</span></a>
-</nav>
-<footer class="disclaimer" role="note">
-  <strong>비공식 학습 자료</strong>
-  <p>이 노트는 Anthropic 공식 “Claude Forward Deployed Engineer” 학습 경로의 공개 개요와 공식 문서를 바탕으로 쓴 개인 학습 노트이며, 공식 강의 필기가 아니에요. 실제 강의·퀴즈·수료는 공식 경로에서 진행해요.</p>
-  <p>공식 경로: <a href="https://anthropic-partners.skilljar.com/path/claude-fde" target="_blank" rel="noopener noreferrer">https://anthropic-partners.skilljar.com/path/claude-fde</a></p>
-</footer>
+
+<section class="room r-note iris" style="--ix:51%" aria-label="노트">
+  <div class="inner">
+    <div class="page">
+      <div class="block"><h2><span class="mono">##</span>오늘의 목표</h2><ul class="ticks"><li>도구 사용을 &quot;모델은 요청하고, 실행은 바깥에서 한다&quot;는 계약으로 설명할 수 있다.</li><li>도구 정의의 세 요소(이름, 설명, 입력 스키마)를 쓰고, 좋은 설명의 조건을 말할 수 있다.</li><li>도구를 실행되는 곳에 따라 세 종류로 구분하고, 도구가 필요한 일과 필요 없는 일을 가를 수 있다.</li></ul></div>
+      <div class="block"><h2><span class="mono">##</span>직접 해 보기 <span class="mono small">5분</span></h2><div class="md"><p>S11의 <code>loop.ts</code>에서 도구 정의의 <code>description</code>만 바꿔 가며 실행해 보세요.</p>
+<ol><li>설명을 위 예시(환불 정보는 돌려주지 않는다는 문장 포함)로 바꾸고, 질문을 &quot;주문 A-1001 환불 처리됐어?&quot;로 해 보세요. Claude가 도구를 부르는지, 부른 뒤 무엇을 알 수 없다고 말하는지 보세요.</li><li>설명을 &quot;주문 조회&quot; 네 글자로 줄이고 같은 질문을 해 보세요. 도구를 부르는 판단과 답이 어떻게 달라지는지 비교하세요. 여러 번 돌려 봐야 차이가 보여요(S01의 뽑기).</li></ol></div></div>
+      <div class="block quiz" id="quiz"><h2><span class="mono">##</span>확인 문제 <span class="mono small">고르면 바로 채점</span></h2>
+  
+  <div class="q" data-answer="1"><p class="qq"><span class="mono">Q1</span>도구 사용에서 Claude가 실제로 하는 일은?</p>
+  <div class="opts"><button class="opt" type="button">내 서버에 접속해 함수를 직접 실행한다</button><button class="opt" type="button">어떤 도구를 어떤 입력으로 부를지 구조화된 요청을 낸다</button><button class="opt" type="button">도구의 코드를 읽고 고친다</button></div>
+  <p class="why">모델은 <code>tool_use</code> 블록으로 요청만 해요. 실행은 내 코드나 Anthropic 서버가 해요.</p></div>
+<div class="q" data-answer="1"><p class="qq"><span class="mono">Q2</span>공식 문서가 도구 성능에 가장 큰 영향을 준다고 꼽는 것은?</p>
+  <div class="opts"><button class="opt" type="button">도구 이름의 길이</button><button class="opt" type="button">상세한 설명</button><button class="opt" type="button">도구를 최대한 많이 붙이는 것</button></div>
+  <p class="why">문서는 상세한 설명을 가장 중요한 요소로 꼽아요. 도구를 많이 붙이는 것(c)은 오히려 고르기 어렵게 만들고 컨텍스트를 차지해요.</p></div>
+<div class="q" data-answer="1"><p class="qq"><span class="mono">Q3</span><code>web_search</code> 같은 서버 실행 도구의 특징은?</p>
+  <div class="opts"><button class="opt" type="button">내 코드가 실행하고 <code>tool_result</code>를 만들어 보낸다</button><button class="opt" type="button">Anthropic 서버가 실행하고 결과가 응답에 담겨 온다</button><button class="opt" type="button">브라우저 확장을 설치해야 쓸 수 있다</button></div>
+  <p class="why">서버 실행 도구는 요청에 켜 두기만 하면 Anthropic 쪽에서 실행돼요. (a)는 사용자 정의 도구와 Anthropic 스키마 도구의 방식이에요.</p></div>
+<div class="q"><p class="qq"><span class="mono">Q4</span>(서술형) 도구 실행이 실패했을 때 Claude에게 무엇을 어떻게 돌려줘야 하나요? 좋은 예와 나쁜 예를 하나씩 들어 보세요.</p>
+  <details class="ans"><summary>예시 답 보기</summary><div class="md">실패해도 <code>tool_result</code>를 반드시 돌려주고 <code>is_error: true</code>를 붙인다. 내용에는 무엇이 잘못됐는지와 다음에 무엇을 해 볼 수 있는지를 적는다. 좋은 예: &quot;주문 시스템 응답 없음. 30초 뒤 다시 시도하세요.&quot; 나쁜 예: &quot;실패&quot;. 나쁜 예로는 Claude가 다시 부를지, 다른 방법을 쓸지, 사용자에게 알릴지 판단할 근거가 없다. 그리고 Claude가 다시 시도할 수 있으니 재시도 횟수에 상한을 둔다.</div></details></div>
+<div class="q"><p class="qq"><span class="mono">Q5</span>(상황형) 고객사 운영팀장이 말해요. &quot;Claude한테 우리 ERP 데이터베이스 접속 권한을 통째로 주면 알아서 다 하겠죠?&quot; 어떻게 답하고, 무엇을 제안할까요?</p>
+  <details class="ans"><summary>예시 답 보기</summary><div class="md">&quot;Claude는 데이터베이스에 직접 들어가지 않고, 우리가 만들어 준 도구를 불러 달라고 요청만 해요. 그래서 무엇을 할 수 있는지는 우리가 도구로 정해요&quot;라고 설명한다. 통째로 권한을 주는 대신, 업무에 필요한 조회를 좁은 도구 몇 개(예: 주문 조회, 재고 조회)로 만들고 읽기 전용 계정으로 연결하자고 제안한다. 기록을 바꾸는 작업은 사람의 승인을 거치는 도구로 따로 만들어 다음 단계에 넣는다. 도구 설명은 운영팀과 함께 쓰고, 호출 기록을 남겨 검토한다.</div></details></div>
+  
+  </div>
+    </div>
+  </div>
+</section>
+<section class="room r-fde band iris" style="--wall:var(--purple);--floor:var(--bottle);--text:var(--ink);--serc:var(--cobalt);--line:76%;--ix:11%" aria-labelledby="h-fde">
+  <div class="inner">
+    <span class="mark"><b>##</b> FDE 관점</span>
+    <h2 id="h-fde" class="say">현장에서 <em>&quot;Claude가 무엇을 할 수 있나요?&quot;</em>라는 질문의 답은 결국 도구 목록이에요.</h2>
+    <div class="lead md"><p>어떤 도구를, 어떤 권한으로 붙였는지가 파일럿의 실제 범위거든요. 그래서 FDE는 첫 출시 범위를 도구로 적어요. 예를 들어 &quot;주문 조회와 배송 조회, 둘 다 읽기 전용&quot;처럼요. 기록을 바꾸는 도구는 사람의 승인을 거치게 하고 다음 단계로 미뤄요. 도구 설명은 개발자 혼자 쓰지 말고 현장 담당자와 함께 쓰세요. &quot;언제 쓰고 언제 쓰지 않는지&quot;는 그 업무를 하는 사람이 가장 잘 알아요. 성공 지표도 도구에서 나와요. 불러야 할 때 부른 비율, 틀린 입력으로 부른 횟수를 기준선과 함께 재 두면 개선할 곳이 보여요.</p></div>
+  </div>
+</section>
+<section class="room r-cards iris" style="--wall:var(--butter);--floor:var(--butter);--text:var(--ink);--serc:var(--cobalt);--ix:61%" aria-labelledby="h-cards">
+  <div class="inner">
+    <span class="mark"><b>##</b> 복습 카드</span>
+    <h2 id="h-cards" class="title">눌러서 뒤집기</h2>
+    <div class="cards"><button class="card" type="button" aria-pressed="false" style="--r:1.5deg"><span class="face front"><span class="no">01</span><b>도구 사용에서 모델이 하는 일과 하지 않는 일은?</b><span class="flip mono">눌러서 뒤집기</span></span><span class="face back" style="--bg:var(--lilac)">어떤 도구를 어떤 입력으로 부를지 요청한다. 실행은 하지 않는다.</span></button>
+<button class="card" type="button" aria-pressed="false" style="--r:-3deg"><span class="face front"><span class="no">02</span><b>도구 정의의 세 요소는?</b><span class="flip mono">눌러서 뒤집기</span></span><span class="face back" style="--bg:var(--sky)">이름(<code>name</code>), 설명(<code>description</code>), 입력 스키마(<code>input_schema</code>).</span></button>
+<button class="card" type="button" aria-pressed="false" style="--r:2deg"><span class="face front"><span class="no">03</span><b>좋은 도구 설명에 들어갈 것은?</b><span class="flip mono">눌러서 뒤집기</span></span><span class="face back" style="--bg:var(--pink)">무엇을 하는지, 언제 쓰고 쓰지 않는지, 각 입력의 뜻, 돌려주지 않는 것.</span></button>
+<button class="card" type="button" aria-pressed="false" style="--r:-1.5deg"><span class="face front"><span class="no">04</span><b>도구가 실패하면?</b><span class="flip mono">눌러서 뒤집기</span></span><span class="face back" style="--bg:var(--purple)"><code>tool_result</code>에 <code>is_error: true</code>와 함께, 무엇이 잘못됐고 다음에 무엇을 해 볼지 적어 돌려준다.</span></button>
+<button class="card" type="button" aria-pressed="false" style="--r:3deg"><span class="face front"><span class="no">05</span><b>도구의 세 종류는?</b><span class="flip mono">눌러서 뒤집기</span></span><span class="face back" style="--bg:var(--mint)">사용자 정의 도구, Anthropic 스키마 도구(둘 다 내 코드가 실행), 서버 실행 도구(Anthropic이 실행).</span></button></div>
+  </div>
+</section>
+
+<section class="room r-tt iris" style="--wall:var(--cobalt);--floor:var(--cobalt);--text:var(--paper);--serc:var(--pink);--ix:91%" id="timetable" aria-labelledby="h-tt">
+  <div class="inner">
+    <div class="endrow">
+      <label class="done-box"><input type="checkbox" data-done="S12"> 이 세션을 다 했어요 <span class="mono small">이 브라우저에만 저장</span></label>
+      <nav class="pager" aria-label="세션 이동">
+        <a href="/t/claude-fde/s11-agent-loop" target="_top" class="pg">← S11</a>
+        <a href="/t/claude-fde/0000-course-home" target="_top" class="pg">코스 홈</a>
+        <a href="/t/claude-fde/s13-thinking" target="_top" class="pg pg-next">S13 · 확장 사고 (thinking) →</a>
+      </nav>
+    </div>
+    <span class="mark"><b>##</b> 전체 시간표</span>
+    <h2 id="h-tt" class="title">11개 코스, <span class="ser">42개</span> 세션</h2>
+    <div class="ledger"><div class="course rise"><h3><span>1. AI Capabilities and Limitations</span><span class="mono">4세션</span></h3>
+  <p class="cd mono">핵심, 약 60분</p><ol><li class=""><a href="/t/claude-fde/s01-next-token-prediction" target="_top"><span class="mono">S01</span><span class="tt">생성형 AI의 네 가지 성질과 다음 토큰 예측</span><span class="tag v">영상</span><span class="done-mark" data-done-mark="S01" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s02-knowledge" target="_top"><span class="mono">S02</span><span class="tt">지식: 학습 데이터, 지식 컷오프, 환각</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S02" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s03-working-memory" target="_top"><span class="mono">S03</span><span class="tt">작업 기억: 컨텍스트 윈도우</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S03" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s04-steerability-diagnosis" target="_top"><span class="mono">S04</span><span class="tt">조종 가능성과 예상 밖 출력 진단하기</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S04" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>2. AI Fluency for Builders</span><span class="mono">2세션</span></h3>
+  <p class="cd mono">핵심, 약 45분</p><ol><li class=""><a href="/t/claude-fde/s05-4d-delegation-description" target="_top"><span class="mono">S05</span><span class="tt">AI Fluency와 4D 프레임워크: 위임과 설명</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S05" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s06-4d-discernment-diligence" target="_top"><span class="mono">S06</span><span class="tt">분별과 책임: 빌더의 검증</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S06" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>3. Claude Platform and Model Foundations</span><span class="mono">2세션</span></h3>
+  <p class="cd mono">핵심, 약 60분</p><ol><li class=""><a href="/t/claude-fde/s07-entry-points-features" target="_top"><span class="mono">S07</span><span class="tt">결정 1·2: 진입점과 기능 고르기</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S07" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s08-model-context-decisions" target="_top"><span class="mono">S08</span><span class="tt">결정 3·4: 모델 선택과 컨텍스트·메모리 관리</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S08" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>4. Choosing the right Claude model</span><span class="mono">1세션</span></h3>
+  <p class="cd mono">핵심, 약 10분</p><ol><li class=""><a href="/t/claude-fde/s09-choosing-model" target="_top"><span class="mono">S09</span><span class="tt">네 가지 모델과 effort 조절</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S09" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>5. Claude Platform 101</span><span class="mono">8세션</span></h3>
+  <p class="cd mono">빌드, 약 90분</p><ol><li class=""><a href="/t/claude-fde/s10-platform-first-api-call" target="_top"><span class="mono">S10</span><span class="tt">Claude Platform이란, 첫 API 호출, 모델 고르기</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S10" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s11-agent-loop" target="_top"><span class="mono">S11</span><span class="tt">에이전트 루프</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S11" aria-hidden="true"></span></a></li><li class="now" aria-current="page"><a href="/t/claude-fde/s12-tool-use" target="_top"><span class="mono">S12</span><span class="tt">도구 사용 (tool use)</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S12" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s13-thinking" target="_top"><span class="mono">S13</span><span class="tt">확장 사고 (thinking)</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S13" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s14-built-in-tools-skills" target="_top"><span class="mono">S14</span><span class="tt">내장 도구와 Skills</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S14" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s15-mcp-context-management" target="_top"><span class="mono">S15</span><span class="tt">MCP와 컨텍스트 관리</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S15" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s16-managed-agents" target="_top"><span class="mono">S16</span><span class="tt">Managed Agents</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S16" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s17-building-with-claude-code" target="_top"><span class="mono">S17</span><span class="tt">Claude Code로 만들기 + 코스 5 총정리</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S17" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>6. Claude Code 101</span><span class="mono">5세션</span></h3>
+  <p class="cd mono">빌드, 약 60분</p><ol><li class=""><a href="/t/claude-fde/s18-what-is-claude-code" target="_top"><span class="mono">S18</span><span class="tt">Claude Code란: 에이전트 루프, 컨텍스트, 도구와 권한, 설치</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S18" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s19-first-prompt-modes" target="_top"><span class="mono">S19</span><span class="tt">첫 프롬프트: 승인 모드, 자동 수락, Plan Mode</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S19" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s20-daily-workflows" target="_top"><span class="mono">S20</span><span class="tt">일상 워크플로: Explore → Plan → Code → Commit, 리뷰, 컨텍스트 명령</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S20" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s21-claude-md-subagents" target="_top"><span class="mono">S21</span><span class="tt">커스터마이즈 1: CLAUDE.md와 서브에이전트</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S21" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s22-skills-mcp-hooks" target="_top"><span class="mono">S22</span><span class="tt">커스터마이즈 2: skills, MCP, hooks</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S22" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>7. Claude Code in Action</span><span class="mono">5세션</span></h3>
+  <p class="cd mono">빌드, 약 60분</p><ol><li class=""><a href="/t/claude-fde/s23-steer-the-work" target="_top"><span class="mono">S23</span><span class="tt">작업 조종: plan mode, 압축(compaction), 되감기(rewind)</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S23" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s24-configure-claude" target="_top"><span class="mono">S24</span><span class="tt">설정: 간결한 CLAUDE.md, 지시를 둘 자리, 검증 skill</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S24" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s25-permissions-hooks" target="_top"><span class="mono">S25</span><span class="tt">권한 모드와 hooks로 규칙 강제하기</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S25" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s26-automate-repeat-work" target="_top"><span class="mono">S26</span><span class="tt">반복 작업 자동화: 자율 세션, worktree, routines, headless, PR 리뷰</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S26" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s27-verify-share" target="_top"><span class="mono">S27</span><span class="tt">검증과 공유: 무감독 실행 검증, plugin</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S27" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>8. Introduction to Model Context Protocol</span><span class="mono">4세션</span></h3>
+  <p class="cd mono">빌드, 약 60분</p><ol><li class=""><a href="/t/claude-fde/s28-mcp-architecture" target="_top"><span class="mono">S28</span><span class="tt">MCP 구조: 클라이언트와 서버</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S28" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s29-mcp-server-tools" target="_top"><span class="mono">S29</span><span class="tt">서버 만들기: tools와 MCP Inspector</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S29" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s30-mcp-resources-prompts" target="_top"><span class="mono">S30</span><span class="tt">Resources와 Prompts, 셋 중 무엇을 쓸까</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S30" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s31-mcp-client" target="_top"><span class="mono">S31</span><span class="tt">클라이언트 구현: 연결, 비동기, 정리</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S31" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>9. Introduction to agent skills</span><span class="mono">3세션</span></h3>
+  <p class="cd mono">빌드, 약 30분</p><ol><li class=""><a href="/t/claude-fde/s32-what-are-skills" target="_top"><span class="mono">S32</span><span class="tt">Skill이란, 첫 skill 만들기</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S32" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s33-skill-config-comparison" target="_top"><span class="mono">S33</span><span class="tt">설정과 여러 파일 skill, 다른 기능과 비교</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S33" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s34-sharing-troubleshooting-skills" target="_top"><span class="mono">S34</span><span class="tt">skill 공유와 문제 해결</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S34" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>10. Delivery Methodology</span><span class="mono">4세션</span></h3>
+  <p class="cd mono">파일럿, 약 40분</p><ol><li class=""><a href="/t/claude-fde/s35-use-case-qualification" target="_top"><span class="mono">S35</span><span class="tt">유스케이스 발굴과 자격 판정</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S35" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s36-pilot-design-roi" target="_top"><span class="mono">S36</span><span class="tt">파일럿 설계와 ROI 측정</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S36" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s37-rollout-champions" target="_top"><span class="mono">S37</span><span class="tt">단계적 롤아웃, 변화 관리, 챔피언</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S37" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s38-failure-modes-30-day" target="_top"><span class="mono">S38</span><span class="tt">흔한 실패 모드 예방과 30일 활성화</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S38" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>11. Driving enterprise adoption of Claude</span><span class="mono">3세션</span></h3>
+  <p class="cd mono">파일럿, 약 60분</p><ol><li class=""><a href="/t/claude-fde/s39-activation" target="_top"><span class="mono">S39</span><span class="tt">1단계 Activation: 성공 팀, 프로비저닝, 문화, 교육, 런치</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S39" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s40-acceleration" target="_top"><span class="mono">S40</span><span class="tt">2단계 Acceleration: CoE와 Train the Trainer</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S40" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s41-expansion" target="_top"><span class="mono">S41</span><span class="tt">3단계 Expansion: 측정, 축하, 반복, 새 유스케이스</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S41" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>캡스톤</span><span class="mono">1세션</span></h3>
+  <ol><li class=""><a href="/t/claude-fde/s42-capstone-pilot-plan" target="_top"><span class="mono">S42</span><span class="tt">파일럿 계획서 쓰기</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S42" aria-hidden="true"></span></a></li></ol></div></div>
+  </div>
+</section>
 </main>
+<footer class="night" role="contentinfo">
+  <div class="inner">
+    <p class="end">FDE <span class="ser">study</span><span class="dot end-dot" aria-hidden="true"></span></p>
+    <p><b>비공식 학습 자료.</b> 이 노트는 Anthropic 공식 “Claude Forward Deployed Engineer” 학습 경로의 공개 개요와 공식 문서를 바탕으로 쓴 개인 학습 노트이며, 공식 강의 필기가 아니에요. 실제 강의·퀴즈·수료는 공식 경로에서 진행해요.</p>
+    <p>공식 경로: <a href="https://anthropic-partners.skilljar.com/path/claude-fde" target="_blank" rel="noopener noreferrer">https://anthropic-partners.skilljar.com/path/claude-fde</a></p>
+    <div class="sources"><p class="mono">## 출처</p><div class="md"><ul><li>Claude 문서, Tool use with Claude(정의, 클라이언트 도구와 서버 도구, 웹 검색 예): <a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview" target="_blank" rel="noopener noreferrer">https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview</a></li><li>Claude 문서, How tool use works(계약, 세 종류, 쓸 때와 쓰지 않을 때): <a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/how-tool-use-works" target="_blank" rel="noopener noreferrer">https://platform.claude.com/docs/en/agents-and-tools/tool-use/how-tool-use-works</a></li><li>Claude 문서, Define tools(도구 정의와 설명 작성 권장 사항): <a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/define-tools" target="_blank" rel="noopener noreferrer">https://platform.claude.com/docs/en/agents-and-tools/tool-use/define-tools</a></li><li>Claude 문서, Handle tool calls(<code>tool_use</code>, <code>tool_result</code>, <code>is_error</code>): <a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/handle-tool-calls" target="_blank" rel="noopener noreferrer">https://platform.claude.com/docs/en/agents-and-tools/tool-use/handle-tool-calls</a></li><li>Claude 문서, Features overview(도구 관련 기능 목록): <a href="https://platform.claude.com/docs/en/build-with-claude/overview" target="_blank" rel="noopener noreferrer">https://platform.claude.com/docs/en/build-with-claude/overview</a></li><li>Claude Forward Deployed Engineer 학습 경로, 코스 5 소개와 목차(개요 사본 <code>_official-outline-2026-11-27.txt</code>): <a href="https://anthropic-partners.skilljar.com/path/claude-fde" target="_blank" rel="noopener noreferrer">https://anthropic-partners.skilljar.com/path/claude-fde</a></li><li>도구 정의 예시는 공식 문서의 예를 주문 조회 상황으로 바꿔 쓴 것이에요. <code>@anthropic-ai/sdk</code> 1.14.0 기준으로 타입 검사는 통과했고, 실제 API 호출은 이 노트를 쓰면서 실행하지 않았어요. 주문 번호와 오류 문구는 지어낸 예시예요.</li></ul></div></div>
+  </div>
+</footer>
+
 <script src="fde.js"></script>
 </body>
 </html>

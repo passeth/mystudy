@@ -4,85 +4,171 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="3. Claude Platform and Model Foundations · 20분">
+<meta name="color-scheme" content="light">
 <title>S07. 결정 1·2: 진입점과 기능 고르기</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,700;12..96,800&family=Cutive+Mono&family=Gowun+Batang:wght@400;700&family=Instrument+Serif:ital@0;1&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap">
 <link rel="stylesheet" href="fde.css">
 </head>
 <body data-session="S07">
-<!-- 자동 생성 파일: scripts/sync-fde.mjs 가 만들어요. 직접 고치지 말고 원본 노트를 고친 뒤 npm run fde:sync 하세요. -->
-<main class="wrap">
-
-<nav class="crumbs"><a href="/t/claude-fde/0000-course-home" target="_top">← 코스 홈</a><span>3. Claude Platform and Model Foundations</span></nav>
-<header class="head">
-  <span class="eyebrow">Claude FDE 스터디 · 세션 7 / 42</span>
-  <h1>S07. 결정 1·2: 진입점과 기능 고르기</h1>
-  <div class="meta"><span>20분</span><span class="pill pill-draft">노트 초안</span><span class="pill pill-check">확인 필요 1곳</span></div>
-  <p class="official">공식 경로에서 해당하는 부분: (목차 비공개) 학습 목표 1: 업무에 맞는 진입점과 기능 조합 고르기</p>
+<!-- 자동 생성 파일: scripts/sync-fde.mjs 가 만들어요. 직접 고치지 말고 원본 노트나 claude-fde-course/ 를 고친 뒤 npm run fde:render 하세요. -->
+<nav class="hud" aria-label="코스">
+  <a href="/t/claude-fde/0000-course-home" target="_top" class="brand">Claude FDE 스터디 <span class="dot" aria-hidden="true"></span><span class="long">비공식 노트</span></a>
+  <a class="pill" href="#timetable">세션 07 / 42 <i aria-hidden="true"></i></a>
+</nav>
+<main>
+<header class="room hero type" style="--wall:var(--cobalt);--floor:var(--beige);--text:var(--paper);--serc:var(--pink);--line:78%">
+  <div class="copy">
+    <span class="mark land"><b>##</b> 코스 3 · Claude Platform and Model Foundations</span>
+    <h1 class="land l2">결정 1·2: <span class="ser">진입점</span>과 기능 고르기</h1>
+    <div class="lines land l3"><span>프롬프트를 쓰기 전에 내리는 네 가지 결정(진입점, 기능, 모델, 컨텍스트)을 순서대로 말할 수 있다.</span><span>20분 · 확인 문제 5개 · 복습 카드 5장</span><span><span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span> 표시 1곳</span></div>
+    <span class="by">S07 · 결정 1·2: 진입점과 기능 고르기</span>
+  </div>
+  <span class="numeral" aria-hidden="true">07</span>
 </header>
 
-
-<article class="note">
-<section class="sec sec-goals"><h2>오늘의 목표</h2><ul><li>프롬프트를 쓰기 전에 내리는 네 가지 결정(진입점, 기능, 모델, 컨텍스트)을 순서대로 말할 수 있다.</li><li>업무 하나를 듣고 알맞은 진입점을 고르고 이유를 말할 수 있다.</li><li>웹 검색, 리서치, 커넥터, 스킬, 프로젝트 가운데 그 업무에 켤 기능을 고를 수 있다.</li></ul></section>
-<section class="sec "><h2>핵심 정리</h2><h3>프롬프트보다 먼저 정해지는 것</h3>
-<p>요리로 치면 프롬프트는 레시피예요. 그런데 어느 주방에서, 어떤 도구로, 어떤 요리사와, 어떤 재료로 할지는 레시피보다 먼저 정해져요. 공식 코스 소개는 이 네 가지를 <strong>진입점</strong>(entry point), <strong>기능</strong>(capability features), <strong>모델</strong>(model), <strong>컨텍스트</strong>(context)라고 부르고, 이 결정들이 세션 품질의 천장을 정한다고 해요. S05의 위임이 &quot;무엇을 맡길까&quot;였다면 오늘은 &quot;어디서, 무엇을 켜고 맡길까&quot;예요. 모델과 컨텍스트는 S08에서 봅니다.</p>
-<h3>결정 1: 진입점, 일이 어디에 있나</h3>
-<p>진입점은 Claude와 일하는 자리예요. 공식 강의가 무엇을 진입점으로 꼽는지는 목차가 공개돼 있지 않아서(<span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>), claude.com 제품 메뉴와 도움말을 기준으로 정리했어요.</p>
-<div class="table-scroll"><table><thead><tr><th>진입점</th><th>일하는 방식</th><th>어울리는 일</th></tr></thead><tbody><tr><td>Claude 채팅 (웹·데스크톱·모바일)</td><td>한 턴씩 주고받는 대화</td><td>질문, 생각 정리, 가벼운 초안</td></tr><tr><td>Claude Cowork</td><td>목표를 맡기고 결과물을 받는 위임</td><td>파일과 도구를 오가는 여러 단계 작업</td></tr><tr><td>Claude Code</td><td>코드베이스를 읽고 고치고 명령을 실행</td><td>개발, 저장소 안의 작업 (S18부터)</td></tr><tr><td>일하던 앱 안의 Claude</td><td>Chrome 확장, Microsoft 365, Google Workspace, Slack의 Claude Tag</td><td>자리를 옮기지 않고 그 앱 안에서 하는 일</td></tr><tr><td>Claude Platform (API)</td><td>내 제품과 시스템에 Claude를 넣기</td><td>직접 만드는 서비스와 자동화 (S10부터)</td></tr></tbody></table></div>
-<p>채팅과 Cowork는 이렇게 갈라요. 목표가 아직 정리 중이면 채팅, 결과물이 분명하고 파일이나 도구를 건드려야 하면 Cowork예요. 둘을 한 대화로 합친 새 Claude 경험도 단계적으로 나오고 있어요. 그 화면에서는 모드를 고르지 않지만, &quot;대화로 풀 일인가, 통째로 맡길 일인가&quot;라는 판단은 그대로 남아요.</p>
-<h3>결정 2: 기능, 무엇을 켤까</h3>
-<p>기능은 그 자리에서 켜고 끄는 능력이에요. S01~S04에서 본 한계와 짝을 지으면 고르기 쉬워요.</p>
-<ul><li><strong>최신 정보가 필요하다</strong> (S02의 지식 컷오프): 웹 검색(web search)이나 리서치(Research). 검색 한두 번으로 풀리는 사실 확인은 웹 검색, 여러 출처를 찾아 종합하는 보고서는 리서치예요. 웹이 필요 없고 깊이 따져야 하는 문제는 확장 사고(S13)가 맞아요.</li><li><strong>우리 회사 정보를 모른다</strong>: 커넥터(connectors). Claude를 회사 앱과 서비스에 연결해요. 접근 범위는 연결된 서비스에서 그 사람이 가진 권한 그대로예요.</li><li><strong>매번 같은 방식을 설명한다</strong>: 스킬(skills)은 지시, 스크립트, 자료를 묶어 두고 필요할 때만 불러오는 꾸러미이고, 프로젝트(projects)는 자료와 지시를 담아 두는 작업 공간이에요.</li><li><strong>결과물이 파일이어야 한다</strong>: 아티팩트(artifacts)와 파일 만들기로 문서, 스프레드시트, 발표 자료를 받아요.</li></ul>
-<p>원칙은 &quot;다 켜지 않기&quot;예요. 도구와 커넥터는 토큰을 많이 써서 S03의 작업 기억을 차지해요. 쓸 수 있는 진입점과 기능은 플랜마다 달라요(예: Cowork와 리서치는 유료 플랜). Team·Enterprise 플랜에서는 웹 검색처럼 조직 소유자가 먼저 켜 줘야 쓸 수 있는 기능도 있어요.</p></section>
-<section class="sec sec-try callout warm"><h2>직접 해 보기 (5분)</h2><ol><li>이번 주에 한 일 세 가지를 적고, 각각 옆에 &quot;진입점 / 켤 기능&quot;을 한 줄로 적어 보세요. 예: &quot;경쟁사 가격 조사 → 채팅 / 리서치&quot;. 고르기 어려웠던 일이 있다면 무엇 때문에 망설였는지 적어 두세요.</li><li>Claude.ai에서 최근 소식이 필요한 질문을 하나 골라, 입력창의 &quot;+&quot; 메뉴에서 웹 검색을 끈 대화와 켠 대화에 똑같이 물어보세요. 출처 인용이 붙는지, 답의 날짜가 어떻게 다른지 보세요. (새 Claude 경험에서는 이 토글이 없고 Claude가 필요할 때 검색해요.)</li></ol></section>
-<section class="sec sec-quiz"><h2>확인 문제</h2><ol class="quiz"><li value="1" class="q"><div class="q-body">프롬프트를 쓰기 전의 네 가지 결정에 들지 않는 것은?
-<ul><li>(a) 진입점</li><li>(b) 컨텍스트</li><li>(c) 프롬프트 문장의 말투 다듬기</li></ul></div>
-<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">(c). 네 가지 결정은 진입점, 기능, 모델, 컨텍스트예요. 문장 다듬기는 그다음 일이에요.</div></details></li>
-<li value="2" class="q"><div class="q-body">&quot;폴더에 있는 계약서 30개를 읽고 조항 비교표를 스프레드시트로 만들어 줘.&quot; 가장 알맞은 진입점은?
-<ul><li>(a) 한 턴씩 주고받는 채팅</li><li>(b) Claude Cowork</li><li>(c) Slack의 Claude Tag</li></ul></div>
-<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">(b). 결과물이 분명하고 여러 파일을 읽어야 하는 여러 단계 작업이라 위임이 맞아요.</div></details></li>
-<li value="3" class="q"><div class="q-body">&quot;어제 그 회사 실적 발표에서 매출이 얼마였지?&quot;처럼 검색 한두 번으로 끝나는 사실 확인에 맞는 기능은?
-<ul><li>(a) 웹 검색</li><li>(b) 리서치</li><li>(c) 스킬</li></ul></div>
-<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">(a). 검색 한두 번으로 풀리는 사실 확인은 웹 검색이에요. 리서치는 여러 출처를 종합하는 긴 조사에 써요.</div></details></li>
-<li value="4" class="q"><div class="q-body">(서술형) 커넥터와 스킬은 각각 무엇을 Claude에게 더해 주나요? 두세 문장으로 구분해 보세요.</div>
-<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">예시 답: 커넥터는 Claude가 회사 앱과 서비스의 데이터에 닿고 그 안에서 작업하게 해 주는 연결이다. 스킬은 일을 하는 방법(지시, 스크립트, 자료)을 묶어 둔 것으로, 관련된 일이 나올 때 불러와 같은 방식으로 반복하게 해 준다. 하나는 &quot;무엇에 닿을 수 있나&quot;, 다른 하나는 &quot;어떻게 하나&quot;를 더한다.</div></details></li>
-<li value="5" class="q"><div class="q-body">(상황형) 고객사 영업팀장이 말해요. &quot;Claude한테 우리 거래처에 대해 물어봤는데 하나도 몰라요. 업무에는 못 쓰겠네요.&quot; 어떻게 답하고, 무엇을 제안할까요?</div>
-<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">예시 답: &quot;Claude는 학습한 내용과 지금 대화에 들어온 내용만 알아요. 거래처 정보는 어느 쪽에도 없었던 거예요&quot;라고 설명한다. 그다음 거래처 정보가 어디에 있는지 묻고, CRM이나 문서 저장소라면 커넥터 연결을, 정리된 자료 묶음이라면 프로젝트에 올리는 방법을 제안한다. 조직 관리자가 해당 기능을 켜 두었는지도 함께 확인한다.</div></details></li></ol></section>
-<section class="sec sec-fde callout cool"><h2>FDE 관점</h2><p>고객이 &quot;Claude가 못해요&quot;라고 할 때, 프롬프트 문제가 아니라 진입점이나 기능 문제인 경우가 많아요. 그래서 FDE는 프롬프트를 고치기 전에 &quot;어디서 하셨어요? 무엇이 켜져 있었어요?&quot;를 먼저 물어요. 파일럿을 시작할 때는 고객 조직에서 어떤 진입점이 열려 있는지, 웹 검색이나 커넥터 같은 기능을 관리자가 켜 두었는지부터 확인해요. 이 목록이 곧 첫 출시 범위의 재료예요. 파일럿 계획서에는 &quot;첫 사용자는 이 진입점 하나에서, 이 기능 조합으로 시작한다&quot;를 한 줄로 적어 두세요. 범위가 좁아야 기준선과 비교하기도 쉬워요.</p></section>
-<section class="sec sec-cards"><h2>복습 카드</h2><div class="cards"><details class="card"><summary>프롬프트를 쓰기 전에 내리는 네 가지 결정은?</summary><div class="card-a">진입점, 기능, 모델, 컨텍스트.</div></details><details class="card"><summary>채팅과 Cowork를 가르는 기준은?</summary><div class="card-a">주고받으며 풀 일은 채팅, 결과물이 분명하고 파일·도구를 건드리는 일은 Cowork.</div></details><details class="card"><summary>웹 검색과 리서치의 차이는?</summary><div class="card-a">웹 검색은 검색 한두 번으로 끝나는 사실 확인, 리서치는 여러 출처를 여러 번 찾아 종합하는 보고서.</div></details><details class="card"><summary>커넥터는 어떤 권한으로 데이터에 접근하나?</summary><div class="card-a">연결된 서비스에서 그 사람이 가진 권한 그대로.</div></details><details class="card"><summary>기능을 다 켜 두면 안 되는 이유는?</summary><div class="card-a">도구와 커넥터가 토큰을 많이 써서 컨텍스트를 차지하기 때문.</div></details></div></section>
-<section class="sec sec-script"><h2>영상 대본</h2><details class="script"><summary>영상 대본 펼치기 <span class="muted">· 장면별 화면과 내레이션</span></summary><div class="script-body"><h4>장면 1 · 오늘의 질문 (약 25초)</h4>
+<section class="room r-video iris" style="--wall:var(--ink);--floor:var(--mint);--text:var(--paper);--serc:var(--pink);--line:80%;--ix:55%" aria-labelledby="h-v">
+  <div class="inner">
+    <span class="mark"><b>##</b> 오늘의 강의</span>
+    <h2 id="h-v" class="title">영상은 <span class="ser">준비 중</span>, 노트부터 봐요</h2>
+    <div class="screen rise"><div class="ph">
+      <span class="ph-id" aria-hidden="true">S07</span>
+      <span class="ph-pill">영상 준비 중</span>
+    </div></div>
+    <div class="under"><span>20분 세션 · 대본 장면 10개</span><span>노트 먼저</span></div>
+    <details class="next"><summary>영상 대본 펼치기</summary><div class="script md"><h3>장면 1 · 오늘의 질문 (약 25초)</h3>
 <p><strong>화면:</strong> 똑같은 프롬프트 문장이 적힌 카드 두 장. 왼쪽 카드 아래에는 흐릿한 결과물, 오른쪽 카드 아래에는 또렷한 결과물. 가운데에 물음표와 제목 &quot;프롬프트는 같은데 왜 다를까?&quot;<br><strong>내레이션:</strong> 같은 프롬프트인데 결과가 달라요. 왜일까요? 프롬프트를 쓰기 전에 이미 정해진 게 있어서예요. 오늘은 그 결정들을 볼게요.</p>
-<h4>장면 2 · 네 가지 결정 (약 35초)</h4>
+<h3>장면 2 · 네 가지 결정 (약 35초)</h3>
 <p><strong>화면:</strong> 계단 네 칸이 아래에서 위로 쌓임: 진입점, 기능, 모델, 컨텍스트. 맨 위에 작은 종이 한 장 &quot;프롬프트&quot;. 아래 두 칸만 밝게 강조.<br><strong>내레이션:</strong> 프롬프트 아래에는 네 가지 결정이 깔려 있어요. 진입점, 기능, 모델, 컨텍스트예요. 이 넷이 결과의 천장을 정해요. 오늘은 앞의 두 가지, 진입점과 기능이에요.</p>
-<h4>장면 3 · 진입점은 일하는 자리 (약 40초)</h4>
+<h3>장면 3 · 진입점은 일하는 자리 (약 40초)</h3>
 <p><strong>화면:</strong> 문 다섯 개가 가로로 놓임. 문패: &quot;채팅&quot;, &quot;코워크&quot;, &quot;클로드 코드&quot;, &quot;일하던 앱 안&quot;, &quot;플랫폼&quot;. 문마다 작은 아이콘(말풍선, 서류 묶음, 터미널, 브라우저 창, 톱니바퀴).<br><strong>내레이션:</strong> 진입점은 클로드와 일하는 자리예요. 대화하는 채팅, 일을 통째로 맡기는 코워크, 코드를 다루는 클로드 코드가 있어요. 일하던 앱 안에서 부르거나, 플랫폼으로 내 제품에 넣을 수도 있어요.</p>
-<h4>장면 4 · 대화냐 위임이냐 (약 40초)</h4>
+<h3>장면 4 · 대화냐 위임이냐 (약 40초)</h3>
 <p><strong>화면:</strong> 화면이 좌우로 나뉨. 왼쪽 &quot;채팅&quot;: 말풍선이 탁구공처럼 오감. 오른쪽 &quot;코워크&quot;: 서류 상자 하나가 들어가고, 잠시 뒤 완성된 스프레드시트가 나옴. 아래 자막 &quot;정리 중인 생각 → 대화 / 분명한 결과물 → 위임&quot;.<br><strong>내레이션:</strong> 채팅과 코워크는 이렇게 갈라요. 생각이 아직 정리 중이면 대화가 맞아요. 결과물이 분명하고 파일을 건드려야 하면 맡기는 쪽이에요. 요즘은 한 대화에서 둘 다 되는 화면도 나오고 있어요.</p>
-<h4>장면 5 · 일이 있는 곳에서 부른다 (약 35초)</h4>
+<h3>장면 5 · 일이 있는 곳에서 부른다 (약 35초)</h3>
 <p><strong>화면:</strong> 브라우저 창, 문서 편집기, 메신저 채널 그림이 차례로 나타나고, 각 창 구석에 같은 작은 별 모양 아이콘이 켜짐. 마지막에 서버 상자가 나타나 &quot;내 서비스&quot;라는 이름표가 붙음.<br><strong>내레이션:</strong> 꼭 자리를 옮길 필요는 없어요. 브라우저에서도, 문서 프로그램에서도, 메신저에서도 클로드를 부를 수 있어요. 사람이 아니라 내 시스템이 불러야 한다면 플랫폼이 맞는 문이에요.</p>
-<h4>장면 6 · 기능은 한계를 메우는 스위치 (약 40초)</h4>
+<h3>장면 6 · 기능은 한계를 메우는 스위치 (약 40초)</h3>
 <p><strong>화면:</strong> 스위치 패널. 첫 번째 스위치 &quot;웹 검색&quot;이 켜지면 달력 아이콘이 오늘 날짜로 넘어감. 두 번째 스위치 &quot;리서치&quot;가 켜지면 돋보기 여러 개가 흩어졌다가 보고서 한 장으로 모임.<br><strong>내레이션:</strong> 두 번째 결정은 기능이에요. 한계를 메우는 스위치라고 보면 돼요. 최신 정보가 필요하면 웹 검색을 켜요. 여러 출처를 모아 보고서를 만들 때는 리서치가 맞아요.</p>
-<h4>장면 7 · 커넥터, 스킬, 프로젝트 (약 40초)</h4>
+<h3>장면 7 · 커넥터, 스킬, 프로젝트 (약 40초)</h3>
 <p><strong>화면:</strong> 세 개의 상자가 차례로 등장. &quot;커넥터&quot;: 클로드와 회사 앱 아이콘 사이에 선이 연결됨. &quot;스킬&quot;: 작업 설명서 꾸러미가 필요할 때만 펼쳐짐. &quot;프로젝트&quot;: 서랍 안에 자료와 지시가 들어 있음.<br><strong>내레이션:</strong> 회사 자료를 몰라서 막히면 커넥터로 연결해요. 접근 범위는 그 사람의 권한 그대로예요. 매번 같은 방식을 설명하고 있다면 스킬로 묶어요. 자료와 지시는 프로젝트에 담아 둬요.</p>
-<h4>장면 8 · 다 켜지 않는다 (약 35초)</h4>
+<h3>장면 8 · 다 켜지 않는다 (약 35초)</h3>
 <p><strong>화면:</strong> 스위치를 전부 켜자 책상 그림 위에 도구가 잔뜩 쌓여 작업 공간이 좁아짐. 스위치 두 개만 남기자 책상이 넓어짐. 구석에 자물쇠가 달린 스위치 하나와 &quot;관리자 설정&quot; 표시.<br><strong>내레이션:</strong> 그렇다고 전부 켜 두면 안 돼요. 도구와 커넥터는 작업 기억을 차지하거든요. 일에 필요한 것만 켜세요. 회사에서는 관리자가 먼저 열어 줘야 쓸 수 있는 기능도 있어요.</p>
-<h4>장면 9 · 고객 앞에서 (약 35초)</h4>
+<h3>장면 9 · 고객 앞에서 (약 35초)</h3>
 <p><strong>화면:</strong> 회의실 그림. 고객 말풍선 &quot;우리 거래처를 하나도 몰라요.&quot; 에프디이 말풍선 &quot;어디서 물으셨어요? 무엇이 켜져 있었나요?&quot; 아래에 점검표: &quot;진입점 확인, 기능 확인, 그다음 프롬프트&quot;.<br><strong>내레이션:</strong> 고객이 못 쓰겠다고 할 때 프롬프트부터 고치지 마세요. 어디서 했는지, 무엇이 켜져 있었는지 먼저 물어요. 회사 자료가 필요한 일이면 커넥터나 프로젝트가 답이에요.</p>
-<h4>장면 10 · 요약과 예고 (약 25초)</h4>
-<p><strong>화면:</strong> 세 줄 요약이 한 줄씩 나타남: &quot;1. 프롬프트 전에 네 가지 결정 2. 진입점은 일이 있는 자리 3. 기능은 필요한 것만&quot;. 아래에 &quot;다음: S08 모델과 컨텍스트&quot;.<br><strong>내레이션:</strong> 정리할게요. 프롬프트 전에 네 가지 결정이 있어요. 진입점은 일이 있는 자리에서 골라요. 기능은 필요한 것만 켜요. 다음 시간에는 남은 두 결정, 모델과 컨텍스트를 볼게요.</p></div></details></section>
-<section class="sec sec-sources"><h2>출처</h2><ul><li>Claude Forward Deployed Engineer 학습 경로, 코스 3 소개와 학습 목표(개요 사본 <code>_official-outline-2026-11-27.txt</code>): <a href="https://anthropic-partners.skilljar.com/path/claude-fde" target="_blank" rel="noopener noreferrer">https://anthropic-partners.skilljar.com/path/claude-fde</a></li><li>Claude 제품 개요(제품·기능 메뉴): <a href="https://claude.com/product/overview" target="_blank" rel="noopener noreferrer">https://claude.com/product/overview</a></li><li>Claude Academy, Choosing between Claude Cowork or Chat: <a href="https://academy.claude.com/tutorials/choosing-between-claude-cowork-or-chat" target="_blank" rel="noopener noreferrer">https://academy.claude.com/tutorials/choosing-between-claude-cowork-or-chat</a></li><li>Claude Help Center, Claude Cowork and chat are one Claude: <a href="https://support.claude.com/en/articles/16761823-claude-cowork-and-chat-are-one-claude" target="_blank" rel="noopener noreferrer">https://support.claude.com/en/articles/16761823-claude-cowork-and-chat-are-one-claude</a></li><li>Claude Help Center, Get started with Claude Cowork: <a href="https://support.claude.com/en/articles/13345190-get-started-with-claude-cowork" target="_blank" rel="noopener noreferrer">https://support.claude.com/en/articles/13345190-get-started-with-claude-cowork</a></li><li>Claude Help Center, Get started with Claude in Chrome: <a href="https://support.claude.com/en/articles/12012173-get-started-with-claude-in-chrome" target="_blank" rel="noopener noreferrer">https://support.claude.com/en/articles/12012173-get-started-with-claude-in-chrome</a></li><li>Claude Help Center, What is Claude Tag?: <a href="https://support.claude.com/en/articles/15594475-what-is-claude-tag" target="_blank" rel="noopener noreferrer">https://support.claude.com/en/articles/15594475-what-is-claude-tag</a></li><li>Claude for Microsoft 365: <a href="https://claude.com/claude-for-microsoft-365" target="_blank" rel="noopener noreferrer">https://claude.com/claude-for-microsoft-365</a></li><li>Claude for Google Workspace: <a href="https://claude.com/claude-for-google-workspace" target="_blank" rel="noopener noreferrer">https://claude.com/claude-for-google-workspace</a></li><li>Claude Code 문서, Overview: <a href="https://code.claude.com/docs/en/overview" target="_blank" rel="noopener noreferrer">https://code.claude.com/docs/en/overview</a></li><li>Claude Help Center, When should I use web search, extended thinking, and research?: <a href="https://support.claude.com/en/articles/11095361-when-should-i-use-web-search-extended-thinking-and-research" target="_blank" rel="noopener noreferrer">https://support.claude.com/en/articles/11095361-when-should-i-use-web-search-extended-thinking-and-research</a></li><li>Claude Help Center, Enable and use web search: <a href="https://support.claude.com/en/articles/10684626-enable-and-use-web-search" target="_blank" rel="noopener noreferrer">https://support.claude.com/en/articles/10684626-enable-and-use-web-search</a></li><li>Claude Help Center, Use connectors to extend Claude's capabilities: <a href="https://support.claude.com/en/articles/11176164-use-connectors-to-extend-claude-s-capabilities" target="_blank" rel="noopener noreferrer">https://support.claude.com/en/articles/11176164-use-connectors-to-extend-claude-s-capabilities</a></li><li>Claude Help Center, What are skills?: <a href="https://support.claude.com/en/articles/12512176-what-are-skills" target="_blank" rel="noopener noreferrer">https://support.claude.com/en/articles/12512176-what-are-skills</a></li><li>Claude Help Center, What are projects?: <a href="https://support.claude.com/en/articles/9517075-what-are-projects" target="_blank" rel="noopener noreferrer">https://support.claude.com/en/articles/9517075-what-are-projects</a></li><li>Claude Help Center, What are artifacts and how do I use them?: <a href="https://support.claude.com/en/articles/17153992-what-are-artifacts-and-how-do-i-use-them" target="_blank" rel="noopener noreferrer">https://support.claude.com/en/articles/17153992-what-are-artifacts-and-how-do-i-use-them</a></li><li>Claude Help Center, Create and edit files with Claude: <a href="https://support.claude.com/en/articles/12111783-create-and-edit-files-with-claude" target="_blank" rel="noopener noreferrer">https://support.claude.com/en/articles/12111783-create-and-edit-files-with-claude</a></li><li>Claude Help Center, How large is the context window on paid Claude plans?(도구와 커넥터가 토큰을 많이 쓴다는 안내): <a href="https://support.claude.com/en/articles/8606394-how-large-is-the-context-window-on-paid-claude-plans" target="_blank" rel="noopener noreferrer">https://support.claude.com/en/articles/8606394-how-large-is-the-context-window-on-paid-claude-plans</a></li></ul></section>
-</article>
-<section class="done-box">
-  <label><input type="checkbox" data-done="S07"> 이 세션을 다 했어요 <span class="muted">(이 브라우저에만 저장돼요)</span></label>
+<h3>장면 10 · 요약과 예고 (약 25초)</h3>
+<p><strong>화면:</strong> 세 줄 요약이 한 줄씩 나타남: &quot;1. 프롬프트 전에 네 가지 결정 2. 진입점은 일이 있는 자리 3. 기능은 필요한 것만&quot;. 아래에 &quot;다음: S08 모델과 컨텍스트&quot;.<br><strong>내레이션:</strong> 정리할게요. 프롬프트 전에 네 가지 결정이 있어요. 진입점은 일이 있는 자리에서 골라요. 기능은 필요한 것만 켜요. 다음 시간에는 남은 두 결정, 모델과 컨텍스트를 볼게요.</p></div></details>
+  </div>
 </section>
-<nav class="pager">
-  <a href="/t/claude-fde/s06-4d-discernment-diligence" target="_top" class="prev"><small>이전</small><span>S06 · 분별과 책임: 빌더의 검증</span></a>
-  <a href="/t/claude-fde/s08-model-context-decisions" target="_top" class="next"><small>다음</small><span>S08 · 결정 3·4: 모델 선택과 컨텍스트·메모리 관리</span></a>
-</nav>
-<footer class="disclaimer" role="note">
-  <strong>비공식 학습 자료</strong>
-  <p>이 노트는 Anthropic 공식 “Claude Forward Deployed Engineer” 학습 경로의 공개 개요와 공식 문서를 바탕으로 쓴 개인 학습 노트이며, 공식 강의 필기가 아니에요. 실제 강의·퀴즈·수료는 공식 경로에서 진행해요.</p>
-  <p>공식 경로: <a href="https://anthropic-partners.skilljar.com/path/claude-fde" target="_blank" rel="noopener noreferrer">https://anthropic-partners.skilljar.com/path/claude-fde</a></p>
-</footer>
+<section class="zoom" style="--zc:var(--mint);--zfill:var(--mint)" aria-label="핵심 단어: 진입점">
+  <div class="stage"><span class="word" aria-hidden="true" style="font-size:clamp(4rem, 20.7vw, 26rem)">진입점</span><span class="cap">&gt; 글자 속으로 들어가 볼까요</span></div>
+</section>
+<section class="room r-core" style="--wall:var(--mint);--floor:var(--bottle);--text:var(--ink);--serc:var(--cobalt);--line:86%" aria-labelledby="h-core">
+  <div class="inner">
+    <span class="mark"><b>##</b> 핵심 정리</span>
+    <h2 id="h-core" class="title">세 장만 기억해요</h2>
+    
+    <div class="bubbles"><article class="bubble rise"><span class="n">01</span><h3>프롬프트보다 먼저 정해지는 것</h3><div class="md"><p>요리로 치면 프롬프트는 레시피예요. 그런데 어느 주방에서, 어떤 도구로, 어떤 요리사와, 어떤 재료로 할지는 레시피보다 먼저 정해져요. 공식 코스 소개는 이 네 가지를 <strong>진입점</strong>(entry point), <strong>기능</strong>(capability features), <strong>모델</strong>(model), <strong>컨텍스트</strong>(context)라고 부르고, 이 결정들이 세션 품질의 천장을 정한다고 해요. S05의 위임이 &quot;무엇을 맡길까&quot;였다면 오늘은 &quot;어디서, 무엇을 켜고 맡길까&quot;예요. 모델과 컨텍스트는 S08에서 봅니다.</p></div></article>
+<article class="bubble rise wide"><span class="n">02</span><h3>결정 1: 진입점, 일이 어디에 있나</h3><div class="md"><p>진입점은 Claude와 일하는 자리예요. 공식 강의가 무엇을 진입점으로 꼽는지는 목차가 공개돼 있지 않아서(<span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>), claude.com 제품 메뉴와 도움말을 기준으로 정리했어요.</p>
+<div class="table-scroll"><table><thead><tr><th>진입점</th><th>일하는 방식</th><th>어울리는 일</th></tr></thead><tbody><tr><td>Claude 채팅 (웹·데스크톱·모바일)</td><td>한 턴씩 주고받는 대화</td><td>질문, 생각 정리, 가벼운 초안</td></tr><tr><td>Claude Cowork</td><td>목표를 맡기고 결과물을 받는 위임</td><td>파일과 도구를 오가는 여러 단계 작업</td></tr><tr><td>Claude Code</td><td>코드베이스를 읽고 고치고 명령을 실행</td><td>개발, 저장소 안의 작업 (S18부터)</td></tr><tr><td>일하던 앱 안의 Claude</td><td>Chrome 확장, Microsoft 365, Google Workspace, Slack의 Claude Tag</td><td>자리를 옮기지 않고 그 앱 안에서 하는 일</td></tr><tr><td>Claude Platform (API)</td><td>내 제품과 시스템에 Claude를 넣기</td><td>직접 만드는 서비스와 자동화 (S10부터)</td></tr></tbody></table></div>
+<p>채팅과 Cowork는 이렇게 갈라요. 목표가 아직 정리 중이면 채팅, 결과물이 분명하고 파일이나 도구를 건드려야 하면 Cowork예요. 둘을 한 대화로 합친 새 Claude 경험도 단계적으로 나오고 있어요. 그 화면에서는 모드를 고르지 않지만, &quot;대화로 풀 일인가, 통째로 맡길 일인가&quot;라는 판단은 그대로 남아요.</p></div></article>
+<article class="bubble rise"><span class="n">03</span><h3>결정 2: 기능, 무엇을 켤까</h3><div class="md"><p>기능은 그 자리에서 켜고 끄는 능력이에요. S01~S04에서 본 한계와 짝을 지으면 고르기 쉬워요.</p>
+<ul><li><strong>최신 정보가 필요하다</strong> (S02의 지식 컷오프): 웹 검색(web search)이나 리서치(Research). 검색 한두 번으로 풀리는 사실 확인은 웹 검색, 여러 출처를 찾아 종합하는 보고서는 리서치예요. 웹이 필요 없고 깊이 따져야 하는 문제는 확장 사고(S13)가 맞아요.</li><li><strong>우리 회사 정보를 모른다</strong>: 커넥터(connectors). Claude를 회사 앱과 서비스에 연결해요. 접근 범위는 연결된 서비스에서 그 사람이 가진 권한 그대로예요.</li><li><strong>매번 같은 방식을 설명한다</strong>: 스킬(skills)은 지시, 스크립트, 자료를 묶어 두고 필요할 때만 불러오는 꾸러미이고, 프로젝트(projects)는 자료와 지시를 담아 두는 작업 공간이에요.</li><li><strong>결과물이 파일이어야 한다</strong>: 아티팩트(artifacts)와 파일 만들기로 문서, 스프레드시트, 발표 자료를 받아요.</li></ul>
+<p>원칙은 &quot;다 켜지 않기&quot;예요. 도구와 커넥터는 토큰을 많이 써서 S03의 작업 기억을 차지해요. 쓸 수 있는 진입점과 기능은 플랜마다 달라요(예: Cowork와 리서치는 유료 플랜). Team·Enterprise 플랜에서는 웹 검색처럼 조직 소유자가 먼저 켜 줘야 쓸 수 있는 기능도 있어요.</p></div></article></div>
+  </div>
+</section>
+
+<section class="room r-note iris" style="--ix:25%" aria-label="노트">
+  <div class="inner">
+    <div class="page">
+      <div class="block"><h2><span class="mono">##</span>오늘의 목표</h2><ul class="ticks"><li>프롬프트를 쓰기 전에 내리는 네 가지 결정(진입점, 기능, 모델, 컨텍스트)을 순서대로 말할 수 있다.</li><li>업무 하나를 듣고 알맞은 진입점을 고르고 이유를 말할 수 있다.</li><li>웹 검색, 리서치, 커넥터, 스킬, 프로젝트 가운데 그 업무에 켤 기능을 고를 수 있다.</li></ul></div>
+      <div class="block"><h2><span class="mono">##</span>직접 해 보기 <span class="mono small">5분</span></h2><ul class="ticks"><li>이번 주에 한 일 세 가지를 적고, 각각 옆에 &quot;진입점 / 켤 기능&quot;을 한 줄로 적어 보세요. 예: &quot;경쟁사 가격 조사 → 채팅 / 리서치&quot;. 고르기 어려웠던 일이 있다면 무엇 때문에 망설였는지 적어 두세요.</li><li>Claude.ai에서 최근 소식이 필요한 질문을 하나 골라, 입력창의 &quot;+&quot; 메뉴에서 웹 검색을 끈 대화와 켠 대화에 똑같이 물어보세요. 출처 인용이 붙는지, 답의 날짜가 어떻게 다른지 보세요. (새 Claude 경험에서는 이 토글이 없고 Claude가 필요할 때 검색해요.)</li></ul></div>
+      <div class="block quiz" id="quiz"><h2><span class="mono">##</span>확인 문제 <span class="mono small">고르면 바로 채점</span></h2>
+  
+  <div class="q" data-answer="2"><p class="qq"><span class="mono">Q1</span>프롬프트를 쓰기 전의 네 가지 결정에 들지 않는 것은?</p>
+  <div class="opts"><button class="opt" type="button">진입점</button><button class="opt" type="button">컨텍스트</button><button class="opt" type="button">프롬프트 문장의 말투 다듬기</button></div>
+  <p class="why">네 가지 결정은 진입점, 기능, 모델, 컨텍스트예요. 문장 다듬기는 그다음 일이에요.</p></div>
+<div class="q" data-answer="1"><p class="qq"><span class="mono">Q2</span>&quot;폴더에 있는 계약서 30개를 읽고 조항 비교표를 스프레드시트로 만들어 줘.&quot; 가장 알맞은 진입점은?</p>
+  <div class="opts"><button class="opt" type="button">한 턴씩 주고받는 채팅</button><button class="opt" type="button">Claude Cowork</button><button class="opt" type="button">Slack의 Claude Tag</button></div>
+  <p class="why">결과물이 분명하고 여러 파일을 읽어야 하는 여러 단계 작업이라 위임이 맞아요.</p></div>
+<div class="q" data-answer="0"><p class="qq"><span class="mono">Q3</span>&quot;어제 그 회사 실적 발표에서 매출이 얼마였지?&quot;처럼 검색 한두 번으로 끝나는 사실 확인에 맞는 기능은?</p>
+  <div class="opts"><button class="opt" type="button">웹 검색</button><button class="opt" type="button">리서치</button><button class="opt" type="button">스킬</button></div>
+  <p class="why">검색 한두 번으로 풀리는 사실 확인은 웹 검색이에요. 리서치는 여러 출처를 종합하는 긴 조사에 써요.</p></div>
+<div class="q"><p class="qq"><span class="mono">Q4</span>(서술형) 커넥터와 스킬은 각각 무엇을 Claude에게 더해 주나요? 두세 문장으로 구분해 보세요.</p>
+  <details class="ans"><summary>예시 답 보기</summary><div class="md">커넥터는 Claude가 회사 앱과 서비스의 데이터에 닿고 그 안에서 작업하게 해 주는 연결이다. 스킬은 일을 하는 방법(지시, 스크립트, 자료)을 묶어 둔 것으로, 관련된 일이 나올 때 불러와 같은 방식으로 반복하게 해 준다. 하나는 &quot;무엇에 닿을 수 있나&quot;, 다른 하나는 &quot;어떻게 하나&quot;를 더한다.</div></details></div>
+<div class="q"><p class="qq"><span class="mono">Q5</span>(상황형) 고객사 영업팀장이 말해요. &quot;Claude한테 우리 거래처에 대해 물어봤는데 하나도 몰라요. 업무에는 못 쓰겠네요.&quot; 어떻게 답하고, 무엇을 제안할까요?</p>
+  <details class="ans"><summary>예시 답 보기</summary><div class="md">&quot;Claude는 학습한 내용과 지금 대화에 들어온 내용만 알아요. 거래처 정보는 어느 쪽에도 없었던 거예요&quot;라고 설명한다. 그다음 거래처 정보가 어디에 있는지 묻고, CRM이나 문서 저장소라면 커넥터 연결을, 정리된 자료 묶음이라면 프로젝트에 올리는 방법을 제안한다. 조직 관리자가 해당 기능을 켜 두었는지도 함께 확인한다.</div></details></div>
+  
+  </div>
+    </div>
+  </div>
+</section>
+<section class="room r-fde band iris" style="--wall:var(--lilac);--floor:var(--cobalt);--text:var(--ink);--serc:var(--cobalt);--line:76%;--ix:75%" aria-labelledby="h-fde">
+  <div class="inner">
+    <span class="mark"><b>##</b> FDE 관점</span>
+    <h2 id="h-fde" class="say">고객이 <em>&quot;Claude가 못해요&quot;</em>라고 할 때, 프롬프트 문제가 아니라 진입점이나 기능 문제인 경우가 많아요.</h2>
+    <div class="lead md"><p>그래서 FDE는 프롬프트를 고치기 전에 &quot;어디서 하셨어요? 무엇이 켜져 있었어요?&quot;를 먼저 물어요. 파일럿을 시작할 때는 고객 조직에서 어떤 진입점이 열려 있는지, 웹 검색이나 커넥터 같은 기능을 관리자가 켜 두었는지부터 확인해요. 이 목록이 곧 첫 출시 범위의 재료예요. 파일럿 계획서에는 &quot;첫 사용자는 이 진입점 하나에서, 이 기능 조합으로 시작한다&quot;를 한 줄로 적어 두세요. 범위가 좁아야 기준선과 비교하기도 쉬워요.</p></div>
+  </div>
+</section>
+<section class="room r-cards iris" style="--wall:var(--pink);--floor:var(--pink);--text:var(--ink);--serc:var(--cobalt);--ix:35%" aria-labelledby="h-cards">
+  <div class="inner">
+    <span class="mark"><b>##</b> 복습 카드</span>
+    <h2 id="h-cards" class="title">눌러서 뒤집기</h2>
+    <div class="cards"><button class="card" type="button" aria-pressed="false" style="--r:-3deg"><span class="face front"><span class="no">01</span><b>프롬프트를 쓰기 전에 내리는 네 가지 결정은?</b><span class="flip mono">눌러서 뒤집기</span></span><span class="face back" style="--bg:var(--sky)">진입점, 기능, 모델, 컨텍스트.</span></button>
+<button class="card" type="button" aria-pressed="false" style="--r:2deg"><span class="face front"><span class="no">02</span><b>채팅과 Cowork를 가르는 기준은?</b><span class="flip mono">눌러서 뒤집기</span></span><span class="face back" style="--bg:var(--pink)">주고받으며 풀 일은 채팅, 결과물이 분명하고 파일·도구를 건드리는 일은 Cowork.</span></button>
+<button class="card" type="button" aria-pressed="false" style="--r:-1.5deg"><span class="face front"><span class="no">03</span><b>웹 검색과 리서치의 차이는?</b><span class="flip mono">눌러서 뒤집기</span></span><span class="face back" style="--bg:var(--purple)">웹 검색은 검색 한두 번으로 끝나는 사실 확인, 리서치는 여러 출처를 여러 번 찾아 종합하는 보고서.</span></button>
+<button class="card" type="button" aria-pressed="false" style="--r:3deg"><span class="face front"><span class="no">04</span><b>커넥터는 어떤 권한으로 데이터에 접근하나?</b><span class="flip mono">눌러서 뒤집기</span></span><span class="face back" style="--bg:var(--mint)">연결된 서비스에서 그 사람이 가진 권한 그대로.</span></button>
+<button class="card" type="button" aria-pressed="false" style="--r:-2.5deg"><span class="face front"><span class="no">05</span><b>기능을 다 켜 두면 안 되는 이유는?</b><span class="flip mono">눌러서 뒤집기</span></span><span class="face back" style="--bg:var(--butter)">도구와 커넥터가 토큰을 많이 써서 컨텍스트를 차지하기 때문.</span></button></div>
+  </div>
+</section>
+
+<section class="room r-tt iris" style="--wall:var(--cobalt);--floor:var(--cobalt);--text:var(--paper);--serc:var(--pink);--ix:65%" id="timetable" aria-labelledby="h-tt">
+  <div class="inner">
+    <div class="endrow">
+      <label class="done-box"><input type="checkbox" data-done="S07"> 이 세션을 다 했어요 <span class="mono small">이 브라우저에만 저장</span></label>
+      <nav class="pager" aria-label="세션 이동">
+        <a href="/t/claude-fde/s06-4d-discernment-diligence" target="_top" class="pg">← S06</a>
+        <a href="/t/claude-fde/0000-course-home" target="_top" class="pg">코스 홈</a>
+        <a href="/t/claude-fde/s08-model-context-decisions" target="_top" class="pg pg-next">S08 · 결정 3·4: 모델 선택과 컨텍스트·메모리 관리 →</a>
+      </nav>
+    </div>
+    <span class="mark"><b>##</b> 전체 시간표</span>
+    <h2 id="h-tt" class="title">11개 코스, <span class="ser">42개</span> 세션</h2>
+    <div class="ledger"><div class="course rise"><h3><span>1. AI Capabilities and Limitations</span><span class="mono">4세션</span></h3>
+  <p class="cd mono">핵심, 약 60분</p><ol><li class=""><a href="/t/claude-fde/s01-next-token-prediction" target="_top"><span class="mono">S01</span><span class="tt">생성형 AI의 네 가지 성질과 다음 토큰 예측</span><span class="tag v">영상</span><span class="done-mark" data-done-mark="S01" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s02-knowledge" target="_top"><span class="mono">S02</span><span class="tt">지식: 학습 데이터, 지식 컷오프, 환각</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S02" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s03-working-memory" target="_top"><span class="mono">S03</span><span class="tt">작업 기억: 컨텍스트 윈도우</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S03" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s04-steerability-diagnosis" target="_top"><span class="mono">S04</span><span class="tt">조종 가능성과 예상 밖 출력 진단하기</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S04" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>2. AI Fluency for Builders</span><span class="mono">2세션</span></h3>
+  <p class="cd mono">핵심, 약 45분</p><ol><li class=""><a href="/t/claude-fde/s05-4d-delegation-description" target="_top"><span class="mono">S05</span><span class="tt">AI Fluency와 4D 프레임워크: 위임과 설명</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S05" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s06-4d-discernment-diligence" target="_top"><span class="mono">S06</span><span class="tt">분별과 책임: 빌더의 검증</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S06" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>3. Claude Platform and Model Foundations</span><span class="mono">2세션</span></h3>
+  <p class="cd mono">핵심, 약 60분</p><ol><li class="now" aria-current="page"><a href="/t/claude-fde/s07-entry-points-features" target="_top"><span class="mono">S07</span><span class="tt">결정 1·2: 진입점과 기능 고르기</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S07" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s08-model-context-decisions" target="_top"><span class="mono">S08</span><span class="tt">결정 3·4: 모델 선택과 컨텍스트·메모리 관리</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S08" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>4. Choosing the right Claude model</span><span class="mono">1세션</span></h3>
+  <p class="cd mono">핵심, 약 10분</p><ol><li class=""><a href="/t/claude-fde/s09-choosing-model" target="_top"><span class="mono">S09</span><span class="tt">네 가지 모델과 effort 조절</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S09" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>5. Claude Platform 101</span><span class="mono">8세션</span></h3>
+  <p class="cd mono">빌드, 약 90분</p><ol><li class=""><a href="/t/claude-fde/s10-platform-first-api-call" target="_top"><span class="mono">S10</span><span class="tt">Claude Platform이란, 첫 API 호출, 모델 고르기</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S10" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s11-agent-loop" target="_top"><span class="mono">S11</span><span class="tt">에이전트 루프</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S11" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s12-tool-use" target="_top"><span class="mono">S12</span><span class="tt">도구 사용 (tool use)</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S12" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s13-thinking" target="_top"><span class="mono">S13</span><span class="tt">확장 사고 (thinking)</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S13" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s14-built-in-tools-skills" target="_top"><span class="mono">S14</span><span class="tt">내장 도구와 Skills</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S14" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s15-mcp-context-management" target="_top"><span class="mono">S15</span><span class="tt">MCP와 컨텍스트 관리</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S15" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s16-managed-agents" target="_top"><span class="mono">S16</span><span class="tt">Managed Agents</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S16" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s17-building-with-claude-code" target="_top"><span class="mono">S17</span><span class="tt">Claude Code로 만들기 + 코스 5 총정리</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S17" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>6. Claude Code 101</span><span class="mono">5세션</span></h3>
+  <p class="cd mono">빌드, 약 60분</p><ol><li class=""><a href="/t/claude-fde/s18-what-is-claude-code" target="_top"><span class="mono">S18</span><span class="tt">Claude Code란: 에이전트 루프, 컨텍스트, 도구와 권한, 설치</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S18" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s19-first-prompt-modes" target="_top"><span class="mono">S19</span><span class="tt">첫 프롬프트: 승인 모드, 자동 수락, Plan Mode</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S19" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s20-daily-workflows" target="_top"><span class="mono">S20</span><span class="tt">일상 워크플로: Explore → Plan → Code → Commit, 리뷰, 컨텍스트 명령</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S20" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s21-claude-md-subagents" target="_top"><span class="mono">S21</span><span class="tt">커스터마이즈 1: CLAUDE.md와 서브에이전트</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S21" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s22-skills-mcp-hooks" target="_top"><span class="mono">S22</span><span class="tt">커스터마이즈 2: skills, MCP, hooks</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S22" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>7. Claude Code in Action</span><span class="mono">5세션</span></h3>
+  <p class="cd mono">빌드, 약 60분</p><ol><li class=""><a href="/t/claude-fde/s23-steer-the-work" target="_top"><span class="mono">S23</span><span class="tt">작업 조종: plan mode, 압축(compaction), 되감기(rewind)</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S23" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s24-configure-claude" target="_top"><span class="mono">S24</span><span class="tt">설정: 간결한 CLAUDE.md, 지시를 둘 자리, 검증 skill</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S24" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s25-permissions-hooks" target="_top"><span class="mono">S25</span><span class="tt">권한 모드와 hooks로 규칙 강제하기</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S25" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s26-automate-repeat-work" target="_top"><span class="mono">S26</span><span class="tt">반복 작업 자동화: 자율 세션, worktree, routines, headless, PR 리뷰</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S26" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s27-verify-share" target="_top"><span class="mono">S27</span><span class="tt">검증과 공유: 무감독 실행 검증, plugin</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S27" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>8. Introduction to Model Context Protocol</span><span class="mono">4세션</span></h3>
+  <p class="cd mono">빌드, 약 60분</p><ol><li class=""><a href="/t/claude-fde/s28-mcp-architecture" target="_top"><span class="mono">S28</span><span class="tt">MCP 구조: 클라이언트와 서버</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S28" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s29-mcp-server-tools" target="_top"><span class="mono">S29</span><span class="tt">서버 만들기: tools와 MCP Inspector</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S29" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s30-mcp-resources-prompts" target="_top"><span class="mono">S30</span><span class="tt">Resources와 Prompts, 셋 중 무엇을 쓸까</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S30" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s31-mcp-client" target="_top"><span class="mono">S31</span><span class="tt">클라이언트 구현: 연결, 비동기, 정리</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S31" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>9. Introduction to agent skills</span><span class="mono">3세션</span></h3>
+  <p class="cd mono">빌드, 약 30분</p><ol><li class=""><a href="/t/claude-fde/s32-what-are-skills" target="_top"><span class="mono">S32</span><span class="tt">Skill이란, 첫 skill 만들기</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S32" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s33-skill-config-comparison" target="_top"><span class="mono">S33</span><span class="tt">설정과 여러 파일 skill, 다른 기능과 비교</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S33" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s34-sharing-troubleshooting-skills" target="_top"><span class="mono">S34</span><span class="tt">skill 공유와 문제 해결</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S34" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>10. Delivery Methodology</span><span class="mono">4세션</span></h3>
+  <p class="cd mono">파일럿, 약 40분</p><ol><li class=""><a href="/t/claude-fde/s35-use-case-qualification" target="_top"><span class="mono">S35</span><span class="tt">유스케이스 발굴과 자격 판정</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S35" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s36-pilot-design-roi" target="_top"><span class="mono">S36</span><span class="tt">파일럿 설계와 ROI 측정</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S36" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s37-rollout-champions" target="_top"><span class="mono">S37</span><span class="tt">단계적 롤아웃, 변화 관리, 챔피언</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S37" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s38-failure-modes-30-day" target="_top"><span class="mono">S38</span><span class="tt">흔한 실패 모드 예방과 30일 활성화</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S38" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>11. Driving enterprise adoption of Claude</span><span class="mono">3세션</span></h3>
+  <p class="cd mono">파일럿, 약 60분</p><ol><li class=""><a href="/t/claude-fde/s39-activation" target="_top"><span class="mono">S39</span><span class="tt">1단계 Activation: 성공 팀, 프로비저닝, 문화, 교육, 런치</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S39" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s40-acceleration" target="_top"><span class="mono">S40</span><span class="tt">2단계 Acceleration: CoE와 Train the Trainer</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S40" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s41-expansion" target="_top"><span class="mono">S41</span><span class="tt">3단계 Expansion: 측정, 축하, 반복, 새 유스케이스</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S41" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>캡스톤</span><span class="mono">1세션</span></h3>
+  <ol><li class=""><a href="/t/claude-fde/s42-capstone-pilot-plan" target="_top"><span class="mono">S42</span><span class="tt">파일럿 계획서 쓰기</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S42" aria-hidden="true"></span></a></li></ol></div></div>
+  </div>
+</section>
 </main>
+<footer class="night" role="contentinfo">
+  <div class="inner">
+    <p class="end">FDE <span class="ser">study</span><span class="dot end-dot" aria-hidden="true"></span></p>
+    <p><b>비공식 학습 자료.</b> 이 노트는 Anthropic 공식 “Claude Forward Deployed Engineer” 학습 경로의 공개 개요와 공식 문서를 바탕으로 쓴 개인 학습 노트이며, 공식 강의 필기가 아니에요. 실제 강의·퀴즈·수료는 공식 경로에서 진행해요.</p>
+    <p>공식 경로: <a href="https://anthropic-partners.skilljar.com/path/claude-fde" target="_blank" rel="noopener noreferrer">https://anthropic-partners.skilljar.com/path/claude-fde</a></p>
+    <div class="sources"><p class="mono">## 출처</p><div class="md"><ul><li>Claude Forward Deployed Engineer 학습 경로, 코스 3 소개와 학습 목표(개요 사본 <code>_official-outline-2026-11-27.txt</code>): <a href="https://anthropic-partners.skilljar.com/path/claude-fde" target="_blank" rel="noopener noreferrer">https://anthropic-partners.skilljar.com/path/claude-fde</a></li><li>Claude 제품 개요(제품·기능 메뉴): <a href="https://claude.com/product/overview" target="_blank" rel="noopener noreferrer">https://claude.com/product/overview</a></li><li>Claude Academy, Choosing between Claude Cowork or Chat: <a href="https://academy.claude.com/tutorials/choosing-between-claude-cowork-or-chat" target="_blank" rel="noopener noreferrer">https://academy.claude.com/tutorials/choosing-between-claude-cowork-or-chat</a></li><li>Claude Help Center, Claude Cowork and chat are one Claude: <a href="https://support.claude.com/en/articles/16761823-claude-cowork-and-chat-are-one-claude" target="_blank" rel="noopener noreferrer">https://support.claude.com/en/articles/16761823-claude-cowork-and-chat-are-one-claude</a></li><li>Claude Help Center, Get started with Claude Cowork: <a href="https://support.claude.com/en/articles/13345190-get-started-with-claude-cowork" target="_blank" rel="noopener noreferrer">https://support.claude.com/en/articles/13345190-get-started-with-claude-cowork</a></li><li>Claude Help Center, Get started with Claude in Chrome: <a href="https://support.claude.com/en/articles/12012173-get-started-with-claude-in-chrome" target="_blank" rel="noopener noreferrer">https://support.claude.com/en/articles/12012173-get-started-with-claude-in-chrome</a></li><li>Claude Help Center, What is Claude Tag?: <a href="https://support.claude.com/en/articles/15594475-what-is-claude-tag" target="_blank" rel="noopener noreferrer">https://support.claude.com/en/articles/15594475-what-is-claude-tag</a></li><li>Claude for Microsoft 365: <a href="https://claude.com/claude-for-microsoft-365" target="_blank" rel="noopener noreferrer">https://claude.com/claude-for-microsoft-365</a></li><li>Claude for Google Workspace: <a href="https://claude.com/claude-for-google-workspace" target="_blank" rel="noopener noreferrer">https://claude.com/claude-for-google-workspace</a></li><li>Claude Code 문서, Overview: <a href="https://code.claude.com/docs/en/overview" target="_blank" rel="noopener noreferrer">https://code.claude.com/docs/en/overview</a></li><li>Claude Help Center, When should I use web search, extended thinking, and research?: <a href="https://support.claude.com/en/articles/11095361-when-should-i-use-web-search-extended-thinking-and-research" target="_blank" rel="noopener noreferrer">https://support.claude.com/en/articles/11095361-when-should-i-use-web-search-extended-thinking-and-research</a></li><li>Claude Help Center, Enable and use web search: <a href="https://support.claude.com/en/articles/10684626-enable-and-use-web-search" target="_blank" rel="noopener noreferrer">https://support.claude.com/en/articles/10684626-enable-and-use-web-search</a></li><li>Claude Help Center, Use connectors to extend Claude's capabilities: <a href="https://support.claude.com/en/articles/11176164-use-connectors-to-extend-claude-s-capabilities" target="_blank" rel="noopener noreferrer">https://support.claude.com/en/articles/11176164-use-connectors-to-extend-claude-s-capabilities</a></li><li>Claude Help Center, What are skills?: <a href="https://support.claude.com/en/articles/12512176-what-are-skills" target="_blank" rel="noopener noreferrer">https://support.claude.com/en/articles/12512176-what-are-skills</a></li><li>Claude Help Center, What are projects?: <a href="https://support.claude.com/en/articles/9517075-what-are-projects" target="_blank" rel="noopener noreferrer">https://support.claude.com/en/articles/9517075-what-are-projects</a></li><li>Claude Help Center, What are artifacts and how do I use them?: <a href="https://support.claude.com/en/articles/17153992-what-are-artifacts-and-how-do-i-use-them" target="_blank" rel="noopener noreferrer">https://support.claude.com/en/articles/17153992-what-are-artifacts-and-how-do-i-use-them</a></li><li>Claude Help Center, Create and edit files with Claude: <a href="https://support.claude.com/en/articles/12111783-create-and-edit-files-with-claude" target="_blank" rel="noopener noreferrer">https://support.claude.com/en/articles/12111783-create-and-edit-files-with-claude</a></li><li>Claude Help Center, How large is the context window on paid Claude plans?(도구와 커넥터가 토큰을 많이 쓴다는 안내): <a href="https://support.claude.com/en/articles/8606394-how-large-is-the-context-window-on-paid-claude-plans" target="_blank" rel="noopener noreferrer">https://support.claude.com/en/articles/8606394-how-large-is-the-context-window-on-paid-claude-plans</a></li></ul></div></div>
+  </div>
+</footer>
+
 <script src="fde.js"></script>
 </body>
 </html>

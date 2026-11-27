@@ -64,7 +64,10 @@ function importFromSource() {
   for (const f of wanted) copyFileSync(join(courseSrc, f), join(snapshotDir, f));
 
   const images = new Set(
-    [config.courseImage, ...Object.values(config.sessions || {}).map((s) => s.poster)].filter(Boolean)
+    [
+      config.home?.hero,
+      ...Object.values(config.sessions || {}).flatMap((s) => [s.poster, s.hero]),
+    ].filter(Boolean)
   );
   mkdirSync(join(outDir, "img"), { recursive: true });
   for (const rel of images) {
@@ -379,32 +382,61 @@ function parseCurriculum(readme) {
   return courses;
 }
 
-// ---------------------------------------------------------------- page shell
+// ---------------------------------------------------------------- stage (강의실 디자인)
 
-function disclaimer() {
-  return `<footer class="disclaimer" role="note">
-  <strong>비공식 학습 자료</strong>
-  <p>이 노트는 Anthropic 공식 “Claude Forward Deployed Engineer” 학습 경로의 공개 개요와 공식 문서를 바탕으로 쓴 개인 학습 노트이며, 공식 강의 필기가 아니에요. 실제 강의·퀴즈·수료는 공식 경로에서 진행해요.</p>
-  <p>공식 경로: <a href="${OFFICIAL_URL}" target="_blank" rel="noopener noreferrer">${OFFICIAL_URL}</a></p>
+// 벽이 어두우면 글자는 종이색, 밝으면 먹색
+const DARK = new Set(["cobalt", "bottle", "ink", "tomato", "night"]);
+const room = (wall, floor, line) =>
+  `--wall:var(--${wall});--floor:var(--${floor});--text:var(--${DARK.has(wall) ? "paper" : "ink"})` +
+  `;--serc:var(--${DARK.has(wall) ? "pink" : wall === "sky" ? "ink" : "cobalt"})${line ? `;--line:${line}` : ""}`;
+
+// 코스마다 한 벌씩 돌려 쓰는 무대 색 (같은 시리즈, 다른 방)
+const THEMES = [
+  { video: "pink", zoom: "lilac", core: ["lilac", "bottle"], lab: ["butter", "tomato"], fde: ["mint", "tomato"], cards: "mustard" },
+  { video: "butter", zoom: "butter", core: ["butter", "cobalt"], lab: ["sky", "tomato"], fde: ["pink", "bottle"], cards: "sky" },
+  { video: "mint", zoom: "mint", core: ["mint", "bottle"], lab: ["pink", "cobalt"], fde: ["lilac", "cobalt"], cards: "pink" },
+  { video: "sky", zoom: "pink", core: ["pink", "bottle"], lab: ["mint", "tomato"], fde: ["butter", "tomato"], cards: "lilac" },
+  { video: "lilac", zoom: "sky", core: ["sky", "bottle"], lab: ["butter", "cobalt"], fde: ["purple", "bottle"], cards: "butter" },
+  { video: "butter", zoom: "purple", core: ["purple", "cobalt"], lab: ["mint", "bottle"], fde: ["beige", "tomato"], cards: "mint" },
+];
+const CARD_BACKS = ["sky", "pink", "purple", "mint", "butter", "lilac"];
+const TILTS = [-3, 2, -1.5, 3, -2.5, 1.5];
+
+const stats = { auto: 0, essay: 0, folded: [], fallback: [] };
+
+function disclaimerText() {
+  return `<p><b>비공식 학습 자료.</b> 이 노트는 Anthropic 공식 “Claude Forward Deployed Engineer” 학습 경로의 공개 개요와 공식 문서를 바탕으로 쓴 개인 학습 노트이며, 공식 강의 필기가 아니에요. 실제 강의·퀴즈·수료는 공식 경로에서 진행해요.</p>
+    <p>공식 경로: <a href="${OFFICIAL_URL}" target="_blank" rel="noopener noreferrer">${OFFICIAL_URL}</a></p>`;
+}
+
+function night(extra = "") {
+  return `<footer class="night" role="contentinfo">
+  <div class="inner">
+    <p class="end">FDE <span class="ser">study</span><span class="dot end-dot" aria-hidden="true"></span></p>
+    ${disclaimerText()}
+    ${extra}
+  </div>
 </footer>`;
 }
 
-function page({ title, description, body, sessionId = "" }) {
+function page({ title, description, body, sessionId = "", data = null }) {
   return `<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="${esc(description)}">
+<meta name="color-scheme" content="light">
 <title>${esc(title)}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,700;12..96,800&family=Cutive+Mono&family=Gowun+Batang:wght@400;700&family=Instrument+Serif:ital@0;1&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap">
 <link rel="stylesheet" href="fde.css">
 </head>
 <body${sessionId ? ` data-session="${sessionId}"` : ""}>
-<!-- 자동 생성 파일: scripts/sync-fde.mjs 가 만들어요. 직접 고치지 말고 원본 노트를 고친 뒤 npm run fde:sync 하세요. -->
-<main class="wrap">
+<!-- 자동 생성 파일: scripts/sync-fde.mjs 가 만들어요. 직접 고치지 말고 원본 노트나 claude-fde-course/ 를 고친 뒤 npm run fde:render 하세요. -->
 ${body}
-${disclaimer()}
-</main>
+${data ? `<script type="application/json" id="fde-data">${JSON.stringify(data).replace(/</g, "\\u003c")}</script>` : ""}
 <script src="fde.js"></script>
 </body>
 </html>
@@ -412,135 +444,397 @@ ${disclaimer()}
 }
 
 const sessionHref = (n) => `/t/${TOPIC}/${n.slug}`;
+const homeHref = `/t/${TOPIC}/${HOME_ID}`;
 const link = (href, html, cls = "") => `<a href="${href}" target="_top"${cls ? ` class="${cls}"` : ""}>${html}</a>`;
+const mark = (text) => `<span class="mark"><b>##</b> ${text}</span>`;
+const KNUM = ["", "한", "두", "세", "네", "다섯", "여섯", "일곱", "여덟", "아홉", "열"];
 
-function videoBlock(n) {
-  const v = n.video;
-  if (!v) return "";
-  let player;
-  if (v.url) {
-    const yt = v.url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([\w-]{6,})/);
-    player = yt
-      ? `<iframe src="https://www.youtube-nocookie.com/embed/${yt[1]}" title="${esc(n.id)} 강의 영상" allow="encrypted-media; picture-in-picture; fullscreen" allowfullscreen loading="lazy"></iframe>`
-      : `<video controls playsinline preload="metadata" src="${esc(v.url)}"${v.poster ? ` poster="img/${esc(v.poster)}"` : ""}></video>`;
-  } else {
-    player = `<div class="video-placeholder"${v.poster ? ` style="background-image:url('img/${esc(v.poster)}')"` : ""}>
-      <div class="video-placeholder-text"><span class="pill">영상 준비 중</span><p>${esc(v.note || "이 세션의 영상은 아직 연결되지 않았어요.")}</p></div>
-    </div>`;
+/** `*단어*` 를 분홍 세리프 강조로 */
+const accent = (text) => inline(text).replace(/<em>(.+?)<\/em>/g, '<span class="ser">$1</span>');
+
+function hud(label, href) {
+  return `<nav class="hud" aria-label="코스">
+  ${link(homeHref, `Claude FDE 스터디 <span class="dot" aria-hidden="true"></span><span class="long">비공식 노트</span>`, "brand")}
+  <a class="pill" href="${href}">${label} <i aria-hidden="true"></i></a>
+</nav>`;
+}
+
+function videoUrl(url) {
+  const yt = url.match(/(?:youtube(?:-nocookie)?\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|live\/)|youtu\.be\/)([\w-]{6,})/);
+  return yt ? { kind: "youtube", id: yt[1] } : { kind: "file", src: url };
+}
+
+// ---------------------------------------------------------------- zoom word
+
+const JOSA = ["으로", "에서", "에게", "과", "와", "의", "은", "는", "이", "가", "을", "를", "로", "에", "도"];
+const STOP = new Set(["가지", "다음", "하나", "무엇", "결정", "단계", "총정리", "만들기", "고르기", "보기", "하기", "쓰기", "이란", "그리고", "코스", "claude", "ai", "mode", "managed", "the"]);
+const stem = (w) => {
+  for (const j of JOSA) if (w.length - j.length >= 2 && w.endsWith(j)) return w.slice(0, -j.length);
+  return w;
+};
+
+function pickZoom(n) {
+  if (n.cfg.zoom) return n.cfg.zoom;
+  const core = n.sections.find((s) => s.title === "핵심 정리");
+  const text = `${n.title}\n${core ? core.lines.join("\n") : ""}`.toLowerCase();
+  const cands = n.title.replace(/^S\d+\.\s*/, "")
+    .split(/[\s:·,()\/+→“”"'?!.]+/).filter(Boolean).map(stem)
+    .filter((w) => !STOP.has(w) && !STOP.has(w.toLowerCase()) && (/^[가-힣]{2,4}$/.test(w) || /^[A-Za-z][A-Za-z.-]{1,7}$/.test(w)));
+  let best = "", score = -1;
+  for (const w of cands) {
+    const s = text.split(w.toLowerCase()).length - 1;
+    if (s > score) { best = w; score = s; }
   }
-  return `<section class="player" aria-label="강의 영상">${player}</section>`;
+  return best || "FDE";
+}
+
+function zoomSize(word) {
+  const korean = /[가-힣]/.test(word);
+  const vw = Math.min(30, (korean ? 62 : 92) / Math.max(1, word.length));
+  return `font-size:clamp(${korean ? 4 : 3.5}rem, ${vw.toFixed(1)}vw, 26rem)`;
+}
+
+// ---------------------------------------------------------------- section helpers
+
+const nonBlank = (lines) => lines.some((l) => !isBlank(l));
+
+/** A section that is only one list → ticks; otherwise ordinary blocks. */
+function ticksOrBlocks(lines) {
+  const first = lines.findIndex((l) => !isBlank(l));
+  if (first >= 0 && LIST_RE.test(lines[first]) && indentOf(lines[first]) === 0) {
+    const list = collectList(lines, first);
+    if (!nonBlank(lines.slice(list.next))) {
+      return `<ul class="ticks">${list.items.map((b) => `<li>${renderItem(b)}</li>`).join("")}</ul>`;
+    }
+  }
+  return `<div class="md">${renderBlocks(lines)}</div>`;
+}
+
+/** 핵심 정리 → lead + 말풍선 카드 (### 마다 한 장). Fence-aware. */
+function splitSub(lines) {
+  const lead = [];
+  const subs = [];
+  let cur = null;
+  let fence = false;
+  for (const l of lines) {
+    if (FENCE_RE.test(l)) fence = !fence;
+    const h = !fence && l.match(/^###\s+(.*)$/);
+    if (h) { cur = { title: h[1].trim(), lines: [] }; subs.push(cur); continue; }
+    (cur ? cur.lines : lead).push(l);
+  }
+  return { lead, subs };
+}
+
+const OPT_RE = /^\s*[-*+]\s+\(([a-h])\)\s*(.*)$/;
+
+function quizItem(qi, ai, sid) {
+  const opts = [];
+  const qLines = [];
+  for (const l of qi.body) {
+    const m = l.match(OPT_RE);
+    if (m) opts.push(m);
+    else qLines.push(l);
+  }
+  const sequential = opts.length >= 2 && opts.every((m, k) => m[1] === "abcdefgh"[k]);
+  const first = (ai.body[0] || "").trim();
+  const am = first.match(/^\(([a-h])\)\.?(?:\s+|$)(.*)$/);
+  const multi = am && /^[,와과및]|^\s*[,와과및]\s*\(/.test(am[2]);
+  const qHtml = renderBlocks(qLines, { tight: true });
+  const head = `<p class="qq"><span class="mono">Q${qi.num}</span>${qHtml}</p>`;
+
+  if (sequential && am && !multi && "abcdefgh".indexOf(am[1]) < opts.length) {
+    stats.auto++;
+    const why = renderBlocks([am[2], ...ai.body.slice(1)], { tight: true });
+    return `<div class="q" data-answer="${"abcdefgh".indexOf(am[1])}">${head}
+  <div class="opts">${opts.map((m) => `<button class="opt" type="button">${inline(m[2])}</button>`).join("")}</div>
+  <p class="why">${why}</p></div>`;
+  }
+  if (sequential || am) {
+    stats.folded.push(`${sid} Q${qi.num}: ${sequential ? "보기는 있지만 정답 표기를 읽지 못함" : "정답 표기는 있지만 보기 목록을 읽지 못함"}`);
+  } else {
+    stats.essay++;
+  }
+  const optsHtml = opts.length ? `<ul class="opt-list">${opts.map((m) => `<li>(${m[1]}) ${inline(m[2])}</li>`).join("")}</ul>` : "";
+  const body = [...ai.body];
+  body[0] = (body[0] || "").replace(/^예시 답\s*:\s*/, "");
+  return `<div class="q">${head}${optsHtml}
+  <details class="ans"><summary>${sequential || am ? "정답과 해설 보기" : "예시 답 보기"}</summary><div class="md">${renderItem(body)}</div></details></div>`;
+}
+
+function quizHtml(n) {
+  const qs = n.sections.find((s) => s.title === "확인 문제");
+  const as = n.sections.find((s) => s.title === "정답과 해설");
+  if (!qs) return "";
+  const q = topOrderedItems(qs.lines);
+  const a = as && topOrderedItems(as.lines);
+  const paired = q && a && !nonBlank(a.lead) && q.items.length === a.items.length &&
+    q.items.every((it, k) => it.num === a.items[k].num);
+  if (!paired) {
+    stats.fallback.push(`${n.id}: 확인 문제와 정답의 번호 목록이 맞지 않아 전체를 접음`);
+    return `<div class="block" id="quiz"><h2><span class="mono">##</span>확인 문제</h2>
+  <div class="md">${renderBlocks(qs.lines)}</div>
+  ${as ? `<details class="ans big"><summary>정답과 해설 펼치기</summary><div class="md">${renderBlocks(as.lines)}</div></details>` : ""}</div>`;
+  }
+  const items = q.items.map((it, k) => quizItem(it, a.items[k], n.id)).join("\n");
+  const rest = nonBlank(a.tail)
+    ? `<details class="ans"><summary>나머지 해설 보기</summary><div class="md">${renderBlocks(a.tail)}</div></details>` : "";
+  const graded = /data-answer/.test(items);
+  return `<div class="block quiz" id="quiz"><h2><span class="mono">##</span>확인 문제 ${graded ? `<span class="mono small">고르면 바로 채점</span>` : ""}</h2>
+  ${nonBlank(q.lead) ? `<div class="md">${renderBlocks(q.lead)}</div>` : ""}
+  ${items}
+  ${nonBlank(q.tail) ? `<div class="md">${renderBlocks(q.tail)}</div>` : ""}
+  ${rest}</div>`;
+}
+
+function ledger(courses, byId, currentId = "") {
+  return `<div class="ledger">${courses.map((c, ci) => {
+    const no = ci < 11 ? `${ci + 1}. ` : "";
+    const rows = c.sessions.map((s) => {
+      const n = byId.get(s.id);
+      const tag = n?.video?.url ? `<span class="tag v">영상</span>` : `<span class="tag n">노트</span>`;
+      const inner = `<span class="mono">${s.id}</span><span class="tt">${inline(s.topic)}</span>${tag}<span class="done-mark" data-done-mark="${s.id}" aria-hidden="true"></span>`;
+      const cls = s.id === currentId ? "now" : "";
+      return `<li class="${cls}"${s.id === currentId ? ' aria-current="page"' : ""}>${n ? link(sessionHref(n), inner) : `<span class="row">${inner}</span>`}</li>`;
+    }).join("");
+    return `<div class="course rise"><h3><span>${no}${inline(c.name.replace(/^\d+\.\s*/, ""))}</span><span class="mono">${c.sessions.length}세션</span></h3>
+  ${c.detail ? `<p class="cd mono">${esc(c.detail)}</p>` : ""}<ol>${rows}</ol></div>`;
+  }).join("\n")}</div>`;
+}
+
+function labRoom(lab, theme, ix) {
+  const [wall, floor] = theme.lab;
+  return `<section class="room r-lab iris" style="${room(wall, floor, "74%")};--ix:${ix}%" aria-label="${esc(lab.title || "직접 뽑아 보기")}">
+  <div class="inner">
+    ${mark(esc(lab.mark || "직접 뽑아 보기"))}
+    <h2 class="title">${accent(lab.title || "")}</h2>
+    <div class="lab" data-lab>
+      <div class="row" aria-live="polite">${(lab.prefix || []).map((w) => `<span class="block">${esc(w)}</span>`).join("")}<span class="block next" data-lab-next>?</span></div>
+      <div class="dist">
+        <div class="bars" data-lab-bars></div>
+        <div class="go-row"><button class="go" type="button" data-lab-draw>한 번 뽑기</button><span class="tally" data-lab-tally>아직 뽑지 않았어요</span></div>
+        ${lab.note ? `<span class="tally">${esc(lab.note)}</span>` : ""}
+      </div>
+    </div>
+  </div>
+</section>`;
 }
 
 // ---------------------------------------------------------------- session page
 
-function renderSession(n, all, idx) {
-  const { meta, sections, pre } = n;
-  const byTitle = new Map(sections.map((s) => [s.title, s]));
-  const questions = byTitle.get("확인 문제");
-  const answers = byTitle.get("정답과 해설");
-  const cardsSec = byTitle.get("복습 카드");
-  const scriptSec = byTitle.get("영상 대본");
+function renderSession(n, all, idx, courses) {
+  const { meta } = n;
+  const theme = THEMES[n.courseIdx % THEMES.length];
+  const pos = n.posInCourse;
+  const ixs = [50, 80, 20, 70, 30, 60].map((v) => (v + pos * 13) % 90 + 5);
+  const sec = (t) => n.sections.find((s) => s.title === t || s.title.startsWith(t));
+  const KNOWN = ["오늘의 목표", "핵심 정리", "직접 해 보기", "확인 문제", "정답과 해설", "FDE 관점", "복습 카드", "영상 대본", "출처"];
+  const zoom = pickZoom(n);
+  const titleText = n.title.replace(/^S\d+\.\s*/, "");
+  const headline = n.cfg.headline
+    ? accent(n.cfg.headline)
+    : inline(titleText).replace(new RegExp(zoom.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")), (m) => `<span class="ser">${m}</span>`);
+  const goals = sec("오늘의 목표");
+  const qCount = (() => { const q = sec("확인 문제"); const t = q && topOrderedItems(q.lines); return t ? t.items.length : 0; })();
+  const cardsSec = sec("복습 카드");
+  const cardLines = cardsSec ? cardsSec.lines.filter((l) => !isBlank(l)) : [];
+  const cards = cardLines.map((l) => l.match(/^\s*[-*]\s+Q:\s*(.+?)\s+\/\s+A:\s*(.+)$/));
+  const scriptSec = sec("영상 대본");
+  const scenes = scriptSec ? scriptSec.lines.filter((l) => /^###\s/.test(l)).length : 0;
+  const courseNo = n.courseIdx < 11 ? `코스 ${n.courseIdx + 1}` : "캡스톤";
+  const courseName = (n.courseName || meta.course || "").replace(/^\d+\.\s*/, "");
 
-  let paired = null;
-  if (questions && answers) {
-    const q = topOrderedItems(questions.lines);
-    const a = topOrderedItems(answers.lines);
-    if (q && a && !a.lead.some((l) => !isBlank(l)) && q.items.length === a.items.length &&
-        q.items.every((it, k) => it.num === a.items[k].num)) {
-      paired = { q, a };
-    }
+  const lines = n.cfg.lines || [
+    goals && (() => { const f = goals.lines.find((l) => LIST_RE.test(l)); return f ? f.replace(LIST_RE, "$3") : ""; })(),
+    [meta.minutes && `${meta.minutes}분`, qCount && `확인 문제 ${qCount}개`, cards.filter(Boolean).length && `복습 카드 ${cards.filter(Boolean).length}장`].filter(Boolean).join(" · "),
+    n.checks ? `확인 필요 표시 ${n.checks}곳` : "노트 초안 · 비공식",
+  ].filter(Boolean);
+
+  // ---- hero
+  const heroImg = n.cfg.hero;
+  const heroCopy = `<div class="copy">
+    ${mark(`${courseNo} · ${inline(courseName)}`).replace('class="mark"', 'class="mark land"')}
+    <h1 class="land l2">${headline}</h1>
+    <div class="lines land l3">${lines.map((l) => `<span>${inline(l)}</span>`).join("")}</div>
+    <span class="by">${esc(n.id)} · ${inline(titleText)}</span>
+  </div>`;
+  const hero = heroImg
+    ? `<header class="room hero">
+  <div class="art"><img src="img/${esc(basename(heroImg))}" alt="${esc(n.cfg.heroAlt || "")}" width="1600" height="893"></div>
+  ${heroCopy}
+</header>`
+    : `<header class="room hero type" style="${room("cobalt", "beige", "78%")}">
+  ${heroCopy}
+  <span class="numeral" aria-hidden="true">${esc(n.id.slice(1))}</span>
+</header>`;
+
+  // ---- video
+  const v = n.video;
+  let screen;
+  if (v?.url) {
+    const vu = videoUrl(v.url);
+    screen = vu.kind === "youtube"
+      ? `<iframe src="https://www.youtube-nocookie.com/embed/${vu.id}?rel=0" title="${esc(n.id)} 강의 영상" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>`
+      : `<video controls playsinline preload="metadata" src="${esc(vu.src)}"${v.poster ? ` poster="img/${esc(v.poster)}"` : ""}></video>`;
+  } else {
+    screen = `<div class="ph"${v?.poster ? ` style="background-image:url('img/${esc(v.poster)}')"` : ""}>
+      ${v?.poster ? "" : `<span class="ph-id" aria-hidden="true">${esc(n.id)}</span>`}
+      <span class="ph-pill">영상 준비 중</span>
+    </div>`;
+  }
+  const scriptDetails = scriptSec
+    ? `<details class="next"><summary>영상 대본 펼치기</summary><div class="script md">${renderBlocks(scriptSec.lines, { shift: 0 })}</div></details>` : "";
+  const videoRoom = `<section class="room r-video iris" style="${room("ink", theme.video, "80%")};--ix:${ixs[0]}%" aria-labelledby="h-v">
+  <div class="inner">
+    ${mark("오늘의 강의")}
+    <h2 id="h-v" class="title">${v?.url ? `먼저 보고, <span class="ser">아래에서</span> 확인해요` : `영상은 <span class="ser">준비 중</span>, 노트부터 봐요`}</h2>
+    <div class="screen rise">${screen}</div>
+    <div class="under"><span>${[meta.minutes && `${meta.minutes}분 세션`, scenes && `대본 장면 ${scenes}개`].filter(Boolean).join(" · ")}</span><span>${v?.url ? "영상 + 노트" : "노트 먼저"}</span></div>
+    ${scriptDetails}
+  </div>
+</section>`;
+
+  // ---- zoom
+  const coreWall = theme.core[0];
+  const zoomRoom = `<section class="zoom" style="--zc:var(--${theme.zoom});--zfill:var(--${coreWall})" aria-label="핵심 단어: ${esc(zoom)}">
+  <div class="stage"><span class="word" aria-hidden="true" style="${zoomSize(zoom)}">${esc(zoom)}</span><span class="cap">&gt; 글자 속으로 들어가 볼까요</span></div>
+</section>`;
+
+  // ---- core
+  const core = sec("핵심 정리");
+  let coreRoom = "";
+  if (core) {
+    const { lead, subs } = splitSub(core.lines);
+    const bubbles = subs.length ? subs : [{ title: "", lines: core.lines }];
+    const leadHtml = subs.length && nonBlank(lead) ? `<div class="lead md">${renderBlocks(lead)}</div>` : "";
+    coreRoom = `<section class="room r-core" style="${room(theme.core[0], theme.core[1], "86%")}" aria-labelledby="h-core">
+  <div class="inner">
+    ${mark("핵심 정리")}
+    <h2 id="h-core" class="title">${bubbles.length <= 10 ? `${KNUM[bubbles.length]} 장만 기억해요` : `${bubbles.length}장만 기억해요`}</h2>
+    ${leadHtml}
+    <div class="bubbles">${bubbles.map((b, k) => {
+      const body = renderBlocks(b.lines);
+      const wide = /<pre|<table|<blockquote/.test(body) || body.replace(/<[^>]+>/g, "").length > 900 ? " wide" : "";
+      return `<article class="bubble rise${wide}"><span class="n">${String(k + 1).padStart(2, "0")}</span>${b.title ? `<h3>${inline(b.title)}</h3>` : ""}<div class="md">${body}</div></article>`;
+    }).join("\n")}</div>
+  </div>
+</section>`;
   }
 
-  const sec = (cls, title, inner, extra = "") =>
-    `<section class="sec ${cls}"${extra}><h2>${inline(title)}</h2>${inner}</section>`;
+  // ---- note page: goals, try, quiz
+  const tryS = sec("직접 해 보기");
+  const tryLabel = tryS ? (tryS.title.match(/\(([^)]+)\)/) || [])[1] : "";
+  const noteRoom = `<section class="room r-note iris" style="--ix:${ixs[2]}%" aria-label="노트">
+  <div class="inner">
+    <div class="page">
+      ${goals ? `<div class="block"><h2><span class="mono">##</span>오늘의 목표</h2>${ticksOrBlocks(goals.lines)}</div>` : ""}
+      ${tryS ? `<div class="block"><h2><span class="mono">##</span>직접 해 보기 ${tryLabel ? `<span class="mono small">${esc(tryLabel)}</span>` : ""}</h2>${ticksOrBlocks(tryS.lines)}</div>` : ""}
+      ${quizHtml(n)}
+    </div>
+  </div>
+</section>`;
 
-  const scriptHtml = scriptSec
-    ? `<details class="script"><summary>영상 대본 펼치기 <span class="muted">· 장면별 화면과 내레이션</span></summary><div class="script-body">${renderBlocks(scriptSec.lines, { shift: 1 })}</div></details>`
-    : "";
-
-  const parts = [];
-  for (const s of sections) {
-    const t = s.title;
-    if (t === "정답과 해설" && paired) continue;
-    if (t === "영상 대본") {
-      if (!n.video) parts.push(sec("sec-script", t, scriptHtml));
-      continue;
+  // ---- FDE
+  const fde = sec("FDE 관점");
+  let fdeRoom = "";
+  if (fde) {
+    const text = fde.lines.filter((l) => !isBlank(l));
+    const firstPara = [];
+    let i = 0;
+    while (i < fde.lines.length && isBlank(fde.lines[i])) i++;
+    while (i < fde.lines.length && !isBlank(fde.lines[i]) && !(firstPara.length && startsBlock(fde.lines, i))) firstPara.push(fde.lines[i++]);
+    const para = firstPara.join(" ");
+    const simple = text.length && !LIST_RE.test(firstPara[0] || "") && !FENCE_RE.test(firstPara[0] || "");
+    let sayHtml = "", restLines = fde.lines;
+    if (simple) {
+      const m = para.match(/^(.+?[.?!])(\s+|$)([\s\S]*)$/);
+      const lead = m ? m[1] : para;
+      const after = m ? m[3] : "";
+      sayHtml = inline(lead).replace(/(“[^”]{2,40}”|&quot;[^&]{2,40}&quot;)/, "<em>$1</em>");
+      restLines = [after, ...fde.lines.slice(i)];
+      const long = lead.length > 90 ? " sm" : "";
+      sayHtml = `<h2 id="h-fde" class="say${long}">${sayHtml}</h2>`;
     }
-    if (t === "확인 문제") {
-      if (paired) {
-        const items = paired.q.items.map((it, k) => {
-          const ans = paired.a.items[k];
-          return `<li value="${it.num}" class="q"><div class="q-body">${renderItem(it.body)}</div>
-<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">${renderItem(ans.body)}</div></details></li>`;
-        });
-        const rest = paired.a.tail.some((l) => !isBlank(l))
-          ? `<details class="answer answer-all"><summary>나머지 해설 보기</summary><div class="answer-body">${renderBlocks(paired.a.tail)}</div></details>`
-          : "";
-        parts.push(sec("sec-quiz", t, `${renderBlocks(paired.q.lead)}<ol class="quiz">${items.join("\n")}</ol>${renderBlocks(paired.q.tail)}${rest}`));
-      } else {
-        parts.push(sec("sec-quiz", t, renderBlocks(s.lines)));
-      }
-      continue;
-    }
-    if (t === "정답과 해설") {
-      parts.push(sec("sec-answers", t, `<details class="answer answer-all"><summary>정답과 해설 펼치기</summary><div class="answer-body">${renderBlocks(s.lines)}</div></details>`));
-      continue;
-    }
-    if (t === "복습 카드") {
-      const lines = s.lines.filter((l) => !isBlank(l));
-      const cards = lines.map((l) => l.match(/^\s*[-*]\s+Q:\s*(.+?)\s+\/\s+A:\s*(.+)$/));
-      if (cards.length && cards.every(Boolean)) {
-        parts.push(sec("sec-cards", t,
-          `<div class="cards">${cards.map((c) => `<details class="card"><summary>${inline(c[1])}</summary><div class="card-a">${inline(c[2])}</div></details>`).join("")}</div>`));
-      } else {
-        parts.push(sec("sec-cards", t, renderBlocks(s.lines)));
-      }
-      continue;
-    }
-    const cls = t.startsWith("직접 해 보기") ? "sec-try callout warm"
-      : t === "FDE 관점" ? "sec-fde callout cool"
-      : t === "출처" ? "sec-sources"
-      : t === "오늘의 목표" ? "sec-goals"
-      : "";
-    parts.push(sec(cls, t, renderBlocks(s.lines, { shift: 0 })));
+    fdeRoom = `<section class="room r-fde band iris" style="${room(theme.fde[0], theme.fde[1], "76%")};--ix:${ixs[3]}%" aria-labelledby="h-fde">
+  <div class="inner">
+    ${mark("FDE 관점")}
+    ${sayHtml || `<h2 id="h-fde" class="title">FDE는 이렇게 써요</h2>`}
+    ${nonBlank(restLines) ? `<div class="lead md">${renderBlocks(restLines)}</div>` : ""}
+  </div>
+</section>`;
   }
 
+  // ---- cards
+  let cardsRoom = "";
+  if (cardsSec) {
+    const ok = cards.length && cards.every(Boolean);
+    const off = idx % CARD_BACKS.length;
+    const inner = ok
+      ? `<div class="cards">${cards.map((c, k) => `<button class="card" type="button" aria-pressed="false" style="--r:${TILTS[(k + idx) % TILTS.length]}deg"><span class="face front"><span class="no">${String(k + 1).padStart(2, "0")}</span><b>${inline(c[1])}</b><span class="flip mono">눌러서 뒤집기</span></span><span class="face back" style="--bg:var(--${CARD_BACKS[(k + off) % CARD_BACKS.length]})">${inline(c[2])}</span></button>`).join("\n")}</div>`
+      : `<div class="sheet md">${renderBlocks(cardsSec.lines)}</div>`;
+    cardsRoom = `<section class="room r-cards iris" style="${room(theme.cards, theme.cards)};--ix:${ixs[4]}%" aria-labelledby="h-cards">
+  <div class="inner">
+    ${mark("복습 카드")}
+    <h2 id="h-cards" class="title">${ok ? "눌러서 뒤집기" : "복습 카드"}</h2>
+    ${inner}
+  </div>
+</section>`;
+  }
+
+  // ---- other sections and preamble (paper rooms)
+  const extraRoom = (title, lines) => `<section class="room r-plain" aria-label="${esc(title)}">
+  <div class="inner">${mark(inline(title))}<div class="sheet md">${renderBlocks(lines)}</div></div>
+</section>`;
+  const preRoom = nonBlank(n.pre) ? extraRoom("먼저 읽기", n.pre) : "";
+  const extras = n.sections.filter((s) => !KNOWN.some((k) => s.title === k || s.title.startsWith(k)))
+    .map((s) => extraRoom(s.title, s.lines)).join("\n");
+
+  // ---- end: done + pager + timetable
   const prev = all[idx - 1];
   const next = all[idx + 1];
-  const official = Array.isArray(meta.official_sections) ? meta.official_sections.join(" · ") : meta.official_sections || "";
-  const chips = [
-    meta.minutes ? `<span>${esc(meta.minutes)}분</span>` : "",
-    `<span class="pill ${meta.status === "draft" ? "pill-draft" : "pill-ok"}">${esc(STATUS_LABEL[meta.status] || meta.status || "")}</span>`,
-    n.video?.url ? `<span class="pill pill-ok">영상 + 노트</span>` : n.video ? `<span class="pill">영상 준비 중</span>` : "",
-    n.checks ? `<span class="pill pill-check">확인 필요 ${n.checks}곳</span>` : "",
-  ].filter(Boolean).join("");
+  const byId = new Map(all.map((x) => [x.id, x]));
+  const endRoom = `<section class="room r-tt iris" style="${room("cobalt", "cobalt")};--ix:${ixs[5]}%" id="timetable" aria-labelledby="h-tt">
+  <div class="inner">
+    <div class="endrow">
+      <label class="done-box"><input type="checkbox" data-done="${n.id}"> 이 세션을 다 했어요 <span class="mono small">이 브라우저에만 저장</span></label>
+      <nav class="pager" aria-label="세션 이동">
+        ${prev ? link(sessionHref(prev), `← ${esc(prev.id)}`, "pg") : ""}
+        ${link(homeHref, "코스 홈", "pg")}
+        ${next ? link(sessionHref(next), `${esc(next.id)} · ${esc(next.short)} →`, "pg pg-next") : ""}
+      </nav>
+    </div>
+    ${mark("전체 시간표")}
+    <h2 id="h-tt" class="title">11개 코스, <span class="ser">${all.length}개</span> 세션</h2>
+    ${ledger(courses, byId, n.id)}
+  </div>
+</section>`;
 
-  const body = `
-<nav class="crumbs">${link(`/t/${TOPIC}/${HOME_ID}`, "← 코스 홈")}<span>${esc(n.courseName || meta.course || "")}</span></nav>
-<header class="head">
-  <span class="eyebrow">Claude FDE 스터디 · 세션 ${idx + 1} / ${all.length}</span>
-  <h1>${inline(n.title)}</h1>
-  <div class="meta">${chips}</div>
-  ${official ? `<p class="official">공식 경로에서 해당하는 부분: ${inline(official)}${meta.official_sections_comment ? ` <span class="muted">— ${inline(meta.official_sections_comment)}</span>` : ""}</p>` : ""}
-</header>
-${n.video ? videoBlock(n) + (scriptHtml ? `<div class="under-video">${scriptHtml}</div>` : "") : ""}
-${pre.some((l) => !isBlank(l)) ? `<div class="preamble">${renderBlocks(pre)}</div>` : ""}
-<article class="note">
-${parts.join("\n")}
-</article>
-<section class="done-box">
-  <label><input type="checkbox" data-done="${n.id}"> 이 세션을 다 했어요 <span class="muted">(이 브라우저에만 저장돼요)</span></label>
-</section>
-<nav class="pager">
-  ${prev ? link(sessionHref(prev), `<small>이전</small><span>${esc(prev.id)} · ${esc(prev.short)}</span>`, "prev") : `<span></span>`}
-  ${next ? link(sessionHref(next), `<small>다음</small><span>${esc(next.id)} · ${esc(next.short)}</span>`, "next") : link(`/t/${TOPIC}/${HOME_ID}`, `<small>끝</small><span>코스 홈으로</span>`, "next")}
-</nav>`;
+  const src = sec("출처");
+  const srcHtml = src ? `<div class="sources"><p class="mono">## 출처</p><div class="md">${renderBlocks(src.lines)}</div></div>` : "";
+
+  const lab = n.cfg.lab ? labRoom(n.cfg.lab, theme, ixs[1]) : "";
+
+  const body = `${hud(`세션 ${esc(n.id.slice(1))} / ${all.length}`, "#timetable")}
+<main>
+${hero}
+${preRoom}
+${videoRoom}
+${core ? zoomRoom : ""}
+${coreRoom}
+${lab}
+${noteRoom}
+${fdeRoom}
+${cardsRoom}
+${extras}
+${endRoom}
+</main>
+${night(srcHtml)}`;
 
   return page({
     title: n.title,
     description: `${n.courseName || meta.course || ""} · ${meta.minutes ? meta.minutes + "분" : ""}`.trim(),
     body,
     sessionId: n.id,
+    data: n.cfg.lab ? { lab: n.cfg.lab } : null,
   });
 }
 
@@ -550,63 +844,65 @@ function renderHome(courses, notes, overviewMd) {
   const byId = new Map(notes.map((n) => [n.id, n]));
   const total = notes.length;
   const first = notes[0];
-
-  const toc = courses.map((c, ci) => {
-    const rows = c.sessions.map((s) => {
-      const n = byId.get(s.id);
-      if (!n) return `<li class="row missing"><span class="sid">${s.id}</span><span class="stitle">${inline(s.topic)} <span class="muted">(노트 없음)</span></span></li>`;
-      const tags = [
-        `<span class="pill ${n.meta.status === "draft" ? "pill-draft" : "pill-ok"}">${esc(STATUS_LABEL[n.meta.status] || n.meta.status || "")}</span>`,
-        n.video?.url ? `<span class="pill pill-ok">영상</span>` : n.video ? `<span class="pill">영상 준비 중</span>` : "",
-        n.checks ? `<span class="pill pill-check" title="(확인 필요) 표시 ${n.checks}곳">확인 필요 ${n.checks}</span>` : "",
-      ].filter(Boolean).join("");
-      return `<li class="row" data-row="${n.id}">
-  ${link(sessionHref(n), `<span class="sid">${n.id}</span><span class="stitle">${inline(s.topic)}</span>`, "row-link")}
-  <span class="smin">${esc(n.meta.minutes || "")}분</span>
-  <span class="stags">${tags}</span>
-  <span class="sdone" data-done-mark="${n.id}" aria-label="완료 여부"></span>
-</li>`;
-    });
-    return `<section class="course">
-  <header class="course-head"><span class="cnum">${ci < 11 ? `C${ci + 1}` : "★"}</span><h3>${inline(c.name.replace(/^\d+\.\s*/, ""))}</h3><span class="cdetail">${esc(c.detail)} · ${c.sessions.length}세션</span></header>
-  <ol class="rows">${rows.join("\n")}</ol>
-</section>`;
-  });
-
-  const checkList = notes.filter((n) => n.checks).map((n) =>
-    `<li>${link(sessionHref(n), `<strong>${n.id}</strong>`)} <ul>${checkSentences(n).map((t) => `<li>${inline(t)}</li>`).join("")}</ul></li>`
-  );
+  const home = config.home || {};
   const totalChecks = notes.reduce((a, n) => a + n.checks, 0);
+  const checkList = notes.filter((n) => n.checks).map((n) =>
+    `<li>${link(sessionHref(n), `<b>${n.id}</b> ${inline(n.short)}`)}<ul>${checkSentences(n).map((t) => `<li>${inline(t)}</li>`).join("")}</ul></li>`
+  ).join("\n");
 
-  const body = `
-<header class="head home-head">
-  <div class="home-text">
-    <span class="eyebrow">Claude FDE 스터디 · 비공식 학습 노트</span>
-    <h1>Claude Forward Deployed Engineer<br>스터디 코스</h1>
-    <div class="meta"><span>11개 코스</span><span>${total}개 세션</span><span>세션당 15~25분</span><span class="pill pill-draft">모든 노트 초안</span></div>
+  const copy = `<div class="copy">
+    ${mark(`비공식 학습 노트 · 11개 코스 · ${total}세션`).replace('class="mark"', 'class="mark land"')}
+    <h1 class="land l2">${accent(home.headline || "Claude FDE *스터디*")}</h1>
+    <div class="lines land l3">${(home.lines || ["11개 코스를 42개 세션으로", "하루 한 세션, 15~25분", "마지막엔 파일럿 계획서 한 장"]).map((l) => `<span>${inline(l)}</span>`).join("")}</div>
+    <span class="by">Claude Forward Deployed Engineer 학습 경로 · 개인 학습 노트</span>
+  </div>`;
+  const hero = home.hero
+    ? `<header class="room hero">
+  <div class="art"><img src="img/${esc(basename(home.hero))}" alt="${esc(home.heroAlt || "")}" width="1600" height="893"></div>
+  ${copy}
+</header>`
+    : `<header class="room hero type" style="${room("cobalt", "beige", "78%")}">${copy}</header>`;
+
+  const body = `${hud("시간표", "#timetable")}
+<main>
+${hero}
+<section class="room r-note iris" style="--ix:30%" aria-label="코스 소개">
+  <div class="inner"><div class="page">
+    <div class="block"><h2><span class="mono">##</span>이 코스는</h2><div class="md">${renderBlocks(overviewMd.split("\n"), { shift: 0 })}</div></div>
+  </div></div>
+</section>
+<section class="room r-progress iris" style="${room("butter", "tomato", "74%")};--ix:70%" aria-labelledby="h-prog">
+  <div class="inner">
+    ${mark("진도")}
+    <h2 id="h-prog" class="title"><span data-progress-count>0</span> / ${total} <span class="ser">세션</span> 완료</h2>
+    <div class="progress"><div class="bar-track"><i data-progress-bar style="width:0%"></i></div>
+      <p class="mono small">이 브라우저에만 저장돼요. 세션 페이지 맨 아래에서 체크해요.</p>
+      <div class="go-row">${first ? link(sessionHref(first), "S01부터 시작하기 →", "go") : ""}<span data-progress-next></span></div>
+    </div>
   </div>
-  ${config.courseImage ? `<img class="home-img" src="img/${esc(basename(config.courseImage))}" alt="펼친 공책 위에 나무 조각을 한 칸씩 이어 놓는 손 그림" width="380" height="345">` : ""}
-</header>
-<section class="sec overview">${renderBlocks(overviewMd.split("\n"))}</section>
-<section class="progress" aria-label="진행 상태">
-  <div class="progress-text"><strong>진행 상태</strong> <span data-progress-count>0</span> / ${total} 세션 완료 <span class="muted">· 이 브라우저에만 저장돼요. 세션 페이지 아래에서 체크해요.</span></div>
-  <div class="bar"><i data-progress-bar style="width:0%"></i></div>
-  <div class="progress-cta">${first ? link(sessionHref(first), `S01부터 시작하기 →`, "btn") : ""}<span data-progress-next></span></div>
 </section>
-<section class="sec toc">
-  <h2>목차: 11개 코스 → ${total}개 세션</h2>
-  ${toc.join("\n")}
+<section class="room r-tt iris" style="${room("cobalt", "cobalt")};--ix:50%" id="timetable" aria-labelledby="h-tt">
+  <div class="inner">
+    ${mark("전체 시간표")}
+    <h2 id="h-tt" class="title">11개 코스, <span class="ser">${total}개</span> 세션</h2>
+    ${ledger(courses, byId)}
+  </div>
 </section>
-<section class="sec checks">
-  <h2>확인이 필요한 곳 <span class="pill pill-check">${totalChecks}곳</span></h2>
-  <p class="muted">노트를 쓸 때 공식 강의 본문이나 실행 결과로 확인하지 못한 내용이에요. 원본 표시를 그대로 두고, 노트 안에서도 같은 배지로 보여요.</p>
-  <details><summary>세션별 목록 펼치기 (${checkList.length}개 세션)</summary><ul class="check-list">${checkList.join("\n")}</ul></details>
+<section class="room r-plain" aria-labelledby="h-chk">
+  <div class="inner">
+    ${mark("확인이 필요한 곳")}
+    <h2 id="h-chk" class="title">아직 <span class="ser">확인 필요</span> ${totalChecks}곳</h2>
+    <p class="lead">공식 강의 본문이나 실행 결과로 확인하지 못한 내용이에요. 원본 표시를 그대로 두고, 노트 안에서도 같은 배지로 보여요.</p>
+    <details class="next"><summary>세션별 목록 펼치기 (${notes.filter((n) => n.checks).length}개 세션)</summary><div class="sheet md"><ul class="check-list">${checkList}</ul></div></details>
+  </div>
 </section>
+</main>
+${night()}
 <script>window.FDE_SESSIONS = ${JSON.stringify(notes.map((n) => ({ id: n.id, href: sessionHref(n), title: n.short })))};</script>`;
 
   return page({
     title: "Claude FDE 스터디 — 코스 홈",
-    description: `11개 코스 → ${total}개 세션 목차, 진행 상태, 확인이 필요한 곳`,
+    description: `11개 코스 → ${total}개 세션 시간표, 진도, 확인이 필요한 곳`,
     body,
   });
 }
@@ -620,7 +916,7 @@ function main() {
   const readme = readFileSync(join(snapshotDir, "README.md"), "utf8");
   const courses = parseCurriculum(readme);
   const courseOf = new Map();
-  courses.forEach((c) => c.sessions.forEach((s) => courseOf.set(s.id, { course: c, topic: s.topic })));
+  courses.forEach((c, ci) => c.sessions.forEach((s, si) => courseOf.set(s.id, { course: c, ci, si, topic: s.topic })));
 
   const files = readdirSync(snapshotDir).filter((f) => /^s\d{2}-.*\.md$/.test(f)).sort();
   const notes = files.map((f) => {
@@ -632,15 +928,15 @@ function main() {
     const hasLocal = localVideos.includes(id);
     const video = cfg.video
       ? { url: cfg.video, poster: cfg.poster && basename(cfg.poster) }
-      : cfg.poster || cfg.videoNote || hasLocal
-        ? { url: "", poster: cfg.poster && basename(cfg.poster), note: cfg.videoNote }
-        : null;
+      : { url: "", poster: cfg.poster && basename(cfg.poster), local: hasLocal };
     const c = courseOf.get(id);
     return {
-      id, slug: f.replace(/\.md$/, ""), raw, meta, pre, sections,
+      id, slug: f.replace(/\.md$/, ""), raw, meta, pre, sections, cfg,
       title: title || meta.title || id,
       short: c?.topic || meta.title || id,
       courseName: c ? c.course.name : meta.course,
+      courseIdx: c ? c.ci : 0,
+      posInCourse: c ? c.si : 0,
       checks: countChecks(raw),
       video,
     };
@@ -648,7 +944,7 @@ function main() {
 
   for (const id of localVideos) {
     const cfg = (config.sessions || {})[id];
-    if (!cfg?.video) console.log(`· ${id}: 원본에 영상 파일이 있어요. 외부에 올린 뒤 fde.config.json sessions.${id}.video 에 URL을 넣으면 붙어요.`);
+    if (!cfg?.video) console.log(`· ${id}: 원본에 영상 파일이 있어요. 유튜브(일부 공개)에 올린 뒤 fde.config.json sessions.${id}.video 에 주소를 넣으면 붙어요.`);
   }
 
   mkdirSync(outDir, { recursive: true });
@@ -657,10 +953,13 @@ function main() {
   copyFileSync(join(courseDir, "assets", "fde.js"), join(outDir, "fde.js"));
 
   writeFileSync(join(outDir, `${HOME_ID}.html`), renderHome(courses, notes, readFileSync(overviewFile, "utf8")));
-  notes.forEach((n, i) => writeFileSync(join(outDir, `${n.slug}.html`), renderSession(n, notes, i)));
+  notes.forEach((n, i) => writeFileSync(join(outDir, `${n.slug}.html`), renderSession(n, notes, i, courses)));
 
   const checks = notes.reduce((a, n) => a + n.checks, 0);
   console.log(`✓ render: 코스 홈 + ${notes.length}개 세션 → public/lessons/${TOPIC}/ (확인 필요 ${checks}곳)`);
+  console.log(`  확인 문제: 객관식 자동 채점 ${stats.auto}문항 · 서술형/상황형 예시 답 접기 ${stats.essay}문항`);
+  if (stats.folded.length) console.log(`  객관식인데 접기로 대체: ${stats.folded.length}문항\n    - ${stats.folded.join("\n    - ")}`);
+  if (stats.fallback.length) console.log(`  세션 전체 접기: ${stats.fallback.length}개\n    - ${stats.fallback.join("\n    - ")}`);
 }
 
 main();

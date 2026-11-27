@@ -4,90 +4,175 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="4. Choosing the right Claude model · 15분">
+<meta name="color-scheme" content="light">
 <title>S09. 네 가지 모델과 effort 조절</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,700;12..96,800&family=Cutive+Mono&family=Gowun+Batang:wght@400;700&family=Instrument+Serif:ital@0;1&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap">
 <link rel="stylesheet" href="fde.css">
 </head>
 <body data-session="S09">
-<!-- 자동 생성 파일: scripts/sync-fde.mjs 가 만들어요. 직접 고치지 말고 원본 노트를 고친 뒤 npm run fde:sync 하세요. -->
-<main class="wrap">
-
-<nav class="crumbs"><a href="/t/claude-fde/0000-course-home" target="_top">← 코스 홈</a><span>4. Choosing the right Claude model</span></nav>
-<header class="head">
-  <span class="eyebrow">Claude FDE 스터디 · 세션 9 / 42</span>
-  <h1>S09. 네 가지 모델과 effort 조절</h1>
-  <div class="meta"><span>15분</span><span class="pill pill-draft">노트 초안</span></div>
-  <p class="official">공식 경로에서 해당하는 부분: 1. Meet the four models · 2. When to adjust the model or effort · 3. What this looks like in practice · Try it out on your own work · Choosing models over time</p>
+<!-- 자동 생성 파일: scripts/sync-fde.mjs 가 만들어요. 직접 고치지 말고 원본 노트나 claude-fde-course/ 를 고친 뒤 npm run fde:render 하세요. -->
+<nav class="hud" aria-label="코스">
+  <a href="/t/claude-fde/0000-course-home" target="_top" class="brand">Claude FDE 스터디 <span class="dot" aria-hidden="true"></span><span class="long">비공식 노트</span></a>
+  <a class="pill" href="#timetable">세션 09 / 42 <i aria-hidden="true"></i></a>
+</nav>
+<main>
+<header class="room hero type" style="--wall:var(--cobalt);--floor:var(--beige);--text:var(--paper);--serc:var(--pink);--line:78%">
+  <div class="copy">
+    <span class="mark land"><b>##</b> 코스 4 · Choosing the right Claude model</span>
+    <h1 class="land l2">네 가지 <span class="ser">모델</span>과 effort 조절</h1>
+    <div class="lines land l3"><span>모델 메뉴의 네 모델(Fable, Opus, Sonnet, Haiku)이 각각 어떤 일에 맞는지 말할 수 있다.</span><span>15분 · 확인 문제 5개 · 복습 카드 5장</span><span>노트 초안 · 비공식</span></div>
+    <span class="by">S09 · 네 가지 모델과 effort 조절</span>
+  </div>
+  <span class="numeral" aria-hidden="true">09</span>
 </header>
 
-
-<article class="note">
-<section class="sec sec-goals"><h2>오늘의 목표</h2><ul><li>모델 메뉴의 네 모델(Fable, Opus, Sonnet, Haiku)이 각각 어떤 일에 맞는지 말할 수 있다.</li><li>결과가 아쉽거나 과할 때 노력 수준(effort)과 모델 가운데 무엇을 먼저 바꿀지 정할 수 있다.</li><li>토큰당 비용과 작업당 비용이 왜 다른지 설명할 수 있다.</li></ul></section>
-<section class="sec "><h2>핵심 정리</h2><h3>네 모델, 메뉴에 보이는 순서대로</h3>
-<p>S08에서 모델을 품질, 속도, 양의 저울로 고른다고 했어요. 오늘은 그 저울에 올릴 실제 선택지를, 공개된 Claude Academy 튜토리얼을 따라 봐요. 더 강한 모델은 모호한 일, 한 번 틀리면 뒤가 다 틀어지는 긴 일에 강해요. 덜 강한 모델은 더 빨리 답하고, 범위가 분명한 일에서 제 실력을 내요.</p>
-<div class="table-scroll"><table><thead><tr><th>모델</th><th>무엇에 맞나</th><th>잘하는 일</th><th>사용 한도 소모</th></tr></thead><tbody><tr><td>Fable</td><td>가장 어려운 과제</td><td>열린 문제, 방대한 자료 조사, 중간 확인이 적은 긴 작업</td><td>가장 큼</td></tr><tr><td>Opus (여기서 시작)</td><td>복잡한 일과 일상 업무</td><td>실제로 쓸 코드, 판단이 필요한 복잡한 분석</td><td>큼</td></tr><tr><td>Sonnet</td><td>단순한 일을 효율적으로</td><td>문서, 슬라이드, 스프레드시트 같은 일상 업무</td><td>보통</td></tr><tr><td>Haiku</td><td>빠른 답</td><td>요약, 분류 같은 빠르고 반복적인 대량 작업</td><td>가장 작음</td></tr></tbody></table></div>
-<p>튜토리얼의 권장 시작점은 Opus이고, Pro, Max, Ultra, Team 플랜의 기본 모델이기도 해요. Haiku는 주로 Claude로 자기 제품을 만드는 사람을 위한 모델이라 기본값으로는 권하지 않아요. 플랜도 영향을 줘요. 무료 플랜에는 Haiku와 Sonnet이 있고 유료 플랜에서 Opus가 더해져요. Fable은 플랜에 따라 한도에 포함되기도 하고 사용 크레딧으로 쓰기도 해요. 회사에서는 관리자가 메뉴에 보일 모델을 정할 수 있어요.</p>
-<h3>손잡이는 두 개: 모델과 effort</h3>
-<p>모델 메뉴에서 바꿀 수 있는 건 두 가지예요. <strong>모델</strong>은 능력의 수준을, <strong>노력 수준</strong>(effort)은 그 모델이 얼마나 공들여 일할지를 정해요. effort를 올리면 더 오래 생각하고, 도구를 더 쓰고, 답하기 전에 더 검토해요. 내리면 더 빠르고 곧장 답해요.</p>
-<p>기본값으로 시작하고, 결과가 아쉬우면 먼저 프롬프트와 파일이 충분했는지 봐요. 그다음 <strong>한 번에 하나만, effort부터</strong> 바꿔요. 그래야 무엇이 차이를 만들었는지 알 수 있어요.</p>
-<div class="table-scroll"><table><thead><tr><th>보이는 증상</th><th>먼저 해 볼 것</th></tr></thead><tbody><tr><td>지시를 빠뜨린다, 긴 작업이 덜 끝난 채 마무리된다</td><td>effort 올리기</td></tr><tr><td>맥락도 충분하고 effort도 올렸는데 품질이 모자란다</td><td>더 강한 모델로</td></tr><tr><td>답이 길어지기만 한다, 시키지 않은 일까지 한다</td><td>effort 내리기</td></tr><tr><td>effort를 내려도 품질이 유지되고, 더 빨랐으면 한다</td><td>덜 강한 모델을 시험해 보고 비교</td></tr></tbody></table></div>
-<h3>사용량은 토큰당이 아니라 작업당으로</h3>
-<p>읽기, 생각, 답 쓰기가 모두 토큰이고 사용 한도에서 빠져요. 모델은 <strong>토큰 하나의 값</strong>을, effort는 <strong>작업 하나에 쓰는 토큰 수</strong>를 정해요.</p>
-<p>더 중요한 건 작업당 비용이에요. 길고 모호한 일은 강한 모델이 더 적은 턴에 끝내서, 토큰당 값은 비싸도 작업 전체로는 덜 들 수 있어요. 한도를 아끼고 싶다면 effort를 먼저 내려요. 모델을 낮추면 비용과 능력이 함께 바뀌지만, effort를 낮추면 판단력은 그대로이고 비용만 바뀌거든요.</p>
-<h3>일로 가늠하고, 때가 되면 다시 고르기</h3>
-<p>일 자체가 힌트를 줘요. AI 없이 하면 얼마나 걸리는 일인가, 올바른 결과가 얼마나 분명한가. 오래 걸리고 정답이 덜 분명할수록 강한 모델이 도움이 돼요. 걸린 것의 크기, 검증하기 쉬운 정도, 필요한 속도도 함께 봐요. 새 모델이 나오면 예전에 막혔던 일을 다시 맡겨 보고, 늘 하던 일은 더 강한 모델에 낮은 effort로도 같은 결과가 나는지 확인해요.</p></section>
-<section class="sec sec-try callout warm"><h2>직접 해 보기 (5분)</h2><p>튜토리얼이 제안하는 비교 실험이에요.</p>
-<ol><li>최근에 한 일 두 개를 골라요. 하나는 범위가 분명한 일, 하나는 길고 단계가 많은 일.</li><li>돌리기 전에 &quot;좋은 결과&quot;가 무엇인지 먼저 적어요.</li><li>Opus와 Sonnet에 같은 프롬프트와 파일을, 새 대화에서, 기본 effort로 줘요.</li><li>쓸 만한 결과가 나올 때까지 몇 번 고쳐 말했는지 세요. 턴 수가 비슷하면 평소 쓰던 모델을 그대로 써도 돼요. 한쪽이 더 적게 걸렸거나 중요한 걸 찾아냈다면 그런 일에는 그 모델을 써요.</li></ol>
-<p>마땅한 일이 없으면 읽어 본 보고서를 첨부하고 이렇게 물어보세요: &quot;첨부한 보고서를 다섯 항목으로 요약하고, 다른 출처로 꼭 확인하고 싶은 주장 하나를 짚어 줘.&quot;</p></section>
-<section class="sec sec-quiz"><h2>확인 문제</h2><ol class="quiz"><li value="1" class="q"><div class="q-body">어떤 모델로 시작할지 모르겠을 때 튜토리얼이 권하는 시작점은?
-<ul><li>(a) Haiku</li><li>(b) Opus</li><li>(c) Fable</li></ul></div>
-<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">(b). 튜토리얼은 대부분의 코딩과 지식 업무에 Opus로 시작하라고 권해요.</div></details></li>
-<li value="2" class="q"><div class="q-body">프롬프트와 파일은 충분했는데 Claude가 지시 일부를 빠뜨리고 긴 작업을 덜 끝낸 채 마무리했어요. 먼저 바꿀 것은?
-<ul><li>(a) effort를 올린다</li><li>(b) 덜 강한 모델로 바꾼다</li><li>(c) 모델과 effort를 동시에 바꾼다</li></ul></div>
-<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">(a). 지시 누락과 덜 끝난 작업은 effort를 올려 볼 신호예요. 한 번에 하나만 바꿔야 무엇이 효과였는지 알 수 있어서 (c)는 맞지 않아요.</div></details></li>
-<li value="3" class="q"><div class="q-body">사용 한도를 아끼고 싶을 때 튜토리얼이 먼저 권하는 것은?
-<ul><li>(a) 덜 강한 모델로 바꾸기</li><li>(b) effort를 낮추기</li><li>(c) 질문을 여러 메시지로 잘게 나누기</li></ul></div>
-<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">(b). effort를 낮추면 모델의 판단력은 그대로 두고 비용만 바뀌어요. 모델을 낮추면 비용과 능력이 함께 바뀌어요.</div></details></li>
-<li value="4" class="q"><div class="q-body">(서술형) 토큰당 비용이 더 비싼 모델이 작업당 비용으로는 더 쌀 수 있는 이유를 두세 문장으로 설명해 보세요.</div>
-<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">예시 답: 작업 하나의 비용은 토큰 값에 쓴 토큰 수를 곱한 것이고, 쓴 토큰 수는 몇 턴 만에 끝났는지에 크게 좌우된다. 길거나 모호한 일에서 덜 강한 모델은 여러 번 고쳐 말하고 다시 시켜야 해서 턴이 늘어난다. 더 강한 모델이 적은 턴에 끝내면 토큰당 값이 비싸도 합계는 더 작을 수 있다.</div></details></li>
-<li value="5" class="q"><div class="q-body">(상황형) 고객사 IT 팀장이 말해요. &quot;비용을 아껴야 하니 전 직원 기본 모델을 제일 싼 걸로 고정합시다.&quot; 어떻게 답하고, 어떤 절차를 제안할까요?</div>
-<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">예시 답: &quot;토큰당으로는 싸도, 다시 시키는 횟수가 늘면 작업당으로는 더 비쌀 수 있어요&quot;라고 설명한다. 그리고 절차를 제안한다. (1) 대표 작업 두세 개를 고르고 좋은 결과의 기준을 먼저 정한다. (2) 같은 프롬프트와 파일로 모델과 effort를 바꿔 가며 돌려 턴 수와 품질을 표로 만든다. (3) 한도를 줄여야 하면 모델을 낮추기 전에 effort를 먼저 낮춰 본다. (4) 결과에 따라 조직 기본값을 정하되, 어려운 작업에는 더 강한 모델을 쓸 수 있게 열어 두고, 새 모델이 나오면 다시 비교한다.</div></details></li></ol></section>
-<section class="sec sec-fde callout cool"><h2>FDE 관점</h2><p>공식 경로는 이 튜토리얼을 &quot;어떤 모델이 어떤 일에 맞는지, 그리고 각 모델이 한도를 어떻게 쓰는지&quot;로 소개해요. 현장에서는 이 주제가 곧 비용 회의예요. FDE는 &quot;제일 싼 모델&quot;이나 &quot;제일 좋은 모델&quot; 같은 한 줄 결론 대신, 고객의 대표 작업 두세 개로 모델과 effort를 바꿔 가며 돌린 비교표를 가져가요. 세로축은 작업, 가로축은 설정, 칸에는 걸린 턴 수와 결과 품질을 적어요. 이 표가 파일럿의 기준선 옆에 놓이면 성공 지표를 &quot;작업당&quot;으로 합의하기 쉬워져요. Enterprise 플랜에서는 조직의 기본 모델과 기본 effort를 관리자가 정할 수 있으니, 비교 결과를 그 설정에 반영하자고 제안하세요. 새 모델이 나올 때 다시 비교하는 일정도 계획서에 넣어 두세요.</p></section>
-<section class="sec sec-cards"><h2>복습 카드</h2><div class="cards"><details class="card"><summary>모델 메뉴의 네 모델을 순서대로 말하면?</summary><div class="card-a">Fable, Opus, Sonnet, Haiku.</div></details><details class="card"><summary>튜토리얼이 권하는 시작 모델은?</summary><div class="card-a">Opus. 기본값으로 시작해 필요에 따라 위아래로 조정한다.</div></details><details class="card"><summary>effort는 무엇을 바꾸나?</summary><div class="card-a">그 모델이 얼마나 공들여 일할지. 올리면 더 오래 생각하고 더 검토하며, 토큰을 더 쓴다.</div></details><details class="card"><summary>결과가 아쉬울 때 조정 순서는?</summary><div class="card-a">프롬프트와 파일 확인, 그다음 한 번에 하나씩, effort부터.</div></details><details class="card"><summary>한도를 아끼려면 무엇을 먼저 낮추나?</summary><div class="card-a">effort. 모델의 판단력은 그대로 두고 비용만 바뀐다.</div></details></div></section>
-<section class="sec sec-script"><h2>영상 대본</h2><details class="script"><summary>영상 대본 펼치기 <span class="muted">· 장면별 화면과 내레이션</span></summary><div class="script-body"><h4>장면 1 · 오늘의 질문 (약 25초)</h4>
+<section class="room r-video iris" style="--wall:var(--ink);--floor:var(--sky);--text:var(--paper);--serc:var(--pink);--line:80%;--ix:55%" aria-labelledby="h-v">
+  <div class="inner">
+    <span class="mark"><b>##</b> 오늘의 강의</span>
+    <h2 id="h-v" class="title">영상은 <span class="ser">준비 중</span>, 노트부터 봐요</h2>
+    <div class="screen rise"><div class="ph">
+      <span class="ph-id" aria-hidden="true">S09</span>
+      <span class="ph-pill">영상 준비 중</span>
+    </div></div>
+    <div class="under"><span>15분 세션 · 대본 장면 10개</span><span>노트 먼저</span></div>
+    <details class="next"><summary>영상 대본 펼치기</summary><div class="script md"><h3>장면 1 · 오늘의 질문 (약 25초)</h3>
 <p><strong>화면:</strong> 입력창 옆의 모델 메뉴가 펼쳐진 그림. 이름 네 개가 세로로 보이고 커서가 그 위를 망설이며 오르내림. 제목 &quot;무엇을 골라야 할까?&quot;<br><strong>내레이션:</strong> 모델 메뉴를 열면 이름이 네 개 있어요. 무엇을 골라야 할까요? 오늘은 네 모델의 쓰임새와, 고른 뒤에 조절하는 방법을 볼게요.</p>
-<h4>장면 2 · 네 모델 (약 45초)</h4>
+<h3>장면 2 · 네 모델 (약 45초)</h3>
 <p><strong>화면:</strong> 카드 네 장이 위에서 아래로 놓임. &quot;페이블 · 가장 어려운 과제&quot;, &quot;오퍼스 · 복잡한 일과 일상 업무&quot;, &quot;소넷 · 단순한 일을 효율적으로&quot;, &quot;하이쿠 · 빠른 답&quot;. 카드 오른쪽에 사용량 막대가 위에서 아래로 점점 짧아짐.<br><strong>내레이션:</strong> 위에서부터 볼게요. 페이블은 가장 어려운 과제용이에요. 오퍼스는 복잡한 일과 일상 업무를 맡아요. 소넷은 단순한 일을 효율적으로 해요. 하이쿠는 빠른 답에 맞아요. 아래로 갈수록 한도를 덜 써요.</p>
-<h4>장면 3 · 오퍼스에서 시작 (약 30초)</h4>
+<h3>장면 3 · 오퍼스에서 시작 (약 30초)</h3>
 <p><strong>화면:</strong> 오퍼스 카드에 &quot;여기서 시작&quot; 깃발이 꽂힘. 깃발에서 위아래로 화살표가 뻗음: 위쪽 &quot;더 어려운 일&quot;, 아래쪽 &quot;더 빠르게, 더 가볍게&quot;.<br><strong>내레이션:</strong> 어디서 시작할지 모르겠다면 오퍼스예요. 대부분의 업무에 권하는 출발점이에요. 거기서 일의 크기와 속도에 맞춰 위아래로 옮겨요.</p>
-<h4>장면 4 · 손잡이는 두 개 (약 40초)</h4>
+<h3>장면 4 · 손잡이는 두 개 (약 40초)</h3>
 <p><strong>화면:</strong> 조절 손잡이 두 개. 왼쪽 &quot;모델: 능력의 수준&quot;, 오른쪽 &quot;노력 수준: 얼마나 공들일지&quot;. 오른쪽 손잡이를 올리자 생각 구름, 도구 아이콘, 검토 체크 표시가 늘어남.<br><strong>내레이션:</strong> 조절할 수 있는 건 두 가지예요. 모델은 능력의 수준을 정해요. 에포트, 그러니까 노력 수준은 얼마나 공들일지를 정해요. 올리면 더 오래 생각하고 더 많이 검토해요.</p>
-<h4>장면 5 · 조정 지도 (약 45초)</h4>
+<h3>장면 5 · 조정 지도 (약 45초)</h3>
 <p><strong>화면:</strong> 십자 지도. 가운데 &quot;오퍼스, 기본&quot;. 오른쪽 &quot;노력 올리기: 지시를 빠뜨릴 때&quot;, 왼쪽 &quot;노력 내리기: 답이 길어지기만 할 때&quot;, 위쪽 &quot;더 강한 모델: 그래도 품질이 모자랄 때&quot;, 아래쪽 &quot;덜 강한 모델: 품질이 유지될 때&quot;. 좌우 화살표가 먼저 깜빡이고 그다음 위아래가 깜빡임.<br><strong>내레이션:</strong> 결과가 아쉬우면 먼저 프롬프트와 파일을 확인해요. 그다음 한 번에 하나만 바꿔요. 지시를 빠뜨리면 노력을 올려요. 그래도 모자라면 더 강한 모델로 가요. 답이 길어지기만 하면 노력을 내려요.</p>
-<h4>장면 6 · 사용량은 토큰 (약 35초)</h4>
+<h3>장면 6 · 사용량은 토큰 (약 35초)</h3>
 <p><strong>화면:</strong> 작은 구슬(토큰)이 통에서 빠져나감. 두 개의 꼬리표: &quot;모델 = 구슬 하나의 값&quot;, &quot;노력 수준 = 작업에 쓰는 구슬 수&quot;. 통 옆에 &quot;사용 한도&quot; 눈금.<br><strong>내레이션:</strong> 사용량은 토큰으로 세요. 읽기, 생각하기, 쓰기가 모두 토큰이에요. 모델은 토큰 하나의 값을 정하고, 노력 수준은 작업에 쓰는 토큰 수를 정해요.</p>
-<h4>장면 7 · 작업당 비용 (약 40초)</h4>
+<h3>장면 7 · 작업당 비용 (약 40초)</h3>
 <p><strong>화면:</strong> 막대 두 쌍. 왼쪽 &quot;분명한 일&quot;: 두 모델 모두 한 턴, 덜 강한 모델 쪽이 짧음. 오른쪽 &quot;길고 모호한 일&quot;: 덜 강한 모델은 여섯 턴, 더 강한 모델은 두 턴, 더 강한 모델 쪽 막대가 짧음. 구석에 &quot;예시 그림&quot;.<br><strong>내레이션:</strong> 중요한 건 작업당 비용이에요. 분명한 일은 가벼운 모델이 싸요. 하지만 길고 모호한 일은 강한 모델이 더 적은 턴에 끝내요. 그래서 작업 전체로는 오히려 덜 들 수 있어요.</p>
-<h4>장면 8 · 일로 가늠하기 (약 35초)</h4>
+<h3>장면 8 · 일로 가늠하기 (약 35초)</h3>
 <p><strong>화면:</strong> 가로축 &quot;혼자 하면 얼마나 걸리나: 몇 분 → 며칠&quot;, 세로축 &quot;정답이 얼마나 분명한가: 분명 → 열린 질문&quot;인 지도. 왼쪽 아래에 &quot;항목 추출&quot;, 오른쪽 위쪽에 &quot;심층 조사&quot; 점이 찍히고, 오른쪽 위로 갈수록 색이 진해짐.<br><strong>내레이션:</strong> 일 자체가 힌트를 줘요. 혼자 하면 얼마나 걸리는지, 정답이 얼마나 분명한지 물어보세요. 오래 걸리고 정답이 덜 분명할수록 강한 모델이 도움이 돼요.</p>
-<h4>장면 9 · 고객 앞에서 (약 35초)</h4>
+<h3>장면 9 · 고객 앞에서 (약 35초)</h3>
 <p><strong>화면:</strong> 회의실 그림. 고객 말풍선 &quot;제일 싼 모델로 고정합시다.&quot; 에프디이가 표 한 장을 내밈: 세로 &quot;대표 작업 세 개&quot;, 가로 &quot;모델과 노력 수준&quot;, 칸마다 &quot;턴 수, 품질&quot;.<br><strong>내레이션:</strong> 고객이 제일 싼 모델로 고정하자고 하면 표를 가져가세요. 대표 작업 몇 개를 설정만 바꿔 돌린 비교표예요. 토큰당이 아니라 작업당으로 보면 결론이 달라질 수 있어요.</p>
-<h4>장면 10 · 요약과 예고 (약 25초)</h4>
-<p><strong>화면:</strong> 세 줄 요약이 한 줄씩 나타남: &quot;1. 오퍼스에서 시작 2. 한 번에 하나, 노력 수준부터 3. 비용은 작업당으로&quot;. 아래에 &quot;다음: S10 Claude Platform과 첫 API 호출&quot;.<br><strong>내레이션:</strong> 정리할게요. 오퍼스에서 시작해요. 조정은 한 번에 하나, 노력 수준부터예요. 비용은 작업당으로 봐요. 다음 시간부터는 직접 만들어요. 클로드 플랫폼과 첫 에이피아이 호출이에요.</p></div></details></section>
-<section class="sec sec-sources"><h2>출처</h2><ul><li>Claude Academy, Choosing a Claude model for knowledge workers(본문과 모델 카드·조정 지도·작업당 비용·작업 지도 위젯): <a href="https://academy.claude.com/tutorials/choosing-the-right-claude-model" target="_blank" rel="noopener noreferrer">https://academy.claude.com/tutorials/choosing-the-right-claude-model</a></li><li>Claude Academy, How to select the right effort setting in Claude: <a href="https://academy.claude.com/tutorials/how-to-select-the-right-effort-setting-for-claude-cowork-and-chat" target="_blank" rel="noopener noreferrer">https://academy.claude.com/tutorials/how-to-select-the-right-effort-setting-for-claude-cowork-and-chat</a></li><li>Claude Help Center, Change the model, effort, and thinking settings: <a href="https://support.claude.com/en/articles/8664678-change-the-model-effort-and-thinking-settings" target="_blank" rel="noopener noreferrer">https://support.claude.com/en/articles/8664678-change-the-model-effort-and-thinking-settings</a></li><li>Claude Help Center, Claude Fable models on your plan: <a href="https://support.claude.com/en/articles/15424964-claude-fable-models-on-your-plan" target="_blank" rel="noopener noreferrer">https://support.claude.com/en/articles/15424964-claude-fable-models-on-your-plan</a></li><li>Claude Help Center, How do usage and length limits work?: <a href="https://support.claude.com/en/articles/11647753-how-do-usage-and-length-limits-work" target="_blank" rel="noopener noreferrer">https://support.claude.com/en/articles/11647753-how-do-usage-and-length-limits-work</a></li><li>Claude Help Center, Set a default model for your organization: <a href="https://support.claude.com/en/articles/15330088-set-a-default-model-for-your-organization" target="_blank" rel="noopener noreferrer">https://support.claude.com/en/articles/15330088-set-a-default-model-for-your-organization</a></li><li>Claude Forward Deployed Engineer 학습 경로, 코스 4 소개(개요 사본 <code>_official-outline-2026-11-27.txt</code>): <a href="https://anthropic-partners.skilljar.com/path/claude-fde" target="_blank" rel="noopener noreferrer">https://anthropic-partners.skilljar.com/path/claude-fde</a></li><li>영상 장면 7의 턴 수(여섯 턴, 두 턴)는 튜토리얼이 &quot;예시&quot;라고 밝힌 그림의 숫자예요. 실제 측정값이 아니에요.</li></ul></section>
-</article>
-<section class="done-box">
-  <label><input type="checkbox" data-done="S09"> 이 세션을 다 했어요 <span class="muted">(이 브라우저에만 저장돼요)</span></label>
+<h3>장면 10 · 요약과 예고 (약 25초)</h3>
+<p><strong>화면:</strong> 세 줄 요약이 한 줄씩 나타남: &quot;1. 오퍼스에서 시작 2. 한 번에 하나, 노력 수준부터 3. 비용은 작업당으로&quot;. 아래에 &quot;다음: S10 Claude Platform과 첫 API 호출&quot;.<br><strong>내레이션:</strong> 정리할게요. 오퍼스에서 시작해요. 조정은 한 번에 하나, 노력 수준부터예요. 비용은 작업당으로 봐요. 다음 시간부터는 직접 만들어요. 클로드 플랫폼과 첫 에이피아이 호출이에요.</p></div></details>
+  </div>
 </section>
-<nav class="pager">
-  <a href="/t/claude-fde/s08-model-context-decisions" target="_top" class="prev"><small>이전</small><span>S08 · 결정 3·4: 모델 선택과 컨텍스트·메모리 관리</span></a>
-  <a href="/t/claude-fde/s10-platform-first-api-call" target="_top" class="next"><small>다음</small><span>S10 · Claude Platform이란, 첫 API 호출, 모델 고르기</span></a>
-</nav>
-<footer class="disclaimer" role="note">
-  <strong>비공식 학습 자료</strong>
-  <p>이 노트는 Anthropic 공식 “Claude Forward Deployed Engineer” 학습 경로의 공개 개요와 공식 문서를 바탕으로 쓴 개인 학습 노트이며, 공식 강의 필기가 아니에요. 실제 강의·퀴즈·수료는 공식 경로에서 진행해요.</p>
-  <p>공식 경로: <a href="https://anthropic-partners.skilljar.com/path/claude-fde" target="_blank" rel="noopener noreferrer">https://anthropic-partners.skilljar.com/path/claude-fde</a></p>
-</footer>
+<section class="zoom" style="--zc:var(--pink);--zfill:var(--pink)" aria-label="핵심 단어: 모델">
+  <div class="stage"><span class="word" aria-hidden="true" style="font-size:clamp(4rem, 30.0vw, 26rem)">모델</span><span class="cap">&gt; 글자 속으로 들어가 볼까요</span></div>
+</section>
+<section class="room r-core" style="--wall:var(--pink);--floor:var(--bottle);--text:var(--ink);--serc:var(--cobalt);--line:86%" aria-labelledby="h-core">
+  <div class="inner">
+    <span class="mark"><b>##</b> 핵심 정리</span>
+    <h2 id="h-core" class="title">네 장만 기억해요</h2>
+    
+    <div class="bubbles"><article class="bubble rise wide"><span class="n">01</span><h3>네 모델, 메뉴에 보이는 순서대로</h3><div class="md"><p>S08에서 모델을 품질, 속도, 양의 저울로 고른다고 했어요. 오늘은 그 저울에 올릴 실제 선택지를, 공개된 Claude Academy 튜토리얼을 따라 봐요. 더 강한 모델은 모호한 일, 한 번 틀리면 뒤가 다 틀어지는 긴 일에 강해요. 덜 강한 모델은 더 빨리 답하고, 범위가 분명한 일에서 제 실력을 내요.</p>
+<div class="table-scroll"><table><thead><tr><th>모델</th><th>무엇에 맞나</th><th>잘하는 일</th><th>사용 한도 소모</th></tr></thead><tbody><tr><td>Fable</td><td>가장 어려운 과제</td><td>열린 문제, 방대한 자료 조사, 중간 확인이 적은 긴 작업</td><td>가장 큼</td></tr><tr><td>Opus (여기서 시작)</td><td>복잡한 일과 일상 업무</td><td>실제로 쓸 코드, 판단이 필요한 복잡한 분석</td><td>큼</td></tr><tr><td>Sonnet</td><td>단순한 일을 효율적으로</td><td>문서, 슬라이드, 스프레드시트 같은 일상 업무</td><td>보통</td></tr><tr><td>Haiku</td><td>빠른 답</td><td>요약, 분류 같은 빠르고 반복적인 대량 작업</td><td>가장 작음</td></tr></tbody></table></div>
+<p>튜토리얼의 권장 시작점은 Opus이고, Pro, Max, Ultra, Team 플랜의 기본 모델이기도 해요. Haiku는 주로 Claude로 자기 제품을 만드는 사람을 위한 모델이라 기본값으로는 권하지 않아요. 플랜도 영향을 줘요. 무료 플랜에는 Haiku와 Sonnet이 있고 유료 플랜에서 Opus가 더해져요. Fable은 플랜에 따라 한도에 포함되기도 하고 사용 크레딧으로 쓰기도 해요. 회사에서는 관리자가 메뉴에 보일 모델을 정할 수 있어요.</p></div></article>
+<article class="bubble rise wide"><span class="n">02</span><h3>손잡이는 두 개: 모델과 effort</h3><div class="md"><p>모델 메뉴에서 바꿀 수 있는 건 두 가지예요. <strong>모델</strong>은 능력의 수준을, <strong>노력 수준</strong>(effort)은 그 모델이 얼마나 공들여 일할지를 정해요. effort를 올리면 더 오래 생각하고, 도구를 더 쓰고, 답하기 전에 더 검토해요. 내리면 더 빠르고 곧장 답해요.</p>
+<p>기본값으로 시작하고, 결과가 아쉬우면 먼저 프롬프트와 파일이 충분했는지 봐요. 그다음 <strong>한 번에 하나만, effort부터</strong> 바꿔요. 그래야 무엇이 차이를 만들었는지 알 수 있어요.</p>
+<div class="table-scroll"><table><thead><tr><th>보이는 증상</th><th>먼저 해 볼 것</th></tr></thead><tbody><tr><td>지시를 빠뜨린다, 긴 작업이 덜 끝난 채 마무리된다</td><td>effort 올리기</td></tr><tr><td>맥락도 충분하고 effort도 올렸는데 품질이 모자란다</td><td>더 강한 모델로</td></tr><tr><td>답이 길어지기만 한다, 시키지 않은 일까지 한다</td><td>effort 내리기</td></tr><tr><td>effort를 내려도 품질이 유지되고, 더 빨랐으면 한다</td><td>덜 강한 모델을 시험해 보고 비교</td></tr></tbody></table></div></div></article>
+<article class="bubble rise"><span class="n">03</span><h3>사용량은 토큰당이 아니라 작업당으로</h3><div class="md"><p>읽기, 생각, 답 쓰기가 모두 토큰이고 사용 한도에서 빠져요. 모델은 <strong>토큰 하나의 값</strong>을, effort는 <strong>작업 하나에 쓰는 토큰 수</strong>를 정해요.</p>
+<p>더 중요한 건 작업당 비용이에요. 길고 모호한 일은 강한 모델이 더 적은 턴에 끝내서, 토큰당 값은 비싸도 작업 전체로는 덜 들 수 있어요. 한도를 아끼고 싶다면 effort를 먼저 내려요. 모델을 낮추면 비용과 능력이 함께 바뀌지만, effort를 낮추면 판단력은 그대로이고 비용만 바뀌거든요.</p></div></article>
+<article class="bubble rise"><span class="n">04</span><h3>일로 가늠하고, 때가 되면 다시 고르기</h3><div class="md"><p>일 자체가 힌트를 줘요. AI 없이 하면 얼마나 걸리는 일인가, 올바른 결과가 얼마나 분명한가. 오래 걸리고 정답이 덜 분명할수록 강한 모델이 도움이 돼요. 걸린 것의 크기, 검증하기 쉬운 정도, 필요한 속도도 함께 봐요. 새 모델이 나오면 예전에 막혔던 일을 다시 맡겨 보고, 늘 하던 일은 더 강한 모델에 낮은 effort로도 같은 결과가 나는지 확인해요.</p></div></article></div>
+  </div>
+</section>
+
+<section class="room r-note iris" style="--ix:25%" aria-label="노트">
+  <div class="inner">
+    <div class="page">
+      <div class="block"><h2><span class="mono">##</span>오늘의 목표</h2><ul class="ticks"><li>모델 메뉴의 네 모델(Fable, Opus, Sonnet, Haiku)이 각각 어떤 일에 맞는지 말할 수 있다.</li><li>결과가 아쉽거나 과할 때 노력 수준(effort)과 모델 가운데 무엇을 먼저 바꿀지 정할 수 있다.</li><li>토큰당 비용과 작업당 비용이 왜 다른지 설명할 수 있다.</li></ul></div>
+      <div class="block"><h2><span class="mono">##</span>직접 해 보기 <span class="mono small">5분</span></h2><div class="md"><p>튜토리얼이 제안하는 비교 실험이에요.</p>
+<ol><li>최근에 한 일 두 개를 골라요. 하나는 범위가 분명한 일, 하나는 길고 단계가 많은 일.</li><li>돌리기 전에 &quot;좋은 결과&quot;가 무엇인지 먼저 적어요.</li><li>Opus와 Sonnet에 같은 프롬프트와 파일을, 새 대화에서, 기본 effort로 줘요.</li><li>쓸 만한 결과가 나올 때까지 몇 번 고쳐 말했는지 세요. 턴 수가 비슷하면 평소 쓰던 모델을 그대로 써도 돼요. 한쪽이 더 적게 걸렸거나 중요한 걸 찾아냈다면 그런 일에는 그 모델을 써요.</li></ol>
+<p>마땅한 일이 없으면 읽어 본 보고서를 첨부하고 이렇게 물어보세요: &quot;첨부한 보고서를 다섯 항목으로 요약하고, 다른 출처로 꼭 확인하고 싶은 주장 하나를 짚어 줘.&quot;</p></div></div>
+      <div class="block quiz" id="quiz"><h2><span class="mono">##</span>확인 문제 <span class="mono small">고르면 바로 채점</span></h2>
+  
+  <div class="q" data-answer="1"><p class="qq"><span class="mono">Q1</span>어떤 모델로 시작할지 모르겠을 때 튜토리얼이 권하는 시작점은?</p>
+  <div class="opts"><button class="opt" type="button">Haiku</button><button class="opt" type="button">Opus</button><button class="opt" type="button">Fable</button></div>
+  <p class="why">튜토리얼은 대부분의 코딩과 지식 업무에 Opus로 시작하라고 권해요.</p></div>
+<div class="q" data-answer="0"><p class="qq"><span class="mono">Q2</span>프롬프트와 파일은 충분했는데 Claude가 지시 일부를 빠뜨리고 긴 작업을 덜 끝낸 채 마무리했어요. 먼저 바꿀 것은?</p>
+  <div class="opts"><button class="opt" type="button">effort를 올린다</button><button class="opt" type="button">덜 강한 모델로 바꾼다</button><button class="opt" type="button">모델과 effort를 동시에 바꾼다</button></div>
+  <p class="why">지시 누락과 덜 끝난 작업은 effort를 올려 볼 신호예요. 한 번에 하나만 바꿔야 무엇이 효과였는지 알 수 있어서 (c)는 맞지 않아요.</p></div>
+<div class="q" data-answer="1"><p class="qq"><span class="mono">Q3</span>사용 한도를 아끼고 싶을 때 튜토리얼이 먼저 권하는 것은?</p>
+  <div class="opts"><button class="opt" type="button">덜 강한 모델로 바꾸기</button><button class="opt" type="button">effort를 낮추기</button><button class="opt" type="button">질문을 여러 메시지로 잘게 나누기</button></div>
+  <p class="why">effort를 낮추면 모델의 판단력은 그대로 두고 비용만 바뀌어요. 모델을 낮추면 비용과 능력이 함께 바뀌어요.</p></div>
+<div class="q"><p class="qq"><span class="mono">Q4</span>(서술형) 토큰당 비용이 더 비싼 모델이 작업당 비용으로는 더 쌀 수 있는 이유를 두세 문장으로 설명해 보세요.</p>
+  <details class="ans"><summary>예시 답 보기</summary><div class="md">작업 하나의 비용은 토큰 값에 쓴 토큰 수를 곱한 것이고, 쓴 토큰 수는 몇 턴 만에 끝났는지에 크게 좌우된다. 길거나 모호한 일에서 덜 강한 모델은 여러 번 고쳐 말하고 다시 시켜야 해서 턴이 늘어난다. 더 강한 모델이 적은 턴에 끝내면 토큰당 값이 비싸도 합계는 더 작을 수 있다.</div></details></div>
+<div class="q"><p class="qq"><span class="mono">Q5</span>(상황형) 고객사 IT 팀장이 말해요. &quot;비용을 아껴야 하니 전 직원 기본 모델을 제일 싼 걸로 고정합시다.&quot; 어떻게 답하고, 어떤 절차를 제안할까요?</p>
+  <details class="ans"><summary>예시 답 보기</summary><div class="md">&quot;토큰당으로는 싸도, 다시 시키는 횟수가 늘면 작업당으로는 더 비쌀 수 있어요&quot;라고 설명한다. 그리고 절차를 제안한다. (1) 대표 작업 두세 개를 고르고 좋은 결과의 기준을 먼저 정한다. (2) 같은 프롬프트와 파일로 모델과 effort를 바꿔 가며 돌려 턴 수와 품질을 표로 만든다. (3) 한도를 줄여야 하면 모델을 낮추기 전에 effort를 먼저 낮춰 본다. (4) 결과에 따라 조직 기본값을 정하되, 어려운 작업에는 더 강한 모델을 쓸 수 있게 열어 두고, 새 모델이 나오면 다시 비교한다.</div></details></div>
+  
+  </div>
+    </div>
+  </div>
+</section>
+<section class="room r-fde band iris" style="--wall:var(--butter);--floor:var(--tomato);--text:var(--ink);--serc:var(--cobalt);--line:76%;--ix:75%" aria-labelledby="h-fde">
+  <div class="inner">
+    <span class="mark"><b>##</b> FDE 관점</span>
+    <h2 id="h-fde" class="say">공식 경로는 이 튜토리얼을 <em>&quot;어떤 모델이 어떤 일에 맞는지, 그리고 각 모델이 한도를 어떻게 쓰는지&quot;</em>로 소개해요.</h2>
+    <div class="lead md"><p>현장에서는 이 주제가 곧 비용 회의예요. FDE는 &quot;제일 싼 모델&quot;이나 &quot;제일 좋은 모델&quot; 같은 한 줄 결론 대신, 고객의 대표 작업 두세 개로 모델과 effort를 바꿔 가며 돌린 비교표를 가져가요. 세로축은 작업, 가로축은 설정, 칸에는 걸린 턴 수와 결과 품질을 적어요. 이 표가 파일럿의 기준선 옆에 놓이면 성공 지표를 &quot;작업당&quot;으로 합의하기 쉬워져요. Enterprise 플랜에서는 조직의 기본 모델과 기본 effort를 관리자가 정할 수 있으니, 비교 결과를 그 설정에 반영하자고 제안하세요. 새 모델이 나올 때 다시 비교하는 일정도 계획서에 넣어 두세요.</p></div>
+  </div>
+</section>
+<section class="room r-cards iris" style="--wall:var(--lilac);--floor:var(--lilac);--text:var(--ink);--serc:var(--cobalt);--ix:35%" aria-labelledby="h-cards">
+  <div class="inner">
+    <span class="mark"><b>##</b> 복습 카드</span>
+    <h2 id="h-cards" class="title">눌러서 뒤집기</h2>
+    <div class="cards"><button class="card" type="button" aria-pressed="false" style="--r:-1.5deg"><span class="face front"><span class="no">01</span><b>모델 메뉴의 네 모델을 순서대로 말하면?</b><span class="flip mono">눌러서 뒤집기</span></span><span class="face back" style="--bg:var(--purple)">Fable, Opus, Sonnet, Haiku.</span></button>
+<button class="card" type="button" aria-pressed="false" style="--r:3deg"><span class="face front"><span class="no">02</span><b>튜토리얼이 권하는 시작 모델은?</b><span class="flip mono">눌러서 뒤집기</span></span><span class="face back" style="--bg:var(--mint)">Opus. 기본값으로 시작해 필요에 따라 위아래로 조정한다.</span></button>
+<button class="card" type="button" aria-pressed="false" style="--r:-2.5deg"><span class="face front"><span class="no">03</span><b>effort는 무엇을 바꾸나?</b><span class="flip mono">눌러서 뒤집기</span></span><span class="face back" style="--bg:var(--butter)">그 모델이 얼마나 공들여 일할지. 올리면 더 오래 생각하고 더 검토하며, 토큰을 더 쓴다.</span></button>
+<button class="card" type="button" aria-pressed="false" style="--r:1.5deg"><span class="face front"><span class="no">04</span><b>결과가 아쉬울 때 조정 순서는?</b><span class="flip mono">눌러서 뒤집기</span></span><span class="face back" style="--bg:var(--lilac)">프롬프트와 파일 확인, 그다음 한 번에 하나씩, effort부터.</span></button>
+<button class="card" type="button" aria-pressed="false" style="--r:-3deg"><span class="face front"><span class="no">05</span><b>한도를 아끼려면 무엇을 먼저 낮추나?</b><span class="flip mono">눌러서 뒤집기</span></span><span class="face back" style="--bg:var(--sky)">effort. 모델의 판단력은 그대로 두고 비용만 바뀐다.</span></button></div>
+  </div>
+</section>
+
+<section class="room r-tt iris" style="--wall:var(--cobalt);--floor:var(--cobalt);--text:var(--paper);--serc:var(--pink);--ix:65%" id="timetable" aria-labelledby="h-tt">
+  <div class="inner">
+    <div class="endrow">
+      <label class="done-box"><input type="checkbox" data-done="S09"> 이 세션을 다 했어요 <span class="mono small">이 브라우저에만 저장</span></label>
+      <nav class="pager" aria-label="세션 이동">
+        <a href="/t/claude-fde/s08-model-context-decisions" target="_top" class="pg">← S08</a>
+        <a href="/t/claude-fde/0000-course-home" target="_top" class="pg">코스 홈</a>
+        <a href="/t/claude-fde/s10-platform-first-api-call" target="_top" class="pg pg-next">S10 · Claude Platform이란, 첫 API 호출, 모델 고르기 →</a>
+      </nav>
+    </div>
+    <span class="mark"><b>##</b> 전체 시간표</span>
+    <h2 id="h-tt" class="title">11개 코스, <span class="ser">42개</span> 세션</h2>
+    <div class="ledger"><div class="course rise"><h3><span>1. AI Capabilities and Limitations</span><span class="mono">4세션</span></h3>
+  <p class="cd mono">핵심, 약 60분</p><ol><li class=""><a href="/t/claude-fde/s01-next-token-prediction" target="_top"><span class="mono">S01</span><span class="tt">생성형 AI의 네 가지 성질과 다음 토큰 예측</span><span class="tag v">영상</span><span class="done-mark" data-done-mark="S01" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s02-knowledge" target="_top"><span class="mono">S02</span><span class="tt">지식: 학습 데이터, 지식 컷오프, 환각</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S02" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s03-working-memory" target="_top"><span class="mono">S03</span><span class="tt">작업 기억: 컨텍스트 윈도우</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S03" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s04-steerability-diagnosis" target="_top"><span class="mono">S04</span><span class="tt">조종 가능성과 예상 밖 출력 진단하기</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S04" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>2. AI Fluency for Builders</span><span class="mono">2세션</span></h3>
+  <p class="cd mono">핵심, 약 45분</p><ol><li class=""><a href="/t/claude-fde/s05-4d-delegation-description" target="_top"><span class="mono">S05</span><span class="tt">AI Fluency와 4D 프레임워크: 위임과 설명</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S05" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s06-4d-discernment-diligence" target="_top"><span class="mono">S06</span><span class="tt">분별과 책임: 빌더의 검증</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S06" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>3. Claude Platform and Model Foundations</span><span class="mono">2세션</span></h3>
+  <p class="cd mono">핵심, 약 60분</p><ol><li class=""><a href="/t/claude-fde/s07-entry-points-features" target="_top"><span class="mono">S07</span><span class="tt">결정 1·2: 진입점과 기능 고르기</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S07" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s08-model-context-decisions" target="_top"><span class="mono">S08</span><span class="tt">결정 3·4: 모델 선택과 컨텍스트·메모리 관리</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S08" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>4. Choosing the right Claude model</span><span class="mono">1세션</span></h3>
+  <p class="cd mono">핵심, 약 10분</p><ol><li class="now" aria-current="page"><a href="/t/claude-fde/s09-choosing-model" target="_top"><span class="mono">S09</span><span class="tt">네 가지 모델과 effort 조절</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S09" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>5. Claude Platform 101</span><span class="mono">8세션</span></h3>
+  <p class="cd mono">빌드, 약 90분</p><ol><li class=""><a href="/t/claude-fde/s10-platform-first-api-call" target="_top"><span class="mono">S10</span><span class="tt">Claude Platform이란, 첫 API 호출, 모델 고르기</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S10" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s11-agent-loop" target="_top"><span class="mono">S11</span><span class="tt">에이전트 루프</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S11" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s12-tool-use" target="_top"><span class="mono">S12</span><span class="tt">도구 사용 (tool use)</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S12" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s13-thinking" target="_top"><span class="mono">S13</span><span class="tt">확장 사고 (thinking)</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S13" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s14-built-in-tools-skills" target="_top"><span class="mono">S14</span><span class="tt">내장 도구와 Skills</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S14" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s15-mcp-context-management" target="_top"><span class="mono">S15</span><span class="tt">MCP와 컨텍스트 관리</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S15" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s16-managed-agents" target="_top"><span class="mono">S16</span><span class="tt">Managed Agents</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S16" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s17-building-with-claude-code" target="_top"><span class="mono">S17</span><span class="tt">Claude Code로 만들기 + 코스 5 총정리</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S17" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>6. Claude Code 101</span><span class="mono">5세션</span></h3>
+  <p class="cd mono">빌드, 약 60분</p><ol><li class=""><a href="/t/claude-fde/s18-what-is-claude-code" target="_top"><span class="mono">S18</span><span class="tt">Claude Code란: 에이전트 루프, 컨텍스트, 도구와 권한, 설치</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S18" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s19-first-prompt-modes" target="_top"><span class="mono">S19</span><span class="tt">첫 프롬프트: 승인 모드, 자동 수락, Plan Mode</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S19" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s20-daily-workflows" target="_top"><span class="mono">S20</span><span class="tt">일상 워크플로: Explore → Plan → Code → Commit, 리뷰, 컨텍스트 명령</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S20" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s21-claude-md-subagents" target="_top"><span class="mono">S21</span><span class="tt">커스터마이즈 1: CLAUDE.md와 서브에이전트</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S21" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s22-skills-mcp-hooks" target="_top"><span class="mono">S22</span><span class="tt">커스터마이즈 2: skills, MCP, hooks</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S22" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>7. Claude Code in Action</span><span class="mono">5세션</span></h3>
+  <p class="cd mono">빌드, 약 60분</p><ol><li class=""><a href="/t/claude-fde/s23-steer-the-work" target="_top"><span class="mono">S23</span><span class="tt">작업 조종: plan mode, 압축(compaction), 되감기(rewind)</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S23" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s24-configure-claude" target="_top"><span class="mono">S24</span><span class="tt">설정: 간결한 CLAUDE.md, 지시를 둘 자리, 검증 skill</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S24" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s25-permissions-hooks" target="_top"><span class="mono">S25</span><span class="tt">권한 모드와 hooks로 규칙 강제하기</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S25" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s26-automate-repeat-work" target="_top"><span class="mono">S26</span><span class="tt">반복 작업 자동화: 자율 세션, worktree, routines, headless, PR 리뷰</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S26" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s27-verify-share" target="_top"><span class="mono">S27</span><span class="tt">검증과 공유: 무감독 실행 검증, plugin</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S27" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>8. Introduction to Model Context Protocol</span><span class="mono">4세션</span></h3>
+  <p class="cd mono">빌드, 약 60분</p><ol><li class=""><a href="/t/claude-fde/s28-mcp-architecture" target="_top"><span class="mono">S28</span><span class="tt">MCP 구조: 클라이언트와 서버</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S28" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s29-mcp-server-tools" target="_top"><span class="mono">S29</span><span class="tt">서버 만들기: tools와 MCP Inspector</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S29" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s30-mcp-resources-prompts" target="_top"><span class="mono">S30</span><span class="tt">Resources와 Prompts, 셋 중 무엇을 쓸까</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S30" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s31-mcp-client" target="_top"><span class="mono">S31</span><span class="tt">클라이언트 구현: 연결, 비동기, 정리</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S31" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>9. Introduction to agent skills</span><span class="mono">3세션</span></h3>
+  <p class="cd mono">빌드, 약 30분</p><ol><li class=""><a href="/t/claude-fde/s32-what-are-skills" target="_top"><span class="mono">S32</span><span class="tt">Skill이란, 첫 skill 만들기</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S32" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s33-skill-config-comparison" target="_top"><span class="mono">S33</span><span class="tt">설정과 여러 파일 skill, 다른 기능과 비교</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S33" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s34-sharing-troubleshooting-skills" target="_top"><span class="mono">S34</span><span class="tt">skill 공유와 문제 해결</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S34" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>10. Delivery Methodology</span><span class="mono">4세션</span></h3>
+  <p class="cd mono">파일럿, 약 40분</p><ol><li class=""><a href="/t/claude-fde/s35-use-case-qualification" target="_top"><span class="mono">S35</span><span class="tt">유스케이스 발굴과 자격 판정</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S35" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s36-pilot-design-roi" target="_top"><span class="mono">S36</span><span class="tt">파일럿 설계와 ROI 측정</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S36" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s37-rollout-champions" target="_top"><span class="mono">S37</span><span class="tt">단계적 롤아웃, 변화 관리, 챔피언</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S37" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s38-failure-modes-30-day" target="_top"><span class="mono">S38</span><span class="tt">흔한 실패 모드 예방과 30일 활성화</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S38" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>11. Driving enterprise adoption of Claude</span><span class="mono">3세션</span></h3>
+  <p class="cd mono">파일럿, 약 60분</p><ol><li class=""><a href="/t/claude-fde/s39-activation" target="_top"><span class="mono">S39</span><span class="tt">1단계 Activation: 성공 팀, 프로비저닝, 문화, 교육, 런치</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S39" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s40-acceleration" target="_top"><span class="mono">S40</span><span class="tt">2단계 Acceleration: CoE와 Train the Trainer</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S40" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s41-expansion" target="_top"><span class="mono">S41</span><span class="tt">3단계 Expansion: 측정, 축하, 반복, 새 유스케이스</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S41" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>캡스톤</span><span class="mono">1세션</span></h3>
+  <ol><li class=""><a href="/t/claude-fde/s42-capstone-pilot-plan" target="_top"><span class="mono">S42</span><span class="tt">파일럿 계획서 쓰기</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S42" aria-hidden="true"></span></a></li></ol></div></div>
+  </div>
+</section>
 </main>
+<footer class="night" role="contentinfo">
+  <div class="inner">
+    <p class="end">FDE <span class="ser">study</span><span class="dot end-dot" aria-hidden="true"></span></p>
+    <p><b>비공식 학습 자료.</b> 이 노트는 Anthropic 공식 “Claude Forward Deployed Engineer” 학습 경로의 공개 개요와 공식 문서를 바탕으로 쓴 개인 학습 노트이며, 공식 강의 필기가 아니에요. 실제 강의·퀴즈·수료는 공식 경로에서 진행해요.</p>
+    <p>공식 경로: <a href="https://anthropic-partners.skilljar.com/path/claude-fde" target="_blank" rel="noopener noreferrer">https://anthropic-partners.skilljar.com/path/claude-fde</a></p>
+    <div class="sources"><p class="mono">## 출처</p><div class="md"><ul><li>Claude Academy, Choosing a Claude model for knowledge workers(본문과 모델 카드·조정 지도·작업당 비용·작업 지도 위젯): <a href="https://academy.claude.com/tutorials/choosing-the-right-claude-model" target="_blank" rel="noopener noreferrer">https://academy.claude.com/tutorials/choosing-the-right-claude-model</a></li><li>Claude Academy, How to select the right effort setting in Claude: <a href="https://academy.claude.com/tutorials/how-to-select-the-right-effort-setting-for-claude-cowork-and-chat" target="_blank" rel="noopener noreferrer">https://academy.claude.com/tutorials/how-to-select-the-right-effort-setting-for-claude-cowork-and-chat</a></li><li>Claude Help Center, Change the model, effort, and thinking settings: <a href="https://support.claude.com/en/articles/8664678-change-the-model-effort-and-thinking-settings" target="_blank" rel="noopener noreferrer">https://support.claude.com/en/articles/8664678-change-the-model-effort-and-thinking-settings</a></li><li>Claude Help Center, Claude Fable models on your plan: <a href="https://support.claude.com/en/articles/15424964-claude-fable-models-on-your-plan" target="_blank" rel="noopener noreferrer">https://support.claude.com/en/articles/15424964-claude-fable-models-on-your-plan</a></li><li>Claude Help Center, How do usage and length limits work?: <a href="https://support.claude.com/en/articles/11647753-how-do-usage-and-length-limits-work" target="_blank" rel="noopener noreferrer">https://support.claude.com/en/articles/11647753-how-do-usage-and-length-limits-work</a></li><li>Claude Help Center, Set a default model for your organization: <a href="https://support.claude.com/en/articles/15330088-set-a-default-model-for-your-organization" target="_blank" rel="noopener noreferrer">https://support.claude.com/en/articles/15330088-set-a-default-model-for-your-organization</a></li><li>Claude Forward Deployed Engineer 학습 경로, 코스 4 소개(개요 사본 <code>_official-outline-2026-11-27.txt</code>): <a href="https://anthropic-partners.skilljar.com/path/claude-fde" target="_blank" rel="noopener noreferrer">https://anthropic-partners.skilljar.com/path/claude-fde</a></li><li>영상 장면 7의 턴 수(여섯 턴, 두 턴)는 튜토리얼이 &quot;예시&quot;라고 밝힌 그림의 숫자예요. 실제 측정값이 아니에요.</li></ul></div></div>
+  </div>
+</footer>
+
 <script src="fde.js"></script>
 </body>
 </html>

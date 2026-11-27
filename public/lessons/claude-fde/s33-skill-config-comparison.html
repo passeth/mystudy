@@ -4,31 +4,74 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="9. Introduction to agent skills · 25분">
+<meta name="color-scheme" content="light">
 <title>S33. 설정과 여러 파일 skill, 다른 기능과 비교</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,700;12..96,800&family=Cutive+Mono&family=Gowun+Batang:wght@400;700&family=Instrument+Serif:ital@0;1&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap">
 <link rel="stylesheet" href="fde.css">
 </head>
 <body data-session="S33">
-<!-- 자동 생성 파일: scripts/sync-fde.mjs 가 만들어요. 직접 고치지 말고 원본 노트를 고친 뒤 npm run fde:sync 하세요. -->
-<main class="wrap">
-
-<nav class="crumbs"><a href="/t/claude-fde/0000-course-home" target="_top">← 코스 홈</a><span>9. Introduction to agent skills</span></nav>
-<header class="head">
-  <span class="eyebrow">Claude FDE 스터디 · 세션 33 / 42</span>
-  <h1>S33. 설정과 여러 파일 skill, 다른 기능과 비교</h1>
-  <div class="meta"><span>25분</span><span class="pill pill-draft">노트 초안</span></div>
-  <p class="official">공식 경로에서 해당하는 부분: Configuration and multi-file skills · Skills vs. other Claude Code features</p>
+<!-- 자동 생성 파일: scripts/sync-fde.mjs 가 만들어요. 직접 고치지 말고 원본 노트나 claude-fde-course/ 를 고친 뒤 npm run fde:render 하세요. -->
+<nav class="hud" aria-label="코스">
+  <a href="/t/claude-fde/0000-course-home" target="_top" class="brand">Claude FDE 스터디 <span class="dot" aria-hidden="true"></span><span class="long">비공식 노트</span></a>
+  <a class="pill" href="#timetable">세션 33 / 42 <i aria-hidden="true"></i></a>
+</nav>
+<main>
+<header class="room hero type" style="--wall:var(--cobalt);--floor:var(--beige);--text:var(--paper);--serc:var(--pink);--line:78%">
+  <div class="copy">
+    <span class="mark land"><b>##</b> 코스 9 · Introduction to agent skills</span>
+    <h1 class="land l2">설정과 여러 파일 <span class="ser">skill</span>, 다른 기능과 비교</h1>
+    <div class="lines land l3"><span>frontmatter의 주요 필드로 &quot;누가 부를 수 있는지&quot;와 &quot;어떤 도구를 미리 승인할지&quot;를 설정할 수 있다.</span><span>25분 · 확인 문제 5개 · 복습 카드 5장</span><span>노트 초안 · 비공식</span></div>
+    <span class="by">S33 · 설정과 여러 파일 skill, 다른 기능과 비교</span>
+  </div>
+  <span class="numeral" aria-hidden="true">33</span>
 </header>
 
-
-<article class="note">
-<section class="sec sec-goals"><h2>오늘의 목표</h2><ul><li>frontmatter의 주요 필드로 &quot;누가 부를 수 있는지&quot;와 &quot;어떤 도구를 미리 승인할지&quot;를 설정할 수 있다.</li><li>참고 파일과 스크립트를 가진 여러 파일 skill의 구조를 짤 수 있다.</li><li>어떤 요구가 왔을 때 CLAUDE.md, skill, hook, 서브에이전트, MCP 중 무엇에 맞는지 고를 수 있다.</li></ul></section>
-<section class="sec "><h2>핵심 정리</h2><h3>설정은 frontmatter에 적는다</h3>
-<p>S32의 skill에는 <code>name</code>과 <code>description</code>만 있었죠. frontmatter는 skill의 <strong>설정판</strong>이에요. 자주 쓰는 필드는 이래요.</p>
+<section class="room r-video iris" style="--wall:var(--ink);--floor:var(--mint);--text:var(--paper);--serc:var(--pink);--line:80%;--ix:68%" aria-labelledby="h-v">
+  <div class="inner">
+    <span class="mark"><b>##</b> 오늘의 강의</span>
+    <h2 id="h-v" class="title">영상은 <span class="ser">준비 중</span>, 노트부터 봐요</h2>
+    <div class="screen rise"><div class="ph">
+      <span class="ph-id" aria-hidden="true">S33</span>
+      <span class="ph-pill">영상 준비 중</span>
+    </div></div>
+    <div class="under"><span>25분 세션 · 대본 장면 10개</span><span>노트 먼저</span></div>
+    <details class="next"><summary>영상 대본 펼치기</summary><div class="script md"><h3>장면 1 · 오늘의 질문 (약 25초)</h3>
+<p><strong>화면:</strong> 고객 말풍선 세 개가 차례로 뜸: &quot;항상 이렇게 해 주세요&quot;, &quot;이건 절대 하지 마세요&quot;, &quot;우리 시스템을 봐 주세요&quot;. 그 아래 서랍 다섯 개가 닫힌 채 나란히 있고 물음표.<br><strong>내레이션:</strong> 고객의 요청은 다 다르게 생겼어요. 항상 해 달라, 절대 하지 마라, 우리 시스템을 봐 달라. 이걸 전부 스킬에 넣으면 될까요? 오늘은 스킬의 설정과, 다른 기능과의 차이를 볼게요.</p>
+<h3>장면 2 · 설정판 (약 35초)</h3>
+<p><strong>화면:</strong> 스킬 문서의 위 칸이 확대되어 스위치 여러 개가 달린 설정판으로 바뀜. 스위치 이름표: &quot;이름&quot;, &quot;설명&quot;, &quot;누가 부르나&quot;, &quot;미리 승인할 도구&quot;.<br><strong>내레이션:</strong> 스킬 파일의 윗부분은 설정판이에요. 지난 시간에는 이름과 설명만 적었죠. 여기에 스위치를 더 달 수 있어요. 누가 부를 수 있는지, 어떤 도구를 미리 승인할지 같은 것들이에요.</p>
+<h3>장면 3 · 누가 부를 수 있나 (약 40초)</h3>
+<p><strong>화면:</strong> 문 하나에 손잡이 두 개: &quot;사용자&quot;와 &quot;모델&quot;. 첫 번째 스위치를 내리면 &quot;모델&quot; 손잡이가 잠김(배포 스킬 예시). 두 번째 스위치를 내리면 &quot;사용자&quot; 손잡이가 숨겨짐(배경 지식 예시).<br><strong>내레이션:</strong> 기본은 사용자와 클로드 둘 다 부를 수 있어요. 스위치 하나로 클로드가 스스로 부르는 걸 막을 수 있어요. 배포처럼 사람이 때를 정해야 하는 일에 써요. 반대로 메뉴에서 숨겨서 클로드만 쓰게 할 수도 있어요.</p>
+<h3>장면 4 · 사전 승인은 제한이 아니다 (약 40초)</h3>
+<p><strong>화면:</strong> 출입 게이트 그림. 초록 패스를 든 도구 하나는 멈추지 않고 통과. 나머지 도구들은 평소처럼 검문소에서 확인받고 통과. 위에 &quot;막는 것이 아니라, 묻지 않는 것&quot;. 시계가 돌자 초록 패스가 사라짐.<br><strong>내레이션:</strong> 헷갈리기 쉬운 설정이 하나 있어요. 미리 승인할 도구를 적는 칸이에요. 이건 이것만 쓰라는 제한이 아니에요. 이건 묻지 않고 써도 된다는 뜻이에요. 다른 도구는 평소 규칙대로예요. 그리고 다음 메시지를 보내면 승인은 사라져요.</p>
+<h3>장면 5 · 파일을 나눈다 (약 40초)</h3>
+<p><strong>화면:</strong> 스킬 폴더가 펼쳐짐. 맨 위에 얇은 문서 &quot;개요와 길 안내&quot;, 그 아래 두꺼운 문서 &quot;자세한 규칙&quot;, 그 아래 톱니바퀴 아이콘 &quot;스크립트&quot;. 개요 문서에서 나머지 둘로 화살표.<br><strong>내레이션:</strong> 본문이 길어지면 파일을 나눠요. 맨 위 파일은 개요와 길 안내만 맡아요. 자세한 규칙은 다른 파일에 두고, 필요할 때만 읽게 해요. 정해진 계산이나 수집은 스크립트에 맡겨요.</p>
+<h3>장면 6 · 스크립트는 결과만 (약 35초)</h3>
+<p><strong>화면:</strong> 톱니바퀴 스크립트가 돌아가고, 긴 코드 두루마리는 폴더 안에 그대로 남음. 작은 결과 쪽지 한 장만 &quot;컨텍스트&quot; 상자로 들어감.<br><strong>내레이션:</strong> 스크립트는 읽는 게 아니라 실행해요. 코드가 아무리 길어도 대화에 들어오는 건 결과뿐이에요. 그래서 매번 같은 결과가 나와야 하는 일은 스크립트가 맞아요.</p>
+<h3>장면 7 · 다섯 서랍 (약 40초)</h3>
+<p><strong>화면:</strong> 서랍 다섯 개가 하나씩 열리며 이름표가 붙음: &quot;CLAUDE.md: 항상 읽는 메모&quot;, &quot;Skill: 필요할 때 꺼내는 절차&quot;, &quot;Hook: 정해진 순간에 도는 스크립트&quot;, &quot;서브에이전트: 따로 일하는 작업자&quot;, &quot;MCP: 바깥 시스템 연결&quot;.<br><strong>내레이션:</strong> 이제 다섯 가지를 나란히 놓아 볼게요. 클로드 엠디는 항상 읽는 메모예요. 스킬은 필요할 때 꺼내는 절차예요. 훅은 정해진 순간에 자동으로 도는 스크립트예요. 서브에이전트는 따로 떨어져 일하는 작업자예요. 엠씨피는 바깥 시스템과의 연결이에요.</p>
+<h3>장면 8 · 부탁과 보장 (약 40초)</h3>
+<p><strong>화면:</strong> 저울. 왼쪽 접시 &quot;부탁: CLAUDE.md, Skill&quot; 위에 손글씨 쪽지. 오른쪽 접시 &quot;보장: Hook&quot; 위에 자물쇠. 아래에 &quot;절대 안 되는 일 → 자물쇠 쪽&quot;.<br><strong>내레이션:</strong> 가장 중요한 구분은 이거예요. 메모와 스킬에 적은 지시는 부탁이에요. 클로드가 읽고 따르지만, 보장은 아니에요. 훅은 클로드의 판단과 상관없이 실행돼요. 그래서 절대 어기면 안 되는 규칙은 훅에 둬요.</p>
+<h3>장면 9 · 고객 앞에서 (약 35초)</h3>
+<p><strong>화면:</strong> 장면 1의 고객 말풍선 세 개가 서랍으로 날아감: &quot;항상 이렇게&quot; → CLAUDE.md, &quot;절대 하지 마세요&quot; → Hook, &quot;우리 시스템을 봐 주세요&quot; → MCP. 네 번째 말풍선 &quot;이 순서대로 해 주세요&quot; → Skill.<br><strong>내레이션:</strong> 현장에서 에프디이는 고객의 말을 이 서랍으로 번역해요. 항상 해 달라는 건 메모로, 절대 안 된다는 건 훅으로, 시스템을 봐 달라는 건 엠씨피로 가요. 순서대로 해 달라는 절차는 스킬이죠. 계획서에도 이렇게 나눠 적으세요.</p>
+<h3>장면 10 · 요약과 예고 (약 25초)</h3>
+<p><strong>화면:</strong> 세 줄 요약: &quot;1. 설정판에서 누가 부를지, 무엇을 미리 승인할지 정한다 2. 길어지면 파일을 나눈다 3. 부탁은 skill, 보장은 hook&quot;. 아래에 &quot;다음: S34 skill 공유와 문제 해결&quot;.<br><strong>내레이션:</strong> 정리할게요. 설정판에서 누가 부를지와 미리 승인할 도구를 정해요. 길어지면 파일을 나눠요. 부탁은 스킬에, 보장은 훅에 둬요. 다음 시간에는 스킬을 팀과 나누는 법과 문제가 생겼을 때 고치는 법을 볼게요.</p></div></details>
+  </div>
+</section>
+<section class="zoom" style="--zc:var(--mint);--zfill:var(--mint)" aria-label="핵심 단어: skill">
+  <div class="stage"><span class="word" aria-hidden="true" style="font-size:clamp(3.5rem, 18.4vw, 26rem)">skill</span><span class="cap">&gt; 글자 속으로 들어가 볼까요</span></div>
+</section>
+<section class="room r-core" style="--wall:var(--mint);--floor:var(--bottle);--text:var(--ink);--serc:var(--cobalt);--line:86%" aria-labelledby="h-core">
+  <div class="inner">
+    <span class="mark"><b>##</b> 핵심 정리</span>
+    <h2 id="h-core" class="title">세 장만 기억해요</h2>
+    
+    <div class="bubbles"><article class="bubble rise wide"><span class="n">01</span><h3>설정은 frontmatter에 적는다</h3><div class="md"><p>S32의 skill에는 <code>name</code>과 <code>description</code>만 있었죠. frontmatter는 skill의 <strong>설정판</strong>이에요. 자주 쓰는 필드는 이래요.</p>
 <div class="table-scroll"><table><thead><tr><th>필드</th><th>하는 일</th></tr></thead><tbody><tr><td><code>name</code></td><td>명령 이름. 생략하면 폴더 이름</td></tr><tr><td><code>description</code></td><td>무엇을 하고 언제 쓰는지. Claude가 고를 때 읽는다</td></tr><tr><td><code>when_to_use</code></td><td>발동 문구나 예시 요청을 설명 뒤에 덧붙인다</td></tr><tr><td><code>argument-hint</code></td><td>자동완성에 보여 줄 인자 힌트. 예: <code>[티켓번호]</code></td></tr><tr><td><code>disable-model-invocation</code></td><td><code>true</code>면 Claude가 스스로 부르지 못한다. 사용자가 <code>/이름</code>으로만</td></tr><tr><td><code>user-invocable</code></td><td><code>false</code>면 <code>/</code> 메뉴에서 숨긴다. Claude만 부른다</td></tr><tr><td><code>allowed-tools</code></td><td>skill이 발동된 그 턴 동안 승인 없이 쓸 도구</td></tr><tr><td><code>context</code>, <code>agent</code></td><td><code>context: fork</code>면 서브에이전트에서 실행. <code>agent</code>로 종류 지정</td></tr><tr><td><code>paths</code></td><td>이 파일 패턴을 다룰 때만 skill을 활성화</td></tr></tbody></table></div>
 <p>알아 둘 점 세 가지예요.</p>
-<ul><li>모든 필드는 선택이고 <code>description</code>만 권장이에요. 필드 이름을 틀리게 쓰면 오류 없이 <strong>조용히 무시</strong>돼요. 하이픈까지 정확히 쓰세요.</li><li><code>allowed-tools</code>는 &quot;이것만 쓸 수 있다&quot;가 아니라 <strong>&quot;이건 묻지 않고 써도 된다&quot;</strong>예요. 목록에 없는 도구도 평소 권한 규칙대로 쓸 수 있고, 사전 승인은 다음 메시지를 보내면 사라져요. 도구를 막으려면 <code>disallowed-tools</code>나 S25의 권한 규칙을 써요.</li><li>배포처럼 부작용이 있는 절차에는 <code>disable-model-invocation: true</code>를 붙여요. Claude가 &quot;코드가 준비된 것 같으니 배포하자&quot;고 스스로 정하면 안 되니까요.</li></ul>
-<h3>여러 파일 skill</h3>
-<p>본문이 길어지면 폴더 안에 파일을 나눠요. S32의 단계적 공개 3단계가 이거예요.</p>
+<ul><li>모든 필드는 선택이고 <code>description</code>만 권장이에요. 필드 이름을 틀리게 쓰면 오류 없이 <strong>조용히 무시</strong>돼요. 하이픈까지 정확히 쓰세요.</li><li><code>allowed-tools</code>는 &quot;이것만 쓸 수 있다&quot;가 아니라 <strong>&quot;이건 묻지 않고 써도 된다&quot;</strong>예요. 목록에 없는 도구도 평소 권한 규칙대로 쓸 수 있고, 사전 승인은 다음 메시지를 보내면 사라져요. 도구를 막으려면 <code>disallowed-tools</code>나 S25의 권한 규칙을 써요.</li><li>배포처럼 부작용이 있는 절차에는 <code>disable-model-invocation: true</code>를 붙여요. Claude가 &quot;코드가 준비된 것 같으니 배포하자&quot;고 스스로 정하면 안 되니까요.</li></ul></div></article>
+<article class="bubble rise wide"><span class="n">02</span><h3>여러 파일 skill</h3><div class="md"><p>본문이 길어지면 폴더 안에 파일을 나눠요. S32의 단계적 공개 3단계가 이거예요.</p>
 <pre class="code" data-lang="text"><code>release-notes/
 ├── SKILL.md          # 개요와 길 안내 (필수)
 ├── style-guide.md    # 자세한 규칙. 필요할 때만 읽는다
@@ -43,61 +86,104 @@ allowed-tools: Bash(${CLAUDE_SKILL_DIR}/scripts/collect.sh *)
 1. `${CLAUDE_SKILL_DIR}/scripts/collect.sh`를 실행해 커밋 목록을 얻는다.
 2. 분류와 문체는 [style-guide.md](style-guide.md)를 따른다.
 3. 초안을 보여 주고 확인을 받는다.</code></pre>
-<p><code>${CLAUDE_SKILL_DIR}</code>은 이 skill 폴더의 경로로 바뀌는 변수예요. 본문과 <code>allowed-tools</code>에 같은 변수를 쓰면 skill이 어디에 설치돼 있든 스크립트가 승인 창 없이 돌아요. 권장 사항: <code>SKILL.md</code>는 500줄 아래로 두고, 참고 파일은 <code>SKILL.md</code>에서 바로 한 단계로 연결하세요(파일이 또 다른 파일을 가리키는 식으로 깊어지면 Claude가 일부만 읽을 수 있어요).</p>
-<h3>다른 기능과 비교</h3>
-<div class="table-scroll"><table><thead><tr><th>기능</th><th>한 줄 정의</th><th>컨텍스트에 들어오는 때</th><th>누가 발동하나</th><th>맞는 용도</th></tr></thead><tbody><tr><td>CLAUDE.md</td><td>항상 읽는 프로젝트 메모</td><td>매 세션 시작, 전부</td><td>자동</td><td>&quot;항상 이렇게&quot; 규칙, 빌드 명령</td></tr><tr><td>Skill</td><td>필요할 때 꺼내는 절차와 지식</td><td>설명은 시작 때, 본문은 쓸 때</td><td>Claude(설명 맞추기) 또는 사용자(<code>/이름</code>)</td><td>반복 절차, 가끔 필요한 참고 자료</td></tr><tr><td>Hook</td><td>정해진 순간에 도는 스크립트</td><td>들어오지 않음(출력을 돌려줄 때만)</td><td>Claude Code가 이벤트마다. Claude의 판단 없이</td><td>매번 반드시 지켜야 하는 규칙</td></tr><tr><td>서브에이전트</td><td>따로 떨어진 컨텍스트의 작업자</td><td>별도 컨텍스트. 요약만 돌아옴</td><td>Claude나 사용자가 일을 맡길 때</td><td>파일을 많이 읽는 조사, 병렬 작업</td></tr><tr><td>MCP</td><td>바깥 시스템과의 연결</td><td>도구 이름은 시작 때, 스키마는 쓸 때</td><td>Claude가 도구를 부를 때</td><td>외부 데이터 읽기와 행동</td></tr></tbody></table></div>
-<p>고르는 요령은 이래요. 항상 알아야 하면 CLAUDE.md, 가끔 필요하면 skill, <strong>반드시</strong> 매번이어야 하면 hook이에요. skill이나 CLAUDE.md의 지시는 부탁이지 보장이 아니거든요. 대화를 어지럽힐 큰 작업은 서브에이전트, 바깥 시스템은 MCP예요. 섞어 쓰기도 해요. S28~S31의 MCP가 연결을 주고, skill이 &quot;그 연결을 우리 팀 방식으로 쓰는 법&quot;을 줘요.</p></section>
-<section class="sec sec-try callout warm"><h2>직접 해 보기 (5분)</h2><ol><li>S32의 <code>summarize-ticket</code>에 <code>disable-model-invocation: true</code> 한 줄을 추가하세요. 새 세션에서 &quot;이 고객 문의 정리해 줘&quot;라고 하면 skill이 발동되지 않고, <code>/summarize-ticket</code>으로는 되는지 확인하세요. 확인 뒤에는 줄을 지우세요.</li><li>지금 쓰는 프로젝트의 CLAUDE.md를 열어 항목 다섯 개를 골라 표의 다섯 기능 중 어디가 맞는지 옆에 적어 보세요. &quot;절차&quot;처럼 생긴 항목이 있다면 skill 후보예요.</li></ol></section>
-<section class="sec sec-quiz"><h2>확인 문제</h2><ol class="quiz"><li value="1" class="q"><div class="q-body"><code>allowed-tools: Bash(git status *)</code>가 뜻하는 것은?
-<ul><li>(a) 이 skill이 도는 동안 Claude는 <code>git status</code>만 쓸 수 있다</li><li>(b) skill이 발동된 턴 동안 <code>git status</code>는 승인 없이 쓸 수 있고, 다른 도구는 평소 권한 규칙을 따른다</li><li>(c) 이 세션이 끝날 때까지 모든 Bash 명령이 승인된다</li></ul></div>
-<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">(b). <code>allowed-tools</code>는 사전 승인이지 제한이 아니고, 발동된 턴에만 적용돼요.</div></details></li>
-<li value="2" class="q"><div class="q-body">여러 파일 skill에서 <code>scripts/</code> 안의 스크립트는?
-<ul><li>(a) skill이 발동되면 코드 전체가 컨텍스트에 들어온다</li><li>(b) 세션 시작 때 미리 실행된다</li><li>(c) Claude가 실행하고, 출력만 컨텍스트에 들어온다</li></ul></div>
-<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">(c). 스크립트는 실행되고 출력만 컨텍스트에 들어와요.</div></details></li>
-<li value="3" class="q"><div class="q-body">&quot;<code>.env</code> 파일은 절대 수정하지 않는다&quot;를 <strong>확실히</strong> 지키게 하려면?
-<ul><li>(a) hook으로 수정을 막는다</li><li>(b) skill 본문에 굵게 적는다</li><li>(c) CLAUDE.md 맨 위에 적는다</li></ul></div>
-<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">(a). skill이나 CLAUDE.md의 지시는 부탁이에요. 반드시 지켜야 하면 hook으로 막아야 해요.</div></details></li>
-<li value="4" class="q"><div class="q-body">(서술형) skill과 서브에이전트의 차이를 &quot;컨텍스트&quot;라는 말을 넣어 두세 문장으로 설명해 보세요.</div>
-<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">예시 답: skill은 지시와 지식을 지금 대화의 컨텍스트에 불러오는 것이다. 서브에이전트는 별도의 컨텍스트에서 일하고 요약만 돌려주는 작업자다. 그래서 파일을 많이 읽는 조사처럼 대화를 어지럽힐 일은 서브에이전트에 맡기고, 절차나 참고 자료는 skill로 둔다. (둘을 합쳐 skill을 <code>context: fork</code>로 서브에이전트에서 돌릴 수도 있다.)</div></details></li>
-<li value="5" class="q"><div class="q-body">(상황형) 고객사 리드가 세 가지를 원해요. (1) 모든 코드에 사내 명명 규칙 적용, (2) 장애 보고서를 정해진 순서로 작성, (3) 장애 티켓을 사내 티켓 시스템에서 가져오기. 각각 어떤 기능으로 제안할까요?</div>
-<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">예시 답: (1) 명명 규칙은 모든 세션이 알아야 하므로 CLAUDE.md에 적고, 꼭 지켜져야 하는 부분은 편집 뒤에 검사하는 hook을 붙인다. (2) 장애 보고서는 정해진 순서의 반복 절차이므로 skill로 만들고, 양식 예시는 딸린 파일로 둔다. (3) 티켓 시스템은 바깥 시스템이므로 MCP 서버로 연결한다. 그러면 skill 본문에서 &quot;티켓은 이 도구로 가져온다&quot;고 안내할 수 있다.</div></details></li></ol></section>
-<section class="sec sec-fde callout cool"><h2>FDE 관점</h2><p>현장에서 고객은 기능 이름으로 묻지 않아요. &quot;Claude가 이걸 항상 했으면&quot;, &quot;이건 절대 안 했으면&quot;, &quot;우리 시스템을 봤으면&quot;이라고 말해요. FDE의 일은 그 말을 오늘의 표로 번역하는 거예요. 잘못 고르면 파일럿에서 바로 드러나요. 반드시 지켜야 할 보안 규칙을 skill에 적어 두면 어느 날 어겨지고, 가끔 쓰는 긴 절차를 CLAUDE.md에 넣으면 컨텍스트가 무거워져 다른 지시까지 흐려져요. 파일럿 계획의 첫 출시 범위를 적을 때 &quot;규칙은 hook 몇 개, 절차는 skill 몇 개, 연결은 MCP 서버 하나&quot;처럼 기능별로 나눠 적으면 고객 개발팀이 누가 무엇을 관리할지 정하기 쉬워요.</p></section>
-<section class="sec sec-cards"><h2>복습 카드</h2><div class="cards"><details class="card"><summary>Claude가 스스로 부르지 못하게 하는 필드는?</summary><div class="card-a"><code>disable-model-invocation: true</code>. 사용자가 <code>/이름</code>으로만 부른다.</div></details><details class="card"><summary><code>allowed-tools</code>는 제한인가 사전 승인인가?</summary><div class="card-a">사전 승인. 발동된 턴 동안 묻지 않고 쓰게 할 뿐, 다른 도구를 막지 않는다.</div></details><details class="card"><summary>skill 폴더 경로로 바뀌는 변수는?</summary><div class="card-a"><code>${CLAUDE_SKILL_DIR}</code>.</div></details><details class="card"><summary>매번 반드시 지켜야 하는 규칙은 어디에?</summary><div class="card-a">hook. skill과 CLAUDE.md의 지시는 부탁이지 보장이 아니다.</div></details><details class="card"><summary>MCP와 skill을 함께 쓰면 각각 무엇을 주나?</summary><div class="card-a">MCP는 연결과 도구를, skill은 그 도구를 잘 쓰는 방법을 준다.</div></details></div></section>
-<section class="sec sec-script"><h2>영상 대본</h2><details class="script"><summary>영상 대본 펼치기 <span class="muted">· 장면별 화면과 내레이션</span></summary><div class="script-body"><h4>장면 1 · 오늘의 질문 (약 25초)</h4>
-<p><strong>화면:</strong> 고객 말풍선 세 개가 차례로 뜸: &quot;항상 이렇게 해 주세요&quot;, &quot;이건 절대 하지 마세요&quot;, &quot;우리 시스템을 봐 주세요&quot;. 그 아래 서랍 다섯 개가 닫힌 채 나란히 있고 물음표.<br><strong>내레이션:</strong> 고객의 요청은 다 다르게 생겼어요. 항상 해 달라, 절대 하지 마라, 우리 시스템을 봐 달라. 이걸 전부 스킬에 넣으면 될까요? 오늘은 스킬의 설정과, 다른 기능과의 차이를 볼게요.</p>
-<h4>장면 2 · 설정판 (약 35초)</h4>
-<p><strong>화면:</strong> 스킬 문서의 위 칸이 확대되어 스위치 여러 개가 달린 설정판으로 바뀜. 스위치 이름표: &quot;이름&quot;, &quot;설명&quot;, &quot;누가 부르나&quot;, &quot;미리 승인할 도구&quot;.<br><strong>내레이션:</strong> 스킬 파일의 윗부분은 설정판이에요. 지난 시간에는 이름과 설명만 적었죠. 여기에 스위치를 더 달 수 있어요. 누가 부를 수 있는지, 어떤 도구를 미리 승인할지 같은 것들이에요.</p>
-<h4>장면 3 · 누가 부를 수 있나 (약 40초)</h4>
-<p><strong>화면:</strong> 문 하나에 손잡이 두 개: &quot;사용자&quot;와 &quot;모델&quot;. 첫 번째 스위치를 내리면 &quot;모델&quot; 손잡이가 잠김(배포 스킬 예시). 두 번째 스위치를 내리면 &quot;사용자&quot; 손잡이가 숨겨짐(배경 지식 예시).<br><strong>내레이션:</strong> 기본은 사용자와 클로드 둘 다 부를 수 있어요. 스위치 하나로 클로드가 스스로 부르는 걸 막을 수 있어요. 배포처럼 사람이 때를 정해야 하는 일에 써요. 반대로 메뉴에서 숨겨서 클로드만 쓰게 할 수도 있어요.</p>
-<h4>장면 4 · 사전 승인은 제한이 아니다 (약 40초)</h4>
-<p><strong>화면:</strong> 출입 게이트 그림. 초록 패스를 든 도구 하나는 멈추지 않고 통과. 나머지 도구들은 평소처럼 검문소에서 확인받고 통과. 위에 &quot;막는 것이 아니라, 묻지 않는 것&quot;. 시계가 돌자 초록 패스가 사라짐.<br><strong>내레이션:</strong> 헷갈리기 쉬운 설정이 하나 있어요. 미리 승인할 도구를 적는 칸이에요. 이건 이것만 쓰라는 제한이 아니에요. 이건 묻지 않고 써도 된다는 뜻이에요. 다른 도구는 평소 규칙대로예요. 그리고 다음 메시지를 보내면 승인은 사라져요.</p>
-<h4>장면 5 · 파일을 나눈다 (약 40초)</h4>
-<p><strong>화면:</strong> 스킬 폴더가 펼쳐짐. 맨 위에 얇은 문서 &quot;개요와 길 안내&quot;, 그 아래 두꺼운 문서 &quot;자세한 규칙&quot;, 그 아래 톱니바퀴 아이콘 &quot;스크립트&quot;. 개요 문서에서 나머지 둘로 화살표.<br><strong>내레이션:</strong> 본문이 길어지면 파일을 나눠요. 맨 위 파일은 개요와 길 안내만 맡아요. 자세한 규칙은 다른 파일에 두고, 필요할 때만 읽게 해요. 정해진 계산이나 수집은 스크립트에 맡겨요.</p>
-<h4>장면 6 · 스크립트는 결과만 (약 35초)</h4>
-<p><strong>화면:</strong> 톱니바퀴 스크립트가 돌아가고, 긴 코드 두루마리는 폴더 안에 그대로 남음. 작은 결과 쪽지 한 장만 &quot;컨텍스트&quot; 상자로 들어감.<br><strong>내레이션:</strong> 스크립트는 읽는 게 아니라 실행해요. 코드가 아무리 길어도 대화에 들어오는 건 결과뿐이에요. 그래서 매번 같은 결과가 나와야 하는 일은 스크립트가 맞아요.</p>
-<h4>장면 7 · 다섯 서랍 (약 40초)</h4>
-<p><strong>화면:</strong> 서랍 다섯 개가 하나씩 열리며 이름표가 붙음: &quot;CLAUDE.md: 항상 읽는 메모&quot;, &quot;Skill: 필요할 때 꺼내는 절차&quot;, &quot;Hook: 정해진 순간에 도는 스크립트&quot;, &quot;서브에이전트: 따로 일하는 작업자&quot;, &quot;MCP: 바깥 시스템 연결&quot;.<br><strong>내레이션:</strong> 이제 다섯 가지를 나란히 놓아 볼게요. 클로드 엠디는 항상 읽는 메모예요. 스킬은 필요할 때 꺼내는 절차예요. 훅은 정해진 순간에 자동으로 도는 스크립트예요. 서브에이전트는 따로 떨어져 일하는 작업자예요. 엠씨피는 바깥 시스템과의 연결이에요.</p>
-<h4>장면 8 · 부탁과 보장 (약 40초)</h4>
-<p><strong>화면:</strong> 저울. 왼쪽 접시 &quot;부탁: CLAUDE.md, Skill&quot; 위에 손글씨 쪽지. 오른쪽 접시 &quot;보장: Hook&quot; 위에 자물쇠. 아래에 &quot;절대 안 되는 일 → 자물쇠 쪽&quot;.<br><strong>내레이션:</strong> 가장 중요한 구분은 이거예요. 메모와 스킬에 적은 지시는 부탁이에요. 클로드가 읽고 따르지만, 보장은 아니에요. 훅은 클로드의 판단과 상관없이 실행돼요. 그래서 절대 어기면 안 되는 규칙은 훅에 둬요.</p>
-<h4>장면 9 · 고객 앞에서 (약 35초)</h4>
-<p><strong>화면:</strong> 장면 1의 고객 말풍선 세 개가 서랍으로 날아감: &quot;항상 이렇게&quot; → CLAUDE.md, &quot;절대 하지 마세요&quot; → Hook, &quot;우리 시스템을 봐 주세요&quot; → MCP. 네 번째 말풍선 &quot;이 순서대로 해 주세요&quot; → Skill.<br><strong>내레이션:</strong> 현장에서 에프디이는 고객의 말을 이 서랍으로 번역해요. 항상 해 달라는 건 메모로, 절대 안 된다는 건 훅으로, 시스템을 봐 달라는 건 엠씨피로 가요. 순서대로 해 달라는 절차는 스킬이죠. 계획서에도 이렇게 나눠 적으세요.</p>
-<h4>장면 10 · 요약과 예고 (약 25초)</h4>
-<p><strong>화면:</strong> 세 줄 요약: &quot;1. 설정판에서 누가 부를지, 무엇을 미리 승인할지 정한다 2. 길어지면 파일을 나눈다 3. 부탁은 skill, 보장은 hook&quot;. 아래에 &quot;다음: S34 skill 공유와 문제 해결&quot;.<br><strong>내레이션:</strong> 정리할게요. 설정판에서 누가 부를지와 미리 승인할 도구를 정해요. 길어지면 파일을 나눠요. 부탁은 스킬에, 보장은 훅에 둬요. 다음 시간에는 스킬을 팀과 나누는 법과 문제가 생겼을 때 고치는 법을 볼게요.</p></div></details></section>
-<section class="sec sec-sources"><h2>출처</h2><ul><li>Claude Code 문서, Extend Claude with skills (frontmatter 필드 표, <code>allowed-tools</code>의 뜻, <code>${CLAUDE_SKILL_DIR}</code>, 여러 파일 구조, 500줄 권장, 호출 제어): <a href="https://code.claude.com/docs/en/skills" target="_blank" rel="noopener noreferrer">https://code.claude.com/docs/en/skills</a></li><li>Claude Code 문서, Extend Claude Code (기능별 비교표, 컨텍스트 비용, &quot;부탁과 보장&quot;, 기능 조합): <a href="https://code.claude.com/docs/en/features-overview" target="_blank" rel="noopener noreferrer">https://code.claude.com/docs/en/features-overview</a></li><li>Claude Platform 문서, Skill authoring best practices (참고 파일은 한 단계 깊이로): <a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices" target="_blank" rel="noopener noreferrer">https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices</a></li><li>Claude Platform 문서, Agent Skills overview (스크립트는 출력만 컨텍스트에 들어옴): <a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview" target="_blank" rel="noopener noreferrer">https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview</a></li><li>공식 학습 경로 개요(코스 9 소개 문구와 강의 제목): 이 폴더의 <code>_official-outline-2026-11-27.txt</code>. 원본 페이지는 직접 열지 못했어요.</li><li><code>release-notes</code> skill과 <code>collect.sh</code>는 구조를 보여 주려고 쓴 예시예요. <code>collect.sh</code>의 내용은 직접 채워야 해요. 서랍과 저울 비유도 설명용이에요.</li></ul></section>
-</article>
-<section class="done-box">
-  <label><input type="checkbox" data-done="S33"> 이 세션을 다 했어요 <span class="muted">(이 브라우저에만 저장돼요)</span></label>
+<p><code>${CLAUDE_SKILL_DIR}</code>은 이 skill 폴더의 경로로 바뀌는 변수예요. 본문과 <code>allowed-tools</code>에 같은 변수를 쓰면 skill이 어디에 설치돼 있든 스크립트가 승인 창 없이 돌아요. 권장 사항: <code>SKILL.md</code>는 500줄 아래로 두고, 참고 파일은 <code>SKILL.md</code>에서 바로 한 단계로 연결하세요(파일이 또 다른 파일을 가리키는 식으로 깊어지면 Claude가 일부만 읽을 수 있어요).</p></div></article>
+<article class="bubble rise wide"><span class="n">03</span><h3>다른 기능과 비교</h3><div class="md"><div class="table-scroll"><table><thead><tr><th>기능</th><th>한 줄 정의</th><th>컨텍스트에 들어오는 때</th><th>누가 발동하나</th><th>맞는 용도</th></tr></thead><tbody><tr><td>CLAUDE.md</td><td>항상 읽는 프로젝트 메모</td><td>매 세션 시작, 전부</td><td>자동</td><td>&quot;항상 이렇게&quot; 규칙, 빌드 명령</td></tr><tr><td>Skill</td><td>필요할 때 꺼내는 절차와 지식</td><td>설명은 시작 때, 본문은 쓸 때</td><td>Claude(설명 맞추기) 또는 사용자(<code>/이름</code>)</td><td>반복 절차, 가끔 필요한 참고 자료</td></tr><tr><td>Hook</td><td>정해진 순간에 도는 스크립트</td><td>들어오지 않음(출력을 돌려줄 때만)</td><td>Claude Code가 이벤트마다. Claude의 판단 없이</td><td>매번 반드시 지켜야 하는 규칙</td></tr><tr><td>서브에이전트</td><td>따로 떨어진 컨텍스트의 작업자</td><td>별도 컨텍스트. 요약만 돌아옴</td><td>Claude나 사용자가 일을 맡길 때</td><td>파일을 많이 읽는 조사, 병렬 작업</td></tr><tr><td>MCP</td><td>바깥 시스템과의 연결</td><td>도구 이름은 시작 때, 스키마는 쓸 때</td><td>Claude가 도구를 부를 때</td><td>외부 데이터 읽기와 행동</td></tr></tbody></table></div>
+<p>고르는 요령은 이래요. 항상 알아야 하면 CLAUDE.md, 가끔 필요하면 skill, <strong>반드시</strong> 매번이어야 하면 hook이에요. skill이나 CLAUDE.md의 지시는 부탁이지 보장이 아니거든요. 대화를 어지럽힐 큰 작업은 서브에이전트, 바깥 시스템은 MCP예요. 섞어 쓰기도 해요. S28~S31의 MCP가 연결을 주고, skill이 &quot;그 연결을 우리 팀 방식으로 쓰는 법&quot;을 줘요.</p></div></article></div>
+  </div>
 </section>
-<nav class="pager">
-  <a href="/t/claude-fde/s32-what-are-skills" target="_top" class="prev"><small>이전</small><span>S32 · Skill이란, 첫 skill 만들기</span></a>
-  <a href="/t/claude-fde/s34-sharing-troubleshooting-skills" target="_top" class="next"><small>다음</small><span>S34 · skill 공유와 문제 해결</span></a>
-</nav>
-<footer class="disclaimer" role="note">
-  <strong>비공식 학습 자료</strong>
-  <p>이 노트는 Anthropic 공식 “Claude Forward Deployed Engineer” 학습 경로의 공개 개요와 공식 문서를 바탕으로 쓴 개인 학습 노트이며, 공식 강의 필기가 아니에요. 실제 강의·퀴즈·수료는 공식 경로에서 진행해요.</p>
-  <p>공식 경로: <a href="https://anthropic-partners.skilljar.com/path/claude-fde" target="_blank" rel="noopener noreferrer">https://anthropic-partners.skilljar.com/path/claude-fde</a></p>
-</footer>
+
+<section class="room r-note iris" style="--ix:38%" aria-label="노트">
+  <div class="inner">
+    <div class="page">
+      <div class="block"><h2><span class="mono">##</span>오늘의 목표</h2><ul class="ticks"><li>frontmatter의 주요 필드로 &quot;누가 부를 수 있는지&quot;와 &quot;어떤 도구를 미리 승인할지&quot;를 설정할 수 있다.</li><li>참고 파일과 스크립트를 가진 여러 파일 skill의 구조를 짤 수 있다.</li><li>어떤 요구가 왔을 때 CLAUDE.md, skill, hook, 서브에이전트, MCP 중 무엇에 맞는지 고를 수 있다.</li></ul></div>
+      <div class="block"><h2><span class="mono">##</span>직접 해 보기 <span class="mono small">5분</span></h2><ul class="ticks"><li>S32의 <code>summarize-ticket</code>에 <code>disable-model-invocation: true</code> 한 줄을 추가하세요. 새 세션에서 &quot;이 고객 문의 정리해 줘&quot;라고 하면 skill이 발동되지 않고, <code>/summarize-ticket</code>으로는 되는지 확인하세요. 확인 뒤에는 줄을 지우세요.</li><li>지금 쓰는 프로젝트의 CLAUDE.md를 열어 항목 다섯 개를 골라 표의 다섯 기능 중 어디가 맞는지 옆에 적어 보세요. &quot;절차&quot;처럼 생긴 항목이 있다면 skill 후보예요.</li></ul></div>
+      <div class="block quiz" id="quiz"><h2><span class="mono">##</span>확인 문제 <span class="mono small">고르면 바로 채점</span></h2>
+  
+  <div class="q" data-answer="1"><p class="qq"><span class="mono">Q1</span><code>allowed-tools: Bash(git status *)</code>가 뜻하는 것은?</p>
+  <div class="opts"><button class="opt" type="button">이 skill이 도는 동안 Claude는 <code>git status</code>만 쓸 수 있다</button><button class="opt" type="button">skill이 발동된 턴 동안 <code>git status</code>는 승인 없이 쓸 수 있고, 다른 도구는 평소 권한 규칙을 따른다</button><button class="opt" type="button">이 세션이 끝날 때까지 모든 Bash 명령이 승인된다</button></div>
+  <p class="why"><code>allowed-tools</code>는 사전 승인이지 제한이 아니고, 발동된 턴에만 적용돼요.</p></div>
+<div class="q" data-answer="2"><p class="qq"><span class="mono">Q2</span>여러 파일 skill에서 <code>scripts/</code> 안의 스크립트는?</p>
+  <div class="opts"><button class="opt" type="button">skill이 발동되면 코드 전체가 컨텍스트에 들어온다</button><button class="opt" type="button">세션 시작 때 미리 실행된다</button><button class="opt" type="button">Claude가 실행하고, 출력만 컨텍스트에 들어온다</button></div>
+  <p class="why">스크립트는 실행되고 출력만 컨텍스트에 들어와요.</p></div>
+<div class="q" data-answer="0"><p class="qq"><span class="mono">Q3</span>&quot;<code>.env</code> 파일은 절대 수정하지 않는다&quot;를 <strong>확실히</strong> 지키게 하려면?</p>
+  <div class="opts"><button class="opt" type="button">hook으로 수정을 막는다</button><button class="opt" type="button">skill 본문에 굵게 적는다</button><button class="opt" type="button">CLAUDE.md 맨 위에 적는다</button></div>
+  <p class="why">skill이나 CLAUDE.md의 지시는 부탁이에요. 반드시 지켜야 하면 hook으로 막아야 해요.</p></div>
+<div class="q"><p class="qq"><span class="mono">Q4</span>(서술형) skill과 서브에이전트의 차이를 &quot;컨텍스트&quot;라는 말을 넣어 두세 문장으로 설명해 보세요.</p>
+  <details class="ans"><summary>예시 답 보기</summary><div class="md">skill은 지시와 지식을 지금 대화의 컨텍스트에 불러오는 것이다. 서브에이전트는 별도의 컨텍스트에서 일하고 요약만 돌려주는 작업자다. 그래서 파일을 많이 읽는 조사처럼 대화를 어지럽힐 일은 서브에이전트에 맡기고, 절차나 참고 자료는 skill로 둔다. (둘을 합쳐 skill을 <code>context: fork</code>로 서브에이전트에서 돌릴 수도 있다.)</div></details></div>
+<div class="q"><p class="qq"><span class="mono">Q5</span>(상황형) 고객사 리드가 세 가지를 원해요. (1) 모든 코드에 사내 명명 규칙 적용, (2) 장애 보고서를 정해진 순서로 작성, (3) 장애 티켓을 사내 티켓 시스템에서 가져오기. 각각 어떤 기능으로 제안할까요?</p>
+  <details class="ans"><summary>예시 답 보기</summary><div class="md">(1) 명명 규칙은 모든 세션이 알아야 하므로 CLAUDE.md에 적고, 꼭 지켜져야 하는 부분은 편집 뒤에 검사하는 hook을 붙인다. (2) 장애 보고서는 정해진 순서의 반복 절차이므로 skill로 만들고, 양식 예시는 딸린 파일로 둔다. (3) 티켓 시스템은 바깥 시스템이므로 MCP 서버로 연결한다. 그러면 skill 본문에서 &quot;티켓은 이 도구로 가져온다&quot;고 안내할 수 있다.</div></details></div>
+  
+  </div>
+    </div>
+  </div>
+</section>
+<section class="room r-fde band iris" style="--wall:var(--lilac);--floor:var(--cobalt);--text:var(--ink);--serc:var(--cobalt);--line:76%;--ix:88%" aria-labelledby="h-fde">
+  <div class="inner">
+    <span class="mark"><b>##</b> FDE 관점</span>
+    <h2 id="h-fde" class="say">현장에서 고객은 기능 이름으로 묻지 않아요.</h2>
+    <div class="lead md"><p>&quot;Claude가 이걸 항상 했으면&quot;, &quot;이건 절대 안 했으면&quot;, &quot;우리 시스템을 봤으면&quot;이라고 말해요. FDE의 일은 그 말을 오늘의 표로 번역하는 거예요. 잘못 고르면 파일럿에서 바로 드러나요. 반드시 지켜야 할 보안 규칙을 skill에 적어 두면 어느 날 어겨지고, 가끔 쓰는 긴 절차를 CLAUDE.md에 넣으면 컨텍스트가 무거워져 다른 지시까지 흐려져요. 파일럿 계획의 첫 출시 범위를 적을 때 &quot;규칙은 hook 몇 개, 절차는 skill 몇 개, 연결은 MCP 서버 하나&quot;처럼 기능별로 나눠 적으면 고객 개발팀이 누가 무엇을 관리할지 정하기 쉬워요.</p></div>
+  </div>
+</section>
+<section class="room r-cards iris" style="--wall:var(--pink);--floor:var(--pink);--text:var(--ink);--serc:var(--cobalt);--ix:48%" aria-labelledby="h-cards">
+  <div class="inner">
+    <span class="mark"><b>##</b> 복습 카드</span>
+    <h2 id="h-cards" class="title">눌러서 뒤집기</h2>
+    <div class="cards"><button class="card" type="button" aria-pressed="false" style="--r:-1.5deg"><span class="face front"><span class="no">01</span><b>Claude가 스스로 부르지 못하게 하는 필드는?</b><span class="flip mono">눌러서 뒤집기</span></span><span class="face back" style="--bg:var(--purple)"><code>disable-model-invocation: true</code>. 사용자가 <code>/이름</code>으로만 부른다.</span></button>
+<button class="card" type="button" aria-pressed="false" style="--r:3deg"><span class="face front"><span class="no">02</span><b><code>allowed-tools</code>는 제한인가 사전 승인인가?</b><span class="flip mono">눌러서 뒤집기</span></span><span class="face back" style="--bg:var(--mint)">사전 승인. 발동된 턴 동안 묻지 않고 쓰게 할 뿐, 다른 도구를 막지 않는다.</span></button>
+<button class="card" type="button" aria-pressed="false" style="--r:-2.5deg"><span class="face front"><span class="no">03</span><b>skill 폴더 경로로 바뀌는 변수는?</b><span class="flip mono">눌러서 뒤집기</span></span><span class="face back" style="--bg:var(--butter)"><code>${CLAUDE_SKILL_DIR}</code>.</span></button>
+<button class="card" type="button" aria-pressed="false" style="--r:1.5deg"><span class="face front"><span class="no">04</span><b>매번 반드시 지켜야 하는 규칙은 어디에?</b><span class="flip mono">눌러서 뒤집기</span></span><span class="face back" style="--bg:var(--lilac)">hook. skill과 CLAUDE.md의 지시는 부탁이지 보장이 아니다.</span></button>
+<button class="card" type="button" aria-pressed="false" style="--r:-3deg"><span class="face front"><span class="no">05</span><b>MCP와 skill을 함께 쓰면 각각 무엇을 주나?</b><span class="flip mono">눌러서 뒤집기</span></span><span class="face back" style="--bg:var(--sky)">MCP는 연결과 도구를, skill은 그 도구를 잘 쓰는 방법을 준다.</span></button></div>
+  </div>
+</section>
+
+<section class="room r-tt iris" style="--wall:var(--cobalt);--floor:var(--cobalt);--text:var(--paper);--serc:var(--pink);--ix:78%" id="timetable" aria-labelledby="h-tt">
+  <div class="inner">
+    <div class="endrow">
+      <label class="done-box"><input type="checkbox" data-done="S33"> 이 세션을 다 했어요 <span class="mono small">이 브라우저에만 저장</span></label>
+      <nav class="pager" aria-label="세션 이동">
+        <a href="/t/claude-fde/s32-what-are-skills" target="_top" class="pg">← S32</a>
+        <a href="/t/claude-fde/0000-course-home" target="_top" class="pg">코스 홈</a>
+        <a href="/t/claude-fde/s34-sharing-troubleshooting-skills" target="_top" class="pg pg-next">S34 · skill 공유와 문제 해결 →</a>
+      </nav>
+    </div>
+    <span class="mark"><b>##</b> 전체 시간표</span>
+    <h2 id="h-tt" class="title">11개 코스, <span class="ser">42개</span> 세션</h2>
+    <div class="ledger"><div class="course rise"><h3><span>1. AI Capabilities and Limitations</span><span class="mono">4세션</span></h3>
+  <p class="cd mono">핵심, 약 60분</p><ol><li class=""><a href="/t/claude-fde/s01-next-token-prediction" target="_top"><span class="mono">S01</span><span class="tt">생성형 AI의 네 가지 성질과 다음 토큰 예측</span><span class="tag v">영상</span><span class="done-mark" data-done-mark="S01" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s02-knowledge" target="_top"><span class="mono">S02</span><span class="tt">지식: 학습 데이터, 지식 컷오프, 환각</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S02" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s03-working-memory" target="_top"><span class="mono">S03</span><span class="tt">작업 기억: 컨텍스트 윈도우</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S03" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s04-steerability-diagnosis" target="_top"><span class="mono">S04</span><span class="tt">조종 가능성과 예상 밖 출력 진단하기</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S04" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>2. AI Fluency for Builders</span><span class="mono">2세션</span></h3>
+  <p class="cd mono">핵심, 약 45분</p><ol><li class=""><a href="/t/claude-fde/s05-4d-delegation-description" target="_top"><span class="mono">S05</span><span class="tt">AI Fluency와 4D 프레임워크: 위임과 설명</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S05" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s06-4d-discernment-diligence" target="_top"><span class="mono">S06</span><span class="tt">분별과 책임: 빌더의 검증</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S06" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>3. Claude Platform and Model Foundations</span><span class="mono">2세션</span></h3>
+  <p class="cd mono">핵심, 약 60분</p><ol><li class=""><a href="/t/claude-fde/s07-entry-points-features" target="_top"><span class="mono">S07</span><span class="tt">결정 1·2: 진입점과 기능 고르기</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S07" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s08-model-context-decisions" target="_top"><span class="mono">S08</span><span class="tt">결정 3·4: 모델 선택과 컨텍스트·메모리 관리</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S08" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>4. Choosing the right Claude model</span><span class="mono">1세션</span></h3>
+  <p class="cd mono">핵심, 약 10분</p><ol><li class=""><a href="/t/claude-fde/s09-choosing-model" target="_top"><span class="mono">S09</span><span class="tt">네 가지 모델과 effort 조절</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S09" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>5. Claude Platform 101</span><span class="mono">8세션</span></h3>
+  <p class="cd mono">빌드, 약 90분</p><ol><li class=""><a href="/t/claude-fde/s10-platform-first-api-call" target="_top"><span class="mono">S10</span><span class="tt">Claude Platform이란, 첫 API 호출, 모델 고르기</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S10" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s11-agent-loop" target="_top"><span class="mono">S11</span><span class="tt">에이전트 루프</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S11" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s12-tool-use" target="_top"><span class="mono">S12</span><span class="tt">도구 사용 (tool use)</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S12" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s13-thinking" target="_top"><span class="mono">S13</span><span class="tt">확장 사고 (thinking)</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S13" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s14-built-in-tools-skills" target="_top"><span class="mono">S14</span><span class="tt">내장 도구와 Skills</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S14" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s15-mcp-context-management" target="_top"><span class="mono">S15</span><span class="tt">MCP와 컨텍스트 관리</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S15" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s16-managed-agents" target="_top"><span class="mono">S16</span><span class="tt">Managed Agents</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S16" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s17-building-with-claude-code" target="_top"><span class="mono">S17</span><span class="tt">Claude Code로 만들기 + 코스 5 총정리</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S17" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>6. Claude Code 101</span><span class="mono">5세션</span></h3>
+  <p class="cd mono">빌드, 약 60분</p><ol><li class=""><a href="/t/claude-fde/s18-what-is-claude-code" target="_top"><span class="mono">S18</span><span class="tt">Claude Code란: 에이전트 루프, 컨텍스트, 도구와 권한, 설치</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S18" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s19-first-prompt-modes" target="_top"><span class="mono">S19</span><span class="tt">첫 프롬프트: 승인 모드, 자동 수락, Plan Mode</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S19" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s20-daily-workflows" target="_top"><span class="mono">S20</span><span class="tt">일상 워크플로: Explore → Plan → Code → Commit, 리뷰, 컨텍스트 명령</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S20" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s21-claude-md-subagents" target="_top"><span class="mono">S21</span><span class="tt">커스터마이즈 1: CLAUDE.md와 서브에이전트</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S21" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s22-skills-mcp-hooks" target="_top"><span class="mono">S22</span><span class="tt">커스터마이즈 2: skills, MCP, hooks</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S22" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>7. Claude Code in Action</span><span class="mono">5세션</span></h3>
+  <p class="cd mono">빌드, 약 60분</p><ol><li class=""><a href="/t/claude-fde/s23-steer-the-work" target="_top"><span class="mono">S23</span><span class="tt">작업 조종: plan mode, 압축(compaction), 되감기(rewind)</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S23" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s24-configure-claude" target="_top"><span class="mono">S24</span><span class="tt">설정: 간결한 CLAUDE.md, 지시를 둘 자리, 검증 skill</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S24" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s25-permissions-hooks" target="_top"><span class="mono">S25</span><span class="tt">권한 모드와 hooks로 규칙 강제하기</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S25" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s26-automate-repeat-work" target="_top"><span class="mono">S26</span><span class="tt">반복 작업 자동화: 자율 세션, worktree, routines, headless, PR 리뷰</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S26" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s27-verify-share" target="_top"><span class="mono">S27</span><span class="tt">검증과 공유: 무감독 실행 검증, plugin</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S27" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>8. Introduction to Model Context Protocol</span><span class="mono">4세션</span></h3>
+  <p class="cd mono">빌드, 약 60분</p><ol><li class=""><a href="/t/claude-fde/s28-mcp-architecture" target="_top"><span class="mono">S28</span><span class="tt">MCP 구조: 클라이언트와 서버</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S28" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s29-mcp-server-tools" target="_top"><span class="mono">S29</span><span class="tt">서버 만들기: tools와 MCP Inspector</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S29" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s30-mcp-resources-prompts" target="_top"><span class="mono">S30</span><span class="tt">Resources와 Prompts, 셋 중 무엇을 쓸까</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S30" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s31-mcp-client" target="_top"><span class="mono">S31</span><span class="tt">클라이언트 구현: 연결, 비동기, 정리</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S31" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>9. Introduction to agent skills</span><span class="mono">3세션</span></h3>
+  <p class="cd mono">빌드, 약 30분</p><ol><li class=""><a href="/t/claude-fde/s32-what-are-skills" target="_top"><span class="mono">S32</span><span class="tt">Skill이란, 첫 skill 만들기</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S32" aria-hidden="true"></span></a></li><li class="now" aria-current="page"><a href="/t/claude-fde/s33-skill-config-comparison" target="_top"><span class="mono">S33</span><span class="tt">설정과 여러 파일 skill, 다른 기능과 비교</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S33" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s34-sharing-troubleshooting-skills" target="_top"><span class="mono">S34</span><span class="tt">skill 공유와 문제 해결</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S34" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>10. Delivery Methodology</span><span class="mono">4세션</span></h3>
+  <p class="cd mono">파일럿, 약 40분</p><ol><li class=""><a href="/t/claude-fde/s35-use-case-qualification" target="_top"><span class="mono">S35</span><span class="tt">유스케이스 발굴과 자격 판정</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S35" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s36-pilot-design-roi" target="_top"><span class="mono">S36</span><span class="tt">파일럿 설계와 ROI 측정</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S36" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s37-rollout-champions" target="_top"><span class="mono">S37</span><span class="tt">단계적 롤아웃, 변화 관리, 챔피언</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S37" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s38-failure-modes-30-day" target="_top"><span class="mono">S38</span><span class="tt">흔한 실패 모드 예방과 30일 활성화</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S38" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>11. Driving enterprise adoption of Claude</span><span class="mono">3세션</span></h3>
+  <p class="cd mono">파일럿, 약 60분</p><ol><li class=""><a href="/t/claude-fde/s39-activation" target="_top"><span class="mono">S39</span><span class="tt">1단계 Activation: 성공 팀, 프로비저닝, 문화, 교육, 런치</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S39" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s40-acceleration" target="_top"><span class="mono">S40</span><span class="tt">2단계 Acceleration: CoE와 Train the Trainer</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S40" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s41-expansion" target="_top"><span class="mono">S41</span><span class="tt">3단계 Expansion: 측정, 축하, 반복, 새 유스케이스</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S41" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>캡스톤</span><span class="mono">1세션</span></h3>
+  <ol><li class=""><a href="/t/claude-fde/s42-capstone-pilot-plan" target="_top"><span class="mono">S42</span><span class="tt">파일럿 계획서 쓰기</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S42" aria-hidden="true"></span></a></li></ol></div></div>
+  </div>
+</section>
 </main>
+<footer class="night" role="contentinfo">
+  <div class="inner">
+    <p class="end">FDE <span class="ser">study</span><span class="dot end-dot" aria-hidden="true"></span></p>
+    <p><b>비공식 학습 자료.</b> 이 노트는 Anthropic 공식 “Claude Forward Deployed Engineer” 학습 경로의 공개 개요와 공식 문서를 바탕으로 쓴 개인 학습 노트이며, 공식 강의 필기가 아니에요. 실제 강의·퀴즈·수료는 공식 경로에서 진행해요.</p>
+    <p>공식 경로: <a href="https://anthropic-partners.skilljar.com/path/claude-fde" target="_blank" rel="noopener noreferrer">https://anthropic-partners.skilljar.com/path/claude-fde</a></p>
+    <div class="sources"><p class="mono">## 출처</p><div class="md"><ul><li>Claude Code 문서, Extend Claude with skills (frontmatter 필드 표, <code>allowed-tools</code>의 뜻, <code>${CLAUDE_SKILL_DIR}</code>, 여러 파일 구조, 500줄 권장, 호출 제어): <a href="https://code.claude.com/docs/en/skills" target="_blank" rel="noopener noreferrer">https://code.claude.com/docs/en/skills</a></li><li>Claude Code 문서, Extend Claude Code (기능별 비교표, 컨텍스트 비용, &quot;부탁과 보장&quot;, 기능 조합): <a href="https://code.claude.com/docs/en/features-overview" target="_blank" rel="noopener noreferrer">https://code.claude.com/docs/en/features-overview</a></li><li>Claude Platform 문서, Skill authoring best practices (참고 파일은 한 단계 깊이로): <a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices" target="_blank" rel="noopener noreferrer">https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices</a></li><li>Claude Platform 문서, Agent Skills overview (스크립트는 출력만 컨텍스트에 들어옴): <a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview" target="_blank" rel="noopener noreferrer">https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview</a></li><li>공식 학습 경로 개요(코스 9 소개 문구와 강의 제목): 이 폴더의 <code>_official-outline-2026-11-27.txt</code>. 원본 페이지는 직접 열지 못했어요.</li><li><code>release-notes</code> skill과 <code>collect.sh</code>는 구조를 보여 주려고 쓴 예시예요. <code>collect.sh</code>의 내용은 직접 채워야 해요. 서랍과 저울 비유도 설명용이에요.</li></ul></div></div>
+  </div>
+</footer>
+
 <script src="fde.js"></script>
 </body>
 </html>
