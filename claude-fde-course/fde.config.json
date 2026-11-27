@@ -52,28 +52,6 @@
         "note": "확률 숫자는 설명용 예시예요. 실제 모델 값이 아니에요."
       }
     },
-    "S05": {
-      "zoom": "4D",
-      "video": "https://youtu.be/0THpy_f5tYg"
-    },
-    "S21": {
-      "zoom": "CLAUDE.md"
-    },
-    "S23": {
-      "zoom": "압축"
-    },
-    "S24": {
-      "zoom": "검증"
-    },
-    "S37": {
-      "zoom": "챔피언"
-    },
-    "S39": {
-      "zoom": "문화"
-    },
-    "S40": {
-      "zoom": "CoE"
-    },
     "S02": {
       "video": "https://youtu.be/R0zTEQKl3uA"
     },
@@ -82,6 +60,10 @@
     },
     "S04": {
       "video": "https://youtu.be/hp7_SnShfCc"
+    },
+    "S05": {
+      "zoom": "4D",
+      "video": "https://youtu.be/0THpy_f5tYg"
     },
     "S06": {
       "video": "https://youtu.be/WBzpaInByrQ"
@@ -94,6 +76,111 @@
     },
     "S09": {
       "video": "https://youtu.be/l6bzBCS75rg"
+    },
+    "S10": {
+      "video": "https://youtu.be/ksX3FtF3rNY"
+    },
+    "S11": {
+      "video": "https://youtu.be/Xc2QZvDbYjk"
+    },
+    "S12": {
+      "video": "https://youtu.be/oSc9Nek8pLs"
+    },
+    "S13": {
+      "video": "https://youtu.be/HE_QqI5qdbM"
+    },
+    "S14": {
+      "video": "https://youtu.be/Qt8ZeVwd65M"
+    },
+    "S15": {
+      "video": "https://youtu.be/4tWGuEq80Jc"
+    },
+    "S16": {
+      "video": "https://youtu.be/iMJIKwKq2ZU"
+    },
+    "S17": {
+      "video": "https://youtu.be/SEC7YqIzqN4"
+    },
+    "S18": {
+      "video": "https://youtu.be/72leHl0J108"
+    },
+    "S19": {
+      "video": "https://youtu.be/RDwosvSu6To"
+    },
+    "S20": {
+      "video": "https://youtu.be/_TOmkAYiTMs"
+    },
+    "S21": {
+      "zoom": "CLAUDE.md",
+      "video": "https://youtu.be/LI6XWc_xJ3w"
+    },
+    "S22": {
+      "video": "https://youtu.be/EBr2iY2YUus"
+    },
+    "S23": {
+      "zoom": "압축",
+      "video": "https://youtu.be/eMIodi6VLSI"
+    },
+    "S24": {
+      "zoom": "검증",
+      "video": "https://youtu.be/1s2156i2oJs"
+    },
+    "S25": {
+      "video": "https://youtu.be/jrQzbW8IrW0"
+    },
+    "S26": {
+      "video": "https://youtu.be/S2jlOFp64ow"
+    },
+    "S27": {
+      "video": "https://youtu.be/3VydLhHxm_o"
+    },
+    "S28": {
+      "video": "https://youtu.be/TBzviakUbD4"
+    },
+    "S29": {
+      "video": "https://youtu.be/iIFJlzFRIzo"
+    },
+    "S30": {
+      "video": "https://youtu.be/98rKd0BIcRc"
+    },
+    "S31": {
+      "video": "https://youtu.be/Yigtnad9uPg"
+    },
+    "S32": {
+      "video": "https://youtu.be/9t0BtgvyeDU"
+    },
+    "S33": {
+      "video": "https://youtu.be/2zBSjDxnodE"
+    },
+    "S34": {
+      "video": "https://youtu.be/RbCkOGALnVQ"
+    },
+    "S35": {
+      "video": "https://youtu.be/7MuPXdMPsM8"
+    },
+    "S36": {
+      "video": "https://youtu.be/ggzjFljKdps"
+    },
+    "S37": {
+      "zoom": "챔피언",
+      "video": "https://youtu.be/f4JlGOLJvBA"
+    },
+    "S38": {
+      "video": "https://youtu.be/Des9ZpNJC_w"
+    },
+    "S39": {
+      "zoom": "문화",
+      "video": "https://youtu.be/zi-X_CUxrkk"
+    },
+    "S40": {
+      "zoom": "CoE",
+      "video": "https://youtu.be/TsCJV_7Qwyc"
+    },
+    "S41": {
+      "video": "https://youtu.be/_VS5HCpCHIk"
+    },
+    "S42": {
+      "video": "https://youtu.be/1FeBaSCByxg"
     }
   }
 }
