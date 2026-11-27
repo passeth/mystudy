@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-29T01:55:06.989Z",
+  "generatedAt": "2026-11-27T13:24:17.507Z",
   "topics": [
     {
       "id": "pif-cpsr",
@@ -250,33 +250,6 @@
           "title": "Lesson 5: 실무 적용 — 지식 관리 시스템 구축 | OKF 학습",
           "subtitle": "업무 지식 관리 시스템을 OKF로 구축하는 로드맵",
           "file": "lessons/okf/0005-practical-application.html"
-        }
-      ]
-    },
-    {
-      "id": "appguardrail",
-      "title": "AppGuardrail",
-      "subtitle": "AI 생성 앱 배포 전 보안 누락을 찾는 CLI·룰셋·리뷰 프롬프트 운영법",
-      "color": "navy",
-      "order": 5,
-      "lessons": [
-        {
-          "id": "0001-appguardrail-first-scan-model",
-          "title": "AppGuardrail 첫 스캔 모델",
-          "subtitle": "AppGuardrail을 처음 배울 때 필요한 사용법, 작동 원리, 응용 흐름을 한 번의 짧은 레슨으로 익힌다.",
-          "file": "lessons/appguardrail/0001-appguardrail-first-scan-model.html"
-        },
-        {
-          "id": "0002-appguardrail-repo-integration-loop",
-          "title": "AppGuardrail을 레포에 적용하는 루프",
-          "subtitle": "AppGuardrail을 실제 저장소의 로컬 개발, PR 리뷰, CI, AI 에이전트 작업 흐름에 적용하는 방법을 배운다.",
-          "file": "lessons/appguardrail/0002-appguardrail-repo-integration-loop.html"
-        },
-        {
-          "id": "0003-appguardrail-with-git-onboard",
-          "title": "AppGuardrail과 Git Onboard를 같이 쓰는 법",
-          "subtitle": "AppGuardrail을 Naruon GitHub Robot Review Gate와 git-onboard 기반 GitHub Flow 안에서 병행 사용하는 방법을 배운다.",
-          "file": "lessons/appguardrail/0003-appguardrail-with-git-onboard.html"
         }
       ]
     },
@@ -750,24 +723,6 @@
       "order": 10,
       "lessons": [
         {
-          "id": "appguardrail-git-onboard-map",
-          "title": "AppGuardrail × Git Onboard 병행 지도",
-          "subtitle": "AppGuardrail을 git-onboard와 Naruon GitHub Robot Review Gate 안에서 병행 운용하는 역할 분리 지도.",
-          "file": "lessons/reference/appguardrail-git-onboard-map.html"
-        },
-        {
-          "id": "appguardrail-operating-map",
-          "title": "AppGuardrail 운영 지도",
-          "subtitle": "AppGuardrail CLI, init, scan, review, hook을 언제 어떻게 쓰는지 빠르게 복습하는 운영 지도.",
-          "file": "lessons/reference/appguardrail-operating-map.html"
-        },
-        {
-          "id": "appguardrail-repo-playbook",
-          "title": "AppGuardrail 저장소 적용 플레이북",
-          "subtitle": "AppGuardrail을 저장소에 도입할 때 기준 생성, 스캔, 훅, 리뷰, CI를 어떤 순서로 연결하는지 정리한 플레이북.",
-          "file": "lessons/reference/appguardrail-repo-playbook.html"
-        },
-        {
           "id": "glossary",
           "title": "Reference — Cosmetic Safety Assessment Glossary",
           "subtitle": "SCCS Notes of Guidance 12th Revision (2023) 기준. 모든 레슨에서 이 용어집의 정의를 사용한다.",
@@ -784,6 +739,273 @@
           "title": "CPSR Agent System — Master Cheat Sheet",
           "subtitle": "사내 CPSR 자동작성 AI 에이전트, acceptance 95%. 6개 레슨이 도달한 모든 결론을 한 페이지로.",
           "file": "lessons/reference/system-cheatsheet.html"
+        }
+      ]
+    },
+    {
+      "id": "claude-fde",
+      "title": "Claude FDE 스터디",
+      "subtitle": "Claude Forward Deployed Engineer 학습 경로(11개 코스)를 42개 세션으로 나눈 비공식 학습 노트 — 개념, 실습, 확인 문제, 파일럿 계획서",
+      "color": "mint",
+      "order": 11,
+      "lessons": [
+        {
+          "id": "0000-course-home",
+          "title": "Claude FDE 스터디 — 코스 홈",
+          "subtitle": "11개 코스 → 42개 세션 목차, 진행 상태, 확인이 필요한 곳",
+          "file": "lessons/claude-fde/0000-course-home.html"
+        },
+        {
+          "id": "s01-next-token-prediction",
+          "title": "S01. 생성형 AI의 네 가지 성질과 다음 토큰 예측",
+          "subtitle": "1. AI Capabilities and Limitations · 20분",
+          "file": "lessons/claude-fde/s01-next-token-prediction.html"
+        },
+        {
+          "id": "s02-knowledge",
+          "title": "S02. 지식: 학습 데이터, 지식 컷오프, 환각",
+          "subtitle": "1. AI Capabilities and Limitations · 20분",
+          "file": "lessons/claude-fde/s02-knowledge.html"
+        },
+        {
+          "id": "s03-working-memory",
+          "title": "S03. 작업 기억: 컨텍스트 윈도우",
+          "subtitle": "1. AI Capabilities and Limitations · 20분",
+          "file": "lessons/claude-fde/s03-working-memory.html"
+        },
+        {
+          "id": "s04-steerability-diagnosis",
+          "title": "S04. 조종 가능성과 예상 밖 출력 진단하기",
+          "subtitle": "1. AI Capabilities and Limitations · 20분",
+          "file": "lessons/claude-fde/s04-steerability-diagnosis.html"
+        },
+        {
+          "id": "s05-4d-delegation-description",
+          "title": "S05. AI Fluency와 4D 프레임워크: 위임과 설명",
+          "subtitle": "2. AI Fluency for Builders · 20분",
+          "file": "lessons/claude-fde/s05-4d-delegation-description.html"
+        },
+        {
+          "id": "s06-4d-discernment-diligence",
+          "title": "S06. 분별과 책임: 빌더의 검증",
+          "subtitle": "2. AI Fluency for Builders · 20분",
+          "file": "lessons/claude-fde/s06-4d-discernment-diligence.html"
+        },
+        {
+          "id": "s07-entry-points-features",
+          "title": "S07. 결정 1·2: 진입점과 기능 고르기",
+          "subtitle": "3. Claude Platform and Model Foundations · 20분",
+          "file": "lessons/claude-fde/s07-entry-points-features.html"
+        },
+        {
+          "id": "s08-model-context-decisions",
+          "title": "S08. 결정 3·4: 모델 선택과 컨텍스트·메모리 관리",
+          "subtitle": "3. Claude Platform and Model Foundations · 20분",
+          "file": "lessons/claude-fde/s08-model-context-decisions.html"
+        },
+        {
+          "id": "s09-choosing-model",
+          "title": "S09. 네 가지 모델과 effort 조절",
+          "subtitle": "4. Choosing the right Claude model · 15분",
+          "file": "lessons/claude-fde/s09-choosing-model.html"
+        },
+        {
+          "id": "s10-platform-first-api-call",
+          "title": "S10. Claude Platform이란, 첫 API 호출, 모델 고르기",
+          "subtitle": "5. Claude Platform 101 · 25분",
+          "file": "lessons/claude-fde/s10-platform-first-api-call.html"
+        },
+        {
+          "id": "s11-agent-loop",
+          "title": "S11. 에이전트 루프",
+          "subtitle": "5. Claude Platform 101 · 25분",
+          "file": "lessons/claude-fde/s11-agent-loop.html"
+        },
+        {
+          "id": "s12-tool-use",
+          "title": "S12. 도구 사용 (tool use)",
+          "subtitle": "5. Claude Platform 101 · 20분",
+          "file": "lessons/claude-fde/s12-tool-use.html"
+        },
+        {
+          "id": "s13-thinking",
+          "title": "S13. 확장 사고 (thinking)",
+          "subtitle": "5. Claude Platform 101 · 20분",
+          "file": "lessons/claude-fde/s13-thinking.html"
+        },
+        {
+          "id": "s14-built-in-tools-skills",
+          "title": "S14. 내장 도구와 Skills",
+          "subtitle": "5. Claude Platform 101 · 20분",
+          "file": "lessons/claude-fde/s14-built-in-tools-skills.html"
+        },
+        {
+          "id": "s15-mcp-context-management",
+          "title": "S15. MCP와 컨텍스트 관리",
+          "subtitle": "5. Claude Platform 101 · 25분",
+          "file": "lessons/claude-fde/s15-mcp-context-management.html"
+        },
+        {
+          "id": "s16-managed-agents",
+          "title": "S16. Managed Agents",
+          "subtitle": "5. Claude Platform 101 · 25분",
+          "file": "lessons/claude-fde/s16-managed-agents.html"
+        },
+        {
+          "id": "s17-building-with-claude-code",
+          "title": "S17. Claude Code로 만들기 + 코스 5 총정리",
+          "subtitle": "5. Claude Platform 101 · 25분",
+          "file": "lessons/claude-fde/s17-building-with-claude-code.html"
+        },
+        {
+          "id": "s18-what-is-claude-code",
+          "title": "S18. Claude Code란: 에이전트 루프, 컨텍스트, 도구와 권한, 설치",
+          "subtitle": "6. Claude Code 101 · 20분",
+          "file": "lessons/claude-fde/s18-what-is-claude-code.html"
+        },
+        {
+          "id": "s19-first-prompt-modes",
+          "title": "S19. 첫 프롬프트: 승인 모드, 자동 수락, Plan Mode",
+          "subtitle": "6. Claude Code 101 · 20분",
+          "file": "lessons/claude-fde/s19-first-prompt-modes.html"
+        },
+        {
+          "id": "s20-daily-workflows",
+          "title": "S20. 일상 워크플로: Explore → Plan → Code → Commit, 리뷰, 컨텍스트 명령",
+          "subtitle": "6. Claude Code 101 · 22분",
+          "file": "lessons/claude-fde/s20-daily-workflows.html"
+        },
+        {
+          "id": "s21-claude-md-subagents",
+          "title": "S21. 커스터마이즈 1: CLAUDE.md와 서브에이전트",
+          "subtitle": "6. Claude Code 101 · 22분",
+          "file": "lessons/claude-fde/s21-claude-md-subagents.html"
+        },
+        {
+          "id": "s22-skills-mcp-hooks",
+          "title": "S22. 커스터마이즈 2: skills, MCP, hooks",
+          "subtitle": "6. Claude Code 101 · 22분",
+          "file": "lessons/claude-fde/s22-skills-mcp-hooks.html"
+        },
+        {
+          "id": "s23-steer-the-work",
+          "title": "S23. 작업 조종: plan mode, 압축(compaction), 되감기(rewind)",
+          "subtitle": "7. Claude Code in Action · 22분",
+          "file": "lessons/claude-fde/s23-steer-the-work.html"
+        },
+        {
+          "id": "s24-configure-claude",
+          "title": "S24. 설정: 간결한 CLAUDE.md, 지시를 둘 자리, 검증 skill",
+          "subtitle": "7. Claude Code in Action · 22분",
+          "file": "lessons/claude-fde/s24-configure-claude.html"
+        },
+        {
+          "id": "s25-permissions-hooks",
+          "title": "S25. 권한 모드와 hooks로 규칙 강제하기",
+          "subtitle": "7. Claude Code in Action · 25분",
+          "file": "lessons/claude-fde/s25-permissions-hooks.html"
+        },
+        {
+          "id": "s26-automate-repeat-work",
+          "title": "S26. 반복 작업 자동화: 자율 세션, worktree, routines, headless, PR 리뷰",
+          "subtitle": "7. Claude Code in Action · 25분",
+          "file": "lessons/claude-fde/s26-automate-repeat-work.html"
+        },
+        {
+          "id": "s27-verify-share",
+          "title": "S27. 검증과 공유: 무감독 실행 검증, plugin",
+          "subtitle": "7. Claude Code in Action · 22분",
+          "file": "lessons/claude-fde/s27-verify-share.html"
+        },
+        {
+          "id": "s28-mcp-architecture",
+          "title": "S28. MCP 구조: 클라이언트와 서버",
+          "subtitle": "8. Introduction to Model Context Protocol · 20분",
+          "file": "lessons/claude-fde/s28-mcp-architecture.html"
+        },
+        {
+          "id": "s29-mcp-server-tools",
+          "title": "S29. 서버 만들기: tools와 MCP Inspector",
+          "subtitle": "8. Introduction to Model Context Protocol · 25분",
+          "file": "lessons/claude-fde/s29-mcp-server-tools.html"
+        },
+        {
+          "id": "s30-mcp-resources-prompts",
+          "title": "S30. Resources와 Prompts, 셋 중 무엇을 쓸까",
+          "subtitle": "8. Introduction to Model Context Protocol · 25분",
+          "file": "lessons/claude-fde/s30-mcp-resources-prompts.html"
+        },
+        {
+          "id": "s31-mcp-client",
+          "title": "S31. 클라이언트 구현: 연결, 비동기, 정리",
+          "subtitle": "8. Introduction to Model Context Protocol · 25분",
+          "file": "lessons/claude-fde/s31-mcp-client.html"
+        },
+        {
+          "id": "s32-what-are-skills",
+          "title": "S32. Skill이란, 첫 skill 만들기",
+          "subtitle": "9. Introduction to agent skills · 20분",
+          "file": "lessons/claude-fde/s32-what-are-skills.html"
+        },
+        {
+          "id": "s33-skill-config-comparison",
+          "title": "S33. 설정과 여러 파일 skill, 다른 기능과 비교",
+          "subtitle": "9. Introduction to agent skills · 25분",
+          "file": "lessons/claude-fde/s33-skill-config-comparison.html"
+        },
+        {
+          "id": "s34-sharing-troubleshooting-skills",
+          "title": "S34. skill 공유와 문제 해결",
+          "subtitle": "9. Introduction to agent skills · 25분",
+          "file": "lessons/claude-fde/s34-sharing-troubleshooting-skills.html"
+        },
+        {
+          "id": "s35-use-case-qualification",
+          "title": "S35. 유스케이스 발굴과 자격 판정",
+          "subtitle": "10. Delivery Methodology · 20분",
+          "file": "lessons/claude-fde/s35-use-case-qualification.html"
+        },
+        {
+          "id": "s36-pilot-design-roi",
+          "title": "S36. 파일럿 설계와 ROI 측정",
+          "subtitle": "10. Delivery Methodology · 20분",
+          "file": "lessons/claude-fde/s36-pilot-design-roi.html"
+        },
+        {
+          "id": "s37-rollout-champions",
+          "title": "S37. 단계적 롤아웃, 변화 관리, 챔피언",
+          "subtitle": "10. Delivery Methodology · 20분",
+          "file": "lessons/claude-fde/s37-rollout-champions.html"
+        },
+        {
+          "id": "s38-failure-modes-30-day",
+          "title": "S38. 흔한 실패 모드 예방과 30일 활성화",
+          "subtitle": "10. Delivery Methodology · 20분",
+          "file": "lessons/claude-fde/s38-failure-modes-30-day.html"
+        },
+        {
+          "id": "s39-activation",
+          "title": "S39. 1단계 Activation: 성공 팀, 프로비저닝, 문화, 교육, 런치",
+          "subtitle": "11. Driving enterprise adoption of Claude · 20분",
+          "file": "lessons/claude-fde/s39-activation.html"
+        },
+        {
+          "id": "s40-acceleration",
+          "title": "S40. 2단계 Acceleration: CoE와 Train the Trainer",
+          "subtitle": "11. Driving enterprise adoption of Claude · 20분",
+          "file": "lessons/claude-fde/s40-acceleration.html"
+        },
+        {
+          "id": "s41-expansion",
+          "title": "S41. 3단계 Expansion: 측정, 축하, 반복, 새 유스케이스",
+          "subtitle": "11. Driving enterprise adoption of Claude · 20분",
+          "file": "lessons/claude-fde/s41-expansion.html"
+        },
+        {
+          "id": "s42-capstone-pilot-plan",
+          "title": "S42. 캡스톤: 파일럿 계획서 쓰기",
+          "subtitle": "캡스톤 · 60분",
+          "file": "lessons/claude-fde/s42-capstone-pilot-plan.html"
         }
       ]
     }

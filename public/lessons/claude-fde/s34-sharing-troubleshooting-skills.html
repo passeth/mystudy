@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="9. Introduction to agent skills · 25분">
+<title>S34. skill 공유와 문제 해결</title>
+<link rel="stylesheet" href="fde.css">
+</head>
+<body data-session="S34">
+<!-- 자동 생성 파일: scripts/sync-fde.mjs 가 만들어요. 직접 고치지 말고 원본 노트를 고친 뒤 npm run fde:sync 하세요. -->
+<main class="wrap">
+
+<nav class="crumbs"><a href="/t/claude-fde/0000-course-home" target="_top">← 코스 홈</a><span>9. Introduction to agent skills</span></nav>
+<header class="head">
+  <span class="eyebrow">Claude FDE 스터디 · 세션 34 / 42</span>
+  <h1>S34. skill 공유와 문제 해결</h1>
+  <div class="meta"><span>25분</span><span class="pill pill-draft">노트 초안</span></div>
+  <p class="official">공식 경로에서 해당하는 부분: Sharing skills · Troubleshooting skills</p>
+</header>
+
+
+<article class="note">
+<section class="sec sec-goals"><h2>오늘의 목표</h2><ul><li>skill을 나누는 세 가지 범위(저장소, 플러그인, 조직 관리 설정) 중 상황에 맞는 것을 고를 수 있다.</li><li>서브에이전트가 skill을 쓰는 두 가지 방식을 구분할 수 있다.</li><li>skill이 발동되지 않거나, 보이지 않거나, 이름이 겹칠 때 무엇부터 확인할지 말할 수 있다.</li></ul></section>
+<section class="sec "><h2>핵심 정리</h2><h3>공유의 세 범위</h3>
+<p>S32에서 만든 skill은 내 컴퓨터의 <code>~/.claude/skills/</code>에만 있어요. 회사 문서로 치면 내 책상 서랍 속 메모예요. 나누는 범위는 셋이에요. 팀 공유 폴더에 넣기, 사내 배포 꾸러미로 만들기, 회사가 모든 PC에 깔아 주기.</p>
+<div class="table-scroll"><table><thead><tr><th>범위</th><th>방법</th><th>누가 받나</th></tr></thead><tbody><tr><td>저장소</td><td>프로젝트의 <code>.claude/skills/</code>를 커밋한다</td><td>그 저장소에서 일하는 모두</td></tr><tr><td>플러그인</td><td>플러그인의 <code>skills/</code> 폴더에 넣고 마켓플레이스로 배포한다</td><td>여러 저장소, 여러 팀. 버전과 업데이트를 관리</td></tr><tr><td>조직 전체</td><td>관리 설정(managed settings)으로 배포한다</td><td>회사가 관리하는 모든 기기</td></tr></tbody></table></div>
+<ul><li><strong>플러그인</strong>(S27)은 <code>.claude-plugin/plugin.json</code>과 <code>skills/&lt;이름&gt;/SKILL.md</code>로 된 폴더예요. 플러그인 속 skill은 <code>/플러그인이름:skill이름</code>으로 불러요. 배포 전에 <code>claude plugin validate ./my-plugin</code>으로 검사하고 <code>claude --plugin-dir ./my-plugin</code>으로 시험해요. 팀원은 세션에서 <code>/plugin marketplace add</code>로 마켓플레이스를 등록하고 <code>/plugin install 이름@마켓플레이스</code>로 설치해요.</li><li><strong>조직 전체</strong> 방법은 둘이에요. 관리 설정 디렉터리 안의 <code>.claude/skills/</code>에 skill 폴더를 두거나(예: 리눅스는 <code>/etc/claude-code/.claude/skills/&lt;이름&gt;/</code>), 관리 설정에 <code>extraKnownMarketplaces</code>와 <code>enabledPlugins</code>를 적어 플러그인을 모든 기기에 설치해요. 이건 고객사 IT 관리자의 일이에요.</li></ul>
+<h3>서브에이전트에서 skill 쓰기</h3>
+<p>S21의 서브에이전트와 skill은 두 방향으로 만나요.</p>
+<div class="table-scroll"><table><thead><tr><th>방식</th><th>어디에 적나</th><th>무슨 일이 일어나나</th></tr></thead><tbody><tr><td>서브에이전트가 skill을 미리 읽기</td><td>에이전트 파일의 <code>skills:</code> 필드</td><td>시작할 때 skill <strong>본문 전체</strong>가 서브에이전트 컨텍스트에 들어간다</td></tr><tr><td>skill을 서브에이전트에서 돌리기</td><td>skill의 <code>context: fork</code></td><td>skill 본문이 서브에이전트의 과제가 된다. 대화 내역은 못 본다</td></tr></tbody></table></div>
+<pre class="code" data-lang="markdown"><code>---
+name: ticket-triager
+description: 고객 티켓을 분류하고 요약한다
+skills:
+  - summarize-ticket
+---
+
+티켓을 읽고, 미리 불러온 skill의 양식대로 요약한다.</code></pre>
+<p>평소 세션에서는 설명만 먼저 들어오지만, <code>skills:</code>에 적은 skill은 처음부터 본문이 들어가요. <code>disable-model-invocation: true</code>인 skill은 이렇게 미리 넣을 수 없어요. 목록에 없는 skill도 서브에이전트가 필요하면 불러 쓸 수 있어요.</p>
+<h3>문제 해결</h3>
+<div class="table-scroll"><table><thead><tr><th>증상</th><th>먼저 확인할 것</th><th>고치는 법</th></tr></thead><tbody><tr><td>발동되지 않는다</td><td>설명에 사용자가 쓰는 말이 있나. <code>/이름</code>으로 직접 부르면 되나</td><td>설명을 구체적으로. 요청을 설명에 가깝게 바꿔 시험</td></tr><tr><td>목록에 보이지 않는다</td><td>파일이 <code>&lt;이름&gt;/SKILL.md</code>인가. frontmatter의 <code>---</code>가 파일 <strong>첫 줄</strong>인가</td><td><code>claude --debug</code>로 오류 확인, <code>claude plugin validate .claude/skills</code>, <code>/reload-skills</code></td></tr><tr><td>너무 자주 발동된다</td><td>설명이 너무 넓나</td><td>설명을 좁히거나 <code>disable-model-invocation: true</code></td></tr><tr><td>이름이 겹친다</td><td>같은 이름이 어디어디에 있나</td><td>우선순위는 조직 &gt; 개인 &gt; 프로젝트. 플러그인 skill은 접두어가 붙어 함께 남는다</td></tr><tr><td>하다가 안 따른다</td><td>대화가 압축(S23)됐나</td><td>skill을 다시 부른다. 중요한 지시는 본문 위쪽에. 꼭 지켜야 하면 hook</td></tr><tr><td>설명이 잘린다</td><td>skill이 너무 많나</td><td><code>/doctor</code>, <code>/skill-doctor</code>로 안 쓰는 skill을 찾아 끈다</td></tr></tbody></table></div>
+<p>함정 하나: frontmatter의 YAML이 깨져도 skill은 <strong>로드돼요</strong>. 다만 설정이 전부 빈 채로 로드돼서 <code>/이름</code>은 되는데 Claude가 스스로 고르지는 못해요. &quot;직접 부르면 되는데 알아서는 안 불러요&quot;라는 말을 들으면 YAML부터 보세요.</p></section>
+<section class="sec sec-try callout warm"><h2>직접 해 보기 (5분)</h2><ol><li>S32의 <code>summarize-ticket</code> 폴더를 아무 git 저장소의 <code>.claude/skills/</code>로 복사하세요. 그 저장소에서 Claude Code를 열고 <code>/skills</code>에 보이는지 확인하세요. 개인 폴더에도 같은 이름이 있다면 어느 쪽이 실행될지 표의 우선순위로 예상해 보세요.</li><li>일부러 고장 내 보세요. 복사한 <code>SKILL.md</code>의 첫 줄 <code>---</code> 위에 빈 줄을 하나 넣고 새 세션에서 &quot;이 고객 문의 정리해 줘&quot;라고 해 보세요. 무엇이 달라지는지 본 뒤 <code>claude plugin validate .claude/skills</code>를 실행해 보고, 빈 줄을 지워 되돌리세요.</li></ol></section>
+<section class="sec sec-quiz"><h2>확인 문제</h2><ol class="quiz"><li value="1" class="q"><div class="q-body">한 저장소에서 일하는 팀원 모두가 같은 skill을 쓰게 하는 가장 간단한 방법은?
+<ul><li>(a) 각자 <code>~/.claude/skills/</code>에 손으로 복사한다</li><li>(b) skill 내용을 채팅방에 올린다</li><li>(c) 저장소의 <code>.claude/skills/</code>에 넣고 커밋한다</li></ul></div>
+<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">(c). 프로젝트 skill을 커밋하면 저장소를 받는 모두가 같은 버전을 써요.</div></details></li>
+<li value="2" class="q"><div class="q-body">서브에이전트 파일의 <code>skills:</code> 필드에 skill을 적으면?
+<ul><li>(a) 서브에이전트가 시작할 때 그 skill의 본문 전체가 컨텍스트에 들어간다</li><li>(b) 서브에이전트가 그 skill만 쓸 수 있게 제한된다</li><li>(c) skill의 설명만 서브에이전트에 전달된다</li></ul></div>
+<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">(a). 설명만이 아니라 본문 전체가 시작할 때 들어가요. 제한이 아니어서 목록에 없는 skill도 불러 쓸 수 있어요.</div></details></li>
+<li value="3" class="q"><div class="q-body">같은 이름의 skill이 개인 폴더와 프로젝트 폴더에 둘 다 있으면 <code>/이름</code>으로 실행되는 것은?
+<ul><li>(a) 프로젝트 쪽</li><li>(b) 개인 쪽</li><li>(c) 둘 다 차례로 실행된다</li></ul></div>
+<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">(b). 우선순위는 조직 &gt; 개인 &gt; 프로젝트라서 개인 쪽이 실행돼요.</div></details></li>
+<li value="4" class="q"><div class="q-body">(서술형) &quot;직접 <code>/이름</code>으로 부르면 되는데 Claude가 알아서는 안 부른다&quot;는 증상의 원인 두 가지를 들고, 각각 어떻게 확인하는지 써 보세요.</div>
+<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">예시 답: 첫째, 설명에 사용자가 실제로 쓰는 말이 없어서 요청과 맞지 않는 경우. 요청을 설명의 낱말로 바꿔 불러 보거나 설명을 고쳐서 확인한다. 둘째, frontmatter의 YAML이 깨졌거나 <code>---</code>가 첫 줄이 아니어서 설명이 빈 채로 로드된 경우. <code>claude --debug</code>로 파싱 오류를 보거나 <code>claude plugin validate</code>로 검사한다. (<code>disable-model-invocation: true</code>가 켜져 있는지도 본다.)</div></details></li>
+<li value="5" class="q"><div class="q-body">(상황형) 파일럿이 잘 끝나고 고객사 리드가 말해요. &quot;이 skill 다섯 개를 다른 세 팀도 쓰게 하고 싶어요. 팀마다 저장소가 달라요. 나중에 skill을 고치면 다들 최신 버전을 받았으면 해요.&quot; 어떤 방법을 제안하고, 누구의 도움이 필요하다고 말할까요?</div>
+<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">예시 답: 저장소가 다르고 업데이트가 필요하므로 skill 다섯 개를 플러그인 하나로 묶어 사내 마켓플레이스 저장소에 올리자고 제안한다. 각 팀은 마켓플레이스를 한 번 등록하고 플러그인을 설치하면 되고, 고치면 새 버전을 받는다. 모든 기기에 강제로 깔고 싶다면 IT 관리자가 관리 설정에 마켓플레이스와 플러그인을 지정해야 하니, 관리자와 보안팀의 검토가 필요하다고 말한다. 팀마다 챔피언 한 명을 정해 문제 해결표를 넘긴다.</div></details></li></ol></section>
+<section class="sec sec-fde callout cool"><h2>FDE 관점</h2><p>공유 방법은 롤아웃 단계와 짝이 맞아요. 파일럿의 첫 사용자 그룹은 보통 한 저장소에서 일하니 <code>.claude/skills/</code> 커밋으로 충분해요. 다른 팀으로 넓힐 때는 플러그인과 마켓플레이스가 필요하고, 전사로 갈 때는 관리 설정이 필요해요. 이때부터는 고객사 IT 관리자와 보안팀이 함께해야 하니, 계획서에 &quot;확장 단계에 필요한 사람&quot;으로 미리 적어 두세요. 문제 해결표는 고객 팀의 챔피언에게 그대로 넘겨주기 좋아요. FDE가 떠난 뒤 &quot;skill이 안 돼요&quot;라는 질문을 챔피언이 스스로 풀 수 있어야 도입이 이어져요. skill이 실제로 쓰이는지 <code>/skill-doctor</code>로 가끔 보는 습관도 같이 넘겨주세요.</p></section>
+<section class="sec sec-cards"><h2>복습 카드</h2><div class="cards"><details class="card"><summary>skill을 나누는 세 범위는?</summary><div class="card-a">저장소(<code>.claude/skills/</code> 커밋), 플러그인(마켓플레이스), 조직 전체(관리 설정).</div></details><details class="card"><summary>플러그인 속 skill은 어떻게 부르나?</summary><div class="card-a"><code>/플러그인이름:skill이름</code>.</div></details><details class="card"><summary>서브에이전트의 <code>skills:</code> 필드가 하는 일은?</summary><div class="card-a">시작할 때 적힌 skill의 본문 전체를 컨텍스트에 넣는다.</div></details><details class="card"><summary>이름이 겹칠 때의 우선순위는?</summary><div class="card-a">조직 &gt; 개인 &gt; 프로젝트. 플러그인 skill은 접두어가 있어 함께 남는다.</div></details><details class="card"><summary><code>/이름</code>은 되는데 Claude가 스스로 안 부를 때 먼저 볼 것은?</summary><div class="card-a">설명의 낱말, 그리고 frontmatter의 YAML이 깨지지 않았는지.</div></details></div></section>
+<section class="sec sec-script"><h2>영상 대본</h2><details class="script"><summary>영상 대본 펼치기 <span class="muted">· 장면별 화면과 내레이션</span></summary><div class="script-body"><h4>장면 1 · 오늘의 질문 (약 25초)</h4>
+<p><strong>화면:</strong> 책상 서랍 안에 스킬 책 한 권. 서랍 밖에는 동료 세 명이 빈손으로 서 있음. 제목 &quot;내 서랍 속 스킬, 어떻게 나눌까?&quot;<br><strong>내레이션:</strong> 지난 시간까지 만든 스킬은 내 컴퓨터에만 있어요. 내 책상 서랍 속 메모인 셈이죠. 팀이 같이 쓰려면 어떻게 할까요? 오늘은 나누는 법과 고치는 법을 볼게요.</p>
+<h4>장면 2 · 세 가지 범위 (약 35초)</h4>
+<p><strong>화면:</strong> 동심원 세 개. 안쪽 원 &quot;저장소: 한 팀&quot;, 가운데 원 &quot;플러그인: 여러 팀&quot;, 바깥 원 &quot;관리 설정: 회사 전체&quot;. 스킬 책이 안쪽에서 바깥으로 차례로 퍼짐.<br><strong>내레이션:</strong> 나누는 범위는 세 가지예요. 가장 좁은 건 저장소예요. 스킬 폴더를 저장소에 넣으면 거기서 일하는 모두가 받아요. 그다음은 플러그인이에요. 여러 팀에 나눌 때 써요. 가장 넓은 건 회사가 모든 기기에 배포하는 방식이에요.</p>
+<h4>장면 3 · 플러그인은 꾸러미 (약 40초)</h4>
+<p><strong>화면:</strong> 상자 하나에 스킬 책 다섯 권이 담기고 상자에 이름표와 버전 딱지 &quot;1.0&quot;이 붙음. 상자가 진열대(&quot;마켓플레이스&quot;)에 올라가고, 세 팀이 각자 하나씩 가져감. 딱지가 &quot;1.1&quot;로 바뀌자 세 팀의 상자도 같이 바뀜.<br><strong>내레이션:</strong> 플러그인은 스킬 여러 개를 한 꾸러미로 묶은 거예요. 이름과 버전이 붙어요. 마켓플레이스라는 목록에 올려 두면 다른 팀이 이름으로 설치해요. 고치면 받은 쪽도 새 버전으로 바뀌죠. 꾸러미 속 스킬은 꾸러미 이름을 앞에 붙여 불러요.</p>
+<h4>장면 4 · 회사 전체로 (약 35초)</h4>
+<p><strong>화면:</strong> 관리자 캐릭터가 버튼 하나를 누르자 사무실의 모든 컴퓨터 화면에 같은 스킬 책이 나타남. 화면 구석에 자물쇠 표시 &quot;조직 &gt; 개인 &gt; 프로젝트&quot;.<br><strong>내레이션:</strong> 회사 전체에 깔 때는 관리 설정을 써요. 이건 고객사 관리자가 하는 일이에요. 이렇게 배포된 스킬은 우선순위가 가장 높아요. 같은 이름의 개인 스킬이 있어도 회사 것이 실행돼요.</p>
+<h4>장면 5 · 서브에이전트와 만나는 두 방향 (약 40초)</h4>
+<p><strong>화면:</strong> 왼쪽: 작업자 캐릭터가 출근하면서 스킬 책을 통째로 가방에 넣고 시작(&quot;미리 읽기&quot;). 오른쪽: 스킬 책이 작업 지시서가 되어 별도의 방에 있는 작업자에게 전달됨(&quot;따로 돌리기&quot;).<br><strong>내레이션:</strong> 스킬과 서브에이전트는 두 방향으로 만나요. 하나는 서브에이전트가 시작할 때 스킬을 통째로 읽고 들어가는 거예요. 평소에는 설명만 먼저 보지만, 이때는 본문 전체가 들어가요. 다른 하나는 스킬 자체를 따로 떨어진 작업자에게 맡겨 돌리는 거예요.</p>
+<h4>장면 6 · 고장 1: 발동이 안 된다 (약 40초)</h4>
+<p><strong>화면:</strong> 사용자 쪽지 &quot;주간 보고 써 줘&quot;와 스킬 책등 &quot;리포트 생성기&quot; 사이의 선이 끊겨 있음. 책등이 &quot;주간 보고서 초안을 쓴다. 주간 보고, 주간 업무 정리를 요청할 때&quot;로 바뀌자 선이 이어짐.<br><strong>내레이션:</strong> 이제 고장을 고쳐 볼게요. 가장 흔한 건 발동이 안 되는 거예요. 먼저 설명을 보세요. 사용자가 실제로 쓰는 말이 들어 있나요? 그리고 슬래시로 직접 불러 보세요. 직접 부르면 된다면 스킬은 멀쩡하고, 설명이 문제예요.</p>
+<h4>장면 7 · 고장 2: 보이지 않는다 (약 40초)</h4>
+<p><strong>화면:</strong> 점검표 세 줄이 하나씩 체크됨: &quot;폴더 안에 정해진 이름의 파일이 있나&quot;, &quot;설정판의 줄 표시가 파일 첫 줄인가&quot;, &quot;설정판 문법이 깨지지 않았나&quot;. 세 번째 줄 옆에 깨진 설정판 그림과 &quot;로드는 되지만 설정이 비어 있음&quot;.<br><strong>내레이션:</strong> 목록에 아예 안 보이면 세 가지를 보세요. 파일 이름과 위치가 맞는지, 설정판이 파일 첫 줄에서 시작하는지, 설정판 문법이 깨지지 않았는지예요. 문법이 깨지면 스킬은 뜨지만 설명이 비어서 클로드가 고르지 못해요.</p>
+<h4>장면 8 · 고장 3: 겹치고, 넘치고, 잊는다 (약 40초)</h4>
+<p><strong>화면:</strong> 세 칸. 1칸: 같은 이름의 책 두 권 중 위쪽 책에 왕관(&quot;우선순위&quot;). 2칸: 책장이 넘쳐 책등 글자가 잘림 → 안 쓰는 책을 빼자 글자가 다시 보임. 3칸: 긴 대화가 압축되며 스킬 책이 얇아짐 → 다시 부르자 원래 두께로.<br><strong>내레이션:</strong> 나머지 고장 셋이에요. 이름이 겹치면 우선순위가 높은 쪽이 실행돼요. 스킬이 너무 많으면 설명이 잘려요. 안 쓰는 걸 꺼 주세요. 긴 대화가 압축되면 스킬 내용이 줄어들 수 있어요. 그럴 땐 다시 부르면 돼요.</p>
+<h4>장면 9 · 고객 앞에서 (약 35초)</h4>
+<p><strong>화면:</strong> 롤아웃 계단 세 칸: &quot;파일럿 팀: 저장소&quot;, &quot;여러 팀: 플러그인&quot;, &quot;전사: 관리 설정&quot;. 둘째 칸부터 옆에 &quot;IT 관리자, 보안팀&quot; 아이콘이 붙음. 아래에 챔피언 캐릭터가 문제 해결표를 들고 있음.<br><strong>내레이션:</strong> 현장에서는 공유 방법이 롤아웃 단계와 짝이 맞아요. 파일럿 팀은 저장소로 충분해요. 넓힐 때는 플러그인과 관리 설정이 필요하고, 고객사 관리자가 함께해야 해요. 문제 해결표는 고객 팀의 챔피언에게 넘겨주세요.</p>
+<h4>장면 10 · 요약과 예고 (약 30초)</h4>
+<p><strong>화면:</strong> 세 줄 요약: &quot;1. 저장소 → 플러그인 → 관리 설정 2. 서브에이전트는 skill을 미리 읽거나, skill이 서브에이전트에서 돈다 3. 안 되면 설명, 파일 위치, 설정판 순으로 본다&quot;. 아래에 &quot;다음: S35 유스케이스 발굴과 자격 판정&quot;과 돋보기 아이콘.<br><strong>내레이션:</strong> 정리할게요. 스킬은 저장소, 플러그인, 관리 설정 순으로 넓게 나눠요. 서브에이전트와는 두 방향으로 만나요. 안 되면 설명, 파일 위치, 설정판 순으로 보세요. 다음 시간부터는 무엇을 만들지 고르는 법, 고객의 유스케이스를 판정하는 법을 배워요.</p></div></details></section>
+<section class="sec sec-sources"><h2>출처</h2><ul><li>Claude Code 문서, Extend Claude with skills (공유 범위, 저장 위치별 우선순위, 문제 해결 항목, <code>/reload-skills</code>, <code>/skill-doctor</code>, 압축 뒤 skill 내용): <a href="https://code.claude.com/docs/en/skills" target="_blank" rel="noopener noreferrer">https://code.claude.com/docs/en/skills</a></li><li>Claude Code 문서, Create custom subagents (<code>skills:</code> 필드로 미리 넣기와 그 제약): <a href="https://code.claude.com/docs/en/sub-agents" target="_blank" rel="noopener noreferrer">https://code.claude.com/docs/en/sub-agents</a></li><li>Claude Code 문서, Plugins overview (플러그인과 마켓플레이스의 정의, 설치 범위): <a href="https://code.claude.com/docs/en/plugins/overview" target="_blank" rel="noopener noreferrer">https://code.claude.com/docs/en/plugins/overview</a></li><li>Claude Code 문서, Create a Claude Code plugin (플러그인 구조, <code>claude plugin validate</code>, <code>--plugin-dir</code>, 접두어가 붙는 이름): <a href="https://code.claude.com/docs/en/plugins/create" target="_blank" rel="noopener noreferrer">https://code.claude.com/docs/en/plugins/create</a></li><li>Claude Code 문서, Create a marketplace (<code>marketplace.json</code>, 마켓플레이스 등록과 설치 명령): <a href="https://code.claude.com/docs/en/plugins/create-marketplace" target="_blank" rel="noopener noreferrer">https://code.claude.com/docs/en/plugins/create-marketplace</a></li><li>Claude Code 문서, Manage Claude Code plugins for your organization (<code>extraKnownMarketplaces</code>, <code>enabledPlugins</code>): <a href="https://code.claude.com/docs/en/plugins/org" target="_blank" rel="noopener noreferrer">https://code.claude.com/docs/en/plugins/org</a></li><li>Claude Code 문서, Deploy managed settings (관리 설정 파일의 위치와 전달 방식): <a href="https://code.claude.com/docs/en/managed-settings" target="_blank" rel="noopener noreferrer">https://code.claude.com/docs/en/managed-settings</a></li><li>공식 학습 경로 개요(코스 9 강의 제목, 코스 10 소개): 이 폴더의 <code>_official-outline-2026-11-27.txt</code>. 원본 페이지는 직접 열지 못했어요.</li><li><code>ticket-triager</code> 에이전트와 장면 6의 &quot;리포트 생성기&quot;는 설명용 예시예요. 책상 서랍, 꾸러미 비유도 Study_FDE가 만든 것이에요.</li></ul></section>
+</article>
+<section class="done-box">
+  <label><input type="checkbox" data-done="S34"> 이 세션을 다 했어요 <span class="muted">(이 브라우저에만 저장돼요)</span></label>
+</section>
+<nav class="pager">
+  <a href="/t/claude-fde/s33-skill-config-comparison" target="_top" class="prev"><small>이전</small><span>S33 · 설정과 여러 파일 skill, 다른 기능과 비교</span></a>
+  <a href="/t/claude-fde/s35-use-case-qualification" target="_top" class="next"><small>다음</small><span>S35 · 유스케이스 발굴과 자격 판정</span></a>
+</nav>
+<footer class="disclaimer" role="note">
+  <strong>비공식 학습 자료</strong>
+  <p>이 노트는 Anthropic 공식 “Claude Forward Deployed Engineer” 학습 경로의 공개 개요와 공식 문서를 바탕으로 쓴 개인 학습 노트이며, 공식 강의 필기가 아니에요. 실제 강의·퀴즈·수료는 공식 경로에서 진행해요.</p>
+  <p>공식 경로: <a href="https://anthropic-partners.skilljar.com/path/claude-fde" target="_blank" rel="noopener noreferrer">https://anthropic-partners.skilljar.com/path/claude-fde</a></p>
+</footer>
+</main>
+<script src="fde.js"></script>
+</body>
+</html>

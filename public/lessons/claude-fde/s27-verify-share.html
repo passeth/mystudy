@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="7. Claude Code in Action · 22분">
+<title>S27. 검증과 공유: 무감독 실행 검증, plugin</title>
+<link rel="stylesheet" href="fde.css">
+</head>
+<body data-session="S27">
+<!-- 자동 생성 파일: scripts/sync-fde.mjs 가 만들어요. 직접 고치지 말고 원본 노트를 고친 뒤 npm run fde:sync 하세요. -->
+<main class="wrap">
+
+<nav class="crumbs"><a href="/t/claude-fde/0000-course-home" target="_top">← 코스 홈</a><span>7. Claude Code in Action</span></nav>
+<header class="head">
+  <span class="eyebrow">Claude FDE 스터디 · 세션 27 / 42</span>
+  <h1>S27. 검증과 공유: 무감독 실행 검증, plugin</h1>
+  <div class="meta"><span>22분</span><span class="pill pill-draft">노트 초안</span></div>
+  <p class="official">공식 경로에서 해당하는 부분: Verify and Share</p>
+</header>
+
+
+<article class="note">
+<section class="sec sec-goals"><h2>오늘의 목표</h2><ul><li>실행을 덜 지켜봤을수록 더 강한 검증을 붙인다는 원칙으로 검증 수단을 고를 수 있다.</li><li>무감독 실행을 켜기 전의 다섯 질문을 점검하고, 돌아와서 무엇을 증거로 볼지 말할 수 있다.</li><li>믿게 된 설정을 plugin으로 묶어 검사하고 팀이 설치하게 하는 흐름과, 설치 전에 읽어야 할 파일을 설명할 수 있다.</li></ul></section>
+<section class="sec "><h2>핵심 정리</h2><p>무감독 실행의 검증은 야간 근무 인수인계와 같아요. 옆에서 같이 본 일은 한 번 훑으면 되지만, 내가 자는 동안 일어난 일은 기록과 증거로 확인해야 해요. 코스 7의 마지막 세션인 오늘은 S23~S26에서 만든 것을 믿는 법과 나누는 법을 다뤄요.</p>
+<h3>덜 볼수록 더 검증한다</h3>
+<p>지켜보는 세션에서는 Claude가 맥락을 놓쳐도 한두 메시지 안에 알아채고 말해 줘요. 자기 전에 켜 둔 실행에서는 아무도 말해 주지 않아서, 틀린 가정 위에 밤새 쌓은 결과를 아침에 발견하게 돼요. 그래서 검증의 세기는 지켜본 정도와 반대로 가야 해요. 공식 문서가 드는 검증 수단을 약한 것부터 세워 보면 이래요.</p>
+<ol><li>프롬프트로 부탁: &quot;테스트를 돌리고 통과할 때까지 계속해.&quot; Claude가 스스로 만족을 판단해요.</li><li><code>/goal</code>: 별도의 모델이 턴마다 조건을 판정해요(S26).</li><li><code>Stop</code> hook: Claude Code가 강제해요. 검사가 실패하면 턴이 끝나지 않아요(S25).</li><li>코드를 쓰지 않은 리뷰어: <code>/code-review</code>는 내 대화를 보지 못한 새 서브에이전트가 diff를 봐요. 두 번째 세션이나 PR의 Code Review도 같은 역할이에요.</li><li>사람: 머지 승인과 브랜치 보호예요. 마지막 말은 Claude의 요약이 아니라 여기서 나와요.</li></ol>
+<div class="table-scroll"><table><thead><tr><th>실행 방식</th><th>내가 본 정도</th><th>최소한 붙일 검증</th></tr></thead><tbody><tr><td>대화형, 단계마다 확인</td><td>많이</td><td>증거 요청, diff 훑어보기</td></tr><tr><td>auto mode로 긴 작업, 가끔 확인</td><td>조금</td><td>검증 skill이나 <code>/goal</code>, 끝에 <code>/code-review</code></td></tr><tr><td><code>-p</code>, 예약, 백그라운드</td><td>거의 못 봄</td><td><code>Stop</code> hook이나 CI, 독립 리뷰, 사람의 머지 승인</td></tr></tbody></table></div>
+<p>이 표는 공식 표가 아니라, 문서의 수단들을 코스 목표에 맞춰 정리한 학습용 표예요.</p>
+<p>어느 단계든 <strong>증거</strong>를 요구해요. &quot;모든 테스트 통과&quot;라는 말만으로는 알 수 있는 게 거의 없어요. 실행한 명령과 그 출력, 또는 스크린샷을 받아요. 출력을 읽는 편이 직접 다시 돌리는 것보다 빠르고, 보지 않은 세션에서는 그게 유일한 증거예요. 리뷰어에게는 &quot;정확성에 영향을 주는 것만, 스타일은 건너뛰어&quot;라고 범위를 줘요. 문제를 찾으라고 하면 항상 무언가를 찾아내기 때문이에요.</p>
+<h3>떠나기 전 다섯 질문</h3>
+<p>공식 문서는 작업을 혼자 돌려 두기 전에 그 작업을 놓고 다섯 가지를 물으라고 해요.</p>
+<ol><li>끝이 무엇인지 아는가? goal 조건, 스펙 파일, 통과시켜야 할 실패 테스트.</li><li>스스로 검사할 수 있는가? 테스트, <code>Stop</code> hook, 리뷰 단계.</li><li>무엇을 건드릴 수 있는가? 권한 규칙, <code>dontAsk</code>, sandbox, worktree, 푸시해도 되는 브랜치 하나.</li><li>무엇이 멈추는가? <code>--max-turns</code>, <code>--max-budget-usd</code>, 지출 한도.</li><li>결과가 어디로 가고 누가 승인하는가? PR이나 코멘트, 요약. 그리고 되돌릴 수 없는 일은 사람이 승인.</li></ol>
+<p>새 자동화는 작게 시작해요. 파일 세 개로 먼저 돌려 무엇이 틀어지는지 보고 프롬프트를 고친 다음 나머지를 돌려요. 돌아와서는 PR의 diff, 검사 출력, 비용을 봐요. <code>--permission-prompts none</code>과 <code>--output-format stream-json</code>으로 돌린 실행이라면 마지막 result 메시지의 <code>permission_denials</code>에서 거부된 호출도 확인할 수 있어요.</p>
+<h3>믿게 된 설정은 plugin으로</h3>
+<p>믿게 된 skill, hook, 서브에이전트가 <code>.claude/</code>에 쌓이면 다른 저장소와 동료에게도 필요해져요. plugin은 이런 구성 요소를 한 단위로 설치하게 묶은 디렉터리예요.</p>
+<pre class="code" data-lang="text"><code>team-setup/
+├── .claude-plugin/
+│   └── plugin.json        # 매니페스트. name이 필수
+├── skills/verify/SKILL.md # /team-setup:verify 로 실행
+├── agents/reviewer.md
+├── hooks/hooks.json       # settings 파일의 hooks와 같은 모양
+└── .mcp.json</code></pre>
+<p>규칙 두 가지를 기억해요. skill과 agent 같은 구성 요소는 <code>.claude-plugin/</code> 안이 아니라 plugin 루트에 둬요. 그리고 plugin의 skill은 <code>/플러그인이름:skill이름</code>으로 불러요. 여러 plugin이 같은 이름의 skill을 가져도 부딪치지 않게 하기 위해서예요.</p>
+<p>흐름은 네 걸음이에요.</p>
+<ol><li>옮기기: <code>.claude/skills</code>와 <code>.claude/agents</code>를 plugin 루트로 복사하고, settings의 <code>hooks</code> 객체는 <code>hooks/hooks.json</code>으로 옮겨요.</li><li>검사: <code>claude plugin validate ./team-setup</code></li><li>한 세션 시험: <code>claude --plugin-dir ./team-setup</code></li><li>배포: 저장소에 <code>.claude-plugin/marketplace.json</code>을 두면 그 저장소가 marketplace(설치 목록)가 돼요. 팀원은 <code>claude plugin marketplace add &lt;조직&gt;/&lt;저장소&gt;</code> 다음에 <code>claude plugin install team-setup@&lt;marketplace 이름&gt;</code>을 실행해요.</li></ol>
+<p>설치 범위(scope)는 셋이에요. user는 나의 모든 프로젝트, project는 그 저장소에서 일하는 모두(커밋하는 <code>.claude/settings.json</code>에 기록되고, 각자 자기 컴퓨터에 설치는 한 번 해야 해요), local은 그 저장소의 나만이에요.</p>
+<p>받는 쪽의 안전도 중요해요. plugin의 hook과 MCP 서버는 설치한 사람의 사용자 권한으로, sandbox 밖에서 실행돼요. 그래서 설치하기 전에 <code>hooks/hooks.json</code>, <code>.mcp.json</code>, <code>bin/</code> 폴더를 직접 읽어요. <code>claude plugin details &lt;이름&gt;</code>은 plugin에 들어 있는 구성 요소 목록을 보여 줘요.</p></section>
+<section class="sec sec-try callout warm"><h2>직접 해 보기 (5분)</h2><p>연습용 폴더에서만 해요. S24에서 만든 verify skill을 plugin으로 옮겨 봐요.</p>
+<pre class="code" data-lang="bash"><code>mkdir -p ~/cc-lab/s27/team-setup/.claude-plugin ~/cc-lab/s27/team-setup/skills/verify &amp;&amp; cd ~/cc-lab/s27
+echo hello &gt; hello.txt
+printf '[ &quot;$(cat hello.txt)&quot; = &quot;hello&quot; ] &amp;&amp; echo PASS || { echo FAIL; exit 1; }\n' &gt; test.sh
+printf '# s27 lab\n\n테스트: sh test.sh\n' &gt; README.md</code></pre>
+<ol><li>아래 매니페스트를 <code>team-setup/.claude-plugin/plugin.json</code>으로, S24의 verify 예시를 <code>team-setup/skills/verify/SKILL.md</code>로 저장하고 검사해요. 관찰: 출력의 &quot;Provides&quot; 아래에 <code>team-setup:verify</code>가 보이는지, 마지막 줄이 <code>✔ Validation passed</code>인지. README·LICENSE·아이콘이 없다는 안내는 Anthropic 디렉터리에 제출할 때의 점검이라 결과를 바꾸지 않아요(v2.1.332에서 직접 확인).</li></ol>
+<pre class="code" data-lang="json"><code>{
+  &quot;name&quot;: &quot;team-setup&quot;,
+  &quot;description&quot;: &quot;우리 팀이 검증한 Claude Code 설정&quot;,
+  &quot;version&quot;: &quot;0.1.0&quot;,
+  &quot;author&quot;: { &quot;name&quot;: &quot;Study FDE&quot; }
+}</code></pre>
+<pre class="code" data-lang="bash"><code>claude plugin validate ./team-setup</code></pre>
+<ol start="2"><li><code>claude --plugin-dir ./team-setup</code>으로 시작해 <code>/team-setup:verify</code>를 실행해요. 관찰: skill 이름 앞에 plugin 이름이 붙는지, Claude가 <code>sh test.sh</code>의 출력을 증거로 보고하는지. 끝나면 &quot;방금 실행에서 내가 직접 본 것과 Claude의 보고로만 아는 것&quot;을 한 줄씩 적어 보세요.</li></ol></section>
+<section class="sec sec-quiz"><h2>확인 문제</h2><ol class="quiz"><li value="1" class="q"><div class="q-body">다음 중 가장 강한 검증을 붙여야 하는 실행은?
+<ul><li>(a) 편집마다 승인하며 진행한 대화형 세션</li><li>(b) plan mode로 계획을 검토한 뒤 지켜보며 진행한 세션</li><li>(c) 예약으로 밤사이 실행된 <code>claude -p</code> 작업</li></ul></div>
+<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">(c). 사람이 한 단계도 지켜보지 않았으니 강제되는 검사, 독립 리뷰, 사람의 승인이 필요해요. (a)와 (b)는 진행 중에 사람이 이미 걸러 냈어요.</div></details></li>
+<li value="2" class="q"><div class="q-body">이름이 <code>team-setup</code>인 plugin 안의 <code>verify</code> skill을 실행하는 명령은?
+<ul><li>(a) <code>/verify</code></li><li>(b) <code>/team-setup:verify</code></li><li>(c) <code>/plugin verify</code></li></ul></div>
+<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">(b). plugin의 skill에는 plugin 이름이 접두사로 붙어요.</div></details></li>
+<li value="3" class="q"><div class="q-body">plugin의 <code>skills/</code> 폴더를 두는 올바른 위치는?
+<ul><li>(a) <code>.claude-plugin/skills/</code></li><li>(b) plugin 루트 바로 아래의 <code>skills/</code></li><li>(c) <code>~/.claude/</code> 바로 아래</li></ul></div>
+<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">(b). <code>.claude-plugin/</code> 안에 넣은 구성 요소는 로드되지 않아요. 그 폴더에는 매니페스트(배포할 때는 marketplace 파일도)만 두고 구성 요소는 plugin 루트에 둬요.</div></details></li>
+<li value="4" class="q"><div class="q-body">(서술형) Claude가 긴 무감독 실행 끝에 &quot;모든 테스트가 통과했습니다&quot;라고만 보고했어요. 이 보고가 왜 부족한지, 무엇을 요구할지 써 보세요.</div>
+<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">예시 답: 보지 않은 실행에서 Claude의 요약은 주장일 뿐이라 어떤 명령을 돌렸는지, 몇 개가 통과했는지, 건너뛴 테스트가 있는지 알 수 없다. 실행한 명령과 그 출력을 그대로 붙이게 하고, 가능하면 Claude가 아닌 쪽의 확인을 더한다. 예를 들어 CI의 실행 결과, <code>/code-review</code> 같은 독립 리뷰, 그리고 사람의 머지 승인이다.</div></details></li>
+<li value="5" class="q"><div class="q-body">(상황형) 고객사 팀장이 말해요. &quot;FDE님이 쓰는 설정이 좋던데 우리 개발자 마흔 명이 다 쓰게 해 주세요. 그런데 보안팀은 외부 plugin 설치를 걱정해요.&quot; 어떤 순서로 진행하고 보안팀에는 무엇을 보여 줄까요?</div>
+<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">예시 답: 순서는 (1) 검증된 설정을 plugin으로 묶어 <code>claude plugin validate</code>로 검사하고, (2) 고객사의 비공개 저장소에 <code>marketplace.json</code>과 함께 올려 고객이 소유하는 marketplace로 만들고, (3) 몇 명의 첫 사용자 그룹이 먼저 설치해 써 본 뒤, (4) 저장소 단위의 project 범위 설치나 조직의 managed settings로 넓힌다. 보안팀에는 plugin이 &quot;외부 것&quot;이 아니라 고객 저장소 안의 읽을 수 있는 파일이라는 점을 설명하고, <code>hooks/hooks.json</code>이 실행하는 명령, <code>.mcp.json</code>의 서버, <code>claude plugin details</code>의 구성 요소 목록을 보여 준다. 조직이 marketplace를 허용 목록으로 제한할 수 있다는 점도 알린다.</div></details></li></ol></section>
+<section class="sec sec-fde callout cool"><h2>FDE 관점</h2><p>FDE의 일은 내가 떠난 뒤에도 고객팀이 같은 품질로 일하게 만드는 거예요. 파일럿 동안 고객 저장소에서 다듬은 CLAUDE.md, 검증 skill, 금지 규칙 hook은 plugin으로 묶는 순간 &quot;설치 한 줄&quot;이 되고, 이게 파일럿 계획의 &quot;첫 사용자 그룹을 들이는 방법&quot;에 그대로 들어가요. 검증 쪽은 성공 지표와 이어져요. 무감독 실행의 결과를 고객에게 보고할 때 &quot;Claude가 됐다고 했어요&quot;가 아니라 검사 출력, 리뷰 결과, 사람이 승인한 PR을 보여 줘야 지표가 믿을 만해져요. 고객의 저장소에서는 마지막 승인자를 항상 고객 쪽 사람으로 두고, 자동화가 손댈 수 있는 범위와 한도를 문서로 남겨요. plugin을 넘길 때는 보안팀이 읽을 수 있게 hook이 실행하는 명령과 MCP 서버의 주소를 README에 적어 둬요.</p></section>
+<section class="sec sec-cards"><h2>복습 카드</h2><div class="cards"><details class="card"><summary>검증의 세기를 정하는 원칙은?</summary><div class="card-a">실행을 덜 지켜봤을수록 더 강하게. 무감독 실행에는 강제되는 검사, 독립 리뷰, 사람의 승인을 붙인다.</div></details><details class="card"><summary>무감독 실행 전 다섯 질문은?</summary><div class="card-a">끝을 아는가, 스스로 검사하는가, 무엇을 건드리는가, 무엇이 멈추는가, 결과가 어디로 가고 누가 승인하는가.</div></details><details class="card"><summary>Claude의 보고에서 요구할 증거는?</summary><div class="card-a">실행한 명령과 그 출력, 또는 스크린샷. &quot;통과했다&quot;는 말만으로는 부족하다.</div></details><details class="card"><summary>plugin 매니페스트의 위치와 필수 필드는?</summary><div class="card-a"><code>.claude-plugin/plugin.json</code>, 필수는 <code>name</code>. 구성 요소는 plugin 루트에 둔다.</div></details><details class="card"><summary>plugin을 설치하기 전에 읽을 파일은?</summary><div class="card-a"><code>hooks/hooks.json</code>, <code>.mcp.json</code>, <code>bin/</code>. hook과 MCP 서버는 내 사용자 권한으로 sandbox 밖에서 실행된다.</div></details></div></section>
+<section class="sec sec-script"><h2>영상 대본</h2><details class="script"><summary>영상 대본 펼치기 <span class="muted">· 장면별 화면과 내레이션</span></summary><div class="script-body"><h4>장면 1 · 오늘의 질문 (약 25초)</h4>
+<p><strong>화면:</strong> 아침 책상. 노트북 화면에 메시지 한 줄 &quot;작업 완료. 모든 테스트 통과.&quot; 그 옆에 밤새 쌓인 변경 파일 40개 아이콘. 큰 글자 &quot;안 보고 돌린 일, 무엇으로 믿을까?&quot;<br><strong>내레이션:</strong> 밤새 돌려 둔 작업이 끝났다고 해요. 테스트도 다 통과했대요. 그런데 나는 한 줄도 지켜보지 않았어요. 이 말을 어디까지 믿어야 할까요? 오늘은 검증하는 법과 나누는 법을 배워요.</p>
+<h4>장면 2 · 덜 볼수록 더 검증 (약 35초)</h4>
+<p><strong>화면:</strong> 시소 하나. 왼쪽 &quot;내가 지켜본 정도&quot;가 내려가면 오른쪽 &quot;검증의 세기&quot;가 올라감. 왼쪽이 &quot;옆에서 봄 → 가끔 봄 → 못 봄&quot;으로 바뀔 때마다 오른쪽에 추가 올려짐.<br><strong>내레이션:</strong> 원칙은 하나예요. 덜 지켜봤을수록 더 강하게 검증해요. 옆에서 보는 동안에는 틀리면 바로 알아채요. 자는 동안에는 아무도 말해 주지 않아요. 그 빈자리를 검증으로 채워요.</p>
+<h4>장면 3 · 검증의 사다리 (약 40초)</h4>
+<p><strong>화면:</strong> 다섯 칸 사다리가 아래부터 켜짐: &quot;1 프롬프트로 부탁&quot;, &quot;2 goal — 다른 모델이 판정&quot;, &quot;3 Stop hook — 강제&quot;, &quot;4 쓰지 않은 리뷰어&quot;, &quot;5 사람의 승인&quot;. 사다리 옆에 &quot;Claude가 판단 → Claude Code가 강제 → 사람이 결정&quot;.<br><strong>내레이션:</strong> 검증 수단을 약한 것부터 세워 볼게요. 프롬프트로 부탁하기, 다른 모델의 판정, 훅으로 강제하기예요. 그 위에 코드를 쓰지 않은 리뷰어, 맨 위에 사람의 승인이 있어요. 위로 갈수록 클로드의 말에 덜 기대요.</p>
+<h4>장면 4 · 말이 아니라 증거 (약 35초)</h4>
+<p><strong>화면:</strong> 말풍선 &quot;모든 테스트 통과&quot;에 물음표. 그 옆에 터미널 조각: 실행한 명령 한 줄과 통과 개수가 찍힌 출력. 터미널 조각에 체크 표시.<br><strong>내레이션:</strong> 어느 단계에서든 증거를 받아요. 통과했다는 말만으로는 알 수 있는 게 거의 없어요. 실행한 명령과 그 출력을 보여 달라고 해요. 보지 않은 실행에서는 그게 유일한 증거예요.</p>
+<h4>장면 5 · 떠나기 전 다섯 질문 (약 40초)</h4>
+<p><strong>화면:</strong> 문 앞에 체크리스트 다섯 줄이 차례로 체크됨: &quot;끝이 무엇인가&quot;, &quot;스스로 검사하나&quot;, &quot;무엇을 건드리나&quot;, &quot;무엇이 멈추나&quot;, &quot;누가 승인하나&quot;. 다 체크되면 문이 열림.<br><strong>내레이션:</strong> 떠나기 전에 다섯 가지를 물어요. 끝이 무엇인가. 스스로 검사하는가. 무엇을 건드리는가. 무엇이 멈추는가. 결과를 누가 승인하는가. 하나라도 비면 아직 떠날 때가 아니에요.</p>
+<h4>장면 6 · 작게 시작하기 (약 30초)</h4>
+<p><strong>화면:</strong> 파일 200개 더미에서 3개만 꺼내 먼저 실행. 결과 하나에 엑스 표시가 뜨고 프롬프트가 고쳐진 뒤 나머지 197개가 흘러감.<br><strong>내레이션:</strong> 새 자동화는 작게 시작해요. 파일 세 개로 먼저 돌려 보고, 무엇이 틀어지는지 본 다음 프롬프트를 고쳐요. 그러고 나서 나머지를 돌려요. 처음 몇 번은 지켜본 뒤에 맡겨요.</p>
+<h4>장면 7 · 믿게 된 설정을 상자에 (약 40초)</h4>
+<p><strong>화면:</strong> &quot;.claude&quot; 폴더에서 카드 네 장이 나와 상자 하나로 들어감: &quot;skills&quot;, &quot;agents&quot;, &quot;hooks&quot;, &quot;MCP 서버&quot;. 상자 겉면에 이름표 &quot;plugin.json — team-setup&quot;. 상자가 닫힘.<br><strong>내레이션:</strong> 믿게 된 설정은 나눌 차례예요. 스킬, 서브에이전트, 훅, 엠씨피 서버를 한 상자에 담은 것이 플러그인이에요. 상자에는 이름표 파일이 붙고, 그 이름이 스킬을 부를 때 앞에 붙어요.</p>
+<h4>장면 8 · 검사하고, 시험하고, 올리기 (약 40초)</h4>
+<p><strong>화면:</strong> 컨베이어 벨트 세 단계: &quot;검사(validate)&quot; 도장, &quot;한 세션 시험&quot;, &quot;marketplace에 등록&quot;. 벨트 끝에서 팀원 아이콘 여러 명이 같은 상자를 하나씩 받아 감.<br><strong>내레이션:</strong> 순서는 세 단계예요. 먼저 검사 명령으로 형식을 확인해요. 다음에 한 세션에만 불러서 시험해요. 마지막으로 설치 목록인 마켓플레이스에 올려요. 그러면 팀원은 명령 한 줄로 같은 설정을 받아요.</p>
+<h4>장면 9 · 받는 쪽의 안전과 고객 현장 (약 35초)</h4>
+<p><strong>화면:</strong> 상자를 받는 사람이 돋보기로 안의 파일 세 개를 봄: &quot;hooks.json&quot;, &quot;.mcp.json&quot;, &quot;bin&quot;. 옆에 경고 꼬리표 &quot;내 권한으로 실행됨&quot;. 화면이 고객사 회의실로 바뀌고 보안팀 앞에 같은 세 파일이 펼쳐짐.<br><strong>내레이션:</strong> 플러그인의 훅은 설치한 사람의 권한으로 실행돼요. 그래서 설치 전에 훅과 서버 설정 파일을 직접 읽어요. 고객사에 넘길 때는 무엇이 실행되는지 적어서 보안팀에 함께 건네요.</p>
+<h4>장면 10 · 요약과 예고 (약 30초)</h4>
+<p><strong>화면:</strong> 세 줄 요약: &quot;1. 덜 볼수록 더 검증 2. 말이 아니라 증거, 마지막 승인은 사람 3. 믿게 된 설정은 plugin으로&quot;. 아래에 &quot;다음: S28 MCP 구조 — 클라이언트와 서버&quot;. 배경에 클로드 상자와 바깥 시스템 상자들이 선으로 이어지는 그림이 흐릿하게 나타남.<br><strong>내레이션:</strong> 정리할게요. 덜 볼수록 더 검증해요. 말이 아니라 증거를 받고, 마지막 승인은 사람이 해요. 믿게 된 설정은 플러그인으로 나눠요. 다음 시간에는 클로드를 고객의 시스템에 잇는 엠씨피의 구조를 배워요.</p></div></details></section>
+<section class="sec sec-sources"><h2>출처</h2><p>모두 2026-11-27에 마크다운판(주소 끝 <code>.md</code>)으로 열어 확인했어요.</p>
+<ul><li>Claude Code Docs, Best practices for Claude Code (검사 수단의 단계, 증거 요구, 무감독 실행 전 다섯 질문, 작게 시작하기): <a href="https://code.claude.com/docs/en/best-practices.md" target="_blank" rel="noopener noreferrer">https://code.claude.com/docs/en/best-practices.md</a></li><li>Claude Code Docs, Keep Claude working toward a goal (별도 평가 모델): <a href="https://code.claude.com/docs/en/goal.md" target="_blank" rel="noopener noreferrer">https://code.claude.com/docs/en/goal.md</a></li><li>Claude Code Docs, Hooks reference (<code>Stop</code> hook): <a href="https://code.claude.com/docs/en/hooks.md" target="_blank" rel="noopener noreferrer">https://code.claude.com/docs/en/hooks.md</a></li><li>Claude Code Docs, Review locally with /code-review (대화를 보지 않은 서브에이전트의 리뷰): <a href="https://code.claude.com/docs/en/code-review-local.md" target="_blank" rel="noopener noreferrer">https://code.claude.com/docs/en/code-review-local.md</a></li><li>Claude Code Docs, Code Review (PR 리뷰, 승인·차단을 하지 않음): <a href="https://code.claude.com/docs/en/code-review.md" target="_blank" rel="noopener noreferrer">https://code.claude.com/docs/en/code-review.md</a></li><li>Claude Code Docs, Run Claude Code programmatically (<code>--permission-prompts none</code>, <code>permission_denials</code>): <a href="https://code.claude.com/docs/en/headless.md" target="_blank" rel="noopener noreferrer">https://code.claude.com/docs/en/headless.md</a></li><li>Claude Code Docs, Plugins overview (plugin의 정의, marketplace, 설치 범위, 조직 통제): <a href="https://code.claude.com/docs/en/plugins/overview.md" target="_blank" rel="noopener noreferrer">https://code.claude.com/docs/en/plugins/overview.md</a></li><li>Claude Code Docs, Create a Claude Code plugin (매니페스트, 레이아웃, <code>validate</code>, <code>--plugin-dir</code>, 기존 <code>.claude/</code> 옮기기): <a href="https://code.claude.com/docs/en/plugins/create.md" target="_blank" rel="noopener noreferrer">https://code.claude.com/docs/en/plugins/create.md</a></li><li>Claude Code Docs, Install and manage plugins (marketplace 추가, 설치 명령, scope): <a href="https://code.claude.com/docs/en/plugins/install.md" target="_blank" rel="noopener noreferrer">https://code.claude.com/docs/en/plugins/install.md</a></li><li>Claude Code Docs, Publish and distribute a plugin (자체 marketplace, 설치 안내): <a href="https://code.claude.com/docs/en/plugins/publish.md" target="_blank" rel="noopener noreferrer">https://code.claude.com/docs/en/plugins/publish.md</a></li><li>Claude Code Docs, Plugin security and trust (plugin이 할 수 있는 일, 설치 전 검토): <a href="https://code.claude.com/docs/en/plugins/security.md" target="_blank" rel="noopener noreferrer">https://code.claude.com/docs/en/plugins/security.md</a></li><li>공식 학습 경로 개요(코스 7의 학습 목표와 섹션): 이 폴더의 <code>_official-outline-2026-11-27.txt</code>. 공식 사이트는 직접 열지 않았어요.</li><li>&quot;실행 방식별 최소 검증&quot; 표와 영상의 숫자(파일 40개, 200개)는 설명용으로 만든 것이에요. <code>claude plugin validate</code>의 출력은 Claude Code v2.1.332에서 예시 plugin으로 직접 실행해 확인했어요.</li></ul></section>
+</article>
+<section class="done-box">
+  <label><input type="checkbox" data-done="S27"> 이 세션을 다 했어요 <span class="muted">(이 브라우저에만 저장돼요)</span></label>
+</section>
+<nav class="pager">
+  <a href="/t/claude-fde/s26-automate-repeat-work" target="_top" class="prev"><small>이전</small><span>S26 · 반복 작업 자동화: 자율 세션, worktree, routines, headless, PR 리뷰</span></a>
+  <a href="/t/claude-fde/s28-mcp-architecture" target="_top" class="next"><small>다음</small><span>S28 · MCP 구조: 클라이언트와 서버</span></a>
+</nav>
+<footer class="disclaimer" role="note">
+  <strong>비공식 학습 자료</strong>
+  <p>이 노트는 Anthropic 공식 “Claude Forward Deployed Engineer” 학습 경로의 공개 개요와 공식 문서를 바탕으로 쓴 개인 학습 노트이며, 공식 강의 필기가 아니에요. 실제 강의·퀴즈·수료는 공식 경로에서 진행해요.</p>
+  <p>공식 경로: <a href="https://anthropic-partners.skilljar.com/path/claude-fde" target="_blank" rel="noopener noreferrer">https://anthropic-partners.skilljar.com/path/claude-fde</a></p>
+</footer>
+</main>
+<script src="fde.js"></script>
+</body>
+</html>

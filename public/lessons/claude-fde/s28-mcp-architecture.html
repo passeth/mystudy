@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="8. Introduction to Model Context Protocol · 20분">
+<title>S28. MCP 구조: 클라이언트와 서버</title>
+<link rel="stylesheet" href="fde.css">
+</head>
+<body data-session="S28">
+<!-- 자동 생성 파일: scripts/sync-fde.mjs 가 만들어요. 직접 고치지 말고 원본 노트를 고친 뒤 npm run fde:sync 하세요. -->
+<main class="wrap">
+
+<nav class="crumbs"><a href="/t/claude-fde/0000-course-home" target="_top">← 코스 홈</a><span>8. Introduction to Model Context Protocol</span></nav>
+<header class="head">
+  <span class="eyebrow">Claude FDE 스터디 · 세션 28 / 42</span>
+  <h1>S28. MCP 구조: 클라이언트와 서버</h1>
+  <div class="meta"><span>20분</span><span class="pill pill-draft">노트 초안</span><span class="pill pill-check">확인 필요 1곳</span></div>
+  <p class="official">공식 경로에서 해당하는 부분: MCP fundamentals &amp; server development</p>
+</header>
+
+
+<article class="note">
+<section class="sec sec-goals"><h2>오늘의 목표</h2><ul><li>MCP가 어떤 문제를 풀려고 만든 표준인지 한 문장으로 설명할 수 있다.</li><li>호스트, 클라이언트, 서버가 각각 무엇이고 누가 모델을 부르는지 구분할 수 있다.</li><li>두 가지 전송 방식(stdio, Streamable HTTP) 중 상황에 맞는 것을 고르고, 도구 호출 한 번의 메시지 흐름을 순서대로 말할 수 있다.</li></ul></section>
+<section class="sec "><h2>핵심 정리</h2><h3>MCP가 푸는 문제</h3>
+<p>MCP(Model Context Protocol)는 AI 애플리케이션을 바깥 시스템에 잇는 공개 표준이에요. 공식 문서는 &quot;AI 애플리케이션용 USB-C 포트&quot;에 비유해요. S12에서는 도구를 우리 앱 코드 안에 직접 정의했죠. 앱이 하나면 그걸로 충분해요. 하지만 고객사의 문서 시스템을 Claude Code에서도, 사내 챗봇에서도 쓰려면 앱마다 연결 코드를 다시 짜야 해요. MCP는 시스템 쪽에 <strong>서버</strong>를 한 번 만들어 두면, MCP를 지원하는 어떤 앱에서든 그대로 꽂아 쓰게 해 줘요. S15와 S22에서는 만들어진 서버를 쓰는 쪽을 봤고, 이번 코스는 만드는 쪽이에요.</p>
+<h3>세 참여자</h3>
+<div class="table-scroll"><table><thead><tr><th>이름</th><th>하는 일</th><th>예</th></tr></thead><tbody><tr><td>호스트(host)</td><td>사용자가 쓰는 AI 애플리케이션. 클라이언트들을 관리하고 모델을 부른다</td><td>Claude Code, Claude Desktop</td></tr><tr><td>클라이언트(client)</td><td>호스트 안에서 서버 <strong>하나</strong>와 연결을 유지하는 부품</td><td>서버 3개면 클라이언트도 3개</td></tr><tr><td>서버(server)</td><td>도구·데이터·프롬프트를 내주는 프로그램</td><td>문서 서버, DB 서버</td></tr></tbody></table></div>
+<p>꼭 기억할 점: 서버는 모델과 직접 대화하지 않아요. Claude를 부르는 건 언제나 호스트예요.</p>
+<h3>두 층: 무엇을 말하나, 어떻게 나르나</h3>
+<ul><li><strong>데이터 층</strong>: 주고받는 메시지의 형식. JSON-RPC 2.0이라는 요청·응답 규칙을 써요. 요청에는 <code>tools/list</code>, <code>tools/call</code>, <code>resources/read</code>, <code>prompts/get</code> 같은 메서드 이름이 붙어요.</li><li><strong>전송 층(transport)</strong>: 그 메시지를 나르는 길. 표준은 두 가지예요.
+<ul><li><strong>stdio</strong>: 클라이언트가 서버를 내 컴퓨터의 하위 프로세스로 띄우고 표준 입출력으로 대화해요. 로컬 서버용.</li><li><strong>Streamable HTTP</strong>: 서버가 주소(URL)를 가지고, 클라이언트가 HTTP POST로 요청해요. 원격 서버용이고 인증을 붙일 수 있어요(문서는 OAuth를 권장).</li></ul></li></ul>
+<p>전송 방식이 달라도 메시지 내용은 똑같아요.</p>
+<h3>도구 호출 한 번의 흐름</h3>
+<ol><li>호스트가 서버마다 클라이언트를 만들어 연결한다.</li><li>클라이언트가 <code>tools/list</code>로 도구 목록(이름, 설명, 입력 스키마)을 받는다.</li><li>호스트가 사용자 질문과 도구 목록을 Claude에게 보낸다. (여기부터는 S12의 도구 사용과 같아요.)</li><li>Claude가 &quot;이 도구를 이 인자로 불러 달라&quot;고 답한다.</li><li>클라이언트가 서버에 <code>tools/call</code>을 보낸다.</li><li>서버가 함수를 실행하고 결과를 돌려준다.</li><li>호스트가 결과를 Claude에게 넘기고, Claude가 최종 답을 쓴다.</li></ol>
+<p>참고로 프로토콜 2026-07-28판부터는 연결 초기의 악수(<code>initialize</code>)가 없어지고, 요청마다 버전과 기능 정보를 실어 보내요. 서버 정보가 필요하면 <code>server/discover</code>로 물어요. 예전 자료에는 <code>initialize</code>가 나와요. 공식 강의 영상이 어느 판 기준인지는 (<span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>).</p></section>
+<section class="sec sec-try callout warm"><h2>직접 해 보기 (5분)</h2><ol><li>Claude Code 세션에서 <code>/mcp</code>를 실행하세요(터미널에서는 <code>claude mcp list</code>). 연결된 서버가 몇 개인지, 각각 상태가 어떤지 보세요. 서버 수만큼 클라이언트가 호스트(Claude Code) 안에 있다고 상상해 보세요.</li><li>연결된 서버 하나를 골라 그 도구가 필요한 질문을 하나 던지고, 위 7단계 중 지금 화면에 보이는 것이 몇 번인지 짚어 보세요. 도구 승인 창이 뜬다면 그건 4번과 5번 사이예요.</li></ol></section>
+<section class="sec sec-quiz"><h2>확인 문제</h2><ol class="quiz"><li value="1" class="q"><div class="q-body">MCP 호스트에 대한 설명으로 맞는 것은?
+<ul><li>(a) 도구 함수를 실제로 실행하는 프로그램이다</li><li>(b) 사용자가 쓰는 AI 애플리케이션으로, 서버마다 클라이언트를 하나씩 만들어 관리한다</li><li>(c) 서버와 서버 사이에서 메시지를 중계하는 네트워크 장비다</li></ul></div>
+<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">(b). 도구를 실행하는 건 서버이고, 호스트는 클라이언트를 만들어 관리하면서 모델을 불러요.</div></details></li>
+<li value="2" class="q"><div class="q-body">고객사 여러 팀이 함께 쓸 원격 서버에 맞는 전송 방식은?
+<ul><li>(a) stdio</li><li>(b) Streamable HTTP</li><li>(c) 전송 방식은 서버 종류와 상관없이 하나뿐이다</li></ul></div>
+<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">(b). stdio는 클라이언트가 같은 컴퓨터에서 서버를 띄우는 방식이라 보통 한 클라이언트만 써요. 여러 사람이 쓰는 원격 서버는 Streamable HTTP예요.</div></details></li>
+<li value="3" class="q"><div class="q-body">도구 호출 흐름에서 Claude(모델)가 직접 하는 일은?
+<ul><li>(a) 서버에 <code>tools/call</code> 요청을 보낸다</li><li>(b) 서버를 하위 프로세스로 띄운다</li><li>(c) 어떤 도구를 어떤 인자로 부를지 정해서 호스트에 알려 준다</li></ul></div>
+<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">(c). 모델은 &quot;무엇을 부를지&quot;만 정해요. 실제 요청은 클라이언트가 보내고 실행은 서버가 해요.</div></details></li>
+<li value="4" class="q"><div class="q-body">(서술형) &quot;서버는 모델과 직접 대화하지 않는다&quot;가 무슨 뜻인지, 호스트·클라이언트·서버를 모두 넣어 두세 문장으로 설명해 보세요.</div>
+<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">예시 답: 서버는 도구 목록을 알려 주고 요청받은 도구를 실행할 뿐, Claude에게 말을 걸지 않는다. 사용자 질문과 도구 목록을 Claude에게 보내는 것도, Claude가 고른 도구 호출을 클라이언트를 통해 서버에 전하는 것도 호스트다. 그래서 같은 서버를 어떤 호스트에 꽂아도 똑같이 동작한다.</div></details></li>
+<li value="5" class="q"><div class="q-body">(상황형) 고객사 IT 담당자가 물어요. &quot;우리 사내 위키를 Claude에 붙이고 싶은데, 그냥 API 호출 코드를 앱에 넣으면 되지 왜 MCP 서버를 따로 만들어요?&quot; 어떻게 답할까요?</div>
+<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">예시 답: &quot;앱이 하나뿐이면 직접 넣어도 됩니다. 다만 위키를 Claude Code에서도, 사내 챗봇에서도, 나중에 다른 도구에서도 쓰려면 앱마다 연결 코드를 다시 짜고 따로 고쳐야 해요. MCP 서버로 한 번 만들면 MCP를 지원하는 앱은 설정만으로 붙고, 위키 API가 바뀌어도 서버 한 곳만 고치면 됩니다. 권한과 인증도 서버 한 곳에서 관리할 수 있어요.&quot; 이어서 파일럿에서는 도구 두세 개짜리 작은 서버로 시작하자고 제안한다.</div></details></li></ol></section>
+<section class="sec sec-fde callout cool"><h2>FDE 관점</h2><p>공식 경로는 이 코스를 &quot;Claude를 고객의 시스템에 연결하기&quot;라고 소개해요. 현장에서 MCP는 파일럿의 <strong>범위를 정하는 단위</strong>가 돼요. &quot;어떤 시스템을, 어떤 도구 몇 개로, 누구 권한으로 붙일까&quot;가 곧 첫 출시 범위예요. 전송 방식도 일찍 정해야 해요. FDE 혼자 노트북에서 시연할 때는 stdio로 충분하지만, 첫 사용자 그룹이 함께 쓰려면 주소와 인증이 있는 Streamable HTTP 서버가 필요하고, 그건 고객사 보안팀과 협의할 일이 생긴다는 뜻이에요. 그리고 서버를 한 번 만들면 Claude Code에서도 사내 앱에서도 다시 쓸 수 있다는 점이, 파일럿 뒤 확장 단계에서 비용을 줄여 주는 근거가 돼요.</p></section>
+<section class="sec sec-cards"><h2>복습 카드</h2><div class="cards"><details class="card"><summary>MCP를 한 문장으로?</summary><div class="card-a">AI 애플리케이션을 바깥 시스템(데이터, 도구, 워크플로)에 잇는 공개 표준.</div></details><details class="card"><summary>호스트, 클라이언트, 서버의 관계는?</summary><div class="card-a">호스트가 서버 하나당 클라이언트 하나를 만들고, 각 클라이언트가 서버 하나와 연결을 유지한다.</div></details><details class="card"><summary>MCP의 두 가지 표준 전송 방식은?</summary><div class="card-a">stdio(로컬 하위 프로세스)와 Streamable HTTP(원격, HTTP).</div></details><details class="card"><summary>도구 목록을 받는 요청과 도구를 실행하는 요청의 이름은?</summary><div class="card-a"><code>tools/list</code>와 <code>tools/call</code>.</div></details><details class="card"><summary>MCP에서 모델을 부르는 것은 누구인가?</summary><div class="card-a">호스트. 서버는 모델과 직접 대화하지 않는다.</div></details></div></section>
+<section class="sec sec-script"><h2>영상 대본</h2><details class="script"><summary>영상 대본 펼치기 <span class="muted">· 장면별 화면과 내레이션</span></summary><div class="script-body"><h4>장면 1 · 오늘의 질문 (약 25초)</h4>
+<p><strong>화면:</strong> 왼쪽에 앱 아이콘 세 개(채팅 앱, 코드 편집기, 사내 챗봇), 오른쪽에 시스템 아이콘 세 개(문서함, 데이터베이스, 캘린더). 그 사이에 선이 아홉 가닥 엉켜 있음. 위에 제목 &quot;연결 코드를 몇 번 짜야 할까?&quot;<br><strong>내레이션:</strong> 앱이 셋, 시스템이 셋이에요. 전부 이으려면 연결 코드를 아홉 번 짜야 할까요? 오늘은 이 문제를 푸는 표준, 엠씨피의 구조를 알아볼게요.</p>
+<h4>장면 2 · 표준 포트 하나 (약 35초)</h4>
+<p><strong>화면:</strong> 엉킨 선 아홉 가닥이 사라지고, 가운데에 세로 막대 하나(&quot;MCP&quot;)가 생김. 앱 세 개와 시스템 세 개가 각각 막대에 선 하나씩만 꽂음. 막대 옆에 작은 유에스비 씨 단자 그림.<br><strong>내레이션:</strong> 엠씨피는 에이아이 앱을 바깥 시스템에 잇는 공개 표준이에요. 공식 문서는 유에스비 씨 포트에 비유해요. 시스템 쪽에 서버를 한 번 만들면, 표준을 지원하는 앱 어디에든 꽂을 수 있어요.</p>
+<h4>장면 3 · 세 참여자 (약 40초)</h4>
+<p><strong>화면:</strong> 큰 상자 &quot;호스트&quot; 안에 작은 상자 세 개 &quot;클라이언트 1, 2, 3&quot;. 상자 밖 오른쪽에 &quot;서버 A, B, C&quot;. 클라이언트와 서버가 일대일로 선으로 이어짐. 호스트 상자 위에 사람 아이콘.<br><strong>내레이션:</strong> 참여자는 셋이에요. 호스트는 사용자가 쓰는 앱이에요. 클로드 코드가 호스트죠. 호스트는 서버 하나마다 클라이언트를 하나씩 만들어요. 서버는 도구와 데이터를 내주는 프로그램이에요.</p>
+<h4>장면 4 · 모델은 누가 부르나 (약 35초)</h4>
+<p><strong>화면:</strong> 호스트 상자 위쪽에 &quot;모델&quot; 구름이 나타나고, 호스트와 모델 사이에만 굵은 화살표. 서버에서 모델로 가는 점선에는 빨간 엑스 표시.<br><strong>내레이션:</strong> 여기서 꼭 기억할 게 있어요. 서버는 모델과 직접 대화하지 않아요. 모델을 부르는 건 언제나 호스트예요. 서버는 요청받은 일만 하고 결과를 돌려줘요.</p>
+<h4>장면 5 · 두 층 (약 35초)</h4>
+<p><strong>화면:</strong> 두 겹의 띠. 안쪽 띠 &quot;데이터 층: 무엇을 말하나&quot;에 메시지 봉투 그림과 &quot;tools/list&quot;, &quot;tools/call&quot; 글자. 바깥 띠 &quot;전송 층: 어떻게 나르나&quot;에 길 두 갈래 그림.<br><strong>내레이션:</strong> 엠씨피는 두 층으로 돼 있어요. 안쪽은 데이터 층이에요. 어떤 형식으로 무엇을 묻고 답할지를 정해요. 바깥쪽은 전송 층이에요. 그 메시지를 어떤 길로 나를지를 정해요.</p>
+<h4>장면 6 · 두 가지 길 (약 40초)</h4>
+<p><strong>화면:</strong> 왼쪽 &quot;stdio&quot;: 노트북 한 대 안에 호스트와 서버가 함께 있고 짧은 파이프로 연결. 오른쪽 &quot;Streamable HTTP&quot;: 노트북 여러 대가 구름 속 서버 하나에 연결, 서버 앞에 자물쇠 아이콘.<br><strong>내레이션:</strong> 길은 두 가지예요. 하나는 내 컴퓨터 안에서 서버를 직접 띄워 대화하는 방식이에요. 혼자 쓰는 로컬 서버에 맞아요. 다른 하나는 주소가 있는 원격 서버에 에이치티티피로 요청하는 방식이에요. 여러 사람이 함께 쓰고, 인증도 붙일 수 있어요.</p>
+<h4>장면 7 · 흐름 앞부분: 목록 받기 (약 35초)</h4>
+<p><strong>화면:</strong> 가로로 네 칸: 사용자, 호스트(클라이언트), 모델, 서버. 화살표 1 &quot;연결&quot;, 화살표 2 클라이언트→서버 &quot;tools/list&quot;, 서버→클라이언트로 카드 두 장(&quot;read_doc&quot;, &quot;edit_doc&quot;)이 돌아옴.<br><strong>내레이션:</strong> 이제 도구 호출 한 번을 따라가 볼게요. 먼저 클라이언트가 서버에 연결해요. 그리고 어떤 도구가 있는지 목록을 물어요. 서버는 도구의 이름과 설명, 필요한 입력을 알려 줘요.</p>
+<h4>장면 8 · 흐름 뒷부분: 부르고 답하기 (약 45초)</h4>
+<p><strong>화면:</strong> 같은 네 칸. 화살표 3 호스트→모델 &quot;질문 + 도구 목록&quot;. 화살표 4 모델→호스트 &quot;read_doc을 불러 줘&quot;. 화살표 5 클라이언트→서버 &quot;tools/call&quot;. 화살표 6 서버→클라이언트 &quot;문서 내용&quot;. 화살표 7 모델→사용자 &quot;최종 답&quot;.<br><strong>내레이션:</strong> 호스트가 질문과 도구 목록을 모델에게 보내요. 모델은 어떤 도구를 부를지 정해서 알려 줘요. 클라이언트가 그 요청을 서버에 전하고, 서버가 실행해서 결과를 돌려줘요. 모델은 그 결과를 읽고 최종 답을 써요.</p>
+<h4>장면 9 · 고객 앞에서 (약 35초)</h4>
+<p><strong>화면:</strong> 회의실 그림. 화이트보드에 표: &quot;어떤 시스템? / 도구 몇 개? / 누구 권한? / 로컬 or 원격?&quot; 네 줄. 옆에 FDE 말풍선 &quot;이 네 줄이 파일럿의 첫 범위예요.&quot;<br><strong>내레이션:</strong> 현장에서는 이 구조가 파일럿의 범위가 돼요. 어떤 시스템을, 도구 몇 개로, 누구 권한으로 붙일지 정하는 거예요. 시연은 로컬로 충분하지만, 첫 사용자들이 함께 쓰려면 원격 서버와 인증이 필요해요.</p>
+<h4>장면 10 · 요약과 예고 (약 30초)</h4>
+<p><strong>화면:</strong> 세 줄 요약이 한 줄씩 나타남: &quot;1. 서버를 한 번 만들면 어느 앱에나 꽂는다 2. 호스트 안 클라이언트 하나가 서버 하나와 연결 3. 목록 받기 → 모델이 고르기 → 서버가 실행&quot;. 아래에 &quot;다음: S29 서버 만들기&quot;.<br><strong>내레이션:</strong> 정리할게요. 서버를 한 번 만들면 어느 앱에나 꽂을 수 있어요. 호스트 안의 클라이언트 하나가 서버 하나와 연결돼요. 목록을 받고, 모델이 고르고, 서버가 실행해요. 다음 시간에는 파이썬으로 서버를 직접 만들어 볼게요.</p></div></details></section>
+<section class="sec sec-sources"><h2>출처</h2><ul><li>What is the Model Context Protocol (MCP)? (정의, USB-C 비유): <a href="https://modelcontextprotocol.io/docs/getting-started/intro" target="_blank" rel="noopener noreferrer">https://modelcontextprotocol.io/docs/getting-started/intro</a></li><li>Architecture overview (참여자, 두 층, 전송 방식, <code>server/discover</code>, <code>tools/list</code>·<code>tools/call</code> 예시): <a href="https://modelcontextprotocol.io/docs/learn/architecture" target="_blank" rel="noopener noreferrer">https://modelcontextprotocol.io/docs/learn/architecture</a></li><li>Understanding MCP clients (호스트와 클라이언트의 구분): <a href="https://modelcontextprotocol.io/docs/learn/client-concepts" target="_blank" rel="noopener noreferrer">https://modelcontextprotocol.io/docs/learn/client-concepts</a></li><li>Build an MCP server (&quot;What's happening under the hood&quot;의 질문 처리 순서): <a href="https://modelcontextprotocol.io/docs/develop/build-server" target="_blank" rel="noopener noreferrer">https://modelcontextprotocol.io/docs/develop/build-server</a></li><li>Specification 2026-07-28, Transports overview (stdio와 Streamable HTTP 정의): <a href="https://modelcontextprotocol.io/specification/2026-07-28/basic/transports" target="_blank" rel="noopener noreferrer">https://modelcontextprotocol.io/specification/2026-07-28/basic/transports</a></li><li>MCP Python SDK, What's new in v2 (2026-07-28판에서 악수와 세션이 없어진 점): <a href="https://py.sdk.modelcontextprotocol.io/whats-new/" target="_blank" rel="noopener noreferrer">https://py.sdk.modelcontextprotocol.io/whats-new/</a></li><li>Claude Code 문서, Connect Claude Code to tools via MCP (<code>/mcp</code>, <code>claude mcp list</code>): <a href="https://code.claude.com/docs/en/mcp" target="_blank" rel="noopener noreferrer">https://code.claude.com/docs/en/mcp</a></li><li>공식 학습 경로 개요(코스 8 소개 문구, 학습 목표 7개, 섹션 이름): 이 폴더의 <code>_official-outline-2026-11-27.txt</code>. 원본 페이지(anthropic-partners.skilljar.com)는 자동 접근이 막혀 있어 직접 열지 못했어요.</li><li>장면 1의 &quot;아홉 번&quot;은 앱 3개 × 시스템 3개를 설명하려고 든 예시 숫자예요.</li></ul></section>
+</article>
+<section class="done-box">
+  <label><input type="checkbox" data-done="S28"> 이 세션을 다 했어요 <span class="muted">(이 브라우저에만 저장돼요)</span></label>
+</section>
+<nav class="pager">
+  <a href="/t/claude-fde/s27-verify-share" target="_top" class="prev"><small>이전</small><span>S27 · 검증과 공유: 무감독 실행 검증, plugin</span></a>
+  <a href="/t/claude-fde/s29-mcp-server-tools" target="_top" class="next"><small>다음</small><span>S29 · 서버 만들기: tools와 MCP Inspector</span></a>
+</nav>
+<footer class="disclaimer" role="note">
+  <strong>비공식 학습 자료</strong>
+  <p>이 노트는 Anthropic 공식 “Claude Forward Deployed Engineer” 학습 경로의 공개 개요와 공식 문서를 바탕으로 쓴 개인 학습 노트이며, 공식 강의 필기가 아니에요. 실제 강의·퀴즈·수료는 공식 경로에서 진행해요.</p>
+  <p>공식 경로: <a href="https://anthropic-partners.skilljar.com/path/claude-fde" target="_blank" rel="noopener noreferrer">https://anthropic-partners.skilljar.com/path/claude-fde</a></p>
+</footer>
+</main>
+<script src="fde.js"></script>
+</body>
+</html>

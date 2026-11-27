@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="6. Claude Code 101 · 20분">
+<title>S18. Claude Code란: 에이전트 루프, 컨텍스트, 도구와 권한, 설치</title>
+<link rel="stylesheet" href="fde.css">
+</head>
+<body data-session="S18">
+<!-- 자동 생성 파일: scripts/sync-fde.mjs 가 만들어요. 직접 고치지 말고 원본 노트를 고친 뒤 npm run fde:sync 하세요. -->
+<main class="wrap">
+
+<nav class="crumbs"><a href="/t/claude-fde/0000-course-home" target="_top">← 코스 홈</a><span>6. Claude Code 101</span></nav>
+<header class="head">
+  <span class="eyebrow">Claude FDE 스터디 · 세션 18 / 42</span>
+  <h1>S18. Claude Code란: 에이전트 루프, 컨텍스트, 도구와 권한, 설치</h1>
+  <div class="meta"><span>20분</span><span class="pill pill-draft">노트 초안</span><span class="pill pill-check">확인 필요 1곳</span></div>
+  <p class="official">공식 경로에서 해당하는 부분: What is Claude Code? · Your first prompt (설치 부분: Installing Claude Code)</p>
+</header>
+
+
+<article class="note">
+<section class="sec sec-goals"><h2>오늘의 목표</h2><ul><li>Claude Code가 채팅형 도구와 무엇이 다른지, 에이전트 루프의 세 단계(맥락 모으기 → 행동 → 검증)로 설명할 수 있다.</li><li>컨텍스트 윈도우, 도구, 권한이 그 루프에서 각각 무슨 일을 하는지 말할 수 있다.</li><li>다섯 가지 실행 환경(터미널, VS Code, JetBrains, 데스크톱 앱, 웹)의 설치 방법과 차이를 알고 상황에 맞게 고를 수 있다.</li></ul></section>
+<section class="sec "><h2>핵심 정리</h2><h3>조언하는 동료에서, 직접 손대는 동료로</h3>
+<p>Claude.ai가 옆에서 조언해 주는 동료라면, Claude Code는 내 저장소에 들어와 직접 일하는 동료예요. 공식 문서는 &quot;코드베이스를 읽고, 파일을 고치고, 명령을 실행하고, 개발 도구와 연결되는 에이전트형 코딩 도구&quot;라고 정의해요. 코드를 복사해 붙여 넣을 필요가 없어요.</p>
+<h3>에이전트 루프: 모으고, 행동하고, 확인한다</h3>
+<p>S11에서 API로 직접 돌려 본 에이전트 루프를, Claude Code는 대신 돌려 줘요. 일을 받으면 세 단계를 섞어 가며 반복해요.</p>
+<ol><li><strong>맥락 모으기</strong>(gather context): 파일을 찾고 읽어요.</li><li><strong>행동</strong>(take action): 파일을 고치고 명령을 실행해요.</li><li><strong>결과 검증</strong>(verify results): 테스트를 돌려 확인하고, 틀렸으면 다시 돌아가요.</li></ol>
+<p>판단은 모델이, 행동은 도구가 해요. Claude Code는 그 둘레에서 도구를 건네고 컨텍스트를 관리하는 층이고, 이 층을 <strong>에이전트 하네스</strong>(agentic harness)라고 불러요. 사용자도 루프의 일부라서 <code>Esc</code>로 언제든 멈추고 방향을 바꿀 수 있어요.</p>
+<h3>컨텍스트, 도구, 권한</h3>
+<ul><li><strong>컨텍스트 윈도우</strong>: S03에서 본 작업 기억이에요. 대화, 읽은 파일, 명령 출력, CLAUDE.md가 모두 여기에 쌓여요. 가득 차면 대화를 자동으로 요약(압축)하는데, 이때 초반 지시가 흐려질 수 있어요(S20).</li><li><strong>도구</strong>(tools): 내장 도구는 파일 작업, 검색, 실행(셸 명령·git), 웹, 코드 인텔리전스의 다섯 갈래예요. 도구가 없으면 Claude는 글만 쓸 수 있어요.</li><li><strong>권한</strong>(permissions): Manual 모드에서는 작업 폴더 안의 읽기는 묻지 않고, 파일 수정과 셸 명령은 실행 전에 물어요(<code>ls</code>, <code>git status</code> 같은 읽기 전용 명령은 예외). 이 기준을 바꾸는 권한 모드는 S19에서 봐요. 파일 수정은 체크포인트로 되돌릴 수 있지만, 데이터베이스나 배포처럼 바깥 시스템에 한 일은 되돌릴 수 없어요.</li></ul>
+<h3>어디서 돌리고, 어떻게 설치하나</h3>
+<p>어느 환경이든 같은 엔진이 돌아요. 달라지는 건 코드가 실행되는 곳과 화면이에요.</p>
+<div class="table-scroll"><table><thead><tr><th>환경</th><th>설치</th><th>알아 둘 점</th></tr></thead><tbody><tr><td>터미널(CLI)</td><td>macOS·Linux·WSL: <code>curl -fsSL https://claude.ai/install.sh | bash</code> / Windows PowerShell: <code>irm https://claude.ai/install.ps1 | iex</code></td><td>모든 기능을 갖춘 기본 환경</td></tr><tr><td>VS Code</td><td>Extensions에서 &quot;Claude Code&quot; 검색 후 설치</td><td>인라인 diff. 확장에 CLI 포함</td></tr><tr><td>JetBrains</td><td>CLI를 먼저 설치하고 Marketplace 플러그인 설치</td><td>플러그인에 CLI가 없음</td></tr><tr><td>데스크톱 앱</td><td>앱 설치 후 <strong>Code</strong> 탭</td><td>CLI 설치 불필요</td></tr><tr><td>웹</td><td>claude.ai/code</td><td>GitHub 저장소를 클라우드 VM에서 작업</td></tr></tbody></table></div>
+<p>설치 확인은 <code>claude --version</code>, 시작은 프로젝트 폴더에서 <code>claude</code>예요. 네이티브 설치는 자동으로 업데이트되고, Homebrew와 WinGet 설치는 그렇지 않아요. 계정은 유료 Claude 구독(Pro, Max, Ultra, Team, Enterprise)이나 Claude Console 계정, 또는 Amazon Bedrock 같은 클라우드 제공자 연결이 필요해요.</p></section>
+<section class="sec sec-try callout warm"><h2>직접 해 보기 (5분)</h2><p>버리는 폴더에서 해 보세요. 이 폴더는 S22까지 계속 써요.</p>
+<ol><li>터미널에서 <code>claude --version</code>으로 버전을 확인하고, <code>claude doctor</code>로 설치 상태 진단을 읽어 보세요(읽기 전용이라 아무것도 바꾸지 않아요).</li><li><code>mkdir ~/cc-playground &amp;&amp; cd ~/cc-playground</code>로 폴더를 만들고, 아무 내용이나 세 줄 적은 <code>notes.txt</code>를 하나 넣은 뒤 <code>claude</code>를 실행하세요. 처음 보는 폴더라 신뢰 여부를 묻는 창이 떠요. 그다음 &quot;이 폴더에 뭐가 있는지 설명해 줘&quot;라고 해 보세요.
+<ul><li>관찰: 화면에 어떤 도구 호출이 보이나요? 파일을 읽을 때 허락을 물었나요? 루프의 세 단계 중 이번에는 어디까지 갔나요?</li></ul></li></ol></section>
+<section class="sec sec-quiz"><h2>확인 문제</h2><ol class="quiz"><li value="1" class="q"><div class="q-body">Claude Code의 에이전트 루프를 순서대로 쓴 것은?
+<ul><li>(a) 계획 → 승인 → 배포</li><li>(b) 맥락 모으기 → 행동 → 결과 검증</li><li>(c) 질문 → 답변 → 종료</li></ul></div>
+<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">(b). 세 단계는 섞여서 반복되고, 질문만 하면 맥락 모으기에서 끝나기도 해요.</div></details></li>
+<li value="2" class="q"><div class="q-body">Manual 모드에서 Claude Code가 묻지 않고 하는 일은?
+<ul><li>(a) 작업 폴더 안의 파일 읽기</li><li>(b) 소스 파일 수정</li><li>(c) <code>npm install</code> 같은 셸 명령 실행</li></ul></div>
+<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">(a). Manual 모드에서 파일 수정과 셸 명령은 실행 전에 물어요. 읽기 전용 셸 명령은 예외예요.</div></details></li>
+<li value="3" class="q"><div class="q-body">실행 환경에 대한 설명으로 맞는 것은?
+<ul><li>(a) JetBrains 플러그인에는 CLI가 들어 있어 따로 설치할 필요가 없다</li><li>(b) 데스크톱 앱의 Code 탭을 쓰려면 CLI를 먼저 설치해야 한다</li><li>(c) 웹(claude.ai/code)은 로컬 설치 없이 GitHub 저장소를 클라우드에서 작업한다</li></ul></div>
+<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">(c). JetBrains 플러그인은 CLI를 따로 설치해야 하고, 데스크톱 앱은 Claude Code를 포함하고 있어요.</div></details></li>
+<li value="4" class="q"><div class="q-body">(서술형) &quot;판단은 모델이, 행동은 도구가 한다&quot;를 Claude Code가 실패한 테스트를 고치는 장면으로 두세 문장 설명해 보세요.</div>
+<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">예시 답: 모델이 &quot;테스트를 먼저 돌려 봐야겠다&quot;고 판단하면 실행 도구가 테스트를 돌리고, 그 출력이 다시 모델에게 돌아간다. 모델은 출력을 읽고 고칠 파일을 정하고, 파일 도구가 실제로 고친다. 마지막에 다시 테스트를 돌려 결과를 확인한다.</div></details></li>
+<li value="5" class="q"><div class="q-body">(상황형) 킥오프 회의에서 고객사 보안 담당자가 물어요. &quot;이 도구가 우리 저장소에서 마음대로 파일을 고치고 명령을 실행하는 건가요?&quot; 어떻게 답할까요?</div>
+<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">예시 답: &quot;마음대로는 아니에요&quot;라고 답한다. (1) 작업 폴더 안의 읽기는 묻지 않지만 파일 수정과 셸 명령은 권한 모드와 규칙에 따라 묻거나 막을 수 있고, (2) 그 규칙은 저장소에 커밋해 팀 전체에 같게 적용할 수 있으며, (3) 파일 수정은 체크포인트로 되돌릴 수 있지만 바깥 시스템에 한 일은 되돌릴 수 없으니 그 부분은 권한으로 막아 둔다고 설명한다. 파일럿에서는 수정마다 묻는 모드로 시작하자고 제안한다.</div></details></li></ol></section>
+<section class="sec sec-fde callout cool"><h2>FDE 관점</h2><p>공식 경로는 이 코스를 &quot;고객의 저장소에서 프로토타입을 만드는 도구&quot;라고 소개해요. 그래서 FDE가 현장 첫날 정해야 하는 건 기능이 아니라 환경이에요. 고객 PC에 CLI를 설치할 수 있는지, 로그인은 고객의 Enterprise 계정으로 하는지 클라우드 제공자를 거치는지, 저장소가 GitHub에 있어 웹을 쓸 수 있는지부터 확인해요. 보안 담당자에게는 &quot;읽기는 자유롭게, 수정과 명령은 권한 설정대로, 파일 수정은 되돌릴 수 있지만 바깥 시스템은 아니다&quot;로 설명하면 대화가 빨라요. 파일럿 계획서의 &quot;첫 사용자 그룹을 들이는 방법&quot;에는 이 설치 경로와 계정 방식을 그대로 적어 두세요.</p></section>
+<section class="sec sec-cards"><h2>복습 카드</h2><div class="cards"><details class="card"><summary>에이전트 루프의 세 단계는?</summary><div class="card-a">맥락 모으기, 행동, 결과 검증.</div></details><details class="card"><summary>에이전트 하네스란?</summary><div class="card-a">모델 둘레에서 도구를 건네고 컨텍스트를 관리하는 층. Claude Code가 그 역할을 한다.</div></details><details class="card"><summary>Manual 모드에서 묻지 않는 것과 묻는 것은?</summary><div class="card-a">작업 폴더 안 읽기는 묻지 않고, 파일 수정과 셸 명령은 묻는다(읽기 전용 명령 제외).</div></details><details class="card"><summary>CLI를 따로 설치해야 하는 IDE 연동은?</summary><div class="card-a">JetBrains 플러그인. VS Code 확장과 데스크톱 앱은 자체 포함.</div></details><details class="card"><summary>체크포인트로 되돌릴 수 없는 것은?</summary><div class="card-a">데이터베이스, API, 배포처럼 바깥 시스템에 한 일.</div></details></div></section>
+<section class="sec sec-script"><h2>영상 대본</h2><details class="script"><summary>영상 대본 펼치기 <span class="muted">· 장면별 화면과 내레이션</span></summary><div class="script-body"><h4>장면 1 · 오늘의 질문 (약 25초)</h4>
+<p><strong>화면:</strong> 왼쪽에 채팅 창, 오른쪽에 터미널 창. 채팅 창에서는 코드 조각이 복사되어 화살표로 편집기에 붙여지고, 터미널 창에서는 파일이 스스로 열리고 고쳐짐. 가운데 제목 &quot;채팅과 무엇이 다를까?&quot;<br><strong>내레이션:</strong> 클로드 코드를 매일 쓰고 계시죠. 그런데 채팅과 정확히 무엇이 다를까요? 오늘은 그 속을 들여다볼게요.</p>
+<h4>장면 2 · 직접 손대는 동료 (약 30초)</h4>
+<p><strong>화면:</strong> 저장소 폴더 그림 안으로 사람 아이콘이 들어감. 아이콘 손에서 선 세 개가 뻗어 &quot;파일 읽기&quot;, &quot;파일 고치기&quot;, &quot;명령 실행&quot; 카드에 닿음.<br><strong>내레이션:</strong> 채팅은 옆에서 조언하는 동료예요. 클로드 코드는 저장소에 들어와 직접 일하는 동료예요. 파일을 읽고, 고치고, 명령을 실행해요.</p>
+<h4>장면 3 · 에이전트 루프 (약 40초)</h4>
+<p><strong>화면:</strong> 원 위에 세 점 &quot;맥락 모으기&quot;, &quot;행동&quot;, &quot;결과 검증&quot;. 화살표가 한 바퀴 돌고, 검증에서 빨간 엑스가 뜨면 다시 맥락 모으기로 돌아감. 두 번째 바퀴에서 초록 체크.<br><strong>내레이션:</strong> 일하는 방식은 세 단계예요. 맥락을 모으고, 행동하고, 결과를 확인해요. 틀렸으면 다시 돌아가요. 지난 코스에서 직접 만든 그 루프를 클로드 코드가 대신 돌려 주는 거예요.</p>
+<h4>장면 4 · 모델과 도구, 그리고 하네스 (약 35초)</h4>
+<p><strong>화면:</strong> 가운데 &quot;모델(판단)&quot; 상자, 옆에 &quot;도구(행동)&quot; 상자. 둘을 감싸는 큰 테두리가 그려지고 이름표 &quot;하네스 = Claude Code&quot;. 테두리 밖에 사람 아이콘과 &quot;Esc&quot; 키.<br><strong>내레이션:</strong> 판단은 모델이 하고, 행동은 도구가 해요. 그 둘을 감싸서 도구를 건네고 기억을 관리하는 층이 클로드 코드예요. 사용자도 루프 안에 있어요. 이스케이프 키로 언제든 멈출 수 있어요.</p>
+<h4>장면 5 · 컨텍스트 윈도우 (약 35초)</h4>
+<p><strong>화면:</strong> 세로로 긴 통에 블록이 쌓임: &quot;대화&quot;, &quot;읽은 파일&quot;, &quot;명령 출력&quot;, &quot;CLAUDE.md&quot;. 통이 거의 차자 블록들이 납작한 &quot;요약&quot; 블록 하나로 눌림.<br><strong>내레이션:</strong> 작업 기억인 컨텍스트 윈도우에는 대화와 읽은 파일, 명령 출력이 다 쌓여요. 가득 차면 자동으로 요약해요. 이때 초반 지시가 흐려질 수 있어요.</p>
+<h4>장면 6 · 도구 다섯 갈래 (약 30초)</h4>
+<p><strong>화면:</strong> 아이콘 다섯 개가 가로로 등장: 파일 작업, 검색, 실행, 웹, 코드 인텔리전스. 아래에 &quot;도구가 없으면 글만 쓴다&quot;.<br><strong>내레이션:</strong> 내장 도구는 다섯 갈래예요. 파일 작업, 검색, 실행, 웹, 그리고 코드 인텔리전스예요. 도구가 없으면 클로드는 글만 쓸 수 있어요.</p>
+<h4>장면 7 · 권한 (약 40초)</h4>
+<p><strong>화면:</strong> 문 세 개. &quot;읽기&quot; 문은 열려 있고, &quot;파일 수정&quot;과 &quot;셸 명령&quot; 문 앞에는 &quot;허락할까요?&quot; 팻말. 오른쪽에 되감기 화살표가 파일에는 닿지만 &quot;DB·배포&quot; 상자 앞에서 막힘.<br><strong>내레이션:</strong> 매뉴얼 모드에서는 읽기는 그냥 하고, 수정과 명령은 먼저 물어봐요. 파일 수정은 되돌릴 수 있어요. 하지만 데이터베이스나 배포에 한 일은 되돌릴 수 없어요.</p>
+<h4>장면 8 · 다섯 가지 환경 (약 40초)</h4>
+<p><strong>화면:</strong> 카드 다섯 장: 터미널, VS Code, JetBrains, 데스크톱 앱, 웹. 모든 카드에서 선이 가운데 &quot;같은 엔진&quot;으로 모임. JetBrains 카드에 &quot;CLI 먼저&quot;, 웹 카드에 &quot;GitHub 저장소&quot;.<br><strong>내레이션:</strong> 돌릴 수 있는 곳은 다섯 군데예요. 터미널, 브이에스 코드, 젯브레인즈, 데스크톱 앱, 그리고 웹이에요. 엔진은 같아요. 젯브레인즈는 씨엘아이를 먼저 깔아야 하고, 웹은 깃허브 저장소로 일해요.</p>
+<h4>장면 9 · 고객 앞에서 (약 35초)</h4>
+<p><strong>화면:</strong> 회의실. 보안 담당자 말풍선 &quot;마음대로 고치나요?&quot; FDE 말풍선 &quot;읽기는 자유, 수정과 명령은 권한대로&quot;. 아래 체크리스트: &quot;설치 가능? / 어떤 계정? / 저장소 위치?&quot;<br><strong>내레이션:</strong> 고객 현장에서는 기능보다 환경부터 정해요. 설치가 되는지, 어떤 계정으로 로그인하는지, 저장소가 어디 있는지요. 권한은 이렇게 설명해요. 읽기는 자유롭게, 수정과 명령은 설정대로예요.</p>
+<h4>장면 10 · 요약과 예고 (약 25초)</h4>
+<p><strong>화면:</strong> 세 줄 요약이 한 줄씩: &quot;1. 모으고, 행동하고, 확인하는 루프 2. 컨텍스트·도구·권한이 루프를 받친다 3. 환경은 다섯, 엔진은 하나&quot;. 아래에 &quot;다음: S19 첫 프롬프트와 모드&quot;.<br><strong>내레이션:</strong> 정리할게요. 클로드 코드는 모으고, 행동하고, 확인하는 루프예요. 컨텍스트와 도구, 권한이 그 루프를 받쳐요. 환경은 다섯이지만 엔진은 하나예요. 다음 시간에는 첫 프롬프트와 권한 모드를 볼게요.</p></div></details></section>
+<section class="sec sec-sources"><h2>출처</h2><ul><li>Claude Code Docs, Overview (정의, 다섯 환경, 설치 명령): <a href="https://code.claude.com/docs/en/overview" target="_blank" rel="noopener noreferrer">https://code.claude.com/docs/en/overview</a></li><li>Claude Code Docs, How Claude Code works (에이전트 루프, 하네스, 도구 다섯 갈래, 컨텍스트, 체크포인트와 권한): <a href="https://code.claude.com/docs/en/how-claude-code-works" target="_blank" rel="noopener noreferrer">https://code.claude.com/docs/en/how-claude-code-works</a></li><li>Claude Code Docs, Quickstart (설치 확인, 로그인 계정 종류): <a href="https://code.claude.com/docs/en/quickstart" target="_blank" rel="noopener noreferrer">https://code.claude.com/docs/en/quickstart</a></li><li>Claude Code Docs, Advanced setup (<code>claude doctor</code>, 시스템 요구 사항): <a href="https://code.claude.com/docs/en/setup" target="_blank" rel="noopener noreferrer">https://code.claude.com/docs/en/setup</a></li><li>Claude Code Docs, Configure permissions (도구 종류별 승인 표): <a href="https://code.claude.com/docs/en/permissions" target="_blank" rel="noopener noreferrer">https://code.claude.com/docs/en/permissions</a></li><li>Claude Code Docs, Security (작업 폴더 경계, 폴더 신뢰 창): <a href="https://code.claude.com/docs/en/security" target="_blank" rel="noopener noreferrer">https://code.claude.com/docs/en/security</a></li><li>Claude Code Docs, Use Claude Code in VS Code / JetBrains IDEs / Get started with the desktop app / Get started with Claude Code in the cloud: <a href="https://code.claude.com/docs/en/vs-code" target="_blank" rel="noopener noreferrer">https://code.claude.com/docs/en/vs-code</a> , <a href="https://code.claude.com/docs/en/jetbrains" target="_blank" rel="noopener noreferrer">https://code.claude.com/docs/en/jetbrains</a> , <a href="https://code.claude.com/docs/en/desktop-quickstart" target="_blank" rel="noopener noreferrer">https://code.claude.com/docs/en/desktop-quickstart</a> , <a href="https://code.claude.com/docs/en/web-quickstart" target="_blank" rel="noopener noreferrer">https://code.claude.com/docs/en/web-quickstart</a></li><li>Claude Academy, Claude Code 101 코스 소개와 공개 레슨 요약(What is Claude Code?, How Claude Code works, Installing Claude Code): <a href="https://academy.claude.com/courses/claude-code-101" target="_blank" rel="noopener noreferrer">https://academy.claude.com/courses/claude-code-101</a></li><li>Claude Forward Deployed Engineer 학습 경로 개요, 코스 6 소개 문구와 목차: 이 폴더의 <code>_official-outline-2026-11-27.txt</code>로 확인했어요. 원 페이지(anthropic-partners.skilljar.com/path/claude-fde)는 자동 접근이 막혀 직접 열지 못했어요.</li><li>파트너 사이트의 코스 6과 Claude Academy의 Claude Code 101은 레슨 수(12)와 섹션 구성이 같지만, 내용이 완전히 같은지는 확인하지 못했어요(<span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>).</li></ul></section>
+</article>
+<section class="done-box">
+  <label><input type="checkbox" data-done="S18"> 이 세션을 다 했어요 <span class="muted">(이 브라우저에만 저장돼요)</span></label>
+</section>
+<nav class="pager">
+  <a href="/t/claude-fde/s17-building-with-claude-code" target="_top" class="prev"><small>이전</small><span>S17 · Claude Code로 만들기 + 코스 5 총정리</span></a>
+  <a href="/t/claude-fde/s19-first-prompt-modes" target="_top" class="next"><small>다음</small><span>S19 · 첫 프롬프트: 승인 모드, 자동 수락, Plan Mode</span></a>
+</nav>
+<footer class="disclaimer" role="note">
+  <strong>비공식 학습 자료</strong>
+  <p>이 노트는 Anthropic 공식 “Claude Forward Deployed Engineer” 학습 경로의 공개 개요와 공식 문서를 바탕으로 쓴 개인 학습 노트이며, 공식 강의 필기가 아니에요. 실제 강의·퀴즈·수료는 공식 경로에서 진행해요.</p>
+  <p>공식 경로: <a href="https://anthropic-partners.skilljar.com/path/claude-fde" target="_blank" rel="noopener noreferrer">https://anthropic-partners.skilljar.com/path/claude-fde</a></p>
+</footer>
+</main>
+<script src="fde.js"></script>
+</body>
+</html>

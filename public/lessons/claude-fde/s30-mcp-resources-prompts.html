@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="8. Introduction to Model Context Protocol · 25분">
+<title>S30. Resources와 Prompts, 셋 중 무엇을 쓸까</title>
+<link rel="stylesheet" href="fde.css">
+</head>
+<body data-session="S30">
+<!-- 자동 생성 파일: scripts/sync-fde.mjs 가 만들어요. 직접 고치지 말고 원본 노트를 고친 뒤 npm run fde:sync 하세요. -->
+<main class="wrap">
+
+<nav class="crumbs"><a href="/t/claude-fde/0000-course-home" target="_top">← 코스 홈</a><span>8. Introduction to Model Context Protocol</span></nav>
+<header class="head">
+  <span class="eyebrow">Claude FDE 스터디 · 세션 30 / 42</span>
+  <h1>S30. Resources와 Prompts, 셋 중 무엇을 쓸까</h1>
+  <div class="meta"><span>25분</span><span class="pill pill-draft">노트 초안</span><span class="pill pill-check">확인 필요 2곳</span></div>
+  <p class="official">공식 경로에서 해당하는 부분: MCP client implementation &amp; advanced features <span class="muted">— 강의 제목이 비공개라 어느 섹션에 속하는지는 추정 (<span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>)</span></p>
+</header>
+
+
+<article class="note">
+<section class="sec sec-goals"><h2>오늘의 목표</h2><ul><li>리소스(resource)와 프롬프트(prompt)가 무엇이고 도구와 어떻게 다른지 설명할 수 있다.</li><li>고정 URI 리소스와 리소스 템플릿을 구분하고, 문서 서버에 둘 다 추가할 수 있다.</li><li>&quot;누가 쓰기로 결정하는가&quot;를 기준으로 도구, 리소스, 프롬프트 중 하나를 고를 수 있다.</li></ul></section>
+<section class="sec "><h2>핵심 정리</h2><h3>서버가 내주는 세 가지, 결정하는 사람이 다르다</h3>
+<p>식당에 비유하면 이래요. <strong>도구</strong>는 주방장이 필요할 때 스스로 꺼내 쓰는 조리 기구, <strong>리소스</strong>는 가게가 손님 테이블에 미리 올려 두는 메뉴판, <strong>프롬프트</strong>는 손님이 직접 고르는 세트 메뉴예요. 셋을 가르는 기준은 기능이 아니라 <strong>누가 쓰기로 결정하느냐</strong>예요.</p>
+<div class="table-scroll"><table><thead><tr><th>종류</th><th>결정하는 쪽</th><th>무엇인가</th><th>문서 서버의 예</th></tr></thead><tbody><tr><td>도구(tool)</td><td>모델</td><td>모델이 불러서 일을 시키는 함수</td><td><code>edit_doc</code>으로 문장 고치기</td></tr><tr><td>리소스(resource)</td><td>애플리케이션</td><td>앱이 읽어서 모델의 컨텍스트에 넣는 데이터</td><td>사용자가 문서를 <code>@</code>로 지목하면 내용 첨부</td></tr><tr><td>프롬프트(prompt)</td><td>사용자</td><td>사용자가 이름으로 고르는 메시지 틀</td><td>&quot;우리 양식으로 요약&quot; 명령</td></tr></tbody></table></div>
+<h3>리소스: 주소가 있는 데이터</h3>
+<p>리소스는 이름이 아니라 <strong>URI</strong>(주소)로 찾아요. 주소가 고정이면 그냥 리소스, 주소에 <code>{빈칸}</code>이 있으면 <strong>리소스 템플릿</strong>이에요. S29의 <code>server.py</code>에 이어서 붙여요.</p>
+<pre class="code" data-lang="python"><code>@mcp.resource(&quot;docs://documents&quot;, mime_type=&quot;application/json&quot;)
+def list_docs() -&gt; list[str]:
+    &quot;&quot;&quot;문서 ID 목록.&quot;&quot;&quot;
+    return list(docs.keys())
+
+
+@mcp.resource(&quot;docs://documents/{doc_id}&quot;)
+def fetch_doc(doc_id: str) -&gt; str:
+    &quot;&quot;&quot;문서 한 개의 내용.&quot;&quot;&quot;
+    return docs[doc_id]</code></pre>
+<ul><li>클라이언트는 <code>resources/list</code>(고정 주소)와 <code>resources/templates/list</code>(템플릿)로 목록을 받고, <code>resources/read</code>로 읽어요.</li><li>함수는 목록을 볼 때가 아니라 <strong>읽을 때만</strong> 실행돼요.</li><li><code>{doc_id}</code>와 함수 인자 이름이 다르면 서버가 시작할 때 바로 오류가 나요.</li></ul>
+<p>S29의 <code>read_doc</code> 도구와 내용이 겹쳐 보이죠? 결정하는 쪽이 달라요. 도구는 Claude가 &quot;읽어야겠다&quot;고 판단할 때 부르고, 리소스는 사용자가 문서를 지목했을 때 앱이 도구 호출 없이 바로 가져다 넣어요.</p>
+<h3>프롬프트: 사용자가 고르는 메시지 틀</h3>
+<pre class="code" data-lang="python"><code>@mcp.prompt(title=&quot;문서 요약&quot;)
+def summarize_doc(doc_id: str) -&gt; str:
+    &quot;&quot;&quot;문서를 우리 팀 양식으로 요약한다.&quot;&quot;&quot;
+    return (
+        f&quot;{doc_id} 문서를 read_doc 도구로 읽고 요약해 주세요. &quot;
+        &quot;형식: 한 줄 결론, 근거 세 가지, 다음 할 일.&quot;
+    )</code></pre>
+<p>돌려준 문자열은 사용자 메시지 한 개가 돼요. 클라이언트는 <code>prompts/list</code>로 목록을 받고 <code>prompts/get</code>으로 완성된 메시지를 받아요. 프롬프트 인자는 스키마 없이 전부 문자열이에요. 호스트는 보통 이걸 슬래시 명령이나 버튼으로 보여 줘요. S24에서 본 skill이 &quot;Claude Code 안에서 절차를 포장하는 법&quot;이라면, MCP 프롬프트는 &quot;서버 쪽에서 잘 쓰는 법을 같이 내주는 법&quot;이에요.</p>
+<h3>고르는 질문 한 가지</h3>
+<p>&quot;이걸 쓰기로 누가 결정해야 하나?&quot;</p>
+<ul><li>Claude가 상황을 보고 판단해야 한다 → 도구</li><li>앱 화면에서 사용자가 지목하거나 앱이 자동으로 붙인다 → 리소스</li><li>사용자가 &quot;이 작업 시작&quot;이라고 직접 고른다 → 프롬프트</li></ul></section>
+<section class="sec sec-try callout warm"><h2>직접 해 보기 (5분)</h2><ol><li>위 코드를 <code>server.py</code>에 추가하고 <code>uv run mcp dev server.py</code>로 Inspector를 여세요. <strong>Resources</strong> 탭에서 <code>docs://documents</code>는 리소스 목록에, <code>fetch_doc</code>은 템플릿 쪽에 따로 나오는지 보세요. <strong>Prompts</strong> 탭에서 <code>summarize_doc</code>에 <code>plan.md</code>를 넣고 어떤 메시지가 만들어지는지 확인하세요.</li><li>S29에서 Claude Code에 <code>docs</code> 서버를 붙였다면 세션을 새로 열고 해 보세요. 입력창에 <code>@</code>를 쳐서 리소스가 파일과 함께 목록에 뜨는지, <code>/</code>를 쳐서 프롬프트가 명령으로 뜨는지 보세요(<code>/mcp__docs__summarize_doc plan.md</code>처럼 실행해요).</li></ol></section>
+<section class="sec sec-quiz"><h2>확인 문제</h2><ol class="quiz"><li value="1" class="q"><div class="q-body">세 가지 중 &quot;애플리케이션이 결정해서 쓰는 것&quot;은?
+<ul><li>(a) 도구</li><li>(b) 리소스</li><li>(c) 프롬프트</li></ul></div>
+<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">(b). 리소스는 앱이 읽어서 컨텍스트에 넣는 데이터예요. 도구는 모델, 프롬프트는 사용자가 결정해요.</div></details></li>
+<li value="2" class="q"><div class="q-body"><code>docs://documents/{doc_id}</code>처럼 주소에 빈칸이 있는 리소스에 대한 설명으로 맞는 것은?
+<ul><li>(a) 리소스 템플릿이며, 고정 주소 리소스와 다른 목록으로 나온다</li><li>(b) 빈칸이 있으면 리소스로 등록할 수 없다</li><li>(c) 목록을 요청할 때마다 모든 문서에 대해 함수가 실행된다</li></ul></div>
+<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">(a). 템플릿은 <code>resources/templates/list</code>에 따로 나와요. 함수는 목록을 볼 때가 아니라 읽을 때만 실행돼요.</div></details></li>
+<li value="3" class="q"><div class="q-body">MCP 프롬프트의 인자에 대한 설명으로 맞는 것은?
+<ul><li>(a) 도구처럼 JSON 스키마로 타입을 검사한다</li><li>(b) 모델이 알아서 채운다</li><li>(c) 이름이 붙은 문자열 값들이고, 사용자가 채운다</li></ul></div>
+<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">(c). 프롬프트 인자는 스키마 없는 문자열 목록이고, 사람이 채우는 양식이에요.</div></details></li>
+<li value="4" class="q"><div class="q-body">(서술형) 문서 내용을 <code>read_doc</code> 도구로도, <code>docs://documents/{doc_id}</code> 리소스로도 내주는 이유를 &quot;누가 결정하나&quot;를 기준으로 설명해 보세요.</div>
+<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">예시 답: <code>read_doc</code> 도구는 Claude가 대화 흐름을 보고 &quot;이 문서를 읽어야겠다&quot;고 스스로 판단할 때 쓴다. 리소스는 사용자가 문서를 지목했을 때 앱이 도구 호출 없이 바로 내용을 가져와 컨텍스트에 넣을 때 쓴다. 내용은 같아도 결정하는 쪽이 달라서 둘 다 둔다.</div></details></li>
+<li value="5" class="q"><div class="q-body">(상황형) 고객사 팀장이 요청해요. &quot;직원들이 매주 '주간 보고서 초안' 작업을 똑같은 방식으로 시작했으면 좋겠어요. 그리고 Claude가 필요하면 지난주 보고서를 스스로 찾아봤으면 해요.&quot; 각각 무엇으로 만들지 제안해 보세요.</div>
+<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">예시 답: &quot;같은 방식으로 시작&quot;은 사용자가 고르는 것이므로 <code>weekly_report_draft</code> 같은 프롬프트로 만들어 메뉴에 띄운다. 양식과 순서를 프롬프트 문구에 넣는다. &quot;Claude가 스스로 찾아본다&quot;는 모델이 결정하는 것이므로 지난 보고서를 검색하거나 읽는 도구로 만든다. 사용자가 특정 보고서를 직접 붙이고 싶어 하면 보고서를 리소스로도 내준다. 파일럿에서는 프롬프트 하나와 읽기 도구 하나로 시작하자고 제안한다.</div></details></li></ol></section>
+<section class="sec sec-fde callout cool"><h2>FDE 관점</h2><p>고객이 &quot;Claude가 우리 시스템에서 이것도 하게 해 주세요&quot;라고 할 때 전부 도구로 만들면, 도구 목록이 길어지고 Claude가 고르기 어려워져요. 오늘의 질문 하나로 요구 사항을 나눠 보세요. 사용자가 직접 지목하는 데이터는 리소스로, 팀이 반복하는 시작 문구는 프롬프트로 빼면 도구는 &quot;모델이 판단해야 하는 행동&quot;만 남아요. 프롬프트는 변화 관리에도 쓸모가 있어요. 첫 사용자 그룹은 무엇을 물어야 할지 몰라 멈추는 일이 많은데, 서버가 &quot;요약&quot;, &quot;보고서 초안&quot; 같은 프롬프트를 메뉴로 내주면 첫날부터 같은 방식으로 시작할 수 있어요. 파일럿 성공 지표를 잴 때도 모두가 같은 프롬프트로 시작했다면 결과를 비교하기 쉬워요.</p></section>
+<section class="sec sec-cards"><h2>복습 카드</h2><div class="cards"><details class="card"><summary>도구, 리소스, 프롬프트를 결정하는 쪽은 각각?</summary><div class="card-a">도구는 모델, 리소스는 애플리케이션, 프롬프트는 사용자.</div></details><details class="card"><summary>리소스는 무엇으로 찾는가?</summary><div class="card-a">URI(주소). 이름으로 부르지 않는다.</div></details><details class="card"><summary>리소스 템플릿이란?</summary><div class="card-a">URI에 <code>{빈칸}</code>이 있는 리소스. 빈칸을 채운 주소로 읽고, 고정 리소스와 다른 목록에 나온다.</div></details><details class="card"><summary>프롬프트 함수가 문자열을 돌려주면 무엇이 되는가?</summary><div class="card-a">사용자 메시지 한 개.</div></details><details class="card"><summary>셋 중 하나를 고르는 질문은?</summary><div class="card-a">&quot;이걸 쓰기로 누가 결정해야 하나?&quot;</div></details></div></section>
+<section class="sec sec-script"><h2>영상 대본</h2><details class="script"><summary>영상 대본 펼치기 <span class="muted">· 장면별 화면과 내레이션</span></summary><div class="script-body"><h4>장면 1 · 오늘의 질문 (약 25초)</h4>
+<p><strong>화면:</strong> 서버 상자에 도구 카드 스무 장이 빽빽하게 꽂혀 있고, 모델 캐릭터가 머리 위에 물음표를 띄운 채 고르지 못함. 제목 &quot;전부 도구로 만들면 될까?&quot;<br><strong>내레이션:</strong> 고객이 원하는 걸 전부 도구로 만들면 어떻게 될까요? 목록이 길어져서 모델이 고르기 어려워져요. 서버가 내줄 수 있는 건 도구만이 아니에요. 오늘은 나머지 둘을 볼게요.</p>
+<h4>장면 2 · 식당 비유 (약 40초)</h4>
+<p><strong>화면:</strong> 식당 그림 세 칸. 주방에서 주방장이 국자를 집음(&quot;도구&quot;), 테이블 위에 메뉴판이 놓임(&quot;리소스&quot;), 손님이 손가락으로 세트 메뉴를 가리킴(&quot;프롬프트&quot;).<br><strong>내레이션:</strong> 식당으로 생각해 볼게요. 도구는 주방장이 필요할 때 스스로 꺼내 쓰는 조리 기구예요. 리소스는 가게가 테이블에 올려 두는 메뉴판이에요. 프롬프트는 손님이 직접 고르는 세트 메뉴예요.</p>
+<h4>장면 3 · 누가 결정하나 (약 35초)</h4>
+<p><strong>화면:</strong> 세 줄 표가 한 줄씩 나타남: &quot;도구 ← 모델이 결정&quot;, &quot;리소스 ← 앱이 결정&quot;, &quot;프롬프트 ← 사용자가 결정&quot;. 각 줄 왼쪽에 로봇, 창문, 사람 아이콘.<br><strong>내레이션:</strong> 셋을 가르는 기준은 기능이 아니에요. 누가 쓰기로 결정하느냐예요. 도구는 모델이 결정해요. 리소스는 앱이 결정해요. 프롬프트는 사용자가 결정해요.</p>
+<h4>장면 4 · 리소스는 주소로 찾는다 (약 40초)</h4>
+<p><strong>화면:</strong> 문서함 서랍마다 주소표가 붙음: &quot;docs://documents/report.md&quot;, &quot;docs://documents/plan.md&quot;. 앱 창에서 주소 하나를 보내자 서랍이 열리고 문서가 앱으로 날아옴.<br><strong>내레이션:</strong> 리소스는 주소가 있는 데이터예요. 이 주소를 유알아이라고 불러요. 앱이 주소를 보내면 서버가 그 내용을 돌려줘요. 도구처럼 일을 시키는 게 아니라, 읽기만 해요.</p>
+<h4>장면 5 · 빈칸이 있는 주소 (약 35초)</h4>
+<p><strong>화면:</strong> 주소 &quot;docs://documents/{doc_id}&quot;에서 중괄호 부분이 깜빡임. 빈칸에 &quot;plan.md&quot;, &quot;report.md&quot;가 번갈아 끼워지고 그때마다 다른 문서가 나옴. 옆에 &quot;함수 하나가 모든 문서를 처리&quot;.<br><strong>내레이션:</strong> 문서가 천 개면 주소도 천 개 적어야 할까요? 아니에요. 주소에 빈칸을 두면 돼요. 이걸 리소스 템플릿이라고 해요. 빈칸에 문서 이름을 넣으면 함수 하나가 모든 문서를 처리해요.</p>
+<h4>장면 6 · 같은 내용, 다른 길 (약 40초)</h4>
+<p><strong>화면:</strong> 위쪽 길: 모델이 &quot;읽어야겠다&quot; 말풍선 → 도구 호출 → 문서. 아래쪽 길: 사용자가 입력창에 골뱅이 기호와 문서 이름을 침 → 앱이 문서를 바로 대화에 첨부. 두 길 끝의 문서는 같음.<br><strong>내레이션:</strong> 문서 읽기는 도구로도 있고 리소스로도 있어요. 왜 둘 다 둘까요? 모델이 판단해서 읽을 때는 도구를 써요. 사용자가 이 문서라고 콕 집을 때는 앱이 리소스로 바로 가져와요. 도구 호출을 기다릴 필요가 없죠.</p>
+<h4>장면 7 · 프롬프트는 메시지 틀 (약 40초)</h4>
+<p><strong>화면:</strong> 입력창에 슬래시를 치자 메뉴가 펼쳐짐: &quot;문서 요약&quot;, &quot;보고서 초안&quot;. &quot;문서 요약&quot;을 고르고 문서 이름 칸에 &quot;plan.md&quot;를 채우자, 긴 지시문이 완성되어 대화창에 들어감.<br><strong>내레이션:</strong> 프롬프트는 사용자가 고르는 메시지 틀이에요. 서버를 만든 사람이 잘 쓰는 방법을 미리 적어 둔 거예요. 사용자는 메뉴에서 고르고 빈칸만 채워요. 그러면 완성된 지시문이 대화에 들어가요.</p>
+<h4>장면 8 · 고르는 질문 (약 35초)</h4>
+<p><strong>화면:</strong> 갈림길 표지판. 맨 위에 질문 &quot;누가 결정해야 하나?&quot; 세 갈래: &quot;모델이 판단 → 도구&quot;, &quot;앱이나 사용자가 지목 → 리소스&quot;, &quot;사용자가 작업을 시작 → 프롬프트&quot;.<br><strong>내레이션:</strong> 무엇으로 만들지 헷갈리면 이 질문 하나만 하세요. 누가 결정해야 하나? 모델이 상황을 보고 판단해야 하면 도구예요. 사용자가 데이터를 지목하면 리소스예요. 사용자가 작업을 직접 시작하면 프롬프트예요.</p>
+<h4>장면 9 · 고객 앞에서 (약 35초)</h4>
+<p><strong>화면:</strong> 파일럿 첫날 그림. 직원 다섯 명의 화면에 같은 메뉴 &quot;보고서 초안&quot;이 떠 있음. 아래에 &quot;같은 시작 → 비교 가능한 결과&quot;.<br><strong>내레이션:</strong> 현장에서 첫 사용자들은 무엇을 물어야 할지 몰라 멈추곤 해요. 서버가 프롬프트를 메뉴로 내주면 첫날부터 같은 방식으로 시작해요. 모두 같은 틀로 시작하면 결과를 비교하기도 쉬워요.</p>
+<h4>장면 10 · 요약과 예고 (약 25초)</h4>
+<p><strong>화면:</strong> 세 줄 요약: &quot;1. 도구는 모델, 리소스는 앱, 프롬프트는 사용자 2. 리소스는 주소로 읽는 데이터 3. 프롬프트는 고르는 메시지 틀&quot;. 아래에 &quot;다음: S31 클라이언트 구현&quot;.<br><strong>내레이션:</strong> 정리할게요. 도구는 모델이, 리소스는 앱이, 프롬프트는 사용자가 결정해요. 리소스는 주소로 읽는 데이터예요. 프롬프트는 골라 쓰는 메시지 틀이에요. 다음 시간에는 반대편, 클라이언트를 만들어 볼게요.</p></div></details></section>
+<section class="sec sec-sources"><h2>출처</h2><ul><li>Understanding MCP servers (도구·리소스·프롬프트 표와 &quot;Who controls it&quot;, 리소스 템플릿, 프로토콜 메서드): <a href="https://modelcontextprotocol.io/docs/learn/server-concepts" target="_blank" rel="noopener noreferrer">https://modelcontextprotocol.io/docs/learn/server-concepts</a></li><li>MCP Python SDK 문서, First steps (세 가지를 가르는 기준은 &quot;누가 결정하나&quot;): <a href="https://py.sdk.modelcontextprotocol.io/get-started/first-steps/" target="_blank" rel="noopener noreferrer">https://py.sdk.modelcontextprotocol.io/get-started/first-steps/</a></li><li>MCP Python SDK 문서, Resources (<code>@mcp.resource(uri)</code>, 템플릿, <code>mime_type</code>, 읽을 때만 실행): <a href="https://py.sdk.modelcontextprotocol.io/servers/resources/" target="_blank" rel="noopener noreferrer">https://py.sdk.modelcontextprotocol.io/servers/resources/</a></li><li>MCP Python SDK 문서, URI templates and path safety (빈칸 값의 안전 검사): <a href="https://py.sdk.modelcontextprotocol.io/servers/uri-templates/" target="_blank" rel="noopener noreferrer">https://py.sdk.modelcontextprotocol.io/servers/uri-templates/</a></li><li>MCP Python SDK 문서, Prompts (<code>@mcp.prompt()</code>, 문자열 → 사용자 메시지, 인자는 문자열): <a href="https://py.sdk.modelcontextprotocol.io/servers/prompts/" target="_blank" rel="noopener noreferrer">https://py.sdk.modelcontextprotocol.io/servers/prompts/</a></li><li>MCP Inspector, Web client (Resources·Prompts 탭): <a href="https://modelcontextprotocol.io/docs/tools/inspector/web" target="_blank" rel="noopener noreferrer">https://modelcontextprotocol.io/docs/tools/inspector/web</a></li><li>Claude Code 문서, Connect Claude Code to tools via MCP (<code>@</code>로 리소스 참조, MCP 프롬프트를 명령으로 실행): <a href="https://code.claude.com/docs/en/mcp" target="_blank" rel="noopener noreferrer">https://code.claude.com/docs/en/mcp</a></li><li>공식 학습 경로 개요(코스 8 학습 목표): 이 폴더의 <code>_official-outline-2026-11-27.txt</code>. 원본 페이지는 직접 열지 못했어요.</li><li>식당 비유는 설명을 위해 Study_FDE가 만든 것이에요. 예제 코드는 공식 문서의 패턴대로 썼고 SDK 2.3.0 소스와 이름을 대조했지만, 이 환경에서 직접 실행해 보지는 못했어요(실행 <span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>).</li></ul></section>
+</article>
+<section class="done-box">
+  <label><input type="checkbox" data-done="S30"> 이 세션을 다 했어요 <span class="muted">(이 브라우저에만 저장돼요)</span></label>
+</section>
+<nav class="pager">
+  <a href="/t/claude-fde/s29-mcp-server-tools" target="_top" class="prev"><small>이전</small><span>S29 · 서버 만들기: tools와 MCP Inspector</span></a>
+  <a href="/t/claude-fde/s31-mcp-client" target="_top" class="next"><small>다음</small><span>S31 · 클라이언트 구현: 연결, 비동기, 정리</span></a>
+</nav>
+<footer class="disclaimer" role="note">
+  <strong>비공식 학습 자료</strong>
+  <p>이 노트는 Anthropic 공식 “Claude Forward Deployed Engineer” 학습 경로의 공개 개요와 공식 문서를 바탕으로 쓴 개인 학습 노트이며, 공식 강의 필기가 아니에요. 실제 강의·퀴즈·수료는 공식 경로에서 진행해요.</p>
+  <p>공식 경로: <a href="https://anthropic-partners.skilljar.com/path/claude-fde" target="_blank" rel="noopener noreferrer">https://anthropic-partners.skilljar.com/path/claude-fde</a></p>
+</footer>
+</main>
+<script src="fde.js"></script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="6. Claude Code 101 · 22분">
+<title>S20. 일상 워크플로: Explore → Plan → Code → Commit, 리뷰, 컨텍스트 명령</title>
+<link rel="stylesheet" href="fde.css">
+</head>
+<body data-session="S20">
+<!-- 자동 생성 파일: scripts/sync-fde.mjs 가 만들어요. 직접 고치지 말고 원본 노트를 고친 뒤 npm run fde:sync 하세요. -->
+<main class="wrap">
+
+<nav class="crumbs"><a href="/t/claude-fde/0000-course-home" target="_top">← 코스 홈</a><span>6. Claude Code 101</span></nav>
+<header class="head">
+  <span class="eyebrow">Claude FDE 스터디 · 세션 20 / 42</span>
+  <h1>S20. 일상 워크플로: Explore → Plan → Code → Commit, 리뷰, 컨텍스트 명령</h1>
+  <div class="meta"><span>22분</span><span class="pill pill-draft">노트 초안</span></div>
+  <p class="official">공식 경로에서 해당하는 부분: Daily workflows</p>
+</header>
+
+
+<article class="note">
+<section class="sec sec-goals"><h2>오늘의 목표</h2><ul><li>Explore → Plan → Code → Commit 네 단계가 각각 무엇을 위한 것인지 설명하고, 작은 작업에 적용할 수 있다.</li><li>커밋 전에 <code>/diff</code>와 <code>/code-review</code>로 변경을 두 번 확인하는 이유와 방법을 말할 수 있다.</li><li><code>/context</code>, <code>/compact</code>, <code>/clear</code> 중 지금 상황에 맞는 명령을 고를 수 있다.</li></ul></section>
+<section class="sec "><h2>핵심 정리</h2><h3>네 단계의 리듬</h3>
+<p>집을 고칠 때 벽부터 부수지 않죠. 둘러보고, 도면을 그리고, 공사하고, 검수해요. Claude Code 101 코스가 중심에 두는 작업 흐름도 같아요. <strong>탐색</strong>(Explore) → <strong>계획</strong>(Plan) → <strong>구현</strong>(Code) → <strong>커밋</strong>(Commit)이에요. 이 리듬 없이 바로 &quot;코드 써 줘&quot;로 가면 나중에 고쳐 달라고 하는 횟수가 늘어요.</p>
+<ul><li><strong>Explore와 Plan</strong>: S19의 Plan 모드가 이 두 단계를 한 번에 맡아요. Claude가 관련 파일을 읽고 계획을 내면, 마음에 들 때까지 고쳐 달라고 해요.</li><li><strong>Code</strong>: 계획을 승인하면 구현이 시작돼요. 여기서 차이를 만드는 건 Claude가 스스로 돌려 볼 수 있는 <strong>확인 수단</strong>이에요. 테스트, 빌드, 린터처럼 통과와 실패가 나오는 것이면 돼요. &quot;끝났어요&quot;라는 말 대신 실행한 명령과 출력을 증거로 달라고 하세요.</li><li><strong>Commit</strong>: 변경을 검토한 뒤 &quot;변경 내용을 설명하는 메시지로 커밋해 줘&quot;라고 하면 Claude가 스테이징과 커밋을 해요. PR도 만들어 달라고 할 수 있어요.</li></ul>
+<h3>커밋 전 리뷰: 두 번 본다</h3>
+<p>Claude의 요약은 사실이어도 빠진 것이 있을 수 있어요. 그리고 코드를 쓴 세션은 그 코드의 가장 좋은 심사자가 아니에요. 그래서 두 번 봐요.</p>
+<ol><li><strong>내 눈으로</strong>: <code>/diff</code>는 작업 폴더의 변경을 파일별로 보여 줘요. 시키지 않은 변경, 약해진 테스트(건너뛰거나 지운 것), 새로 추가된 패키지와 하드코딩된 값을 찾아보세요.</li><li><strong>새 눈으로</strong>: <code>/code-review</code>는 지금 대화의 기록을 모르는 별도 컨텍스트에서 변경을 검토하고 결과를 보고해요. 터미널에서는 백그라운드 서브에이전트로 돌고, <code>--fix</code>를 붙이지 않으면 보고만 해요. 사용량에 포함되니 중요한 변경에 쓰세요.</li></ol>
+<p>둘 다 git을 읽기 때문에 프로젝트가 git 저장소여야 해요. 변경이 통째로 틀렸다면 <code>/rewind</code>(또는 빈 프롬프트에서 <code>Esc</code> 두 번)로 되감아요. 단, 셸 명령만으로 바뀐 파일은 되감기 대상이 아니에요. GitHub PR에 자동으로 달리는 Code Review는 Team·Enterprise용 별도 서비스예요(S26).</p>
+<h3>컨텍스트 명령 세 가지</h3>
+<p>S03과 S18에서 본 것처럼 읽은 파일과 명령 출력은 전부 컨텍스트에 쌓여요. 가득 차면 자동으로 압축되지만, 무엇을 남기고 언제 비울지 직접 정할 수도 있어요.</p>
+<div class="table-scroll"><table><thead><tr><th>명령</th><th>하는 일</th><th>쓸 때</th></tr></thead><tbody><tr><td><code>/context</code></td><td>컨텍스트 사용량을 항목별로 보여 줌</td><td>무엇이 자리를 차지하는지 궁금할 때</td></tr><tr><td><code>/compact [지시]</code></td><td>지금까지의 대화를 요약해 자리를 비움</td><td>같은 작업을 계속하는데 컨텍스트가 찼을 때</td></tr><tr><td><code>/clear</code></td><td>빈 컨텍스트로 새 대화 시작</td><td>관계없는 새 작업으로 넘어갈 때</td></tr></tbody></table></div>
+<p><code>/compact 인증 버그 수정 위주로</code>처럼 무엇을 남길지 지시할 수 있어요. <code>/clear</code> 한 대화는 <code>/resume</code>으로 다시 열 수 있어요. 압축 뒤에도 프로젝트 루트의 CLAUDE.md는 디스크에서 다시 읽히지만, 대화로만 말한 규칙은 흐려질 수 있어요. 계속 지켜야 할 것은 CLAUDE.md에 적어요(S21). 같은 걸 두 번 고쳐 줬는데도 틀리면, 세 번째 지적보다 <code>/clear</code> 후 더 나은 프롬프트 하나가 낫다는 것이 문서의 조언이에요. 압축과 되감기를 긴 세션에서 쓰는 법은 S23에서 봐요.</p></section>
+<section class="sec sec-try callout warm"><h2>직접 해 보기 (5분)</h2><p><code>~/cc-playground</code>에서 해 보세요.</p>
+<ol><li>한 바퀴 돌기: &quot;이 폴더를 git 저장소로 만들고 첫 커밋을 해 줘&quot;로 준비한 뒤, Plan 모드에서 &quot;이 폴더의 파일을 표로 설명하는 README.md를 만들 계획을 세워 줘&quot;라고 하세요. 계획을 승인하고, 끝나면 <code>/diff</code>로 변경을 읽고 <code>/code-review</code>를 돌린 다음 &quot;변경 내용을 설명하는 메시지로 커밋해 줘&quot;라고 하세요.
+<ul><li>관찰: 리뷰 결과는 대화에 어떻게 도착하나요? 지적이 있다면 &quot;지금 고친다 / 이유를 묻는다 / 그냥 둔다&quot; 중 어디에 넣을지 정해 보세요.</li></ul></li><li>컨텍스트 보기: <code>/context</code>로 가장 큰 항목을 찾고, <code>/compact README 작업 위주로</code>를 실행한 뒤 <code>/context</code>를 다시 보세요. 마지막으로 <code>/clear</code>를 실행하세요.
+<ul><li>관찰: 압축 전후에 무엇이 줄었고 무엇이 그대로인가요?</li></ul></li></ol></section>
+<section class="sec sec-quiz"><h2>확인 문제</h2><ol class="quiz"><li value="1" class="q"><div class="q-body">Explore와 Plan 두 단계를 한 번에 맡기기에 가장 알맞은 것은?
+<ul><li>(a) Accept edits 모드</li><li>(b) Plan 모드</li><li>(c) <code>/clear</code></li></ul></div>
+<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">(b). Plan 모드에서 Claude는 읽고 탐색해 계획을 내고, 승인 전에는 소스를 고치지 않아요.</div></details></li>
+<li value="2" class="q"><div class="q-body">결제 버그 수정을 막 끝내고, 관계없는 문서 작업을 시작하려고 해요. 알맞은 명령은?
+<ul><li>(a) <code>/compact</code></li><li>(b) <code>/context</code></li><li>(c) <code>/clear</code></li></ul></div>
+<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">(c). 관계없는 작업으로 넘어갈 때는 빈 컨텍스트가 좋아요. 이전 대화는 <code>/resume</code>으로 다시 열 수 있어요.</div></details></li>
+<li value="3" class="q"><div class="q-body"><code>/code-review</code>에 대한 설명으로 맞는 것은?
+<ul><li>(a) 지금 대화의 기록을 그대로 이어받아 같은 맥락에서 검토한다</li><li>(b) 별도 컨텍스트에서 변경을 검토해 결과를 보고하고, <code>--fix</code> 없이는 고치지 않는다</li><li>(c) 조직 Owner가 켜야 하고 GitHub PR에만 댓글을 단다</li></ul></div>
+<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">(b). (c)는 GitHub PR용 별도 서비스인 Code Review에 대한 설명이에요.</div></details></li>
+<li value="4" class="q"><div class="q-body">(서술형) Claude가 &quot;다 됐어요, 테스트도 통과해요&quot;라고 요약했어요. 이 말만 믿고 커밋하면 안 되는 이유와, 커밋 전에 할 두 가지 확인을 써 보세요.</div>
+<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">예시 답: 요약은 사실이어도 빠뜨린 변경이 있을 수 있고, 코드를 쓴 세션은 자기 판단에 끌려가기 쉽다. 그래서 (1) <code>/diff</code>로 시키지 않은 변경, 약해진 테스트, 새 패키지를 직접 확인하고, (2) <code>/code-review</code>로 대화 기록이 없는 새 컨텍스트의 검토를 받는다. 테스트 통과는 말이 아니라 실행 출력으로 확인한다.</div></details></li>
+<li value="5" class="q"><div class="q-body">(상황형) 고객사 팀장이 물어요. &quot;AI가 짠 코드를 우리가 어떻게 믿고 커밋합니까?&quot; 오늘 배운 흐름으로 어떻게 답할까요?</div>
+<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">예시 답: &quot;믿음이 아니라 절차로 커밋합니다&quot;라고 답한다. 계획 단계에서 사람이 범위를 승인하고, 구현은 팀의 기존 테스트로 확인하고, 커밋 전에 사람이 diff를 읽고 별도 컨텍스트의 리뷰를 받는다. 틀린 변경은 되감을 수 있고, 최종 승인과 병합은 기존 코드 리뷰 절차대로 사람이 한다. 파일럿에서는 이 한 바퀴에 걸린 시간과 리뷰에서 되돌아간 횟수를 기록해 기준선과 비교하자고 제안한다.</div></details></li></ol></section>
+<section class="sec sec-fde callout cool"><h2>FDE 관점</h2><p>파일럿에서 FDE가 보여 줘야 하는 건 &quot;Claude가 코드를 잘 쓴다&quot;가 아니라 &quot;이 팀이 믿고 커밋할 수 있는 절차가 있다&quot;예요. 네 단계 리듬이 그 절차예요. 계획은 고객 개발자가 승인하고, 구현은 고객의 기존 테스트로 확인하고, 커밋 전에는 사람의 diff 검토와 새 컨텍스트의 리뷰를 거쳐요. 마지막 승인은 사람이 한다는 점을 분명히 하세요. 파일럿 계획서의 &quot;먼저 출시할 부분&quot;은 이 한 바퀴로 끝낼 수 있는 크기의 작업들로 쪼개면 좋고, 한 바퀴에 걸린 시간과 리뷰에서 되돌아간 횟수는 기준선과 비교할 수 있는 측정값이 돼요.</p></section>
+<section class="sec sec-cards"><h2>복습 카드</h2><div class="cards"><details class="card"><summary>Claude Code 101의 네 단계 작업 흐름은?</summary><div class="card-a">Explore → Plan → Code → Commit.</div></details><details class="card"><summary>구현 단계에서 Claude에게 꼭 줘야 하는 것은?</summary><div class="card-a">스스로 돌려 볼 수 있는 확인 수단(테스트, 빌드, 린터)과 완료 기준.</div></details><details class="card"><summary>커밋 전 두 번의 확인은?</summary><div class="card-a"><code>/diff</code>로 직접 읽기, <code>/code-review</code>로 새 컨텍스트의 리뷰 받기.</div></details><details class="card"><summary><code>/compact</code>와 <code>/clear</code>의 차이는?</summary><div class="card-a"><code>/compact</code>는 대화를 요약해 같은 작업을 이어 가고, <code>/clear</code>는 빈 컨텍스트로 새 대화를 시작한다.</div></details><details class="card"><summary>압축 뒤에도 다시 읽히는 것은?</summary><div class="card-a">프로젝트 루트의 CLAUDE.md. 대화로만 말한 규칙은 흐려질 수 있다.</div></details></div></section>
+<section class="sec sec-script"><h2>영상 대본</h2><details class="script"><summary>영상 대본 펼치기 <span class="muted">· 장면별 화면과 내레이션</span></summary><div class="script-body"><h4>장면 1 · 오늘의 질문 (약 25초)</h4>
+<p><strong>화면:</strong> 프롬프트 &quot;기능 만들어 줘&quot;에서 바로 코드 더미로 화살표가 가고, 그 뒤로 &quot;아니 그게 아니라…&quot; 말풍선이 세 번 연달아 뜸. 제목 &quot;왜 자꾸 다시 시키게 될까?&quot;<br><strong>내레이션:</strong> 바로 코드부터 쓰게 하면 꼭 이렇게 돼요. 그게 아니라고 세 번쯤 말하게 되죠. 오늘은 이 왕복을 줄이는 하루의 작업 흐름을 볼게요.</p>
+<h4>장면 2 · 네 단계 (약 30초)</h4>
+<p><strong>화면:</strong> 가로로 네 칸이 차례로 켜짐: Explore(돋보기), Plan(도면), Code(망치), Commit(도장). 아래에 집 수리 그림이 같은 순서로 진행됨.<br><strong>내레이션:</strong> 집을 고칠 때 벽부터 부수지 않죠. 둘러보고, 도면을 그리고, 공사하고, 검수해요. 클로드 코드의 작업 흐름도 같아요. 탐색, 계획, 구현, 커밋이에요.</p>
+<h4>장면 3 · 탐색과 계획 (약 35초)</h4>
+<p><strong>화면:</strong> 상태 표시줄 &quot;plan mode on&quot;. Claude 아이콘이 파일을 훑고 계획 문서를 냄. 사람이 한 줄에 빨간 펜을 대자 그 줄이 다시 쓰임.<br><strong>내레이션:</strong> 앞의 두 단계는 플랜 모드가 한 번에 맡아요. 클로드가 파일을 읽고 계획을 내면, 마음에 들 때까지 고쳐요. 아직 코드가 없어서 방향을 바꾸기가 가장 쉬워요.</p>
+<h4>장면 4 · 구현과 확인 수단 (약 40초)</h4>
+<p><strong>화면:</strong> Claude가 코드를 고치고 &quot;테스트 실행&quot; 버튼을 스스로 누름. 빨간 실패 → 다시 고침 → 초록 통과. 옆에 영수증 모양의 &quot;실행한 명령 + 출력&quot;.<br><strong>내레이션:</strong> 구현 단계의 열쇠는 확인 수단이에요. 테스트처럼 통과와 실패가 나오는 걸 주면 클로드가 스스로 고리를 닫아요. 끝났다는 말 대신 실행한 명령과 출력을 증거로 받으세요.</p>
+<h4>장면 5 · 내 눈으로 (약 35초)</h4>
+<p><strong>화면:</strong> 화면 가득 diff: 빨간 줄과 초록 줄. 돋보기가 세 곳을 짚음: &quot;시키지 않은 변경&quot;, &quot;건너뛴 테스트&quot;, &quot;새 패키지&quot;.<br><strong>내레이션:</strong> 커밋 전에는 두 번 봐요. 첫 번째는 내 눈이에요. 슬래시 디프로 변경을 읽어요. 시키지 않은 변경, 약해진 테스트, 새로 들어온 패키지를 찾아보세요.</p>
+<h4>장면 6 · 새 눈으로 (약 40초)</h4>
+<p><strong>화면:</strong> 왼쪽에 긴 대화 기록을 짊어진 &quot;작성한 세션&quot;. 오른쪽에 빈손의 &quot;리뷰어&quot;가 diff만 보고 메모 네 줄을 건넴. 메모는 세 바구니로 나뉨: &quot;지금 고친다&quot;, &quot;이유를 묻는다&quot;, &quot;그냥 둔다&quot;.<br><strong>내레이션:</strong> 두 번째는 새 눈이에요. 슬래시 코드 리뷰는 지금 대화를 모르는 별도의 컨텍스트에서 변경을 봐요. 쓴 사람의 생각에 끌려가지 않죠. 지적은 고칠 것, 물어볼 것, 둘 것으로 나눠요.</p>
+<h4>장면 7 · 컨텍스트가 찬다 (약 30초)</h4>
+<p><strong>화면:</strong> S18의 세로 통이 다시 등장해 블록으로 거의 참. 옆에 <code>/context</code> 화면처럼 색깔 격자와 항목별 막대.<br><strong>내레이션:</strong> 이렇게 일하다 보면 컨텍스트가 차요. 슬래시 컨텍스트를 치면 무엇이 자리를 차지하는지 보여 줘요.</p>
+<h4>장면 8 · 컴팩트와 클리어 (약 40초)</h4>
+<p><strong>화면:</strong> 갈림길. 왼쪽 길 &quot;같은 작업 계속&quot; → <code>/compact</code>: 블록이 요약 블록으로 눌림. 오른쪽 길 &quot;새 작업&quot; → <code>/clear</code>: 통이 비워지고 이전 통은 서랍 &quot;/resume&quot;에 들어감.<br><strong>내레이션:</strong> 같은 작업을 이어 간다면 슬래시 컴팩트로 요약해요. 관계없는 새 작업이라면 슬래시 클리어로 비워요. 지운 대화는 나중에 다시 열 수 있어요.</p>
+<h4>장면 9 · 고객 앞에서 (약 35초)</h4>
+<p><strong>화면:</strong> 팀장 말풍선 &quot;AI 코드를 어떻게 믿죠?&quot; 아래에 컨베이어 벨트: 계획 승인(사람) → 테스트 통과 → diff 검토(사람) → 새 눈 리뷰 → 커밋. 사람 단계에 굵은 테두리.<br><strong>내레이션:</strong> 고객이 묻는 건 믿을 수 있느냐예요. 답은 절차예요. 계획은 사람이 승인하고, 테스트로 확인하고, 커밋 전에 두 번 봐요. 마지막 승인은 사람이에요.</p>
+<h4>장면 10 · 요약과 예고 (약 25초)</h4>
+<p><strong>화면:</strong> 세 줄 요약: &quot;1. 탐색 → 계획 → 구현 → 커밋 2. 커밋 전에 두 번 본다 3. 이어 가면 compact, 새 작업은 clear&quot;. 아래에 &quot;다음: S21 CLAUDE.md와 서브에이전트&quot;.<br><strong>내레이션:</strong> 정리할게요. 탐색하고, 계획하고, 구현하고, 커밋해요. 커밋 전에는 두 번 봐요. 이어 갈 땐 컴팩트, 새 작업은 클리어예요. 다음 시간에는 클로드가 프로젝트를 기억하게 하는 법을 볼게요.</p></div></details></section>
+<section class="sec sec-sources"><h2>출처</h2><ul><li>Claude Academy, Claude Code 101 코스 소개와 공개 레슨 요약(The explore → plan → code → commit workflow, Context management, Code review): <a href="https://academy.claude.com/courses/claude-code-101" target="_blank" rel="noopener noreferrer">https://academy.claude.com/courses/claude-code-101</a></li><li>Claude Code Docs, Common workflows (Plan before editing, PR 만들기, 서브에이전트에 조사 맡기기): <a href="https://code.claude.com/docs/en/common-workflows" target="_blank" rel="noopener noreferrer">https://code.claude.com/docs/en/common-workflows</a></li><li>Claude Code Docs, Best practices (Give Claude a check to run, 증거 요청, Steer the session): <a href="https://code.claude.com/docs/en/best-practices" target="_blank" rel="noopener noreferrer">https://code.claude.com/docs/en/best-practices</a></li><li>Claude Code Docs, Commands (<code>/context</code>, <code>/compact</code>, <code>/clear</code>, <code>/diff</code>, <code>/code-review</code>, <code>/rewind</code>, <code>/resume</code>): <a href="https://code.claude.com/docs/en/commands" target="_blank" rel="noopener noreferrer">https://code.claude.com/docs/en/commands</a></li><li>Claude Code Docs, Review locally with /code-review (대상, <code>--fix</code>, 백그라운드 서브에이전트): <a href="https://code.claude.com/docs/en/code-review-local" target="_blank" rel="noopener noreferrer">https://code.claude.com/docs/en/code-review-local</a></li><li>Claude Code Docs, Interactive mode (Review changes with /diff): <a href="https://code.claude.com/docs/en/interactive-mode" target="_blank" rel="noopener noreferrer">https://code.claude.com/docs/en/interactive-mode</a></li><li>Claude Code Docs, Checkpointing (되감기 메뉴, 셸 명령 변경은 추적 안 됨): <a href="https://code.claude.com/docs/en/checkpointing" target="_blank" rel="noopener noreferrer">https://code.claude.com/docs/en/checkpointing</a></li><li>Claude Code Docs, Explore the context window (압축 뒤에 남는 것, <code>/compact</code> 지시, <code>/clear</code>): <a href="https://code.claude.com/docs/en/context-window" target="_blank" rel="noopener noreferrer">https://code.claude.com/docs/en/context-window</a></li><li>Claude Code Docs, Code Review (GitHub PR용 관리형 서비스, Team·Enterprise): <a href="https://code.claude.com/docs/en/code-review" target="_blank" rel="noopener noreferrer">https://code.claude.com/docs/en/code-review</a></li><li>&quot;Explore → Plan → Code → Commit&quot;이라는 네 단계 이름은 코스의 용어예요. code.claude.com 문서에는 이 이름의 단일 페이지가 없어서, 각 단계의 내용은 위 문서들의 해당 부분으로 확인했어요.</li></ul></section>
+</article>
+<section class="done-box">
+  <label><input type="checkbox" data-done="S20"> 이 세션을 다 했어요 <span class="muted">(이 브라우저에만 저장돼요)</span></label>
+</section>
+<nav class="pager">
+  <a href="/t/claude-fde/s19-first-prompt-modes" target="_top" class="prev"><small>이전</small><span>S19 · 첫 프롬프트: 승인 모드, 자동 수락, Plan Mode</span></a>
+  <a href="/t/claude-fde/s21-claude-md-subagents" target="_top" class="next"><small>다음</small><span>S21 · 커스터마이즈 1: CLAUDE.md와 서브에이전트</span></a>
+</nav>
+<footer class="disclaimer" role="note">
+  <strong>비공식 학습 자료</strong>
+  <p>이 노트는 Anthropic 공식 “Claude Forward Deployed Engineer” 학습 경로의 공개 개요와 공식 문서를 바탕으로 쓴 개인 학습 노트이며, 공식 강의 필기가 아니에요. 실제 강의·퀴즈·수료는 공식 경로에서 진행해요.</p>
+  <p>공식 경로: <a href="https://anthropic-partners.skilljar.com/path/claude-fde" target="_blank" rel="noopener noreferrer">https://anthropic-partners.skilljar.com/path/claude-fde</a></p>
+</footer>
+</main>
+<script src="fde.js"></script>
+</body>
+</html>

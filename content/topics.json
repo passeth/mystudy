@@ -68,5 +68,12 @@
     "subtitle": "AI Engineer 토크 임베드 + 인포그래픽으로 온톨로지→메모리→결정 트레이스→스킬→루프 파이프라인 설계",
     "color": "navy",
     "order": 9
+  },
+  {
+    "id": "claude-fde",
+    "title": "Claude FDE 스터디",
+    "subtitle": "Claude Forward Deployed Engineer 학습 경로(11개 코스)를 42개 세션으로 나눈 비공식 학습 노트 — 개념, 실습, 확인 문제, 파일럿 계획서",
+    "color": "mint",
+    "order": 11
   }
 ]

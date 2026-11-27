@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="5. Claude Platform 101 · 20분">
+<title>S13. 확장 사고 (thinking)</title>
+<link rel="stylesheet" href="fde.css">
+</head>
+<body data-session="S13">
+<!-- 자동 생성 파일: scripts/sync-fde.mjs 가 만들어요. 직접 고치지 말고 원본 노트를 고친 뒤 npm run fde:sync 하세요. -->
+<main class="wrap">
+
+<nav class="crumbs"><a href="/t/claude-fde/0000-course-home" target="_top">← 코스 홈</a><span>5. Claude Platform 101</span></nav>
+<header class="head">
+  <span class="eyebrow">Claude FDE 스터디 · 세션 13 / 42</span>
+  <h1>S13. 확장 사고 (thinking)</h1>
+  <div class="meta"><span>20분</span><span class="pill pill-draft">노트 초안</span></div>
+  <p class="official">공식 경로에서 해당하는 부분: Teaching your Agent: What is thinking?</p>
+</header>
+
+
+<article class="note">
+<section class="sec sec-goals"><h2>오늘의 목표</h2><ul><li>사고(thinking)가 무엇이고 어떤 일에 도움이 되는지 설명할 수 있다.</li><li>API에서 사고를 요청하고, effort로 깊이를 조절하고, 비용이 어떻게 청구되는지 말할 수 있다.</li><li>도구 사용 루프에서 thinking 블록을 어떻게 다뤄야 하는지 말할 수 있다.</li></ul></section>
+<section class="sec "><h2>핵심 정리</h2><h3>답하기 전의 연습장</h3>
+<p>시험에서 암산으로 바로 답을 쓰는 것과, 연습장에 풀어 보고 답을 쓰는 것의 차이예요. <strong>사고</strong>(thinking)는 Claude가 답하기 전에 문제를 자기 말로 풀어 보는 단계예요. 접근을 시도하고, 중간 결과를 확인하고, 안 되는 길은 버려요. 응답에서는 <code>thinking</code> 블록이 <code>text</code> 블록보다 앞에 와요. 수학, 코딩, 분석, 긴 에이전트 작업처럼 중간 과정이 답의 품질을 좌우하는 일에서 효과가 커요. 간단한 사실 질문이라면 Claude가 생각을 건너뛰기도 해요.</p>
+<h3>이름 정리: 확장 사고와 적응형 사고</h3>
+<ul><li><strong>확장 사고</strong>(extended thinking)는 <code>thinking: {type: &quot;enabled&quot;, budget_tokens: N}</code>처럼 생각에 쓸 토큰 예산을 직접 정하는 수동 방식이에요. 지금 공식 문서는 이 방식을 레거시로 분류하고, Claude 4.7 이후 모델은 이 설정을 400 에러로 거절해요.</li><li><strong>적응형 사고</strong>(adaptive thinking)는 <code>thinking: {type: &quot;adaptive&quot;}</code>예요. 요청마다 생각할지, 얼마나 할지를 Claude가 정해요. Claude 5 이후 모델은 설정 없이도 기본으로 켜져 있고, Claude Opus 5.5처럼 아예 끌 수 없는 모델도 있어요.</li><li>깊이는 S09에서 본 <strong>effort</strong>로 조절해요. API에서는 <code>output_config.effort</code>에 <code>low</code>·<code>medium</code>·<code>high</code>·<code>xhigh</code>·<code>max</code> 중 하나를 넣어요. effort는 부드러운 안내이고, 엄격한 상한은 <code>max_tokens</code>예요.</li></ul>
+<h3>보이는 것과 청구되는 것</h3>
+<p>생각의 원문은 어떤 설정으로도 돌려받지 못해요. <code>display: &quot;summarized&quot;</code>면 요약을 받고, <code>&quot;omitted&quot;</code>면 <code>thinking</code> 필드가 빈 문자열로 와요. 최신 모델은 <code>&quot;omitted&quot;</code>가 기본값이에요.</p>
+<p>사고 토큰은 <strong>출력 토큰으로 청구</strong>되고 <code>max_tokens</code>에도 포함돼요. 요약만 받든 아예 안 받든 실제로 생각한 만큼 청구돼요. <code>&quot;omitted&quot;</code>가 줄여 주는 건 비용이 아니라 첫 글자가 나오기까지의 시간이에요.</p>
+<h3>도구와 함께 쓸 때</h3>
+<p>S11의 에이전트 루프에서 Claude는 도구 호출 사이사이에도 생각해요(interleaved thinking). 적응형 사고에서는 자동이에요. 지킬 규칙은 하나예요. 도구 결과를 돌려보낼 때, 받은 assistant 메시지의 thinking 블록을 <strong>고치지 말고 그대로</strong> 함께 보내요. S11에서 하던 대로 <code>response.content</code>를 통째로 붙이면 돼요. 블록을 수정하면 400 에러가 나요. 그리고 도구 루프 전체가 assistant 턴 하나라서, 루프 중간에 thinking 설정을 바꾸지 않아요.</p>
+<pre class="code" data-lang="typescript"><code>import Anthropic from &quot;@anthropic-ai/sdk&quot;;
+
+const client = new Anthropic(); // ANTHROPIC_API_KEY 환경 변수를 읽어요
+
+const response = await client.messages.create({
+  model: &quot;claude-opus-5-5&quot;,
+  max_tokens: 16000,
+  thinking: { type: &quot;adaptive&quot;, display: &quot;summarized&quot; }, // 생각 요약을 받아 보기
+  output_config: { effort: &quot;medium&quot; },                    // 얼마나 깊이 일할지
+  messages: [{ role: &quot;user&quot;, content: &quot;1071과 462의 최대공약수를 구해 줘.&quot; }],
+});
+
+for (const block of response.content) {
+  if (block.type === &quot;thinking&quot;) console.log(&quot;[생각 요약]&quot;, block.thinking);
+  if (block.type === &quot;text&quot;) console.log(&quot;[답]&quot;, block.text);
+}
+console.log(response.usage); // output_tokens에 생각 토큰이 포함돼요</code></pre>
+<p>예시 모델은 공식 문서 예시와 같은 <code>claude-opus-5-5</code>예요. 허용되는 thinking 설정은 모델마다 달라요. 다른 모델로 바꿀 때는 Thinking 문서의 모델별 표를 확인하세요.</p></section>
+<section class="sec sec-try callout warm"><h2>직접 해 보기 (5분)</h2><ol><li>위 코드를 S10에서 만든 프로젝트에 <code>thinking.ts</code>로 저장하고 <code>npx tsx thinking.ts</code>로 실행하세요. 그다음 <code>effort</code>만 <code>&quot;low&quot;</code>와 <code>&quot;high&quot;</code>로 바꿔 두 번 더 실행하고, <code>usage.output_tokens</code>와 걸린 시간을 비교해 보세요.</li><li>질문을 &quot;대한민국의 수도는?&quot;으로 바꿔 보세요. <code>thinking</code> 블록이 나오나요? 적응형 사고는 쉬운 질문에서 생각을 건너뛸 수 있어요. &quot;모든 응답은 thinking 블록으로 시작한다&quot;고 가정하고 코드를 짜면 안 되는 이유예요.</li></ol></section>
+<section class="sec sec-quiz"><h2>확인 문제</h2><ol class="quiz"><li value="1" class="q"><div class="q-body">사고 토큰의 청구 방식으로 맞는 것은?
+<ul><li>(a) 입력 토큰으로 청구되고 <code>max_tokens</code>와는 무관하다</li><li>(b) 출력 토큰으로 청구되고 <code>max_tokens</code>에 포함된다</li><li>(c) <code>display: &quot;omitted&quot;</code>로 숨기면 청구되지 않는다</li></ul></div>
+<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">(b). 사고 토큰은 출력 토큰으로 청구되고 <code>max_tokens</code>에 포함돼요. 숨겨도 청구는 같아요.</div></details></li>
+<li value="2" class="q"><div class="q-body">지금 권장되는 사고 요청 방식은?
+<ul><li>(a) <code>thinking: {type: &quot;enabled&quot;, budget_tokens: N}</code>으로 예산을 직접 정한다</li><li>(b) 프롬프트에 &quot;단계별로 생각해&quot;라고만 적는다</li><li>(c) 적응형 사고에 맡기고, 깊이는 <code>output_config.effort</code>로 조절한다</li></ul></div>
+<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">(c). 적응형 사고가 현재 방식이고 깊이는 effort로 조절해요. (a)는 레거시 방식이라 최신 모델에서는 400 에러가 나요.</div></details></li>
+<li value="3" class="q"><div class="q-body">도구 사용 루프에서 thinking 블록을 다루는 올바른 방법은?
+<ul><li>(a) 토큰을 아끼려고 thinking 블록을 지우고 도구 결과만 보낸다</li><li>(b) 받은 assistant 메시지의 thinking 블록을 수정 없이 그대로 다시 보낸다</li><li>(c) thinking 블록을 요약해서 user 메시지에 넣는다</li></ul></div>
+<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">(b). thinking 블록은 수정 없이 그대로 돌려보내야 해요. 수정하면 400 에러가 나고, 지우면 Claude가 앞선 추론을 이어 가지 못해요.</div></details></li>
+<li value="4" class="q"><div class="q-body">(서술형) effort와 <code>max_tokens</code>는 둘 다 &quot;얼마나 쓸지&quot;와 관련이 있어요. 둘의 차이를 두세 문장으로 설명해 보세요.</div>
+<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">예시 답: effort는 Claude가 응답 전체에 얼마나 공을 들일지 알려 주는 부드러운 안내라서, 낮춰도 어려운 문제에서는 여전히 생각한다. <code>max_tokens</code>는 생각과 답을 합친 출력의 엄격한 상한이라서, 넘으면 거기서 잘린다. 그래서 비용과 속도는 effort로 조절하고, 절대 넘으면 안 되는 한도는 <code>max_tokens</code>로 건다.</div></details></li>
+<li value="5" class="q"><div class="q-body">(상황형) 고객사 팀장이 말해요. &quot;답은 좋아졌는데 전보다 느리고 청구액이 늘었어요. 그리고 감사 때문에 AI가 생각한 과정을 전부 저장하고 싶어요.&quot; 어떻게 설명하고 무엇을 제안할까요?</div>
+<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">예시 답: &quot;답하기 전에 생각하는 단계가 켜져 있어서 품질이 올랐고, 그 생각이 출력 토큰으로 청구되고 시간도 걸려요&quot;라고 설명한다. 제안은 (1) 업무 표본을 effort 단계별로 돌려 품질·시간·비용을 비교하고 업무마다 단계를 정한다. (2) 생각의 원문은 API가 돌려주지 않으니, 감사용으로는 생각 요약(<code>display: &quot;summarized&quot;</code>), 도구 호출 기록, 최종 답과 근거를 저장한다. (3) 성공 지표를 &quot;기준을 통과한 건당 비용&quot;으로 합의한다.</div></details></li></ol></section>
+<section class="sec sec-fde callout cool"><h2>FDE 관점</h2><p>파일럿에서 사고는 &quot;품질을 얼마에 살 것인가&quot;의 문제로 나타나요. 어려운 판단이 들어가는 업무는 effort를 올릴 가치가 있고, 분류나 짧은 응답처럼 양이 많은 업무는 낮은 effort로도 충분한 경우가 많아요. 그래서 FDE는 감으로 정하지 않고, 실제 업무 표본을 effort 단계별로 돌려서 품질·시간·비용을 같이 재요. 이 결과가 파일럿의 기준선과 성공 지표가 돼요. &quot;요청당 비용&quot;이 아니라 &quot;기준을 통과한 건당 비용&quot;으로 합의해 두면 좋아요. 또 생각의 원문은 받을 수 없다는 점을 미리 알려야 해요. 감사 기록이 필요하면 요약, 도구 호출 기록, 최종 답과 근거를 남기는 쪽으로 설계해요.</p></section>
+<section class="sec sec-cards"><h2>복습 카드</h2><div class="cards"><details class="card"><summary>사고(thinking)란?</summary><div class="card-a">Claude가 답하기 전에 문제를 풀어 보는 단계. 응답에서 <code>thinking</code> 블록이 <code>text</code> 블록 앞에 온다.</div></details><details class="card"><summary>확장 사고와 적응형 사고의 차이는?</summary><div class="card-a">확장 사고는 <code>budget_tokens</code>로 예산을 직접 정하는 레거시 방식, 적응형 사고는 Claude가 요청마다 생각할지와 깊이를 정하는 현재 방식.</div></details><details class="card"><summary>사고의 깊이를 조절하는 파라미터는?</summary><div class="card-a"><code>output_config.effort</code> (low, medium, high, xhigh, max).</div></details><details class="card"><summary>사고 토큰은 어떻게 청구되나?</summary><div class="card-a">출력 토큰으로 청구되고 <code>max_tokens</code>에 포함된다. 숨겨도(omitted) 청구된다.</div></details><details class="card"><summary>도구 루프에서 thinking 블록 규칙은?</summary><div class="card-a">받은 그대로, 수정 없이 다시 보낸다.</div></details></div></section>
+<section class="sec sec-script"><h2>영상 대본</h2><details class="script"><summary>영상 대본 펼치기 <span class="muted">· 장면별 화면과 내레이션</span></summary><div class="script-body"><h4>장면 1 · 오늘의 질문 (약 25초)</h4>
+<p><strong>화면:</strong> 시험지 두 장이 나란히 놓임. 왼쪽은 답만 적힌 시험지, 오른쪽은 옆에 연습장 풀이가 붙은 시험지. 아래에 제목 &quot;답하기 전에 생각하게 하려면?&quot;<br><strong>내레이션:</strong> 어려운 문제를 암산으로 바로 답하면 틀리기 쉽죠. 연습장에 풀어 보면 달라져요. 오늘은 클로드에게 연습장을 주는 기능, 사고를 알아볼게요.</p>
+<h4>장면 2 · 사고란 (약 35초)</h4>
+<p><strong>화면:</strong> 질문 말풍선에서 화살표가 나와 &quot;생각&quot; 상자를 지나 &quot;답&quot; 상자로 이어짐. 생각 상자 안에서 작은 줄 세 개가 차례로 나타남: &quot;다시 정리&quot;, &quot;시도&quot;, &quot;확인&quot;. 한 줄에는 취소선이 그어짐.<br><strong>내레이션:</strong> 사고는 답하기 전에 문제를 풀어 보는 단계예요. 무엇을 묻는지 정리하고, 방법을 시도하고, 중간 결과를 확인해요. 안 되는 길은 버리고요.</p>
+<h4>장면 3 · 언제 도움이 되나 (약 35초)</h4>
+<p><strong>화면:</strong> 저울 그림. 왼쪽 접시에 &quot;수학&quot;, &quot;코딩&quot;, &quot;분석&quot;, &quot;긴 에이전트 작업&quot; 카드가 올라가 무겁게 내려감. 오른쪽 접시에 &quot;수도 묻기&quot;, &quot;인사&quot; 카드가 가볍게 떠 있음.<br><strong>내레이션:</strong> 중간 과정이 답의 질을 좌우하는 일에서 효과가 커요. 수학, 코딩, 분석, 긴 에이전트 작업이 그래요. 쉬운 질문에는 생각을 건너뛰기도 해요.</p>
+<h4>장면 4 · 두 가지 이름 (약 40초)</h4>
+<p><strong>화면:</strong> 왼쪽 카드 &quot;확장 사고: 예산을 내가 정함&quot;에 &quot;레거시&quot; 딱지가 붙음. 오른쪽 카드 &quot;적응형 사고: 클로드가 정함&quot;에 &quot;현재&quot; 딱지가 붙고 밝게 강조됨.<br><strong>내레이션:</strong> 이름이 둘이에요. 확장 사고는 생각에 쓸 토큰 예산을 직접 정하는 옛 방식이에요. 지금은 적응형 사고가 기본이에요. 생각할지, 얼마나 할지를 클로드가 정해요.</p>
+<h4>장면 5 · 깊이 조절 (약 35초)</h4>
+<p><strong>화면:</strong> 다섯 칸짜리 다이얼: 낮음, 중간, 높음, 아주 높음, 최대. 바늘이 낮음에서 높음으로 움직이면 옆의 &quot;생각&quot; 상자가 점점 커지고, 시계와 동전 아이콘도 함께 커짐.<br><strong>내레이션:</strong> 깊이는 에포트라는 다이얼로 조절해요. 높이면 더 꼼꼼히 생각하지만 시간과 비용도 늘어요. 낮추면 빠르고 싸져요. 일에 맞게 고르면 돼요.</p>
+<h4>장면 6 · 보이는 것과 내는 것 (약 40초)</h4>
+<p><strong>화면:</strong> 생각 상자 위에 반투명 덮개가 내려옴. 덮개에 &quot;요약만 보임&quot; 또는 &quot;안 보임&quot; 글자가 번갈아 나타남. 아래 영수증에는 두 경우 모두 &quot;출력 토큰: 생각 + 답&quot;이 똑같이 찍힘.<br><strong>내레이션:</strong> 생각의 원문은 받을 수 없어요. 요약을 받거나, 아예 안 받거나예요. 그런데 비용은 같아요. 생각한 만큼 출력 토큰으로 청구돼요. 숨긴다고 싸지지 않아요.</p>
+<h4>장면 7 · 도구와 함께 (약 40초)</h4>
+<p><strong>화면:</strong> S11의 루프 그림이 다시 등장. 도구 호출과 도구 결과 사이마다 작은 &quot;생각&quot; 블록이 끼어 있음. 블록에 자물쇠 아이콘이 붙고 &quot;그대로 돌려보내기&quot; 화살표가 한 바퀴 돎.<br><strong>내레이션:</strong> 에이전트 루프에서는 도구를 쓰는 사이사이에도 생각해요. 규칙은 하나예요. 받은 생각 블록을 고치지 말고 그대로 다시 보내요. 응답을 통째로 붙이면 돼요.</p>
+<h4>장면 8 · 코드로 보면 (약 35초)</h4>
+<p><strong>화면:</strong> 요청 상자에 세 줄이 강조됨: &quot;사고 방식: 적응형&quot;, &quot;표시: 요약&quot;, &quot;깊이: 중간&quot;. 응답 상자에는 &quot;생각 요약&quot; 블록, &quot;답&quot; 블록, 사용량 표가 차례로 나타남.<br><strong>내레이션:</strong> 요청에는 사고 방식과 깊이를 적어요. 응답에는 생각 요약과 답이 따로 와요. 사용량의 출력 토큰에는 생각에 쓴 토큰이 들어 있어요.</p>
+<h4>장면 9 · 고객 앞에서 (약 35초)</h4>
+<p><strong>화면:</strong> 회의실 그림. 고객 말풍선 &quot;느려지고 비싸졌어요.&quot; FDE 말풍선 옆에 표가 펼쳐짐: 깊이 단계별로 품질, 시간, 비용 세 칸. 한 줄에 동그라미.<br><strong>내레이션:</strong> 고객이 느리고 비싸졌다고 하면 이렇게 해요. 실제 업무 표본을 깊이 단계별로 돌려요. 품질과 시간, 비용을 같이 재고 업무마다 알맞은 단계를 정해요.</p>
+<h4>장면 10 · 요약과 예고 (약 25초)</h4>
+<p><strong>화면:</strong> 세 줄 요약이 한 줄씩 나타남: &quot;1. 사고는 답하기 전의 연습장 2. 깊이는 에포트로, 비용은 출력 토큰으로 3. 생각 블록은 그대로 돌려보낸다&quot;. 아래에 &quot;다음: S14 내장 도구와 스킬&quot;.<br><strong>내레이션:</strong> 정리할게요. 사고는 답하기 전의 연습장이에요. 깊이는 에포트로 조절하고 출력 토큰으로 청구돼요. 생각 블록은 그대로 돌려보내요. 다음 시간에는 내장 도구와 스킬을 볼게요.</p></div></details></section>
+<section class="sec sec-sources"><h2>출처</h2><ul><li>Anthropic, Thinking (사고의 동작, 모델별 설정 표, display, 청구, 도구 사용과 thinking 블록 보존): <a href="https://platform.claude.com/docs/en/build-with-claude/thinking" target="_blank" rel="noopener noreferrer">https://platform.claude.com/docs/en/build-with-claude/thinking</a></li><li>Anthropic, Adaptive thinking (요청마다 생각 여부와 깊이를 정하는 방식): <a href="https://platform.claude.com/docs/en/build-with-claude/adaptive-thinking" target="_blank" rel="noopener noreferrer">https://platform.claude.com/docs/en/build-with-claude/adaptive-thinking</a></li><li>Anthropic, Extended thinking (수동 방식이 레거시라는 안내, <code>budget_tokens</code>): <a href="https://platform.claude.com/docs/en/build-with-claude/extended-thinking" target="_blank" rel="noopener noreferrer">https://platform.claude.com/docs/en/build-with-claude/extended-thinking</a></li><li>Anthropic, Effort (effort 단계와 모델별 기본값): <a href="https://platform.claude.com/docs/en/build-with-claude/effort" target="_blank" rel="noopener noreferrer">https://platform.claude.com/docs/en/build-with-claude/effort</a></li><li>Anthropic, Context windows (사고 토큰과 컨텍스트 윈도우·<code>max_tokens</code>의 관계): <a href="https://platform.claude.com/docs/en/build-with-claude/context-windows" target="_blank" rel="noopener noreferrer">https://platform.claude.com/docs/en/build-with-claude/context-windows</a></li><li>Claude Forward Deployed Engineer 학습 경로, 코스 5 목차(<code>_official-outline-2026-11-27.txt</code>): <a href="https://anthropic-partners.skilljar.com/path/claude-fde" target="_blank" rel="noopener noreferrer">https://anthropic-partners.skilljar.com/path/claude-fde</a></li><li>예시 코드는 공식 문서의 TypeScript 예시를 줄인 것이고, <code>@anthropic-ai/sdk</code> 1.14.0에서 타입 검사만 통과시켰어요. 실제 호출은 해 보지 않았어요.</li></ul></section>
+</article>
+<section class="done-box">
+  <label><input type="checkbox" data-done="S13"> 이 세션을 다 했어요 <span class="muted">(이 브라우저에만 저장돼요)</span></label>
+</section>
+<nav class="pager">
+  <a href="/t/claude-fde/s12-tool-use" target="_top" class="prev"><small>이전</small><span>S12 · 도구 사용 (tool use)</span></a>
+  <a href="/t/claude-fde/s14-built-in-tools-skills" target="_top" class="next"><small>다음</small><span>S14 · 내장 도구와 Skills</span></a>
+</nav>
+<footer class="disclaimer" role="note">
+  <strong>비공식 학습 자료</strong>
+  <p>이 노트는 Anthropic 공식 “Claude Forward Deployed Engineer” 학습 경로의 공개 개요와 공식 문서를 바탕으로 쓴 개인 학습 노트이며, 공식 강의 필기가 아니에요. 실제 강의·퀴즈·수료는 공식 경로에서 진행해요.</p>
+  <p>공식 경로: <a href="https://anthropic-partners.skilljar.com/path/claude-fde" target="_blank" rel="noopener noreferrer">https://anthropic-partners.skilljar.com/path/claude-fde</a></p>
+</footer>
+</main>
+<script src="fde.js"></script>
+</body>
+</html>
