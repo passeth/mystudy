@@ -1,12 +1,77 @@
 {
   "source": "/Users/passeth/.orca/bots/study-fde/study",
   "officialPathUrl": "https://anthropic-partners.skilljar.com/path/claude-fde",
-  "courseImage": "img/hero.jpg",
+  "home": {
+    "hero": "img/stage.jpg",
+    "heroAlt": "파란 벽과 베이지 바닥의 무대 위에서, 고전 초상화 얼굴의 인물이 크림색 블록을 한 줄로 쌓고 있고 빨간 블록 하나가 다음 차례를 기다린다",
+    "headline": "Claude FDE *스터디*",
+    "lines": [
+      "11개 코스를 42개 세션으로",
+      "하루 한 세션, 15~25분",
+      "마지막엔 파일럿 계획서 한 장"
+    ]
+  },
   "sessions": {
     "S01": {
-      "video": "",
-      "poster": "img/hero.jpg",
-      "videoNote": "시범 영상(약 2분 19초, 한국어 내레이션)은 새 디자인으로 다시 만드는 중이에요. 외부에 올리면 여기에 붙어요."
+      "video": "https://youtu.be/ZH9xzCGXthI",
+      "poster": "img/s01-poster.jpg",
+      "hero": "img/stage.jpg",
+      "heroAlt": "파란 벽과 베이지 바닥의 무대 위에서, 고전 초상화 얼굴의 인물이 크림색 블록을 한 줄로 쌓고 있고 빨간 블록 하나가 다음 차례를 기다린다",
+      "headline": "다음 *토큰*을 하나씩 고르는 기계",
+      "lines": [
+        "같은 질문에 왜 답이 매번 다를까?",
+        "영상 5분, 노트 10분, 문제 5분.",
+        "오늘은 네 가지 성질 중 첫 번째."
+      ],
+      "zoom": "토큰",
+      "lab": {
+        "mark": "직접 뽑아 보기",
+        "title": "“오늘 날씨가 ___” 다음 조각은?",
+        "prefix": [
+          "오늘",
+          "날씨가"
+        ],
+        "dist": [
+          [
+            "맑아요",
+            46
+          ],
+          [
+            "좋네요",
+            31
+          ],
+          [
+            "흐려요",
+            18
+          ],
+          [
+            "그 밖",
+            5
+          ]
+        ],
+        "note": "확률 숫자는 설명용 예시예요. 실제 모델 값이 아니에요."
+      }
+    },
+    "S05": {
+      "zoom": "4D"
+    },
+    "S21": {
+      "zoom": "CLAUDE.md"
+    },
+    "S23": {
+      "zoom": "압축"
+    },
+    "S24": {
+      "zoom": "검증"
+    },
+    "S37": {
+      "zoom": "챔피언"
+    },
+    "S39": {
+      "zoom": "문화"
+    },
+    "S40": {
+      "zoom": "CoE"
     }
   }
 }

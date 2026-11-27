@@ -4,87 +4,181 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="1. AI Capabilities and Limitations · 20분">
+<meta name="color-scheme" content="light">
 <title>S01. 생성형 AI의 네 가지 성질과 다음 토큰 예측</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,700;12..96,800&family=Cutive+Mono&family=Gowun+Batang:wght@400;700&family=Instrument+Serif:ital@0;1&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap">
 <link rel="stylesheet" href="fde.css">
 </head>
 <body data-session="S01">
-<!-- 자동 생성 파일: scripts/sync-fde.mjs 가 만들어요. 직접 고치지 말고 원본 노트를 고친 뒤 npm run fde:sync 하세요. -->
-<main class="wrap">
-
-<nav class="crumbs"><a href="/t/claude-fde/0000-course-home" target="_top">← 코스 홈</a><span>1. AI Capabilities and Limitations</span></nav>
-<header class="head">
-  <span class="eyebrow">Claude FDE 스터디 · 세션 1 / 42</span>
-  <h1>S01. 생성형 AI의 네 가지 성질과 다음 토큰 예측</h1>
-  <div class="meta"><span>20분</span><span class="pill pill-draft">노트 초안</span><span class="pill">영상 준비 중</span></div>
-  <p class="official">공식 경로에서 해당하는 부분: Getting started · Next Token Prediction</p>
-</header>
-<section class="player" aria-label="강의 영상"><div class="video-placeholder" style="background-image:url('img/hero.jpg')">
-      <div class="video-placeholder-text"><span class="pill">영상 준비 중</span><p>시범 영상(약 2분 19초, 한국어 내레이션)은 새 디자인으로 다시 만드는 중이에요. 외부에 올리면 여기에 붙어요.</p></div>
-    </div></section><div class="under-video"><details class="script"><summary>영상 대본 펼치기 <span class="muted">· 장면별 화면과 내레이션</span></summary><div class="script-body"><h4>장면 1 · 오늘의 질문 (약 25초)</h4>
-<p><strong>화면:</strong> 검은 화면에 채팅 말풍선 두 개가 차례로 나타남. 같은 질문 &quot;회의 이름 지어 줘&quot;에 서로 다른 답 두 개. 그 아래 큰 물음표와 제목 &quot;왜 답이 매번 다를까?&quot;<br><strong>내레이션:</strong> 같은 질문을 두 번 했는데 답이 달라요. 고장일까요? 아니에요. 오늘은 그 이유인 다음 토큰 예측을 알아볼게요.</p>
-<h4>장면 2 · 네 가지 성질 (약 35초)</h4>
-<p><strong>화면:</strong> 카드 네 장이 가로로 놓임: 다음 토큰 예측, 지식, 작업 기억, 조종 가능성. 각 카드 아래에 &quot;능력 ←→ 한계&quot; 눈금 막대. 첫 번째 카드만 밝게 강조.<br><strong>내레이션:</strong> 이 코스는 생성형 에이아이를 네 가지 성질로 봐요. 다음 토큰 예측, 지식, 작업 기억, 조종 가능성이에요. 성질마다 능력과 한계가 한 눈금 위에 있어요. 오늘은 첫 번째예요.</p>
-<h4>장면 3 · 한 조각씩 쓴다 (약 40초)</h4>
-<p><strong>화면:</strong> 문장 &quot;오늘 날씨가&quot; 뒤에 빈칸. 빈칸에 &quot;맑&quot; &quot;아&quot; &quot;요&quot;가 하나씩 채워지고, 채워질 때마다 전체 문장이 다시 입력으로 돌아가는 화살표가 한 바퀴 돎.<br><strong>내레이션:</strong> 언어 모델은 글을 한 번에 쓰지 않아요. 지금까지의 글을 보고 다음 조각 하나를 골라요. 그 조각을 붙이고, 다시 보고, 또 고르죠. 이 조각을 토큰이라고 불러요.</p>
-<h4>장면 4 · 확률에서 뽑는다 (약 40초)</h4>
-<p><strong>화면:</strong> &quot;오늘 날씨가&quot; 다음 후보 막대그래프: &quot;맑아요&quot; 46%, &quot;좋네요&quot; 31%, &quot;흐려요&quot; 18%, 기타 5%. 구슬 하나가 막대 위로 떨어져 한 번은 &quot;맑아요&quot;, 다시 재생하면 &quot;좋네요&quot;에 떨어짐.<br><strong>내레이션:</strong> 모델은 답을 하나로 정해 두지 않아요. 후보마다 확률을 매기고 그중에서 뽑아요. 그래서 다시 물으면 다른 후보가 뽑힐 수 있어요. 답이 달라지는 이유가 이거예요.</p>
-<h4>장면 5 · 몰린 분포, 퍼진 분포 (약 35초)</h4>
-<p><strong>화면:</strong> 왼쪽 &quot;대한민국의 수도는?&quot; → 막대 하나(&quot;서울&quot;)가 압도적으로 높음. 오른쪽 &quot;회의 이름 지어 줘&quot; → 낮은 막대 여러 개가 고르게 퍼짐.<br><strong>내레이션:</strong> 수도를 물으면 답이 늘 같죠. 한 후보의 확률이 압도적이라서예요. 이름을 지어 달라고 하면 후보가 고르게 퍼져 있어요. 그래서 매번 달라져요.</p>
-<h4>장면 6 · 능력 쪽 (약 35초)</h4>
-<p><strong>화면:</strong> 눈금 막대의 왼쪽 끝 &quot;능력&quot;이 켜짐. 아이콘 네 개가 차례로 등장: 번역, 요약, 초안, 코드. 모두 같은 화살표(&quot;다음에 올 법한 것&quot;)에서 뻗어 나옴.<br><strong>내레이션:</strong> 이 단순한 원리에서 놀라운 능력이 나와요. 엄청난 양의 글로 학습하면서 설명하는 법, 요약하는 법, 코드의 구조까지 익혔거든요. 번역도 초안도 코드도 뿌리는 같아요.</p>
-<h4>장면 7 · 한계 쪽 (약 40초)</h4>
-<p><strong>화면:</strong> 눈금 막대의 오른쪽 끝 &quot;한계&quot;가 켜짐. 말풍선에 그럴듯한 논문 제목이 매끄럽게 타이핑되고, 그 위에 &quot;존재하지 않음&quot; 도장. 옆에 &quot;그럴듯함 ≠ 사실&quot;.<br><strong>내레이션:</strong> 하지만 모델이 고르는 건 그럴듯한 조각이지 확인된 사실이 아니에요. 그래서 없는 논문 제목도 매끄럽게 쓸 수 있어요. 유창함과 그럴듯한 오류는 한 뿌리에서 나와요.</p>
-<h4>장면 8 · 받쳐 주기 (약 40초)</h4>
-<p><strong>화면:</strong> 모델 상자 옆에 받침대 세 개가 하나씩 끼워짐: &quot;도구(계산·검색)&quot;, &quot;출력 형식&quot;, &quot;사람의 확인&quot;. 받침대가 끼워질 때마다 &quot;한계&quot; 쪽 눈금이 줄어듦.<br><strong>내레이션:</strong> 그래서 대책은 믿지 말자가 아니에요. 일에 맞게 받쳐 주는 거예요. 정확한 값이 필요하면 도구를 붙이고, 형식이 중요하면 형식을 정해 주고, 중요한 결과는 사람이 확인해요.</p>
-<h4>장면 9 · 고객 앞에서 (약 35초)</h4>
-<p><strong>화면:</strong> 회의실 그림. 고객 말풍선 &quot;어제랑 답이 달라요, 믿어도 되나요?&quot; FDE 말풍선 &quot;뽑기라서 표현은 달라져요. 그래서 기준을 정해 통과율로 봅니다.&quot; 아래에 &quot;성공 지표: 100% 같은 답 (X) → 기준 통과율 (O)&quot;.<br><strong>내레이션:</strong> 파일럿 첫날 꼭 듣는 질문이에요. 이렇게 답해요. 표현은 달라질 수 있어요. 그래서 업무 기준을 정하고 통과율로 봅니다. 성공 지표도 그렇게 합의해 두세요.</p>
-<h4>장면 10 · 요약과 예고 (약 25초)</h4>
-<p><strong>화면:</strong> 세 줄 요약이 한 줄씩 나타남: &quot;1. 다음 토큰을 하나씩 고른다 2. 확률에서 뽑아서 답이 달라진다 3. 유창함과 오류는 한 뿌리, 그래서 받쳐 준다&quot;. 아래에 &quot;다음: S02 지식&quot;.<br><strong>내레이션:</strong> 정리할게요. 모델은 다음 토큰을 하나씩 고르고, 확률에서 뽑기 때문에 답이 달라져요. 유창함과 오류는 한 뿌리라서 받쳐 줘야 해요. 다음 시간에는 두 번째 성질, 지식을 볼게요.</p></div></details></div>
-
-<article class="note">
-<section class="sec sec-goals"><h2>오늘의 목표</h2><ul><li>생성형 AI를 이해하는 네 가지 성질(다음 토큰 예측, 지식, 작업 기억, 조종 가능성)을 이름 붙여 말할 수 있다.</li><li>&quot;다음 토큰 예측&quot;이 무엇인지, 왜 같은 질문에 답이 달라질 수 있는지 설명할 수 있다.</li><li>이 성질 하나에서 능력과 한계가 함께 나온다는 것을 예를 들어 말할 수 있다.</li></ul></section>
-<section class="sec "><h2>핵심 정리</h2><h3>네 가지 성질, 하나의 눈금</h3>
-<p>이 코스는 생성형 AI를 네 가지 성질로 봐요. <strong>다음 토큰 예측</strong>(Next Token Prediction), <strong>지식</strong>(Knowledge), <strong>작업 기억</strong>(Working Memory), <strong>조종 가능성</strong>(Steerability). 중요한 건 성질마다 &quot;능력&quot;과 &quot;한계&quot;가 따로 있는 게 아니라, 같은 성질이 한쪽 끝에서는 능력으로, 다른 쪽 끝에서는 한계로 나타난다는 점이에요. 그래서 한계를 만났을 때 &quot;AI가 고장 났다&quot;가 아니라 &quot;어떤 성질이 지금 한계 쪽으로 나타났나&quot;를 물을 수 있어요. 오늘은 첫 번째 성질을 봅니다.</p>
-<h3>다음 토큰 예측이란</h3>
-<p>Claude 같은 대규모 언어 모델(LLM)은 글을 한 번에 쓰지 않아요. 지금까지의 글을 보고 &quot;다음에 올 조각&quot;을 하나 고르고, 그 조각을 붙인 글을 다시 보고 또 다음 조각을 고르는 일을 반복해요. 이 조각이 <strong>토큰</strong>(token)이에요. 토큰은 단어 하나일 수도, 단어의 일부나 글자 하나일 수도 있어요.</p>
-<p>모델은 다음 토큰을 &quot;하나로 정해&quot; 두지 않고, 후보마다 확률을 매긴 뒤 그중에서 뽑아요. 그래서 같은 질문을 두 번 하면 문장이 달라질 수 있어요. 예전 API에는 이 무작위성을 조절하는 <strong>온도</strong>(temperature)라는 값이 있었지만, 현재 API 버전(2026-10-21)에서는 없어져서 보내면 오류가 나요. 그래서 답을 일정하게 만들고 싶을 때는 뽑기 자체를 끄는 게 아니라, 출력 형식과 판단 기준을 정해 주는 쪽으로 가요.</p>
-<h3>능력 쪽: 유창하고 유연하다</h3>
-<p>방대한 글로 사전 학습(pretraining)하면서 모델은 문법만이 아니라 설명하는 법, 요약하는 법, 코드의 구조, 논증의 흐름까지 &quot;다음에 올 법한 것&quot;으로 익혔어요. 그래서 따로 프로그래밍하지 않은 일도 지시만으로 해내요. 번역, 초안 쓰기, 분류, 코드 작성이 전부 같은 원리에서 나와요.</p>
-<h3>한계 쪽: &quot;그럴듯함&quot;과 &quot;사실&quot;은 다르다</h3>
-<p>모델이 고르는 건 <strong>그럴듯한</strong> 다음 토큰이지, 검증된 사실이 아니에요. 그래서</p>
-<ul><li>모르는 것도 아는 것처럼 매끄럽게 쓸 수 있어요(이른바 환각. S02에서 자세히).</li><li>긴 계산이나 글자 수 세기처럼 &quot;정확히 한 가지 답&quot;이 필요한 일은 도구 없이 틀릴 수 있어요.</li><li>같은 입력에도 표현이나 결론이 조금씩 달라질 수 있어요.</li></ul>
-<p>정리하면, 유창함과 그럴듯한 오류는 한 뿌리에서 나와요. 그래서 대책도 &quot;모델을 믿지 마라&quot;가 아니라 <strong>일에 맞게 받쳐 주기</strong>예요. 정확한 값이 필요하면 계산 도구나 검색을 붙이고, 형식이 중요하면 출력 형식을 정해 주고, 중요한 결과는 사람이 확인해요.</p></section>
-<section class="sec sec-try callout warm"><h2>직접 해 보기 (5분)</h2><ol><li>Claude.ai 새 대화 세 개에 똑같이 물어보세요: &quot;우리 팀 주간 회의 이름을 재치 있게 하나만 지어 줘.&quot; 세 답이 어떻게 다른지 보세요. 틀린 게 아니라 &quot;뽑기&quot;의 결과예요.</li><li>이번엔 &quot;대한민국의 수도는?&quot;을 세 번 물어보세요. 왜 이건 거의 똑같이 나올까요? (힌트: 다음 토큰 후보의 확률이 한쪽으로 몰려 있을 때와 퍼져 있을 때)</li></ol></section>
-<section class="sec sec-quiz"><h2>확인 문제</h2><ol class="quiz"><li value="1" class="q"><div class="q-body">언어 모델이 글을 만드는 방식으로 가장 알맞은 것은?
-<ul><li>(a) 데이터베이스에서 정답 문장을 찾아 그대로 꺼낸다</li><li>(b) 지금까지의 글을 보고 다음 토큰을 확률에 따라 하나씩 고른다</li><li>(c) 먼저 전체 답을 완성한 뒤 한 글자씩 보여 준다</li></ul></div>
-<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">(b). 모델은 저장된 문장을 꺼내는 게 아니라 다음 토큰을 하나씩 생성해요.</div></details></li>
-<li value="2" class="q"><div class="q-body">같은 프롬프트에 답이 매번 조금씩 다른 가장 직접적인 이유는?
-<ul><li>(a) 서버가 바쁠 때 품질이 떨어져서</li><li>(b) 모델이 이전 대화를 잊어버려서</li><li>(c) 다음 토큰을 확률 분포에서 뽑기 때문에</li></ul></div>
-<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">(c). 확률 분포에서 뽑기 때문이에요.</div></details></li>
-<li value="3" class="q"><div class="q-body">&quot;다음 토큰 예측&quot;의 한계 쪽에 해당하는 것은?
-<ul><li>(a) 처음 보는 형식의 글도 지시대로 쓴다</li><li>(b) 존재하지 않는 논문 제목을 그럴듯하게 만들어 낸다</li><li>(c) 여러 언어를 오가며 번역한다</li></ul></div>
-<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">(b). (a)와 (c)는 같은 성질의 능력 쪽이에요.</div></details></li>
-<li value="4" class="q"><div class="q-body">(서술형) &quot;유창함과 그럴듯한 오류는 한 뿌리에서 나온다&quot;를 자신의 말로 두세 문장으로 설명해 보세요.</div>
-<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">예시 답: 모델은 &quot;다음에 올 법한 글&quot;을 고르도록 학습됐다. 그래서 글이 자연스럽고 여러 일을 해내지만, 고르는 기준이 사실 여부가 아니라 그럴듯함이라 틀린 내용도 똑같이 매끄럽게 나온다.</div></details></li>
-<li value="5" class="q"><div class="q-body">(상황형) 파일럿 첫날, 고객사 직원이 말해요. &quot;어제랑 똑같이 물었는데 답이 달라요. 이거 믿어도 되는 건가요?&quot; 어떻게 답하고, 어떤 조치를 제안할까요?</div>
-<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">예시 답: &quot;모델은 답을 확률로 뽑기 때문에 표현이 달라질 수 있고, 이건 고장이 아니에요&quot;라고 설명한다. 조치로는 (1) 답이 일정해야 하는 항목은 출력 형식과 판단 기준을 프롬프트에 고정하고, (2) 정확한 값은 도구나 원본 데이터로 확인하게 하고, (3) 파일럿 성공 지표를 &quot;기준 통과율&quot;로 합의하고 표본을 사람이 검토하는 절차를 둔다.</div></details></li></ol></section>
-<section class="sec sec-fde callout cool"><h2>FDE 관점</h2><p>공식 경로는 이 코스를 &quot;파일럿 첫날부터 사용자에게 설명하게 될 한계&quot;라고 소개해요. 현장에서 가장 먼저 듣는 질문이 &quot;왜 답이 매번 달라요?&quot;와 &quot;왜 틀린 걸 자신 있게 말해요?&quot;인데, 둘 다 오늘 배운 성질로 설명돼요. FDE는 이걸 변명이 아니라 설계 근거로 써요. 답이 일정해야 하는 업무라면 출력 형식을 고정하고 평가 기준을 정하고, 정확한 수치가 필요한 업무라면 도구를 붙여요. 그리고 파일럿의 성공 지표를 정할 때 &quot;항상 100% 같은 답&quot;이 아니라 &quot;업무 기준을 통과하는 비율&quot;로 합의해 두면 나중에 기대가 어긋나지 않아요.</p></section>
-<section class="sec sec-cards"><h2>복습 카드</h2><div class="cards"><details class="card"><summary>생성형 AI를 이해하는 네 가지 성질은?</summary><div class="card-a">다음 토큰 예측, 지식, 작업 기억, 조종 가능성.</div></details><details class="card"><summary>토큰이란?</summary><div class="card-a">언어 모델이 다루는 가장 작은 글 조각. 단어, 단어의 일부, 글자일 수 있다.</div></details><details class="card"><summary>같은 질문에 답이 달라지는 이유는?</summary><div class="card-a">다음 토큰을 확률 분포에서 뽑기 때문. 현재 API에는 이를 끄는 온도(temperature) 값이 없으니 형식과 기준으로 일정하게 만든다.</div></details><details class="card"><summary>다음 토큰 예측의 능력과 한계를 한 쌍으로 말하면?</summary><div class="card-a">능력은 유창하고 유연한 글쓰기, 한계는 그럴듯하지만 틀린 내용을 쓸 수 있다는 것.</div></details><details class="card"><summary>그럴듯한 오류에 대한 FDE의 대책 세 가지는?</summary><div class="card-a">도구(계산·검색) 붙이기, 출력 형식 정하기, 중요한 결과는 사람이 확인하기.</div></details></div></section>
-<section class="sec sec-sources"><h2>출처</h2><ul><li>Anthropic, Glossary (Tokens, Pretraining, LLM 정의): <a href="https://platform.claude.com/docs/en/about-claude/glossary" target="_blank" rel="noopener noreferrer">https://platform.claude.com/docs/en/about-claude/glossary</a></li><li>Anthropic, API Versioning (2026-10-21 버전에서 temperature·top_p·top_k 제거): <a href="https://platform.claude.com/docs/en/api/versioning" target="_blank" rel="noopener noreferrer">https://platform.claude.com/docs/en/api/versioning</a></li><li>Claude Forward Deployed Engineer 학습 경로, 코스 1 소개와 목차(네 가지 성질, 능력–한계 눈금): <a href="https://anthropic-partners.skilljar.com/path/claude-fde" target="_blank" rel="noopener noreferrer">https://anthropic-partners.skilljar.com/path/claude-fde</a></li><li>영상 장면 4의 확률 숫자(46%, 31% 등)는 설명용으로 지어낸 예시예요. 실제 모델의 값이 아니에요.</li></ul></section>
-</article>
-<section class="done-box">
-  <label><input type="checkbox" data-done="S01"> 이 세션을 다 했어요 <span class="muted">(이 브라우저에만 저장돼요)</span></label>
-</section>
-<nav class="pager">
-  <span></span>
-  <a href="/t/claude-fde/s02-knowledge" target="_top" class="next"><small>다음</small><span>S02 · 지식: 학습 데이터, 지식 컷오프, 환각</span></a>
+<!-- 자동 생성 파일: scripts/sync-fde.mjs 가 만들어요. 직접 고치지 말고 원본 노트나 claude-fde-course/ 를 고친 뒤 npm run fde:render 하세요. -->
+<nav class="hud" aria-label="코스">
+  <a href="/t/claude-fde/0000-course-home" target="_top" class="brand">Claude FDE 스터디 <span class="dot" aria-hidden="true"></span><span class="long">비공식 노트</span></a>
+  <a class="pill" href="#timetable">세션 01 / 42 <i aria-hidden="true"></i></a>
 </nav>
-<footer class="disclaimer" role="note">
-  <strong>비공식 학습 자료</strong>
-  <p>이 노트는 Anthropic 공식 “Claude Forward Deployed Engineer” 학습 경로의 공개 개요와 공식 문서를 바탕으로 쓴 개인 학습 노트이며, 공식 강의 필기가 아니에요. 실제 강의·퀴즈·수료는 공식 경로에서 진행해요.</p>
-  <p>공식 경로: <a href="https://anthropic-partners.skilljar.com/path/claude-fde" target="_blank" rel="noopener noreferrer">https://anthropic-partners.skilljar.com/path/claude-fde</a></p>
-</footer>
+<main>
+<header class="room hero">
+  <div class="art"><img src="img/stage.jpg" alt="파란 벽과 베이지 바닥의 무대 위에서, 고전 초상화 얼굴의 인물이 크림색 블록을 한 줄로 쌓고 있고 빨간 블록 하나가 다음 차례를 기다린다" width="1600" height="893"></div>
+  <div class="copy">
+    <span class="mark land"><b>##</b> 코스 1 · AI Capabilities and Limitations</span>
+    <h1 class="land l2">다음 <span class="ser">토큰</span>을 하나씩 고르는 기계</h1>
+    <div class="lines land l3"><span>같은 질문에 왜 답이 매번 다를까?</span><span>영상 5분, 노트 10분, 문제 5분.</span><span>오늘은 네 가지 성질 중 첫 번째.</span></div>
+    <span class="by">S01 · 생성형 AI의 네 가지 성질과 다음 토큰 예측</span>
+  </div>
+</header>
+
+<section class="room r-video iris" style="--wall:var(--ink);--floor:var(--pink);--text:var(--paper);--serc:var(--pink);--line:80%;--ix:55%" aria-labelledby="h-v">
+  <div class="inner">
+    <span class="mark"><b>##</b> 오늘의 강의</span>
+    <h2 id="h-v" class="title">먼저 보고, <span class="ser">아래에서</span> 확인해요</h2>
+    <div class="screen rise"><iframe src="https://www.youtube-nocookie.com/embed/ZH9xzCGXthI?rel=0" title="S01 강의 영상" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
+    <div class="under"><span>20분 세션 · 대본 장면 10개</span><span>영상 + 노트</span></div>
+    <details class="next"><summary>영상 대본 펼치기</summary><div class="script md"><h3>장면 1 · 오늘의 질문 (약 25초)</h3>
+<p><strong>화면:</strong> 검은 화면에 채팅 말풍선 두 개가 차례로 나타남. 같은 질문 &quot;회의 이름 지어 줘&quot;에 서로 다른 답 두 개. 그 아래 큰 물음표와 제목 &quot;왜 답이 매번 다를까?&quot;<br><strong>내레이션:</strong> 같은 질문을 두 번 했는데 답이 달라요. 고장일까요? 아니에요. 오늘은 그 이유인 다음 토큰 예측을 알아볼게요.</p>
+<h3>장면 2 · 네 가지 성질 (약 35초)</h3>
+<p><strong>화면:</strong> 카드 네 장이 가로로 놓임: 다음 토큰 예측, 지식, 작업 기억, 조종 가능성. 각 카드 아래에 &quot;능력 ←→ 한계&quot; 눈금 막대. 첫 번째 카드만 밝게 강조.<br><strong>내레이션:</strong> 이 코스는 생성형 에이아이를 네 가지 성질로 봐요. 다음 토큰 예측, 지식, 작업 기억, 조종 가능성이에요. 성질마다 능력과 한계가 한 눈금 위에 있어요. 오늘은 첫 번째예요.</p>
+<h3>장면 3 · 한 조각씩 쓴다 (약 40초)</h3>
+<p><strong>화면:</strong> 문장 &quot;오늘 날씨가&quot; 뒤에 빈칸. 빈칸에 &quot;맑&quot; &quot;아&quot; &quot;요&quot;가 하나씩 채워지고, 채워질 때마다 전체 문장이 다시 입력으로 돌아가는 화살표가 한 바퀴 돎.<br><strong>내레이션:</strong> 언어 모델은 글을 한 번에 쓰지 않아요. 지금까지의 글을 보고 다음 조각 하나를 골라요. 그 조각을 붙이고, 다시 보고, 또 고르죠. 이 조각을 토큰이라고 불러요.</p>
+<h3>장면 4 · 확률에서 뽑는다 (약 40초)</h3>
+<p><strong>화면:</strong> &quot;오늘 날씨가&quot; 다음 후보 막대그래프: &quot;맑아요&quot; 46%, &quot;좋네요&quot; 31%, &quot;흐려요&quot; 18%, 기타 5%. 구슬 하나가 막대 위로 떨어져 한 번은 &quot;맑아요&quot;, 다시 재생하면 &quot;좋네요&quot;에 떨어짐.<br><strong>내레이션:</strong> 모델은 답을 하나로 정해 두지 않아요. 후보마다 확률을 매기고 그중에서 뽑아요. 그래서 다시 물으면 다른 후보가 뽑힐 수 있어요. 답이 달라지는 이유가 이거예요.</p>
+<h3>장면 5 · 몰린 분포, 퍼진 분포 (약 35초)</h3>
+<p><strong>화면:</strong> 왼쪽 &quot;대한민국의 수도는?&quot; → 막대 하나(&quot;서울&quot;)가 압도적으로 높음. 오른쪽 &quot;회의 이름 지어 줘&quot; → 낮은 막대 여러 개가 고르게 퍼짐.<br><strong>내레이션:</strong> 수도를 물으면 답이 늘 같죠. 한 후보의 확률이 압도적이라서예요. 이름을 지어 달라고 하면 후보가 고르게 퍼져 있어요. 그래서 매번 달라져요.</p>
+<h3>장면 6 · 능력 쪽 (약 35초)</h3>
+<p><strong>화면:</strong> 눈금 막대의 왼쪽 끝 &quot;능력&quot;이 켜짐. 아이콘 네 개가 차례로 등장: 번역, 요약, 초안, 코드. 모두 같은 화살표(&quot;다음에 올 법한 것&quot;)에서 뻗어 나옴.<br><strong>내레이션:</strong> 이 단순한 원리에서 놀라운 능력이 나와요. 엄청난 양의 글로 학습하면서 설명하는 법, 요약하는 법, 코드의 구조까지 익혔거든요. 번역도 초안도 코드도 뿌리는 같아요.</p>
+<h3>장면 7 · 한계 쪽 (약 40초)</h3>
+<p><strong>화면:</strong> 눈금 막대의 오른쪽 끝 &quot;한계&quot;가 켜짐. 말풍선에 그럴듯한 논문 제목이 매끄럽게 타이핑되고, 그 위에 &quot;존재하지 않음&quot; 도장. 옆에 &quot;그럴듯함 ≠ 사실&quot;.<br><strong>내레이션:</strong> 하지만 모델이 고르는 건 그럴듯한 조각이지 확인된 사실이 아니에요. 그래서 없는 논문 제목도 매끄럽게 쓸 수 있어요. 유창함과 그럴듯한 오류는 한 뿌리에서 나와요.</p>
+<h3>장면 8 · 받쳐 주기 (약 40초)</h3>
+<p><strong>화면:</strong> 모델 상자 옆에 받침대 세 개가 하나씩 끼워짐: &quot;도구(계산·검색)&quot;, &quot;출력 형식&quot;, &quot;사람의 확인&quot;. 받침대가 끼워질 때마다 &quot;한계&quot; 쪽 눈금이 줄어듦.<br><strong>내레이션:</strong> 그래서 대책은 믿지 말자가 아니에요. 일에 맞게 받쳐 주는 거예요. 정확한 값이 필요하면 도구를 붙이고, 형식이 중요하면 형식을 정해 주고, 중요한 결과는 사람이 확인해요.</p>
+<h3>장면 9 · 고객 앞에서 (약 35초)</h3>
+<p><strong>화면:</strong> 회의실 그림. 고객 말풍선 &quot;어제랑 답이 달라요, 믿어도 되나요?&quot; FDE 말풍선 &quot;뽑기라서 표현은 달라져요. 그래서 기준을 정해 통과율로 봅니다.&quot; 아래에 &quot;성공 지표: 100% 같은 답 (X) → 기준 통과율 (O)&quot;.<br><strong>내레이션:</strong> 파일럿 첫날 꼭 듣는 질문이에요. 이렇게 답해요. 표현은 달라질 수 있어요. 그래서 업무 기준을 정하고 통과율로 봅니다. 성공 지표도 그렇게 합의해 두세요.</p>
+<h3>장면 10 · 요약과 예고 (약 25초)</h3>
+<p><strong>화면:</strong> 세 줄 요약이 한 줄씩 나타남: &quot;1. 다음 토큰을 하나씩 고른다 2. 확률에서 뽑아서 답이 달라진다 3. 유창함과 오류는 한 뿌리, 그래서 받쳐 준다&quot;. 아래에 &quot;다음: S02 지식&quot;.<br><strong>내레이션:</strong> 정리할게요. 모델은 다음 토큰을 하나씩 고르고, 확률에서 뽑기 때문에 답이 달라져요. 유창함과 오류는 한 뿌리라서 받쳐 줘야 해요. 다음 시간에는 두 번째 성질, 지식을 볼게요.</p></div></details>
+  </div>
+</section>
+<section class="zoom" style="--zc:var(--lilac);--zfill:var(--lilac)" aria-label="핵심 단어: 토큰">
+  <div class="stage"><span class="word" aria-hidden="true" style="font-size:clamp(4rem, 30.0vw, 26rem)">토큰</span><span class="cap">&gt; 글자 속으로 들어가 볼까요</span></div>
+</section>
+<section class="room r-core" style="--wall:var(--lilac);--floor:var(--bottle);--text:var(--ink);--serc:var(--cobalt);--line:86%" aria-labelledby="h-core">
+  <div class="inner">
+    <span class="mark"><b>##</b> 핵심 정리</span>
+    <h2 id="h-core" class="title">네 장만 기억해요</h2>
+    
+    <div class="bubbles"><article class="bubble rise"><span class="n">01</span><h3>네 가지 성질, 하나의 눈금</h3><div class="md"><p>이 코스는 생성형 AI를 네 가지 성질로 봐요. <strong>다음 토큰 예측</strong>(Next Token Prediction), <strong>지식</strong>(Knowledge), <strong>작업 기억</strong>(Working Memory), <strong>조종 가능성</strong>(Steerability). 중요한 건 성질마다 &quot;능력&quot;과 &quot;한계&quot;가 따로 있는 게 아니라, 같은 성질이 한쪽 끝에서는 능력으로, 다른 쪽 끝에서는 한계로 나타난다는 점이에요. 그래서 한계를 만났을 때 &quot;AI가 고장 났다&quot;가 아니라 &quot;어떤 성질이 지금 한계 쪽으로 나타났나&quot;를 물을 수 있어요. 오늘은 첫 번째 성질을 봅니다.</p></div></article>
+<article class="bubble rise"><span class="n">02</span><h3>다음 토큰 예측이란</h3><div class="md"><p>Claude 같은 대규모 언어 모델(LLM)은 글을 한 번에 쓰지 않아요. 지금까지의 글을 보고 &quot;다음에 올 조각&quot;을 하나 고르고, 그 조각을 붙인 글을 다시 보고 또 다음 조각을 고르는 일을 반복해요. 이 조각이 <strong>토큰</strong>(token)이에요. 토큰은 단어 하나일 수도, 단어의 일부나 글자 하나일 수도 있어요.</p>
+<p>모델은 다음 토큰을 &quot;하나로 정해&quot; 두지 않고, 후보마다 확률을 매긴 뒤 그중에서 뽑아요. 그래서 같은 질문을 두 번 하면 문장이 달라질 수 있어요. 예전 API에는 이 무작위성을 조절하는 <strong>온도</strong>(temperature)라는 값이 있었지만, 현재 API 버전(2026-10-21)에서는 없어져서 보내면 오류가 나요. 그래서 답을 일정하게 만들고 싶을 때는 뽑기 자체를 끄는 게 아니라, 출력 형식과 판단 기준을 정해 주는 쪽으로 가요.</p></div></article>
+<article class="bubble rise"><span class="n">03</span><h3>능력 쪽: 유창하고 유연하다</h3><div class="md"><p>방대한 글로 사전 학습(pretraining)하면서 모델은 문법만이 아니라 설명하는 법, 요약하는 법, 코드의 구조, 논증의 흐름까지 &quot;다음에 올 법한 것&quot;으로 익혔어요. 그래서 따로 프로그래밍하지 않은 일도 지시만으로 해내요. 번역, 초안 쓰기, 분류, 코드 작성이 전부 같은 원리에서 나와요.</p></div></article>
+<article class="bubble rise"><span class="n">04</span><h3>한계 쪽: &quot;그럴듯함&quot;과 &quot;사실&quot;은 다르다</h3><div class="md"><p>모델이 고르는 건 <strong>그럴듯한</strong> 다음 토큰이지, 검증된 사실이 아니에요. 그래서</p>
+<ul><li>모르는 것도 아는 것처럼 매끄럽게 쓸 수 있어요(이른바 환각. S02에서 자세히).</li><li>긴 계산이나 글자 수 세기처럼 &quot;정확히 한 가지 답&quot;이 필요한 일은 도구 없이 틀릴 수 있어요.</li><li>같은 입력에도 표현이나 결론이 조금씩 달라질 수 있어요.</li></ul>
+<p>정리하면, 유창함과 그럴듯한 오류는 한 뿌리에서 나와요. 그래서 대책도 &quot;모델을 믿지 마라&quot;가 아니라 <strong>일에 맞게 받쳐 주기</strong>예요. 정확한 값이 필요하면 계산 도구나 검색을 붙이고, 형식이 중요하면 출력 형식을 정해 주고, 중요한 결과는 사람이 확인해요.</p></div></article></div>
+  </div>
+</section>
+<section class="room r-lab iris" style="--wall:var(--butter);--floor:var(--tomato);--text:var(--ink);--serc:var(--cobalt);--line:74%;--ix:85%" aria-label="“오늘 날씨가 ___” 다음 조각은?">
+  <div class="inner">
+    <span class="mark"><b>##</b> 직접 뽑아 보기</span>
+    <h2 class="title">“오늘 날씨가 ___” 다음 조각은?</h2>
+    <div class="lab" data-lab>
+      <div class="row" aria-live="polite"><span class="block">오늘</span><span class="block">날씨가</span><span class="block next" data-lab-next>?</span></div>
+      <div class="dist">
+        <div class="bars" data-lab-bars></div>
+        <div class="go-row"><button class="go" type="button" data-lab-draw>한 번 뽑기</button><span class="tally" data-lab-tally>아직 뽑지 않았어요</span></div>
+        <span class="tally">확률 숫자는 설명용 예시예요. 실제 모델 값이 아니에요.</span>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="room r-note iris" style="--ix:25%" aria-label="노트">
+  <div class="inner">
+    <div class="page">
+      <div class="block"><h2><span class="mono">##</span>오늘의 목표</h2><ul class="ticks"><li>생성형 AI를 이해하는 네 가지 성질(다음 토큰 예측, 지식, 작업 기억, 조종 가능성)을 이름 붙여 말할 수 있다.</li><li>&quot;다음 토큰 예측&quot;이 무엇인지, 왜 같은 질문에 답이 달라질 수 있는지 설명할 수 있다.</li><li>이 성질 하나에서 능력과 한계가 함께 나온다는 것을 예를 들어 말할 수 있다.</li></ul></div>
+      <div class="block"><h2><span class="mono">##</span>직접 해 보기 <span class="mono small">5분</span></h2><ul class="ticks"><li>Claude.ai 새 대화 세 개에 똑같이 물어보세요: &quot;우리 팀 주간 회의 이름을 재치 있게 하나만 지어 줘.&quot; 세 답이 어떻게 다른지 보세요. 틀린 게 아니라 &quot;뽑기&quot;의 결과예요.</li><li>이번엔 &quot;대한민국의 수도는?&quot;을 세 번 물어보세요. 왜 이건 거의 똑같이 나올까요? (힌트: 다음 토큰 후보의 확률이 한쪽으로 몰려 있을 때와 퍼져 있을 때)</li></ul></div>
+      <div class="block quiz" id="quiz"><h2><span class="mono">##</span>확인 문제 <span class="mono small">고르면 바로 채점</span></h2>
+  
+  <div class="q" data-answer="1"><p class="qq"><span class="mono">Q1</span>언어 모델이 글을 만드는 방식으로 가장 알맞은 것은?</p>
+  <div class="opts"><button class="opt" type="button">데이터베이스에서 정답 문장을 찾아 그대로 꺼낸다</button><button class="opt" type="button">지금까지의 글을 보고 다음 토큰을 확률에 따라 하나씩 고른다</button><button class="opt" type="button">먼저 전체 답을 완성한 뒤 한 글자씩 보여 준다</button></div>
+  <p class="why">모델은 저장된 문장을 꺼내는 게 아니라 다음 토큰을 하나씩 생성해요.</p></div>
+<div class="q" data-answer="2"><p class="qq"><span class="mono">Q2</span>같은 프롬프트에 답이 매번 조금씩 다른 가장 직접적인 이유는?</p>
+  <div class="opts"><button class="opt" type="button">서버가 바쁠 때 품질이 떨어져서</button><button class="opt" type="button">모델이 이전 대화를 잊어버려서</button><button class="opt" type="button">다음 토큰을 확률 분포에서 뽑기 때문에</button></div>
+  <p class="why">확률 분포에서 뽑기 때문이에요.</p></div>
+<div class="q" data-answer="1"><p class="qq"><span class="mono">Q3</span>&quot;다음 토큰 예측&quot;의 한계 쪽에 해당하는 것은?</p>
+  <div class="opts"><button class="opt" type="button">처음 보는 형식의 글도 지시대로 쓴다</button><button class="opt" type="button">존재하지 않는 논문 제목을 그럴듯하게 만들어 낸다</button><button class="opt" type="button">여러 언어를 오가며 번역한다</button></div>
+  <p class="why">(a)와 (c)는 같은 성질의 능력 쪽이에요.</p></div>
+<div class="q"><p class="qq"><span class="mono">Q4</span>(서술형) &quot;유창함과 그럴듯한 오류는 한 뿌리에서 나온다&quot;를 자신의 말로 두세 문장으로 설명해 보세요.</p>
+  <details class="ans"><summary>예시 답 보기</summary><div class="md">모델은 &quot;다음에 올 법한 글&quot;을 고르도록 학습됐다. 그래서 글이 자연스럽고 여러 일을 해내지만, 고르는 기준이 사실 여부가 아니라 그럴듯함이라 틀린 내용도 똑같이 매끄럽게 나온다.</div></details></div>
+<div class="q"><p class="qq"><span class="mono">Q5</span>(상황형) 파일럿 첫날, 고객사 직원이 말해요. &quot;어제랑 똑같이 물었는데 답이 달라요. 이거 믿어도 되는 건가요?&quot; 어떻게 답하고, 어떤 조치를 제안할까요?</p>
+  <details class="ans"><summary>예시 답 보기</summary><div class="md">&quot;모델은 답을 확률로 뽑기 때문에 표현이 달라질 수 있고, 이건 고장이 아니에요&quot;라고 설명한다. 조치로는 (1) 답이 일정해야 하는 항목은 출력 형식과 판단 기준을 프롬프트에 고정하고, (2) 정확한 값은 도구나 원본 데이터로 확인하게 하고, (3) 파일럿 성공 지표를 &quot;기준 통과율&quot;로 합의하고 표본을 사람이 검토하는 절차를 둔다.</div></details></div>
+  
+  </div>
+    </div>
+  </div>
+</section>
+<section class="room r-fde band iris" style="--wall:var(--mint);--floor:var(--tomato);--text:var(--ink);--serc:var(--cobalt);--line:76%;--ix:75%" aria-labelledby="h-fde">
+  <div class="inner">
+    <span class="mark"><b>##</b> FDE 관점</span>
+    <h2 id="h-fde" class="say">공식 경로는 이 코스를 <em>&quot;파일럿 첫날부터 사용자에게 설명하게 될 한계&quot;</em>라고 소개해요.</h2>
+    <div class="lead md"><p>현장에서 가장 먼저 듣는 질문이 &quot;왜 답이 매번 달라요?&quot;와 &quot;왜 틀린 걸 자신 있게 말해요?&quot;인데, 둘 다 오늘 배운 성질로 설명돼요. FDE는 이걸 변명이 아니라 설계 근거로 써요. 답이 일정해야 하는 업무라면 출력 형식을 고정하고 평가 기준을 정하고, 정확한 수치가 필요한 업무라면 도구를 붙여요. 그리고 파일럿의 성공 지표를 정할 때 &quot;항상 100% 같은 답&quot;이 아니라 &quot;업무 기준을 통과하는 비율&quot;로 합의해 두면 나중에 기대가 어긋나지 않아요.</p></div>
+  </div>
+</section>
+<section class="room r-cards iris" style="--wall:var(--mustard);--floor:var(--mustard);--text:var(--ink);--serc:var(--cobalt);--ix:35%" aria-labelledby="h-cards">
+  <div class="inner">
+    <span class="mark"><b>##</b> 복습 카드</span>
+    <h2 id="h-cards" class="title">눌러서 뒤집기</h2>
+    <div class="cards"><button class="card" type="button" aria-pressed="false" style="--r:-3deg"><span class="face front"><span class="no">01</span><b>생성형 AI를 이해하는 네 가지 성질은?</b><span class="flip mono">눌러서 뒤집기</span></span><span class="face back" style="--bg:var(--sky)">다음 토큰 예측, 지식, 작업 기억, 조종 가능성.</span></button>
+<button class="card" type="button" aria-pressed="false" style="--r:2deg"><span class="face front"><span class="no">02</span><b>토큰이란?</b><span class="flip mono">눌러서 뒤집기</span></span><span class="face back" style="--bg:var(--pink)">언어 모델이 다루는 가장 작은 글 조각. 단어, 단어의 일부, 글자일 수 있다.</span></button>
+<button class="card" type="button" aria-pressed="false" style="--r:-1.5deg"><span class="face front"><span class="no">03</span><b>같은 질문에 답이 달라지는 이유는?</b><span class="flip mono">눌러서 뒤집기</span></span><span class="face back" style="--bg:var(--purple)">다음 토큰을 확률 분포에서 뽑기 때문. 현재 API에는 이를 끄는 온도(temperature) 값이 없으니 형식과 기준으로 일정하게 만든다.</span></button>
+<button class="card" type="button" aria-pressed="false" style="--r:3deg"><span class="face front"><span class="no">04</span><b>다음 토큰 예측의 능력과 한계를 한 쌍으로 말하면?</b><span class="flip mono">눌러서 뒤집기</span></span><span class="face back" style="--bg:var(--mint)">능력은 유창하고 유연한 글쓰기, 한계는 그럴듯하지만 틀린 내용을 쓸 수 있다는 것.</span></button>
+<button class="card" type="button" aria-pressed="false" style="--r:-2.5deg"><span class="face front"><span class="no">05</span><b>그럴듯한 오류에 대한 FDE의 대책 세 가지는?</b><span class="flip mono">눌러서 뒤집기</span></span><span class="face back" style="--bg:var(--butter)">도구(계산·검색) 붙이기, 출력 형식 정하기, 중요한 결과는 사람이 확인하기.</span></button></div>
+  </div>
+</section>
+
+<section class="room r-tt iris" style="--wall:var(--cobalt);--floor:var(--cobalt);--text:var(--paper);--serc:var(--pink);--ix:65%" id="timetable" aria-labelledby="h-tt">
+  <div class="inner">
+    <div class="endrow">
+      <label class="done-box"><input type="checkbox" data-done="S01"> 이 세션을 다 했어요 <span class="mono small">이 브라우저에만 저장</span></label>
+      <nav class="pager" aria-label="세션 이동">
+        
+        <a href="/t/claude-fde/0000-course-home" target="_top" class="pg">코스 홈</a>
+        <a href="/t/claude-fde/s02-knowledge" target="_top" class="pg pg-next">S02 · 지식: 학습 데이터, 지식 컷오프, 환각 →</a>
+      </nav>
+    </div>
+    <span class="mark"><b>##</b> 전체 시간표</span>
+    <h2 id="h-tt" class="title">11개 코스, <span class="ser">42개</span> 세션</h2>
+    <div class="ledger"><div class="course rise"><h3><span>1. AI Capabilities and Limitations</span><span class="mono">4세션</span></h3>
+  <p class="cd mono">핵심, 약 60분</p><ol><li class="now" aria-current="page"><a href="/t/claude-fde/s01-next-token-prediction" target="_top"><span class="mono">S01</span><span class="tt">생성형 AI의 네 가지 성질과 다음 토큰 예측</span><span class="tag v">영상</span><span class="done-mark" data-done-mark="S01" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s02-knowledge" target="_top"><span class="mono">S02</span><span class="tt">지식: 학습 데이터, 지식 컷오프, 환각</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S02" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s03-working-memory" target="_top"><span class="mono">S03</span><span class="tt">작업 기억: 컨텍스트 윈도우</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S03" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s04-steerability-diagnosis" target="_top"><span class="mono">S04</span><span class="tt">조종 가능성과 예상 밖 출력 진단하기</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S04" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>2. AI Fluency for Builders</span><span class="mono">2세션</span></h3>
+  <p class="cd mono">핵심, 약 45분</p><ol><li class=""><a href="/t/claude-fde/s05-4d-delegation-description" target="_top"><span class="mono">S05</span><span class="tt">AI Fluency와 4D 프레임워크: 위임과 설명</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S05" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s06-4d-discernment-diligence" target="_top"><span class="mono">S06</span><span class="tt">분별과 책임: 빌더의 검증</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S06" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>3. Claude Platform and Model Foundations</span><span class="mono">2세션</span></h3>
+  <p class="cd mono">핵심, 약 60분</p><ol><li class=""><a href="/t/claude-fde/s07-entry-points-features" target="_top"><span class="mono">S07</span><span class="tt">결정 1·2: 진입점과 기능 고르기</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S07" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s08-model-context-decisions" target="_top"><span class="mono">S08</span><span class="tt">결정 3·4: 모델 선택과 컨텍스트·메모리 관리</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S08" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>4. Choosing the right Claude model</span><span class="mono">1세션</span></h3>
+  <p class="cd mono">핵심, 약 10분</p><ol><li class=""><a href="/t/claude-fde/s09-choosing-model" target="_top"><span class="mono">S09</span><span class="tt">네 가지 모델과 effort 조절</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S09" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>5. Claude Platform 101</span><span class="mono">8세션</span></h3>
+  <p class="cd mono">빌드, 약 90분</p><ol><li class=""><a href="/t/claude-fde/s10-platform-first-api-call" target="_top"><span class="mono">S10</span><span class="tt">Claude Platform이란, 첫 API 호출, 모델 고르기</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S10" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s11-agent-loop" target="_top"><span class="mono">S11</span><span class="tt">에이전트 루프</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S11" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s12-tool-use" target="_top"><span class="mono">S12</span><span class="tt">도구 사용 (tool use)</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S12" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s13-thinking" target="_top"><span class="mono">S13</span><span class="tt">확장 사고 (thinking)</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S13" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s14-built-in-tools-skills" target="_top"><span class="mono">S14</span><span class="tt">내장 도구와 Skills</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S14" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s15-mcp-context-management" target="_top"><span class="mono">S15</span><span class="tt">MCP와 컨텍스트 관리</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S15" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s16-managed-agents" target="_top"><span class="mono">S16</span><span class="tt">Managed Agents</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S16" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s17-building-with-claude-code" target="_top"><span class="mono">S17</span><span class="tt">Claude Code로 만들기 + 코스 5 총정리</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S17" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>6. Claude Code 101</span><span class="mono">5세션</span></h3>
+  <p class="cd mono">빌드, 약 60분</p><ol><li class=""><a href="/t/claude-fde/s18-what-is-claude-code" target="_top"><span class="mono">S18</span><span class="tt">Claude Code란: 에이전트 루프, 컨텍스트, 도구와 권한, 설치</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S18" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s19-first-prompt-modes" target="_top"><span class="mono">S19</span><span class="tt">첫 프롬프트: 승인 모드, 자동 수락, Plan Mode</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S19" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s20-daily-workflows" target="_top"><span class="mono">S20</span><span class="tt">일상 워크플로: Explore → Plan → Code → Commit, 리뷰, 컨텍스트 명령</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S20" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s21-claude-md-subagents" target="_top"><span class="mono">S21</span><span class="tt">커스터마이즈 1: CLAUDE.md와 서브에이전트</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S21" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s22-skills-mcp-hooks" target="_top"><span class="mono">S22</span><span class="tt">커스터마이즈 2: skills, MCP, hooks</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S22" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>7. Claude Code in Action</span><span class="mono">5세션</span></h3>
+  <p class="cd mono">빌드, 약 60분</p><ol><li class=""><a href="/t/claude-fde/s23-steer-the-work" target="_top"><span class="mono">S23</span><span class="tt">작업 조종: plan mode, 압축(compaction), 되감기(rewind)</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S23" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s24-configure-claude" target="_top"><span class="mono">S24</span><span class="tt">설정: 간결한 CLAUDE.md, 지시를 둘 자리, 검증 skill</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S24" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s25-permissions-hooks" target="_top"><span class="mono">S25</span><span class="tt">권한 모드와 hooks로 규칙 강제하기</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S25" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s26-automate-repeat-work" target="_top"><span class="mono">S26</span><span class="tt">반복 작업 자동화: 자율 세션, worktree, routines, headless, PR 리뷰</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S26" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s27-verify-share" target="_top"><span class="mono">S27</span><span class="tt">검증과 공유: 무감독 실행 검증, plugin</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S27" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>8. Introduction to Model Context Protocol</span><span class="mono">4세션</span></h3>
+  <p class="cd mono">빌드, 약 60분</p><ol><li class=""><a href="/t/claude-fde/s28-mcp-architecture" target="_top"><span class="mono">S28</span><span class="tt">MCP 구조: 클라이언트와 서버</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S28" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s29-mcp-server-tools" target="_top"><span class="mono">S29</span><span class="tt">서버 만들기: tools와 MCP Inspector</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S29" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s30-mcp-resources-prompts" target="_top"><span class="mono">S30</span><span class="tt">Resources와 Prompts, 셋 중 무엇을 쓸까</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S30" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s31-mcp-client" target="_top"><span class="mono">S31</span><span class="tt">클라이언트 구현: 연결, 비동기, 정리</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S31" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>9. Introduction to agent skills</span><span class="mono">3세션</span></h3>
+  <p class="cd mono">빌드, 약 30분</p><ol><li class=""><a href="/t/claude-fde/s32-what-are-skills" target="_top"><span class="mono">S32</span><span class="tt">Skill이란, 첫 skill 만들기</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S32" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s33-skill-config-comparison" target="_top"><span class="mono">S33</span><span class="tt">설정과 여러 파일 skill, 다른 기능과 비교</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S33" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s34-sharing-troubleshooting-skills" target="_top"><span class="mono">S34</span><span class="tt">skill 공유와 문제 해결</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S34" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>10. Delivery Methodology</span><span class="mono">4세션</span></h3>
+  <p class="cd mono">파일럿, 약 40분</p><ol><li class=""><a href="/t/claude-fde/s35-use-case-qualification" target="_top"><span class="mono">S35</span><span class="tt">유스케이스 발굴과 자격 판정</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S35" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s36-pilot-design-roi" target="_top"><span class="mono">S36</span><span class="tt">파일럿 설계와 ROI 측정</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S36" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s37-rollout-champions" target="_top"><span class="mono">S37</span><span class="tt">단계적 롤아웃, 변화 관리, 챔피언</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S37" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s38-failure-modes-30-day" target="_top"><span class="mono">S38</span><span class="tt">흔한 실패 모드 예방과 30일 활성화</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S38" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>11. Driving enterprise adoption of Claude</span><span class="mono">3세션</span></h3>
+  <p class="cd mono">파일럿, 약 60분</p><ol><li class=""><a href="/t/claude-fde/s39-activation" target="_top"><span class="mono">S39</span><span class="tt">1단계 Activation: 성공 팀, 프로비저닝, 문화, 교육, 런치</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S39" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s40-acceleration" target="_top"><span class="mono">S40</span><span class="tt">2단계 Acceleration: CoE와 Train the Trainer</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S40" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s41-expansion" target="_top"><span class="mono">S41</span><span class="tt">3단계 Expansion: 측정, 축하, 반복, 새 유스케이스</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S41" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>캡스톤</span><span class="mono">1세션</span></h3>
+  <ol><li class=""><a href="/t/claude-fde/s42-capstone-pilot-plan" target="_top"><span class="mono">S42</span><span class="tt">파일럿 계획서 쓰기</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S42" aria-hidden="true"></span></a></li></ol></div></div>
+  </div>
+</section>
 </main>
+<footer class="night" role="contentinfo">
+  <div class="inner">
+    <p class="end">FDE <span class="ser">study</span><span class="dot end-dot" aria-hidden="true"></span></p>
+    <p><b>비공식 학습 자료.</b> 이 노트는 Anthropic 공식 “Claude Forward Deployed Engineer” 학습 경로의 공개 개요와 공식 문서를 바탕으로 쓴 개인 학습 노트이며, 공식 강의 필기가 아니에요. 실제 강의·퀴즈·수료는 공식 경로에서 진행해요.</p>
+    <p>공식 경로: <a href="https://anthropic-partners.skilljar.com/path/claude-fde" target="_blank" rel="noopener noreferrer">https://anthropic-partners.skilljar.com/path/claude-fde</a></p>
+    <div class="sources"><p class="mono">## 출처</p><div class="md"><ul><li>Anthropic, Glossary (Tokens, Pretraining, LLM 정의): <a href="https://platform.claude.com/docs/en/about-claude/glossary" target="_blank" rel="noopener noreferrer">https://platform.claude.com/docs/en/about-claude/glossary</a></li><li>Anthropic, API Versioning (2026-10-21 버전에서 temperature·top_p·top_k 제거): <a href="https://platform.claude.com/docs/en/api/versioning" target="_blank" rel="noopener noreferrer">https://platform.claude.com/docs/en/api/versioning</a></li><li>Claude Forward Deployed Engineer 학습 경로, 코스 1 소개와 목차(네 가지 성질, 능력–한계 눈금): <a href="https://anthropic-partners.skilljar.com/path/claude-fde" target="_blank" rel="noopener noreferrer">https://anthropic-partners.skilljar.com/path/claude-fde</a></li><li>영상 장면 4의 확률 숫자(46%, 31% 등)는 설명용으로 지어낸 예시예요. 실제 모델의 값이 아니에요.</li></ul></div></div>
+  </div>
+</footer>
+<script type="application/json" id="fde-data">{"lab":{"mark":"직접 뽑아 보기","title":"“오늘 날씨가 ___” 다음 조각은?","prefix":["오늘","날씨가"],"dist":[["맑아요",46],["좋네요",31],["흐려요",18],["그 밖",5]],"note":"확률 숫자는 설명용 예시예요. 실제 모델 값이 아니에요."}}</script>
 <script src="fde.js"></script>
 </body>
 </html>

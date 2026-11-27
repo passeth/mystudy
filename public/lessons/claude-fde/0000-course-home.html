@@ -3,357 +3,120 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="11개 코스 → 42개 세션 목차, 진행 상태, 확인이 필요한 곳">
+<meta name="description" content="11개 코스 → 42개 세션 시간표, 진도, 확인이 필요한 곳">
+<meta name="color-scheme" content="light">
 <title>Claude FDE 스터디 — 코스 홈</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,700;12..96,800&family=Cutive+Mono&family=Gowun+Batang:wght@400;700&family=Instrument+Serif:ital@0;1&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap">
 <link rel="stylesheet" href="fde.css">
 </head>
 <body>
-<!-- 자동 생성 파일: scripts/sync-fde.mjs 가 만들어요. 직접 고치지 말고 원본 노트를 고친 뒤 npm run fde:sync 하세요. -->
-<main class="wrap">
-
-<header class="head home-head">
-  <div class="home-text">
-    <span class="eyebrow">Claude FDE 스터디 · 비공식 학습 노트</span>
-    <h1>Claude Forward Deployed Engineer<br>스터디 코스</h1>
-    <div class="meta"><span>11개 코스</span><span>42개 세션</span><span>세션당 15~25분</span><span class="pill pill-draft">모든 노트 초안</span></div>
+<!-- 자동 생성 파일: scripts/sync-fde.mjs 가 만들어요. 직접 고치지 말고 원본 노트나 claude-fde-course/ 를 고친 뒤 npm run fde:render 하세요. -->
+<nav class="hud" aria-label="코스">
+  <a href="/t/claude-fde/0000-course-home" target="_top" class="brand">Claude FDE 스터디 <span class="dot" aria-hidden="true"></span><span class="long">비공식 노트</span></a>
+  <a class="pill" href="#timetable">시간표 <i aria-hidden="true"></i></a>
+</nav>
+<main>
+<header class="room hero">
+  <div class="art"><img src="img/stage.jpg" alt="파란 벽과 베이지 바닥의 무대 위에서, 고전 초상화 얼굴의 인물이 크림색 블록을 한 줄로 쌓고 있고 빨간 블록 하나가 다음 차례를 기다린다" width="1600" height="893"></div>
+  <div class="copy">
+    <span class="mark land"><b>##</b> 비공식 학습 노트 · 11개 코스 · 42세션</span>
+    <h1 class="land l2">Claude FDE <span class="ser">스터디</span></h1>
+    <div class="lines land l3"><span>11개 코스를 42개 세션으로</span><span>하루 한 세션, 15~25분</span><span>마지막엔 파일럿 계획서 한 장</span></div>
+    <span class="by">Claude Forward Deployed Engineer 학습 경로 · 개인 학습 노트</span>
   </div>
-  <img class="home-img" src="img/hero.jpg" alt="펼친 공책 위에 나무 조각을 한 칸씩 이어 놓는 손 그림" width="380" height="345">
 </header>
-<section class="sec overview"><p>Anthropic 파트너 학습 사이트의 <strong>Claude Forward Deployed Engineer</strong> 학습 경로(11개 코스, 약 9.5시간)를 따라가며 쓴 한국어 학습 노트예요. 공식 경로의 개요를 기준으로 코스를 42개 세션으로 나눴고, 한 세션은 15~25분이면 끝나요.</p>
+<section class="room r-note iris" style="--ix:30%" aria-label="코스 소개">
+  <div class="inner"><div class="page">
+    <div class="block"><h2><span class="mono">##</span>이 코스는</h2><div class="md"><p>Anthropic 파트너 학습 사이트의 <strong>Claude Forward Deployed Engineer</strong> 학습 경로(11개 코스, 약 9.5시간)를 따라가며 쓴 한국어 학습 노트예요. 공식 경로의 개요를 기준으로 코스를 42개 세션으로 나눴고, 한 세션은 15~25분이면 끝나요.</p>
 <p>경로의 최종 목표는 <strong>고객 유스케이스의 파일럿 계획서 쓰기</strong>예요. 측정 기준선(baseline), 만들기 전에 합의하는 성공 지표, 먼저 출시할 부분, 첫 사용자 그룹을 들이는 방법을 한 문서에 담아요. 마지막 세션(S42)이 그 계획서를 직접 써 보는 캡스톤이에요.</p>
 <h3>한 세션을 공부하는 순서</h3>
 <ol><li>지난 세션의 <strong>복습 카드</strong>를 펼쳐 보며 떠올리기 (3분)</li><li>영상이 있는 세션은 <strong>영상</strong> 보기 (4~6분)</li><li><strong>핵심 정리</strong>와 <strong>직접 해 보기</strong> 읽고 따라 하기 (5~8분)</li><li><strong>확인 문제</strong> 풀고, 정답과 해설을 펼쳐 맞춰 보기 (5분)</li><li><strong>FDE 관점</strong> 한 단락으로 현장에서 어떻게 쓰는지 정리하기 (2분)</li></ol>
-<p>주 5회면 약 8.5주, 매일이면 6주 정도 걸려요. 같이 공부한다면 세션 하나씩 정해 확인 문제의 서술형·상황형 답을 서로 비교해 보세요.</p></section>
-<section class="progress" aria-label="진행 상태">
-  <div class="progress-text"><strong>진행 상태</strong> <span data-progress-count>0</span> / 42 세션 완료 <span class="muted">· 이 브라우저에만 저장돼요. 세션 페이지 아래에서 체크해요.</span></div>
-  <div class="bar"><i data-progress-bar style="width:0%"></i></div>
-  <div class="progress-cta"><a href="/t/claude-fde/s01-next-token-prediction" target="_top" class="btn">S01부터 시작하기 →</a><span data-progress-next></span></div>
+<p>주 5회면 약 8.5주, 매일이면 6주 정도 걸려요. 같이 공부한다면 세션 하나씩 정해 확인 문제의 서술형·상황형 답을 서로 비교해 보세요.</p></div></div>
+  </div></div>
 </section>
-<section class="sec toc">
-  <h2>목차: 11개 코스 → 42개 세션</h2>
-  <section class="course">
-  <header class="course-head"><span class="cnum">C1</span><h3>AI Capabilities and Limitations</h3><span class="cdetail">핵심, 약 60분 · 4세션</span></header>
-  <ol class="rows"><li class="row" data-row="S01">
-  <a href="/t/claude-fde/s01-next-token-prediction" target="_top" class="row-link"><span class="sid">S01</span><span class="stitle">생성형 AI의 네 가지 성질과 다음 토큰 예측</span></a>
-  <span class="smin">20분</span>
-  <span class="stags"><span class="pill pill-draft">노트 초안</span><span class="pill">영상 준비 중</span></span>
-  <span class="sdone" data-done-mark="S01" aria-label="완료 여부"></span>
-</li>
-<li class="row" data-row="S02">
-  <a href="/t/claude-fde/s02-knowledge" target="_top" class="row-link"><span class="sid">S02</span><span class="stitle">지식: 학습 데이터, 지식 컷오프, 환각</span></a>
-  <span class="smin">20분</span>
-  <span class="stags"><span class="pill pill-draft">노트 초안</span><span class="pill pill-check" title="(확인 필요) 표시 1곳">확인 필요 1</span></span>
-  <span class="sdone" data-done-mark="S02" aria-label="완료 여부"></span>
-</li>
-<li class="row" data-row="S03">
-  <a href="/t/claude-fde/s03-working-memory" target="_top" class="row-link"><span class="sid">S03</span><span class="stitle">작업 기억: 컨텍스트 윈도우</span></a>
-  <span class="smin">20분</span>
-  <span class="stags"><span class="pill pill-draft">노트 초안</span><span class="pill pill-check" title="(확인 필요) 표시 1곳">확인 필요 1</span></span>
-  <span class="sdone" data-done-mark="S03" aria-label="완료 여부"></span>
-</li>
-<li class="row" data-row="S04">
-  <a href="/t/claude-fde/s04-steerability-diagnosis" target="_top" class="row-link"><span class="sid">S04</span><span class="stitle">조종 가능성과 예상 밖 출력 진단하기</span></a>
-  <span class="smin">20분</span>
-  <span class="stags"><span class="pill pill-draft">노트 초안</span><span class="pill pill-check" title="(확인 필요) 표시 2곳">확인 필요 2</span></span>
-  <span class="sdone" data-done-mark="S04" aria-label="완료 여부"></span>
-</li></ol>
+<section class="room r-progress iris" style="--wall:var(--butter);--floor:var(--tomato);--text:var(--ink);--serc:var(--cobalt);--line:74%;--ix:70%" aria-labelledby="h-prog">
+  <div class="inner">
+    <span class="mark"><b>##</b> 진도</span>
+    <h2 id="h-prog" class="title"><span data-progress-count>0</span> / 42 <span class="ser">세션</span> 완료</h2>
+    <div class="progress"><div class="bar-track"><i data-progress-bar style="width:0%"></i></div>
+      <p class="mono small">이 브라우저에만 저장돼요. 세션 페이지 맨 아래에서 체크해요.</p>
+      <div class="go-row"><a href="/t/claude-fde/s01-next-token-prediction" target="_top" class="go">S01부터 시작하기 →</a><span data-progress-next></span></div>
+    </div>
+  </div>
 </section>
-<section class="course">
-  <header class="course-head"><span class="cnum">C2</span><h3>AI Fluency for Builders</h3><span class="cdetail">핵심, 약 45분 · 2세션</span></header>
-  <ol class="rows"><li class="row" data-row="S05">
-  <a href="/t/claude-fde/s05-4d-delegation-description" target="_top" class="row-link"><span class="sid">S05</span><span class="stitle">AI Fluency와 4D 프레임워크: 위임과 설명</span></a>
-  <span class="smin">20분</span>
-  <span class="stags"><span class="pill pill-draft">노트 초안</span><span class="pill pill-check" title="(확인 필요) 표시 1곳">확인 필요 1</span></span>
-  <span class="sdone" data-done-mark="S05" aria-label="완료 여부"></span>
-</li>
-<li class="row" data-row="S06">
-  <a href="/t/claude-fde/s06-4d-discernment-diligence" target="_top" class="row-link"><span class="sid">S06</span><span class="stitle">분별과 책임: 빌더의 검증</span></a>
-  <span class="smin">20분</span>
-  <span class="stags"><span class="pill pill-draft">노트 초안</span><span class="pill pill-check" title="(확인 필요) 표시 1곳">확인 필요 1</span></span>
-  <span class="sdone" data-done-mark="S06" aria-label="완료 여부"></span>
-</li></ol>
+<section class="room r-tt iris" style="--wall:var(--cobalt);--floor:var(--cobalt);--text:var(--paper);--serc:var(--pink);--ix:50%" id="timetable" aria-labelledby="h-tt">
+  <div class="inner">
+    <span class="mark"><b>##</b> 전체 시간표</span>
+    <h2 id="h-tt" class="title">11개 코스, <span class="ser">42개</span> 세션</h2>
+    <div class="ledger"><div class="course rise"><h3><span>1. AI Capabilities and Limitations</span><span class="mono">4세션</span></h3>
+  <p class="cd mono">핵심, 약 60분</p><ol><li class=""><a href="/t/claude-fde/s01-next-token-prediction" target="_top"><span class="mono">S01</span><span class="tt">생성형 AI의 네 가지 성질과 다음 토큰 예측</span><span class="tag v">영상</span><span class="done-mark" data-done-mark="S01" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s02-knowledge" target="_top"><span class="mono">S02</span><span class="tt">지식: 학습 데이터, 지식 컷오프, 환각</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S02" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s03-working-memory" target="_top"><span class="mono">S03</span><span class="tt">작업 기억: 컨텍스트 윈도우</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S03" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s04-steerability-diagnosis" target="_top"><span class="mono">S04</span><span class="tt">조종 가능성과 예상 밖 출력 진단하기</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S04" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>2. AI Fluency for Builders</span><span class="mono">2세션</span></h3>
+  <p class="cd mono">핵심, 약 45분</p><ol><li class=""><a href="/t/claude-fde/s05-4d-delegation-description" target="_top"><span class="mono">S05</span><span class="tt">AI Fluency와 4D 프레임워크: 위임과 설명</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S05" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s06-4d-discernment-diligence" target="_top"><span class="mono">S06</span><span class="tt">분별과 책임: 빌더의 검증</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S06" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>3. Claude Platform and Model Foundations</span><span class="mono">2세션</span></h3>
+  <p class="cd mono">핵심, 약 60분</p><ol><li class=""><a href="/t/claude-fde/s07-entry-points-features" target="_top"><span class="mono">S07</span><span class="tt">결정 1·2: 진입점과 기능 고르기</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S07" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s08-model-context-decisions" target="_top"><span class="mono">S08</span><span class="tt">결정 3·4: 모델 선택과 컨텍스트·메모리 관리</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S08" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>4. Choosing the right Claude model</span><span class="mono">1세션</span></h3>
+  <p class="cd mono">핵심, 약 10분</p><ol><li class=""><a href="/t/claude-fde/s09-choosing-model" target="_top"><span class="mono">S09</span><span class="tt">네 가지 모델과 effort 조절</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S09" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>5. Claude Platform 101</span><span class="mono">8세션</span></h3>
+  <p class="cd mono">빌드, 약 90분</p><ol><li class=""><a href="/t/claude-fde/s10-platform-first-api-call" target="_top"><span class="mono">S10</span><span class="tt">Claude Platform이란, 첫 API 호출, 모델 고르기</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S10" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s11-agent-loop" target="_top"><span class="mono">S11</span><span class="tt">에이전트 루프</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S11" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s12-tool-use" target="_top"><span class="mono">S12</span><span class="tt">도구 사용 (tool use)</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S12" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s13-thinking" target="_top"><span class="mono">S13</span><span class="tt">확장 사고 (thinking)</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S13" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s14-built-in-tools-skills" target="_top"><span class="mono">S14</span><span class="tt">내장 도구와 Skills</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S14" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s15-mcp-context-management" target="_top"><span class="mono">S15</span><span class="tt">MCP와 컨텍스트 관리</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S15" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s16-managed-agents" target="_top"><span class="mono">S16</span><span class="tt">Managed Agents</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S16" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s17-building-with-claude-code" target="_top"><span class="mono">S17</span><span class="tt">Claude Code로 만들기 + 코스 5 총정리</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S17" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>6. Claude Code 101</span><span class="mono">5세션</span></h3>
+  <p class="cd mono">빌드, 약 60분</p><ol><li class=""><a href="/t/claude-fde/s18-what-is-claude-code" target="_top"><span class="mono">S18</span><span class="tt">Claude Code란: 에이전트 루프, 컨텍스트, 도구와 권한, 설치</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S18" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s19-first-prompt-modes" target="_top"><span class="mono">S19</span><span class="tt">첫 프롬프트: 승인 모드, 자동 수락, Plan Mode</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S19" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s20-daily-workflows" target="_top"><span class="mono">S20</span><span class="tt">일상 워크플로: Explore → Plan → Code → Commit, 리뷰, 컨텍스트 명령</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S20" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s21-claude-md-subagents" target="_top"><span class="mono">S21</span><span class="tt">커스터마이즈 1: CLAUDE.md와 서브에이전트</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S21" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s22-skills-mcp-hooks" target="_top"><span class="mono">S22</span><span class="tt">커스터마이즈 2: skills, MCP, hooks</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S22" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>7. Claude Code in Action</span><span class="mono">5세션</span></h3>
+  <p class="cd mono">빌드, 약 60분</p><ol><li class=""><a href="/t/claude-fde/s23-steer-the-work" target="_top"><span class="mono">S23</span><span class="tt">작업 조종: plan mode, 압축(compaction), 되감기(rewind)</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S23" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s24-configure-claude" target="_top"><span class="mono">S24</span><span class="tt">설정: 간결한 CLAUDE.md, 지시를 둘 자리, 검증 skill</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S24" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s25-permissions-hooks" target="_top"><span class="mono">S25</span><span class="tt">권한 모드와 hooks로 규칙 강제하기</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S25" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s26-automate-repeat-work" target="_top"><span class="mono">S26</span><span class="tt">반복 작업 자동화: 자율 세션, worktree, routines, headless, PR 리뷰</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S26" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s27-verify-share" target="_top"><span class="mono">S27</span><span class="tt">검증과 공유: 무감독 실행 검증, plugin</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S27" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>8. Introduction to Model Context Protocol</span><span class="mono">4세션</span></h3>
+  <p class="cd mono">빌드, 약 60분</p><ol><li class=""><a href="/t/claude-fde/s28-mcp-architecture" target="_top"><span class="mono">S28</span><span class="tt">MCP 구조: 클라이언트와 서버</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S28" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s29-mcp-server-tools" target="_top"><span class="mono">S29</span><span class="tt">서버 만들기: tools와 MCP Inspector</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S29" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s30-mcp-resources-prompts" target="_top"><span class="mono">S30</span><span class="tt">Resources와 Prompts, 셋 중 무엇을 쓸까</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S30" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s31-mcp-client" target="_top"><span class="mono">S31</span><span class="tt">클라이언트 구현: 연결, 비동기, 정리</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S31" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>9. Introduction to agent skills</span><span class="mono">3세션</span></h3>
+  <p class="cd mono">빌드, 약 30분</p><ol><li class=""><a href="/t/claude-fde/s32-what-are-skills" target="_top"><span class="mono">S32</span><span class="tt">Skill이란, 첫 skill 만들기</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S32" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s33-skill-config-comparison" target="_top"><span class="mono">S33</span><span class="tt">설정과 여러 파일 skill, 다른 기능과 비교</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S33" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s34-sharing-troubleshooting-skills" target="_top"><span class="mono">S34</span><span class="tt">skill 공유와 문제 해결</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S34" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>10. Delivery Methodology</span><span class="mono">4세션</span></h3>
+  <p class="cd mono">파일럿, 약 40분</p><ol><li class=""><a href="/t/claude-fde/s35-use-case-qualification" target="_top"><span class="mono">S35</span><span class="tt">유스케이스 발굴과 자격 판정</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S35" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s36-pilot-design-roi" target="_top"><span class="mono">S36</span><span class="tt">파일럿 설계와 ROI 측정</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S36" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s37-rollout-champions" target="_top"><span class="mono">S37</span><span class="tt">단계적 롤아웃, 변화 관리, 챔피언</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S37" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s38-failure-modes-30-day" target="_top"><span class="mono">S38</span><span class="tt">흔한 실패 모드 예방과 30일 활성화</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S38" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>11. Driving enterprise adoption of Claude</span><span class="mono">3세션</span></h3>
+  <p class="cd mono">파일럿, 약 60분</p><ol><li class=""><a href="/t/claude-fde/s39-activation" target="_top"><span class="mono">S39</span><span class="tt">1단계 Activation: 성공 팀, 프로비저닝, 문화, 교육, 런치</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S39" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s40-acceleration" target="_top"><span class="mono">S40</span><span class="tt">2단계 Acceleration: CoE와 Train the Trainer</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S40" aria-hidden="true"></span></a></li><li class=""><a href="/t/claude-fde/s41-expansion" target="_top"><span class="mono">S41</span><span class="tt">3단계 Expansion: 측정, 축하, 반복, 새 유스케이스</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S41" aria-hidden="true"></span></a></li></ol></div>
+<div class="course rise"><h3><span>캡스톤</span><span class="mono">1세션</span></h3>
+  <ol><li class=""><a href="/t/claude-fde/s42-capstone-pilot-plan" target="_top"><span class="mono">S42</span><span class="tt">파일럿 계획서 쓰기</span><span class="tag n">노트</span><span class="done-mark" data-done-mark="S42" aria-hidden="true"></span></a></li></ol></div></div>
+  </div>
 </section>
-<section class="course">
-  <header class="course-head"><span class="cnum">C3</span><h3>Claude Platform and Model Foundations</h3><span class="cdetail">핵심, 약 60분 · 2세션</span></header>
-  <ol class="rows"><li class="row" data-row="S07">
-  <a href="/t/claude-fde/s07-entry-points-features" target="_top" class="row-link"><span class="sid">S07</span><span class="stitle">결정 1·2: 진입점과 기능 고르기</span></a>
-  <span class="smin">20분</span>
-  <span class="stags"><span class="pill pill-draft">노트 초안</span><span class="pill pill-check" title="(확인 필요) 표시 1곳">확인 필요 1</span></span>
-  <span class="sdone" data-done-mark="S07" aria-label="완료 여부"></span>
-</li>
-<li class="row" data-row="S08">
-  <a href="/t/claude-fde/s08-model-context-decisions" target="_top" class="row-link"><span class="sid">S08</span><span class="stitle">결정 3·4: 모델 선택과 컨텍스트·메모리 관리</span></a>
-  <span class="smin">20분</span>
-  <span class="stags"><span class="pill pill-draft">노트 초안</span><span class="pill pill-check" title="(확인 필요) 표시 1곳">확인 필요 1</span></span>
-  <span class="sdone" data-done-mark="S08" aria-label="완료 여부"></span>
-</li></ol>
+<section class="room r-plain" aria-labelledby="h-chk">
+  <div class="inner">
+    <span class="mark"><b>##</b> 확인이 필요한 곳</span>
+    <h2 id="h-chk" class="title">아직 <span class="ser">확인 필요</span> 34곳</h2>
+    <p class="lead">공식 강의 본문이나 실행 결과로 확인하지 못한 내용이에요. 원본 표시를 그대로 두고, 노트 안에서도 같은 배지로 보여요.</p>
+    <details class="next"><summary>세션별 목록 펼치기 (23개 세션)</summary><div class="sheet md"><ul class="check-list"><li><a href="/t/claude-fde/s02-knowledge" target="_top"><b>S02</b> 지식: 학습 데이터, 지식 컷오프, 환각</a><ul><li>Claude.ai 새 대화에서 물어보세요: &quot;네 지식은 대략 언제까지야? 그 뒤에 일어난 일을 물으면 어떻게 답할 거야?&quot; 답을 모델 개요 표의 날짜와 비교해 보세요. 모델이 스스로 말한 날짜가 공식 표와 항상 일치하는지는 확인하지 못했어요(<span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>). 기준은 표예요.</li></ul></li>
+<li><a href="/t/claude-fde/s03-working-memory" target="_top"><b>S03</b> 작업 기억: 컨텍스트 윈도우</a><ul><li>창 밖은 모른다. 새 대화는 빈 책상에서 시작해요. 어제 대화에서 한 약속을 오늘의 모델은 보지 못해요. 제품에 따라 대화 사이를 이어 주는 메모리 기능이 있는데, 이건 S08에서 다뤄요(Claude.ai 메모리 기능의 구체적인 동작은 이번에 확인하지 않았어요. <span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>).</li></ul></li>
+<li><a href="/t/claude-fde/s04-steerability-diagnosis" target="_top"><b>S04</b> 조종 가능성과 예상 밖 출력 진단하기</a><ul><li>조종 가능성은 내 프롬프트가 모델의 행동을 얼마나 움직일 수 있는가예요. 공식 문서는 Claude를 &quot;뛰어나지만 우리 규범과 업무 방식은 모르는 새 직원&quot;처럼 대하라고 해요. 잘 설명하면 잘 따르고, 설명이 비면 알아서 채워요. (공식 강의가 이 용어를 정확히 어떻게 정의하는지는 볼 수 없었어요. <span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>.)</li><li>코스 1의 목표는 예상 밖 출력을 보고 어떤 종류인지 알아보고, 맞춤 처방을 하는 것이에요. 아래 표는 네 성질에 맞춰 직접 구성한 간단한 진단이에요(공식 강의의 진단 도구 내용은 볼 수 없었어요. <span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>).</li></ul></li>
+<li><a href="/t/claude-fde/s05-4d-delegation-description" target="_top"><b>S05</b> AI Fluency와 4D 프레임워크: 위임과 설명</a><ul><li>… y)예요. 오늘은 앞의 두 역량을 빌더(무언가를 만드는 사람)의 일에 대어 봐요. 공식 강의가 빌더 업무에 구체적으로 어떻게 적용하는지는 볼 수 없어서, 아래 적용은 프레임워크 정의와 공개 문서로 직접 쓴 것이에요(<span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>).</li></ul></li>
+<li><a href="/t/claude-fde/s06-4d-discernment-diligence" target="_top"><b>S06</b> 분별과 책임: 빌더의 검증</a><ul><li>공식 코스 2의 분별 섹션은 코드와 사용자 경험, 두 강의로 이루어져 있어요. 강의 내용은 볼 수 없어서 아래는 공개 문서와 일반 원리로 직접 쓴 것이에요(<span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>).</li></ul></li>
+<li><a href="/t/claude-fde/s07-entry-points-features" target="_top"><b>S07</b> 결정 1·2: 진입점과 기능 고르기</a><ul><li>진입점은 Claude와 일하는 자리예요. 공식 강의가 무엇을 진입점으로 꼽는지는 목차가 공개돼 있지 않아서(<span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>), claude.com 제품 메뉴와 도움말을 기준으로 정리했어요.</li></ul></li>
+<li><a href="/t/claude-fde/s08-model-context-decisions" target="_top"><b>S08</b> 결정 3·4: 모델 선택과 컨텍스트·메모리 관리</a><ul><li>현재 라인업에는 Opus 위에 Fable 계열도 있어요. 학습 목표에는 세 계열만 적혀 있어서 강의가 Fable을 다루는지는 알 수 없어요(<span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>). 네 모델의 차이와 노력 수준(effort) 조절은 S09에서 봅니다.</li></ul></li>
+<li><a href="/t/claude-fde/s10-platform-first-api-call" target="_top"><b>S10</b> Claude Platform이란, 첫 API 호출, 모델 고르기</a><ul><li>Claude Console(platform.claude.com): API 키, 사용량과 한도, 환경을 나누는 워크스페이스(workspace), 브라우저에서 시험해 보는 플레이그라운드(playground). 공식 코스 설명의 Workbench가 이 플레이그라운드를 가리키는지는 확인하지 못했어요(<span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>).</li></ul></li>
+<li><a href="/t/claude-fde/s15-mcp-context-management" target="_top"><b>S15</b> MCP와 컨텍스트 관리</a><ul><li>… ontent의 블록 종류를 출력해 보세요. S14의 서버 도구 응답과 어떤 점이 닮았나요? (힌트: 누가 실행했나) 예시의 서버 주소는 공식 문서에 나오는 예시 주소인데, 지금 실제로 응답하는지는 확인하지 못했어요(<span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>). 연결 오류가 나면 쓸 수 있는 원격 MCP 서버 주소로 바꾸세요.</li></ul></li>
+<li><a href="/t/claude-fde/s16-managed-agents" target="_top"><b>S16</b> Managed Agents</a><ul><li>…  다른 구성을 검토하고, 고객의 법무·보안 담당과 Anthropic 계정 팀에 확인한다. (2) 사내망: Anthropic 쪽 클라우드 샌드박스에서 고객 사내망에 바로 닿을 수 있는지는 이 노트에서 확인하지 못했다(<span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>). 공식 문서가 안내하는, 내 인프라에서 실행하는 방법은 커스텀 도구(실행은 고객 쪽 코드)와 셀 …</li></ul></li>
+<li><a href="/t/claude-fde/s18-what-is-claude-code" target="_top"><b>S18</b> Claude Code란: 에이전트 루프, 컨텍스트, 도구와 권한, 설치</a><ul><li>파트너 사이트의 코스 6과 Claude Academy의 Claude Code 101은 레슨 수(12)와 섹션 구성이 같지만, 내용이 완전히 같은지는 확인하지 못했어요(<span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>).</li></ul></li>
+<li><a href="/t/claude-fde/s19-first-prompt-modes" target="_top"><b>S19</b> 첫 프롬프트: 승인 모드, 자동 수락, Plan Mode</a><ul><li>공식 경로의 코스 설명에 나오는 approval mode와 auto-accept는 현재 문서의 Manual과 Accept edits에 해당하는 것으로 보여요(<span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>: 강의가 쓰는 정확한 이름). Accept edits에서도 그 밖의 셸 명령은 여전히 물어요. A …</li><li><span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>: 파트너 사이트 강의가 모드를 부르는 정확한 이름. 문서와 Claude Academy 페이지는 Manual, Accept edits, Plan, Auto로 쓰고 있어요.</li></ul></li>
+<li><a href="/t/claude-fde/s24-configure-claude" target="_top"><b>S24</b> 설정: 간결한 CLAUDE.md, 지시를 둘 자리, 검증 skill</a><ul><li>… 로 바꿔 줘&quot;라고 한 뒤 /verify를 실행해요. 문서는 저장소 루트에 기록된 verify skill이 번들 /verify를 대신한다고 해요. 손으로 쓴 파일도 똑같이 대신하는지는 이 실습에서 직접 확인해 보세요(<span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>). 관찰: Claude가 sh test.sh를 돌리는지, 실패를 보고 변경을 되돌리는지 테스트를  …</li></ul></li>
+<li><a href="/t/claude-fde/s28-mcp-architecture" target="_top"><b>S28</b> MCP 구조: 클라이언트와 서버</a><ul><li>참고로 프로토콜 2026-07-28판부터는 연결 초기의 악수(initialize)가 없어지고, 요청마다 버전과 기능 정보를 실어 보내요. 서버 정보가 필요하면 server/discover로 물어요. 예전 자료에는 initialize가 나와요. 공식 강의 영상이 어느 판 기준인지는 (<span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>).</li></ul></li>
+<li><a href="/t/claude-fde/s29-mcp-server-tools" target="_top"><b>S29</b> 서버 만들기: tools와 MCP Inspector</a><ul><li>예전 자료에는 from mcp.server.fastmcp import FastMCP가 나와요. SDK v2에서 이름이 MCPServer로 바뀌었고 데코레이터 쓰는 법은 그대로예요. 공식 강의 영상이 어느 버전 기준인지는 (<span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>).</li><li>예제 코드는 위 공식 문서의 패턴대로 썼고, 함수·클래스 이름은 SDK 2.3.0 소스와 대조했어요. 다만 이 환경에서 직접 실행해 보지는 못했어요(실행 <span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>). 문서 내용(매출 12%, 10명)은 지어낸 예시예요.</li></ul></li>
+<li><a href="/t/claude-fde/s30-mcp-resources-prompts" target="_top"><b>S30</b> Resources와 Prompts, 셋 중 무엇을 쓸까</a><ul><li>[&quot;MCP client implementation &amp; advanced features&quot;]   # 강의 제목이 비공개라 어느 섹션에 속하는지는 추정 (<span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>)</li><li>식당 비유는 설명을 위해 Study_FDE가 만든 것이에요. 예제 코드는 공식 문서의 패턴대로 썼고 SDK 2.3.0 소스와 이름을 대조했지만, 이 환경에서 직접 실행해 보지는 못했어요(실행 <span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>).</li></ul></li>
+<li><a href="/t/claude-fde/s31-mcp-client" target="_top"><b>S31</b> 클라이언트 구현: 연결, 비동기, 정리</a><ul><li>… 직접 만들어 넘겼다면, 그건 만든 사람이 닫아야 해요. 예전 자료에는 ClientSession을 만들고 session.initialize()를 직접 부르는 더 긴 방식이 나와요. 공식 강의 영상이 어느 방식인지는 (<span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>).</li><li>진동벨 비유와 &quot;최대 10번&quot;은 설명용 예시예요(공식 튜토리얼의 예제 상한값이 10이에요). 예제 코드는 공식 문서의 패턴대로 썼고 SDK 2.3.0 소스와 이름을 대조했지만, 이 환경에서 직접 실행해 보지는 못했어요(실행 <span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>).</li></ul></li>
+<li><a href="/t/claude-fde/s35-use-case-qualification" target="_top"><b>S35</b> 유스케이스 발굴과 자격 판정</a><ul><li>… , 처리 건수 같은 업무 단위 숫자로 잡혀요. 그래서 파일럿은 구조적 이득이 보이는 일로 골라요. (두 낱말은 공식 개요에 있지만 정의 본문은 공개돼 있지 않아요. 위 풀이는 일반적인 실무 해석이에요. 공식 정의는 <span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>)</li><li>복잡도는 &quot;높을수록 좋다&quot;가 아니에요. 규칙만으로 끝나는 일은 스크립트가 낫고, 전문가끼리도 답이 갈리는 고위험 일은 첫 파일럿으로 무거워요. Anthropic 공개 가이드도 첫 파일럿에서는 고객에게 바로 닿는 일과 핵심 업무를 피하라고 해요. (공식 코스가 네 기준을 어떻게 채점하는지는 <span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>)</li></ul></li>
+<li><a href="/t/claude-fde/s38-failure-modes-30-day" target="_top"><b>S38</b> 흔한 실패 모드 예방과 30일 활성화</a><ul><li>실패 모드 표의 뒤 네 줄과 조기 신호, 0주차 항목, 주차별 계획의 묶음은 Study_FDE가 짠 예시예요. 공식 코스의 실패 모드 목록과 30일 일정은 확인하지 못했어요(<span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>).</li></ul></li>
+<li><a href="/t/claude-fde/s39-activation" target="_top"><b>S39</b> 1단계 Activation: 성공 팀, 프로비저닝, 문화, 교육, 런치</a><ul><li>… . 각 단계 안의 세부는 Anthropic 공개 문서(Claude Enterprise 관리자 가이드, 기업 AI 전환 가이드, 지원 문서)에서 확인한 것과 일반적인 실무 방식으로 썼어요. 공식 코스의 정확한 설명은 <span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>예요.</li><li>… 세울 법무·컴플라이언스를 넣으라고 해요. 파일럿 팀에는 파일럿 리드, 기술 담당, 현업 사용자, 임원 스폰서를 두고 전용 시간을 줘요. 여기에 S37의 챔피언이 더해져요. (공식 코스가 말하는 &quot;성공 팀&quot;의 구성은 <span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>)</li><li>심리적 안전감의 정의는 조직 행동 연구(에이미 에드먼슨의 1999년 논문으로 알려짐)의 일반적인 설명이에요. 논문 원문 페이지는 열지 못해 출처 목록에 넣지 않았어요(<span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>). 리더의 실천 세 가지와 &quot;활성화 점검표&quot;는 Study_FDE가 든 예시예요. 팀 수준의 J-커 …</li></ul></li>
+<li><a href="/t/claude-fde/s40-acceleration" target="_top"><b>S40</b> 2단계 Acceleration: CoE와 Train the Trainer</a><ul><li>… e&quot;, 그리고 수업 제목 셋이에요. CoE의 구성, 거버넌스 항목, Train the Trainer의 방식은 Anthropic 공개 가이드에서 확인한 것과 일반적인 실무 방식으로 썼어요. 공식 코스의 정확한 설명은 <span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>예요.</li><li>Train the Trainer의 풀이, &quot;세 기둥&quot;이라는 묶음, 가벼운 CoE 운영안(주 2시간, 격주 30분)은 Study_FDE가 든 일반적인 실무 방식과 예시예요. 공식 코스의 CoE 구성과 Train the Trainer 진행 방식은 확인하지 못했어요(<span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>).</li></ul></li>
+<li><a href="/t/claude-fde/s41-expansion" target="_top"><b>S41</b> 3단계 Expansion: 측정, 축하, 반복, 새 유스케이스</a><ul><li>… 과 유스케이스 탐색&quot;), 그리고 주제 &quot;성과 나누기&quot;예요. 무엇을 어떻게 재고 나누는지는 Anthropic 공개 가이드와 제품 문서에서 확인한 것, 그리고 일반적인 실무 방식으로 썼어요. 공식 코스의 정확한 설명은 <span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>예요.</li></ul></li>
+<li><a href="/t/claude-fde/s42-capstone-pilot-plan" target="_top"><b>S42</b> 파일럿 계획서 쓰기</a><ul><li>skill로 묶는다(플랜별 사용 가능 여부는 <span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>). 모델은 기본값에서 시작해 평가 세트</li><li>가상 고객 브리프(회사 이름, 인원, 건수, 시간, 통과율), 템플릿, 작성 예시, 루브릭과 점수 기준은 모두 Study_FDE가 만든 연습 자료예요. 실제 회사나 공식 코스의 과제가 아니에요. 작성 예시의 &quot;Team 플랜에서 skill을 쓸 수 있는지&quot;는 확인하지 못했어요(<span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>).</li></ul></li></ul></div></details>
+  </div>
 </section>
-<section class="course">
-  <header class="course-head"><span class="cnum">C4</span><h3>Choosing the right Claude model</h3><span class="cdetail">핵심, 약 10분 · 1세션</span></header>
-  <ol class="rows"><li class="row" data-row="S09">
-  <a href="/t/claude-fde/s09-choosing-model" target="_top" class="row-link"><span class="sid">S09</span><span class="stitle">네 가지 모델과 effort 조절</span></a>
-  <span class="smin">15분</span>
-  <span class="stags"><span class="pill pill-draft">노트 초안</span></span>
-  <span class="sdone" data-done-mark="S09" aria-label="완료 여부"></span>
-</li></ol>
-</section>
-<section class="course">
-  <header class="course-head"><span class="cnum">C5</span><h3>Claude Platform 101</h3><span class="cdetail">빌드, 약 90분 · 8세션</span></header>
-  <ol class="rows"><li class="row" data-row="S10">
-  <a href="/t/claude-fde/s10-platform-first-api-call" target="_top" class="row-link"><span class="sid">S10</span><span class="stitle">Claude Platform이란, 첫 API 호출, 모델 고르기</span></a>
-  <span class="smin">25분</span>
-  <span class="stags"><span class="pill pill-draft">노트 초안</span><span class="pill pill-check" title="(확인 필요) 표시 1곳">확인 필요 1</span></span>
-  <span class="sdone" data-done-mark="S10" aria-label="완료 여부"></span>
-</li>
-<li class="row" data-row="S11">
-  <a href="/t/claude-fde/s11-agent-loop" target="_top" class="row-link"><span class="sid">S11</span><span class="stitle">에이전트 루프</span></a>
-  <span class="smin">25분</span>
-  <span class="stags"><span class="pill pill-draft">노트 초안</span></span>
-  <span class="sdone" data-done-mark="S11" aria-label="완료 여부"></span>
-</li>
-<li class="row" data-row="S12">
-  <a href="/t/claude-fde/s12-tool-use" target="_top" class="row-link"><span class="sid">S12</span><span class="stitle">도구 사용 (tool use)</span></a>
-  <span class="smin">20분</span>
-  <span class="stags"><span class="pill pill-draft">노트 초안</span></span>
-  <span class="sdone" data-done-mark="S12" aria-label="완료 여부"></span>
-</li>
-<li class="row" data-row="S13">
-  <a href="/t/claude-fde/s13-thinking" target="_top" class="row-link"><span class="sid">S13</span><span class="stitle">확장 사고 (thinking)</span></a>
-  <span class="smin">20분</span>
-  <span class="stags"><span class="pill pill-draft">노트 초안</span></span>
-  <span class="sdone" data-done-mark="S13" aria-label="완료 여부"></span>
-</li>
-<li class="row" data-row="S14">
-  <a href="/t/claude-fde/s14-built-in-tools-skills" target="_top" class="row-link"><span class="sid">S14</span><span class="stitle">내장 도구와 Skills</span></a>
-  <span class="smin">20분</span>
-  <span class="stags"><span class="pill pill-draft">노트 초안</span></span>
-  <span class="sdone" data-done-mark="S14" aria-label="완료 여부"></span>
-</li>
-<li class="row" data-row="S15">
-  <a href="/t/claude-fde/s15-mcp-context-management" target="_top" class="row-link"><span class="sid">S15</span><span class="stitle">MCP와 컨텍스트 관리</span></a>
-  <span class="smin">25분</span>
-  <span class="stags"><span class="pill pill-draft">노트 초안</span><span class="pill pill-check" title="(확인 필요) 표시 1곳">확인 필요 1</span></span>
-  <span class="sdone" data-done-mark="S15" aria-label="완료 여부"></span>
-</li>
-<li class="row" data-row="S16">
-  <a href="/t/claude-fde/s16-managed-agents" target="_top" class="row-link"><span class="sid">S16</span><span class="stitle">Managed Agents</span></a>
-  <span class="smin">25분</span>
-  <span class="stags"><span class="pill pill-draft">노트 초안</span><span class="pill pill-check" title="(확인 필요) 표시 1곳">확인 필요 1</span></span>
-  <span class="sdone" data-done-mark="S16" aria-label="완료 여부"></span>
-</li>
-<li class="row" data-row="S17">
-  <a href="/t/claude-fde/s17-building-with-claude-code" target="_top" class="row-link"><span class="sid">S17</span><span class="stitle">Claude Code로 만들기 + 코스 5 총정리</span></a>
-  <span class="smin">25분</span>
-  <span class="stags"><span class="pill pill-draft">노트 초안</span></span>
-  <span class="sdone" data-done-mark="S17" aria-label="완료 여부"></span>
-</li></ol>
-</section>
-<section class="course">
-  <header class="course-head"><span class="cnum">C6</span><h3>Claude Code 101</h3><span class="cdetail">빌드, 약 60분 · 5세션</span></header>
-  <ol class="rows"><li class="row" data-row="S18">
-  <a href="/t/claude-fde/s18-what-is-claude-code" target="_top" class="row-link"><span class="sid">S18</span><span class="stitle">Claude Code란: 에이전트 루프, 컨텍스트, 도구와 권한, 설치</span></a>
-  <span class="smin">20분</span>
-  <span class="stags"><span class="pill pill-draft">노트 초안</span><span class="pill pill-check" title="(확인 필요) 표시 1곳">확인 필요 1</span></span>
-  <span class="sdone" data-done-mark="S18" aria-label="완료 여부"></span>
-</li>
-<li class="row" data-row="S19">
-  <a href="/t/claude-fde/s19-first-prompt-modes" target="_top" class="row-link"><span class="sid">S19</span><span class="stitle">첫 프롬프트: 승인 모드, 자동 수락, Plan Mode</span></a>
-  <span class="smin">20분</span>
-  <span class="stags"><span class="pill pill-draft">노트 초안</span><span class="pill pill-check" title="(확인 필요) 표시 2곳">확인 필요 2</span></span>
-  <span class="sdone" data-done-mark="S19" aria-label="완료 여부"></span>
-</li>
-<li class="row" data-row="S20">
-  <a href="/t/claude-fde/s20-daily-workflows" target="_top" class="row-link"><span class="sid">S20</span><span class="stitle">일상 워크플로: Explore → Plan → Code → Commit, 리뷰, 컨텍스트 명령</span></a>
-  <span class="smin">22분</span>
-  <span class="stags"><span class="pill pill-draft">노트 초안</span></span>
-  <span class="sdone" data-done-mark="S20" aria-label="완료 여부"></span>
-</li>
-<li class="row" data-row="S21">
-  <a href="/t/claude-fde/s21-claude-md-subagents" target="_top" class="row-link"><span class="sid">S21</span><span class="stitle">커스터마이즈 1: CLAUDE.md와 서브에이전트</span></a>
-  <span class="smin">22분</span>
-  <span class="stags"><span class="pill pill-draft">노트 초안</span></span>
-  <span class="sdone" data-done-mark="S21" aria-label="완료 여부"></span>
-</li>
-<li class="row" data-row="S22">
-  <a href="/t/claude-fde/s22-skills-mcp-hooks" target="_top" class="row-link"><span class="sid">S22</span><span class="stitle">커스터마이즈 2: skills, MCP, hooks</span></a>
-  <span class="smin">22분</span>
-  <span class="stags"><span class="pill pill-draft">노트 초안</span></span>
-  <span class="sdone" data-done-mark="S22" aria-label="완료 여부"></span>
-</li></ol>
-</section>
-<section class="course">
-  <header class="course-head"><span class="cnum">C7</span><h3>Claude Code in Action</h3><span class="cdetail">빌드, 약 60분 · 5세션</span></header>
-  <ol class="rows"><li class="row" data-row="S23">
-  <a href="/t/claude-fde/s23-steer-the-work" target="_top" class="row-link"><span class="sid">S23</span><span class="stitle">작업 조종: plan mode, 압축(compaction), 되감기(rewind)</span></a>
-  <span class="smin">22분</span>
-  <span class="stags"><span class="pill pill-draft">노트 초안</span></span>
-  <span class="sdone" data-done-mark="S23" aria-label="완료 여부"></span>
-</li>
-<li class="row" data-row="S24">
-  <a href="/t/claude-fde/s24-configure-claude" target="_top" class="row-link"><span class="sid">S24</span><span class="stitle">설정: 간결한 CLAUDE.md, 지시를 둘 자리, 검증 skill</span></a>
-  <span class="smin">22분</span>
-  <span class="stags"><span class="pill pill-draft">노트 초안</span><span class="pill pill-check" title="(확인 필요) 표시 1곳">확인 필요 1</span></span>
-  <span class="sdone" data-done-mark="S24" aria-label="완료 여부"></span>
-</li>
-<li class="row" data-row="S25">
-  <a href="/t/claude-fde/s25-permissions-hooks" target="_top" class="row-link"><span class="sid">S25</span><span class="stitle">권한 모드와 hooks로 규칙 강제하기</span></a>
-  <span class="smin">25분</span>
-  <span class="stags"><span class="pill pill-draft">노트 초안</span></span>
-  <span class="sdone" data-done-mark="S25" aria-label="완료 여부"></span>
-</li>
-<li class="row" data-row="S26">
-  <a href="/t/claude-fde/s26-automate-repeat-work" target="_top" class="row-link"><span class="sid">S26</span><span class="stitle">반복 작업 자동화: 자율 세션, worktree, routines, headless, PR 리뷰</span></a>
-  <span class="smin">25분</span>
-  <span class="stags"><span class="pill pill-draft">노트 초안</span></span>
-  <span class="sdone" data-done-mark="S26" aria-label="완료 여부"></span>
-</li>
-<li class="row" data-row="S27">
-  <a href="/t/claude-fde/s27-verify-share" target="_top" class="row-link"><span class="sid">S27</span><span class="stitle">검증과 공유: 무감독 실행 검증, plugin</span></a>
-  <span class="smin">22분</span>
-  <span class="stags"><span class="pill pill-draft">노트 초안</span></span>
-  <span class="sdone" data-done-mark="S27" aria-label="완료 여부"></span>
-</li></ol>
-</section>
-<section class="course">
-  <header class="course-head"><span class="cnum">C8</span><h3>Introduction to Model Context Protocol</h3><span class="cdetail">빌드, 약 60분 · 4세션</span></header>
-  <ol class="rows"><li class="row" data-row="S28">
-  <a href="/t/claude-fde/s28-mcp-architecture" target="_top" class="row-link"><span class="sid">S28</span><span class="stitle">MCP 구조: 클라이언트와 서버</span></a>
-  <span class="smin">20분</span>
-  <span class="stags"><span class="pill pill-draft">노트 초안</span><span class="pill pill-check" title="(확인 필요) 표시 1곳">확인 필요 1</span></span>
-  <span class="sdone" data-done-mark="S28" aria-label="완료 여부"></span>
-</li>
-<li class="row" data-row="S29">
-  <a href="/t/claude-fde/s29-mcp-server-tools" target="_top" class="row-link"><span class="sid">S29</span><span class="stitle">서버 만들기: tools와 MCP Inspector</span></a>
-  <span class="smin">25분</span>
-  <span class="stags"><span class="pill pill-draft">노트 초안</span><span class="pill pill-check" title="(확인 필요) 표시 2곳">확인 필요 2</span></span>
-  <span class="sdone" data-done-mark="S29" aria-label="완료 여부"></span>
-</li>
-<li class="row" data-row="S30">
-  <a href="/t/claude-fde/s30-mcp-resources-prompts" target="_top" class="row-link"><span class="sid">S30</span><span class="stitle">Resources와 Prompts, 셋 중 무엇을 쓸까</span></a>
-  <span class="smin">25분</span>
-  <span class="stags"><span class="pill pill-draft">노트 초안</span><span class="pill pill-check" title="(확인 필요) 표시 2곳">확인 필요 2</span></span>
-  <span class="sdone" data-done-mark="S30" aria-label="완료 여부"></span>
-</li>
-<li class="row" data-row="S31">
-  <a href="/t/claude-fde/s31-mcp-client" target="_top" class="row-link"><span class="sid">S31</span><span class="stitle">클라이언트 구현: 연결, 비동기, 정리</span></a>
-  <span class="smin">25분</span>
-  <span class="stags"><span class="pill pill-draft">노트 초안</span><span class="pill pill-check" title="(확인 필요) 표시 2곳">확인 필요 2</span></span>
-  <span class="sdone" data-done-mark="S31" aria-label="완료 여부"></span>
-</li></ol>
-</section>
-<section class="course">
-  <header class="course-head"><span class="cnum">C9</span><h3>Introduction to agent skills</h3><span class="cdetail">빌드, 약 30분 · 3세션</span></header>
-  <ol class="rows"><li class="row" data-row="S32">
-  <a href="/t/claude-fde/s32-what-are-skills" target="_top" class="row-link"><span class="sid">S32</span><span class="stitle">Skill이란, 첫 skill 만들기</span></a>
-  <span class="smin">20분</span>
-  <span class="stags"><span class="pill pill-draft">노트 초안</span></span>
-  <span class="sdone" data-done-mark="S32" aria-label="완료 여부"></span>
-</li>
-<li class="row" data-row="S33">
-  <a href="/t/claude-fde/s33-skill-config-comparison" target="_top" class="row-link"><span class="sid">S33</span><span class="stitle">설정과 여러 파일 skill, 다른 기능과 비교</span></a>
-  <span class="smin">25분</span>
-  <span class="stags"><span class="pill pill-draft">노트 초안</span></span>
-  <span class="sdone" data-done-mark="S33" aria-label="완료 여부"></span>
-</li>
-<li class="row" data-row="S34">
-  <a href="/t/claude-fde/s34-sharing-troubleshooting-skills" target="_top" class="row-link"><span class="sid">S34</span><span class="stitle">skill 공유와 문제 해결</span></a>
-  <span class="smin">25분</span>
-  <span class="stags"><span class="pill pill-draft">노트 초안</span></span>
-  <span class="sdone" data-done-mark="S34" aria-label="완료 여부"></span>
-</li></ol>
-</section>
-<section class="course">
-  <header class="course-head"><span class="cnum">C10</span><h3>Delivery Methodology</h3><span class="cdetail">파일럿, 약 40분 · 4세션</span></header>
-  <ol class="rows"><li class="row" data-row="S35">
-  <a href="/t/claude-fde/s35-use-case-qualification" target="_top" class="row-link"><span class="sid">S35</span><span class="stitle">유스케이스 발굴과 자격 판정</span></a>
-  <span class="smin">20분</span>
-  <span class="stags"><span class="pill pill-draft">노트 초안</span><span class="pill pill-check" title="(확인 필요) 표시 2곳">확인 필요 2</span></span>
-  <span class="sdone" data-done-mark="S35" aria-label="완료 여부"></span>
-</li>
-<li class="row" data-row="S36">
-  <a href="/t/claude-fde/s36-pilot-design-roi" target="_top" class="row-link"><span class="sid">S36</span><span class="stitle">파일럿 설계와 ROI 측정</span></a>
-  <span class="smin">20분</span>
-  <span class="stags"><span class="pill pill-draft">노트 초안</span></span>
-  <span class="sdone" data-done-mark="S36" aria-label="완료 여부"></span>
-</li>
-<li class="row" data-row="S37">
-  <a href="/t/claude-fde/s37-rollout-champions" target="_top" class="row-link"><span class="sid">S37</span><span class="stitle">단계적 롤아웃, 변화 관리, 챔피언</span></a>
-  <span class="smin">20분</span>
-  <span class="stags"><span class="pill pill-draft">노트 초안</span></span>
-  <span class="sdone" data-done-mark="S37" aria-label="완료 여부"></span>
-</li>
-<li class="row" data-row="S38">
-  <a href="/t/claude-fde/s38-failure-modes-30-day" target="_top" class="row-link"><span class="sid">S38</span><span class="stitle">흔한 실패 모드 예방과 30일 활성화</span></a>
-  <span class="smin">20분</span>
-  <span class="stags"><span class="pill pill-draft">노트 초안</span><span class="pill pill-check" title="(확인 필요) 표시 1곳">확인 필요 1</span></span>
-  <span class="sdone" data-done-mark="S38" aria-label="완료 여부"></span>
-</li></ol>
-</section>
-<section class="course">
-  <header class="course-head"><span class="cnum">C11</span><h3>Driving enterprise adoption of Claude</h3><span class="cdetail">파일럿, 약 60분 · 3세션</span></header>
-  <ol class="rows"><li class="row" data-row="S39">
-  <a href="/t/claude-fde/s39-activation" target="_top" class="row-link"><span class="sid">S39</span><span class="stitle">1단계 Activation: 성공 팀, 프로비저닝, 문화, 교육, 런치</span></a>
-  <span class="smin">20분</span>
-  <span class="stags"><span class="pill pill-draft">노트 초안</span><span class="pill pill-check" title="(확인 필요) 표시 4곳">확인 필요 4</span></span>
-  <span class="sdone" data-done-mark="S39" aria-label="완료 여부"></span>
-</li>
-<li class="row" data-row="S40">
-  <a href="/t/claude-fde/s40-acceleration" target="_top" class="row-link"><span class="sid">S40</span><span class="stitle">2단계 Acceleration: CoE와 Train the Trainer</span></a>
-  <span class="smin">20분</span>
-  <span class="stags"><span class="pill pill-draft">노트 초안</span><span class="pill pill-check" title="(확인 필요) 표시 2곳">확인 필요 2</span></span>
-  <span class="sdone" data-done-mark="S40" aria-label="완료 여부"></span>
-</li>
-<li class="row" data-row="S41">
-  <a href="/t/claude-fde/s41-expansion" target="_top" class="row-link"><span class="sid">S41</span><span class="stitle">3단계 Expansion: 측정, 축하, 반복, 새 유스케이스</span></a>
-  <span class="smin">20분</span>
-  <span class="stags"><span class="pill pill-draft">노트 초안</span><span class="pill pill-check" title="(확인 필요) 표시 1곳">확인 필요 1</span></span>
-  <span class="sdone" data-done-mark="S41" aria-label="완료 여부"></span>
-</li></ol>
-</section>
-<section class="course">
-  <header class="course-head"><span class="cnum">★</span><h3>캡스톤</h3><span class="cdetail"> · 1세션</span></header>
-  <ol class="rows"><li class="row" data-row="S42">
-  <a href="/t/claude-fde/s42-capstone-pilot-plan" target="_top" class="row-link"><span class="sid">S42</span><span class="stitle">파일럿 계획서 쓰기</span></a>
-  <span class="smin">60분</span>
-  <span class="stags"><span class="pill pill-draft">노트 초안</span><span class="pill pill-check" title="(확인 필요) 표시 2곳">확인 필요 2</span></span>
-  <span class="sdone" data-done-mark="S42" aria-label="완료 여부"></span>
-</li></ol>
-</section>
-</section>
-<section class="sec checks">
-  <h2>확인이 필요한 곳 <span class="pill pill-check">34곳</span></h2>
-  <p class="muted">노트를 쓸 때 공식 강의 본문이나 실행 결과로 확인하지 못한 내용이에요. 원본 표시를 그대로 두고, 노트 안에서도 같은 배지로 보여요.</p>
-  <details><summary>세션별 목록 펼치기 (23개 세션)</summary><ul class="check-list"><li><a href="/t/claude-fde/s02-knowledge" target="_top"><strong>S02</strong></a> <ul><li>Claude.ai 새 대화에서 물어보세요: &quot;네 지식은 대략 언제까지야? 그 뒤에 일어난 일을 물으면 어떻게 답할 거야?&quot; 답을 모델 개요 표의 날짜와 비교해 보세요. 모델이 스스로 말한 날짜가 공식 표와 항상 일치하는지는 확인하지 못했어요(<span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>). 기준은 표예요.</li></ul></li>
-<li><a href="/t/claude-fde/s03-working-memory" target="_top"><strong>S03</strong></a> <ul><li>창 밖은 모른다. 새 대화는 빈 책상에서 시작해요. 어제 대화에서 한 약속을 오늘의 모델은 보지 못해요. 제품에 따라 대화 사이를 이어 주는 메모리 기능이 있는데, 이건 S08에서 다뤄요(Claude.ai 메모리 기능의 구체적인 동작은 이번에 확인하지 않았어요. <span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>).</li></ul></li>
-<li><a href="/t/claude-fde/s04-steerability-diagnosis" target="_top"><strong>S04</strong></a> <ul><li>조종 가능성은 내 프롬프트가 모델의 행동을 얼마나 움직일 수 있는가예요. 공식 문서는 Claude를 &quot;뛰어나지만 우리 규범과 업무 방식은 모르는 새 직원&quot;처럼 대하라고 해요. 잘 설명하면 잘 따르고, 설명이 비면 알아서 채워요. (공식 강의가 이 용어를 정확히 어떻게 정의하는지는 볼 수 없었어요. <span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>.)</li><li>코스 1의 목표는 예상 밖 출력을 보고 어떤 종류인지 알아보고, 맞춤 처방을 하는 것이에요. 아래 표는 네 성질에 맞춰 직접 구성한 간단한 진단이에요(공식 강의의 진단 도구 내용은 볼 수 없었어요. <span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>).</li></ul></li>
-<li><a href="/t/claude-fde/s05-4d-delegation-description" target="_top"><strong>S05</strong></a> <ul><li>… y)예요. 오늘은 앞의 두 역량을 빌더(무언가를 만드는 사람)의 일에 대어 봐요. 공식 강의가 빌더 업무에 구체적으로 어떻게 적용하는지는 볼 수 없어서, 아래 적용은 프레임워크 정의와 공개 문서로 직접 쓴 것이에요(<span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>).</li></ul></li>
-<li><a href="/t/claude-fde/s06-4d-discernment-diligence" target="_top"><strong>S06</strong></a> <ul><li>공식 코스 2의 분별 섹션은 코드와 사용자 경험, 두 강의로 이루어져 있어요. 강의 내용은 볼 수 없어서 아래는 공개 문서와 일반 원리로 직접 쓴 것이에요(<span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>).</li></ul></li>
-<li><a href="/t/claude-fde/s07-entry-points-features" target="_top"><strong>S07</strong></a> <ul><li>진입점은 Claude와 일하는 자리예요. 공식 강의가 무엇을 진입점으로 꼽는지는 목차가 공개돼 있지 않아서(<span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>), claude.com 제품 메뉴와 도움말을 기준으로 정리했어요.</li></ul></li>
-<li><a href="/t/claude-fde/s08-model-context-decisions" target="_top"><strong>S08</strong></a> <ul><li>현재 라인업에는 Opus 위에 Fable 계열도 있어요. 학습 목표에는 세 계열만 적혀 있어서 강의가 Fable을 다루는지는 알 수 없어요(<span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>). 네 모델의 차이와 노력 수준(effort) 조절은 S09에서 봅니다.</li></ul></li>
-<li><a href="/t/claude-fde/s10-platform-first-api-call" target="_top"><strong>S10</strong></a> <ul><li>Claude Console(platform.claude.com): API 키, 사용량과 한도, 환경을 나누는 워크스페이스(workspace), 브라우저에서 시험해 보는 플레이그라운드(playground). 공식 코스 설명의 Workbench가 이 플레이그라운드를 가리키는지는 확인하지 못했어요(<span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>).</li></ul></li>
-<li><a href="/t/claude-fde/s15-mcp-context-management" target="_top"><strong>S15</strong></a> <ul><li>… ontent의 블록 종류를 출력해 보세요. S14의 서버 도구 응답과 어떤 점이 닮았나요? (힌트: 누가 실행했나) 예시의 서버 주소는 공식 문서에 나오는 예시 주소인데, 지금 실제로 응답하는지는 확인하지 못했어요(<span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>). 연결 오류가 나면 쓸 수 있는 원격 MCP 서버 주소로 바꾸세요.</li></ul></li>
-<li><a href="/t/claude-fde/s16-managed-agents" target="_top"><strong>S16</strong></a> <ul><li>…  다른 구성을 검토하고, 고객의 법무·보안 담당과 Anthropic 계정 팀에 확인한다. (2) 사내망: Anthropic 쪽 클라우드 샌드박스에서 고객 사내망에 바로 닿을 수 있는지는 이 노트에서 확인하지 못했다(<span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>). 공식 문서가 안내하는, 내 인프라에서 실행하는 방법은 커스텀 도구(실행은 고객 쪽 코드)와 셀 …</li></ul></li>
-<li><a href="/t/claude-fde/s18-what-is-claude-code" target="_top"><strong>S18</strong></a> <ul><li>파트너 사이트의 코스 6과 Claude Academy의 Claude Code 101은 레슨 수(12)와 섹션 구성이 같지만, 내용이 완전히 같은지는 확인하지 못했어요(<span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>).</li></ul></li>
-<li><a href="/t/claude-fde/s19-first-prompt-modes" target="_top"><strong>S19</strong></a> <ul><li>공식 경로의 코스 설명에 나오는 approval mode와 auto-accept는 현재 문서의 Manual과 Accept edits에 해당하는 것으로 보여요(<span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>: 강의가 쓰는 정확한 이름). Accept edits에서도 그 밖의 셸 명령은 여전히 물어요. A …</li><li><span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>: 파트너 사이트 강의가 모드를 부르는 정확한 이름. 문서와 Claude Academy 페이지는 Manual, Accept edits, Plan, Auto로 쓰고 있어요.</li></ul></li>
-<li><a href="/t/claude-fde/s24-configure-claude" target="_top"><strong>S24</strong></a> <ul><li>… 로 바꿔 줘&quot;라고 한 뒤 /verify를 실행해요. 문서는 저장소 루트에 기록된 verify skill이 번들 /verify를 대신한다고 해요. 손으로 쓴 파일도 똑같이 대신하는지는 이 실습에서 직접 확인해 보세요(<span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>). 관찰: Claude가 sh test.sh를 돌리는지, 실패를 보고 변경을 되돌리는지 테스트를  …</li></ul></li>
-<li><a href="/t/claude-fde/s28-mcp-architecture" target="_top"><strong>S28</strong></a> <ul><li>참고로 프로토콜 2026-07-28판부터는 연결 초기의 악수(initialize)가 없어지고, 요청마다 버전과 기능 정보를 실어 보내요. 서버 정보가 필요하면 server/discover로 물어요. 예전 자료에는 initialize가 나와요. 공식 강의 영상이 어느 판 기준인지는 (<span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>).</li></ul></li>
-<li><a href="/t/claude-fde/s29-mcp-server-tools" target="_top"><strong>S29</strong></a> <ul><li>예전 자료에는 from mcp.server.fastmcp import FastMCP가 나와요. SDK v2에서 이름이 MCPServer로 바뀌었고 데코레이터 쓰는 법은 그대로예요. 공식 강의 영상이 어느 버전 기준인지는 (<span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>).</li><li>예제 코드는 위 공식 문서의 패턴대로 썼고, 함수·클래스 이름은 SDK 2.3.0 소스와 대조했어요. 다만 이 환경에서 직접 실행해 보지는 못했어요(실행 <span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>). 문서 내용(매출 12%, 10명)은 지어낸 예시예요.</li></ul></li>
-<li><a href="/t/claude-fde/s30-mcp-resources-prompts" target="_top"><strong>S30</strong></a> <ul><li>[&quot;MCP client implementation &amp; advanced features&quot;]   # 강의 제목이 비공개라 어느 섹션에 속하는지는 추정 (<span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>)</li><li>식당 비유는 설명을 위해 Study_FDE가 만든 것이에요. 예제 코드는 공식 문서의 패턴대로 썼고 SDK 2.3.0 소스와 이름을 대조했지만, 이 환경에서 직접 실행해 보지는 못했어요(실행 <span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>).</li></ul></li>
-<li><a href="/t/claude-fde/s31-mcp-client" target="_top"><strong>S31</strong></a> <ul><li>… 직접 만들어 넘겼다면, 그건 만든 사람이 닫아야 해요. 예전 자료에는 ClientSession을 만들고 session.initialize()를 직접 부르는 더 긴 방식이 나와요. 공식 강의 영상이 어느 방식인지는 (<span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>).</li><li>진동벨 비유와 &quot;최대 10번&quot;은 설명용 예시예요(공식 튜토리얼의 예제 상한값이 10이에요). 예제 코드는 공식 문서의 패턴대로 썼고 SDK 2.3.0 소스와 이름을 대조했지만, 이 환경에서 직접 실행해 보지는 못했어요(실행 <span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>).</li></ul></li>
-<li><a href="/t/claude-fde/s35-use-case-qualification" target="_top"><strong>S35</strong></a> <ul><li>… , 처리 건수 같은 업무 단위 숫자로 잡혀요. 그래서 파일럿은 구조적 이득이 보이는 일로 골라요. (두 낱말은 공식 개요에 있지만 정의 본문은 공개돼 있지 않아요. 위 풀이는 일반적인 실무 해석이에요. 공식 정의는 <span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>)</li><li>복잡도는 &quot;높을수록 좋다&quot;가 아니에요. 규칙만으로 끝나는 일은 스크립트가 낫고, 전문가끼리도 답이 갈리는 고위험 일은 첫 파일럿으로 무거워요. Anthropic 공개 가이드도 첫 파일럿에서는 고객에게 바로 닿는 일과 핵심 업무를 피하라고 해요. (공식 코스가 네 기준을 어떻게 채점하는지는 <span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>)</li></ul></li>
-<li><a href="/t/claude-fde/s38-failure-modes-30-day" target="_top"><strong>S38</strong></a> <ul><li>실패 모드 표의 뒤 네 줄과 조기 신호, 0주차 항목, 주차별 계획의 묶음은 Study_FDE가 짠 예시예요. 공식 코스의 실패 모드 목록과 30일 일정은 확인하지 못했어요(<span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>).</li></ul></li>
-<li><a href="/t/claude-fde/s39-activation" target="_top"><strong>S39</strong></a> <ul><li>… . 각 단계 안의 세부는 Anthropic 공개 문서(Claude Enterprise 관리자 가이드, 기업 AI 전환 가이드, 지원 문서)에서 확인한 것과 일반적인 실무 방식으로 썼어요. 공식 코스의 정확한 설명은 <span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>예요.</li><li>… 세울 법무·컴플라이언스를 넣으라고 해요. 파일럿 팀에는 파일럿 리드, 기술 담당, 현업 사용자, 임원 스폰서를 두고 전용 시간을 줘요. 여기에 S37의 챔피언이 더해져요. (공식 코스가 말하는 &quot;성공 팀&quot;의 구성은 <span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>)</li><li>심리적 안전감의 정의는 조직 행동 연구(에이미 에드먼슨의 1999년 논문으로 알려짐)의 일반적인 설명이에요. 논문 원문 페이지는 열지 못해 출처 목록에 넣지 않았어요(<span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>). 리더의 실천 세 가지와 &quot;활성화 점검표&quot;는 Study_FDE가 든 예시예요. 팀 수준의 J-커 …</li></ul></li>
-<li><a href="/t/claude-fde/s40-acceleration" target="_top"><strong>S40</strong></a> <ul><li>… e&quot;, 그리고 수업 제목 셋이에요. CoE의 구성, 거버넌스 항목, Train the Trainer의 방식은 Anthropic 공개 가이드에서 확인한 것과 일반적인 실무 방식으로 썼어요. 공식 코스의 정확한 설명은 <span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>예요.</li><li>Train the Trainer의 풀이, &quot;세 기둥&quot;이라는 묶음, 가벼운 CoE 운영안(주 2시간, 격주 30분)은 Study_FDE가 든 일반적인 실무 방식과 예시예요. 공식 코스의 CoE 구성과 Train the Trainer 진행 방식은 확인하지 못했어요(<span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>).</li></ul></li>
-<li><a href="/t/claude-fde/s41-expansion" target="_top"><strong>S41</strong></a> <ul><li>… 과 유스케이스 탐색&quot;), 그리고 주제 &quot;성과 나누기&quot;예요. 무엇을 어떻게 재고 나누는지는 Anthropic 공개 가이드와 제품 문서에서 확인한 것, 그리고 일반적인 실무 방식으로 썼어요. 공식 코스의 정확한 설명은 <span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>예요.</li></ul></li>
-<li><a href="/t/claude-fde/s42-capstone-pilot-plan" target="_top"><strong>S42</strong></a> <ul><li>skill로 묶는다(플랜별 사용 가능 여부는 <span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>). 모델은 기본값에서 시작해 평가 세트</li><li>가상 고객 브리프(회사 이름, 인원, 건수, 시간, 통과율), 템플릿, 작성 예시, 루브릭과 점수 기준은 모두 Study_FDE가 만든 연습 자료예요. 실제 회사나 공식 코스의 과제가 아니에요. 작성 예시의 &quot;Team 플랜에서 skill을 쓸 수 있는지&quot;는 확인하지 못했어요(<span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>).</li></ul></li></ul></details>
-</section>
-<script>window.FDE_SESSIONS = [{"id":"S01","href":"/t/claude-fde/s01-next-token-prediction","title":"생성형 AI의 네 가지 성질과 다음 토큰 예측"},{"id":"S02","href":"/t/claude-fde/s02-knowledge","title":"지식: 학습 데이터, 지식 컷오프, 환각"},{"id":"S03","href":"/t/claude-fde/s03-working-memory","title":"작업 기억: 컨텍스트 윈도우"},{"id":"S04","href":"/t/claude-fde/s04-steerability-diagnosis","title":"조종 가능성과 예상 밖 출력 진단하기"},{"id":"S05","href":"/t/claude-fde/s05-4d-delegation-description","title":"AI Fluency와 4D 프레임워크: 위임과 설명"},{"id":"S06","href":"/t/claude-fde/s06-4d-discernment-diligence","title":"분별과 책임: 빌더의 검증"},{"id":"S07","href":"/t/claude-fde/s07-entry-points-features","title":"결정 1·2: 진입점과 기능 고르기"},{"id":"S08","href":"/t/claude-fde/s08-model-context-decisions","title":"결정 3·4: 모델 선택과 컨텍스트·메모리 관리"},{"id":"S09","href":"/t/claude-fde/s09-choosing-model","title":"네 가지 모델과 effort 조절"},{"id":"S10","href":"/t/claude-fde/s10-platform-first-api-call","title":"Claude Platform이란, 첫 API 호출, 모델 고르기"},{"id":"S11","href":"/t/claude-fde/s11-agent-loop","title":"에이전트 루프"},{"id":"S12","href":"/t/claude-fde/s12-tool-use","title":"도구 사용 (tool use)"},{"id":"S13","href":"/t/claude-fde/s13-thinking","title":"확장 사고 (thinking)"},{"id":"S14","href":"/t/claude-fde/s14-built-in-tools-skills","title":"내장 도구와 Skills"},{"id":"S15","href":"/t/claude-fde/s15-mcp-context-management","title":"MCP와 컨텍스트 관리"},{"id":"S16","href":"/t/claude-fde/s16-managed-agents","title":"Managed Agents"},{"id":"S17","href":"/t/claude-fde/s17-building-with-claude-code","title":"Claude Code로 만들기 + 코스 5 총정리"},{"id":"S18","href":"/t/claude-fde/s18-what-is-claude-code","title":"Claude Code란: 에이전트 루프, 컨텍스트, 도구와 권한, 설치"},{"id":"S19","href":"/t/claude-fde/s19-first-prompt-modes","title":"첫 프롬프트: 승인 모드, 자동 수락, Plan Mode"},{"id":"S20","href":"/t/claude-fde/s20-daily-workflows","title":"일상 워크플로: Explore → Plan → Code → Commit, 리뷰, 컨텍스트 명령"},{"id":"S21","href":"/t/claude-fde/s21-claude-md-subagents","title":"커스터마이즈 1: CLAUDE.md와 서브에이전트"},{"id":"S22","href":"/t/claude-fde/s22-skills-mcp-hooks","title":"커스터마이즈 2: skills, MCP, hooks"},{"id":"S23","href":"/t/claude-fde/s23-steer-the-work","title":"작업 조종: plan mode, 압축(compaction), 되감기(rewind)"},{"id":"S24","href":"/t/claude-fde/s24-configure-claude","title":"설정: 간결한 CLAUDE.md, 지시를 둘 자리, 검증 skill"},{"id":"S25","href":"/t/claude-fde/s25-permissions-hooks","title":"권한 모드와 hooks로 규칙 강제하기"},{"id":"S26","href":"/t/claude-fde/s26-automate-repeat-work","title":"반복 작업 자동화: 자율 세션, worktree, routines, headless, PR 리뷰"},{"id":"S27","href":"/t/claude-fde/s27-verify-share","title":"검증과 공유: 무감독 실행 검증, plugin"},{"id":"S28","href":"/t/claude-fde/s28-mcp-architecture","title":"MCP 구조: 클라이언트와 서버"},{"id":"S29","href":"/t/claude-fde/s29-mcp-server-tools","title":"서버 만들기: tools와 MCP Inspector"},{"id":"S30","href":"/t/claude-fde/s30-mcp-resources-prompts","title":"Resources와 Prompts, 셋 중 무엇을 쓸까"},{"id":"S31","href":"/t/claude-fde/s31-mcp-client","title":"클라이언트 구현: 연결, 비동기, 정리"},{"id":"S32","href":"/t/claude-fde/s32-what-are-skills","title":"Skill이란, 첫 skill 만들기"},{"id":"S33","href":"/t/claude-fde/s33-skill-config-comparison","title":"설정과 여러 파일 skill, 다른 기능과 비교"},{"id":"S34","href":"/t/claude-fde/s34-sharing-troubleshooting-skills","title":"skill 공유와 문제 해결"},{"id":"S35","href":"/t/claude-fde/s35-use-case-qualification","title":"유스케이스 발굴과 자격 판정"},{"id":"S36","href":"/t/claude-fde/s36-pilot-design-roi","title":"파일럿 설계와 ROI 측정"},{"id":"S37","href":"/t/claude-fde/s37-rollout-champions","title":"단계적 롤아웃, 변화 관리, 챔피언"},{"id":"S38","href":"/t/claude-fde/s38-failure-modes-30-day","title":"흔한 실패 모드 예방과 30일 활성화"},{"id":"S39","href":"/t/claude-fde/s39-activation","title":"1단계 Activation: 성공 팀, 프로비저닝, 문화, 교육, 런치"},{"id":"S40","href":"/t/claude-fde/s40-acceleration","title":"2단계 Acceleration: CoE와 Train the Trainer"},{"id":"S41","href":"/t/claude-fde/s41-expansion","title":"3단계 Expansion: 측정, 축하, 반복, 새 유스케이스"},{"id":"S42","href":"/t/claude-fde/s42-capstone-pilot-plan","title":"파일럿 계획서 쓰기"}];</script>
-<footer class="disclaimer" role="note">
-  <strong>비공식 학습 자료</strong>
-  <p>이 노트는 Anthropic 공식 “Claude Forward Deployed Engineer” 학습 경로의 공개 개요와 공식 문서를 바탕으로 쓴 개인 학습 노트이며, 공식 강의 필기가 아니에요. 실제 강의·퀴즈·수료는 공식 경로에서 진행해요.</p>
-  <p>공식 경로: <a href="https://anthropic-partners.skilljar.com/path/claude-fde" target="_blank" rel="noopener noreferrer">https://anthropic-partners.skilljar.com/path/claude-fde</a></p>
-</footer>
 </main>
+<footer class="night" role="contentinfo">
+  <div class="inner">
+    <p class="end">FDE <span class="ser">study</span><span class="dot end-dot" aria-hidden="true"></span></p>
+    <p><b>비공식 학습 자료.</b> 이 노트는 Anthropic 공식 “Claude Forward Deployed Engineer” 학습 경로의 공개 개요와 공식 문서를 바탕으로 쓴 개인 학습 노트이며, 공식 강의 필기가 아니에요. 실제 강의·퀴즈·수료는 공식 경로에서 진행해요.</p>
+    <p>공식 경로: <a href="https://anthropic-partners.skilljar.com/path/claude-fde" target="_blank" rel="noopener noreferrer">https://anthropic-partners.skilljar.com/path/claude-fde</a></p>
+    
+  </div>
+</footer>
+<script>window.FDE_SESSIONS = [{"id":"S01","href":"/t/claude-fde/s01-next-token-prediction","title":"생성형 AI의 네 가지 성질과 다음 토큰 예측"},{"id":"S02","href":"/t/claude-fde/s02-knowledge","title":"지식: 학습 데이터, 지식 컷오프, 환각"},{"id":"S03","href":"/t/claude-fde/s03-working-memory","title":"작업 기억: 컨텍스트 윈도우"},{"id":"S04","href":"/t/claude-fde/s04-steerability-diagnosis","title":"조종 가능성과 예상 밖 출력 진단하기"},{"id":"S05","href":"/t/claude-fde/s05-4d-delegation-description","title":"AI Fluency와 4D 프레임워크: 위임과 설명"},{"id":"S06","href":"/t/claude-fde/s06-4d-discernment-diligence","title":"분별과 책임: 빌더의 검증"},{"id":"S07","href":"/t/claude-fde/s07-entry-points-features","title":"결정 1·2: 진입점과 기능 고르기"},{"id":"S08","href":"/t/claude-fde/s08-model-context-decisions","title":"결정 3·4: 모델 선택과 컨텍스트·메모리 관리"},{"id":"S09","href":"/t/claude-fde/s09-choosing-model","title":"네 가지 모델과 effort 조절"},{"id":"S10","href":"/t/claude-fde/s10-platform-first-api-call","title":"Claude Platform이란, 첫 API 호출, 모델 고르기"},{"id":"S11","href":"/t/claude-fde/s11-agent-loop","title":"에이전트 루프"},{"id":"S12","href":"/t/claude-fde/s12-tool-use","title":"도구 사용 (tool use)"},{"id":"S13","href":"/t/claude-fde/s13-thinking","title":"확장 사고 (thinking)"},{"id":"S14","href":"/t/claude-fde/s14-built-in-tools-skills","title":"내장 도구와 Skills"},{"id":"S15","href":"/t/claude-fde/s15-mcp-context-management","title":"MCP와 컨텍스트 관리"},{"id":"S16","href":"/t/claude-fde/s16-managed-agents","title":"Managed Agents"},{"id":"S17","href":"/t/claude-fde/s17-building-with-claude-code","title":"Claude Code로 만들기 + 코스 5 총정리"},{"id":"S18","href":"/t/claude-fde/s18-what-is-claude-code","title":"Claude Code란: 에이전트 루프, 컨텍스트, 도구와 권한, 설치"},{"id":"S19","href":"/t/claude-fde/s19-first-prompt-modes","title":"첫 프롬프트: 승인 모드, 자동 수락, Plan Mode"},{"id":"S20","href":"/t/claude-fde/s20-daily-workflows","title":"일상 워크플로: Explore → Plan → Code → Commit, 리뷰, 컨텍스트 명령"},{"id":"S21","href":"/t/claude-fde/s21-claude-md-subagents","title":"커스터마이즈 1: CLAUDE.md와 서브에이전트"},{"id":"S22","href":"/t/claude-fde/s22-skills-mcp-hooks","title":"커스터마이즈 2: skills, MCP, hooks"},{"id":"S23","href":"/t/claude-fde/s23-steer-the-work","title":"작업 조종: plan mode, 압축(compaction), 되감기(rewind)"},{"id":"S24","href":"/t/claude-fde/s24-configure-claude","title":"설정: 간결한 CLAUDE.md, 지시를 둘 자리, 검증 skill"},{"id":"S25","href":"/t/claude-fde/s25-permissions-hooks","title":"권한 모드와 hooks로 규칙 강제하기"},{"id":"S26","href":"/t/claude-fde/s26-automate-repeat-work","title":"반복 작업 자동화: 자율 세션, worktree, routines, headless, PR 리뷰"},{"id":"S27","href":"/t/claude-fde/s27-verify-share","title":"검증과 공유: 무감독 실행 검증, plugin"},{"id":"S28","href":"/t/claude-fde/s28-mcp-architecture","title":"MCP 구조: 클라이언트와 서버"},{"id":"S29","href":"/t/claude-fde/s29-mcp-server-tools","title":"서버 만들기: tools와 MCP Inspector"},{"id":"S30","href":"/t/claude-fde/s30-mcp-resources-prompts","title":"Resources와 Prompts, 셋 중 무엇을 쓸까"},{"id":"S31","href":"/t/claude-fde/s31-mcp-client","title":"클라이언트 구현: 연결, 비동기, 정리"},{"id":"S32","href":"/t/claude-fde/s32-what-are-skills","title":"Skill이란, 첫 skill 만들기"},{"id":"S33","href":"/t/claude-fde/s33-skill-config-comparison","title":"설정과 여러 파일 skill, 다른 기능과 비교"},{"id":"S34","href":"/t/claude-fde/s34-sharing-troubleshooting-skills","title":"skill 공유와 문제 해결"},{"id":"S35","href":"/t/claude-fde/s35-use-case-qualification","title":"유스케이스 발굴과 자격 판정"},{"id":"S36","href":"/t/claude-fde/s36-pilot-design-roi","title":"파일럿 설계와 ROI 측정"},{"id":"S37","href":"/t/claude-fde/s37-rollout-champions","title":"단계적 롤아웃, 변화 관리, 챔피언"},{"id":"S38","href":"/t/claude-fde/s38-failure-modes-30-day","title":"흔한 실패 모드 예방과 30일 활성화"},{"id":"S39","href":"/t/claude-fde/s39-activation","title":"1단계 Activation: 성공 팀, 프로비저닝, 문화, 교육, 런치"},{"id":"S40","href":"/t/claude-fde/s40-acceleration","title":"2단계 Acceleration: CoE와 Train the Trainer"},{"id":"S41","href":"/t/claude-fde/s41-expansion","title":"3단계 Expansion: 측정, 축하, 반복, 새 유스케이스"},{"id":"S42","href":"/t/claude-fde/s42-capstone-pilot-plan","title":"파일럿 계획서 쓰기"}];</script>
+
 <script src="fde.js"></script>
 </body>
 </html>

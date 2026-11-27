@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-27T13:24:17.507Z",
+  "generatedAt": "2026-11-27T16:13:29.680Z",
   "topics": [
     {
       "id": "pif-cpsr",
@@ -752,7 +752,7 @@
         {
           "id": "0000-course-home",
           "title": "Claude FDE 스터디 — 코스 홈",
-          "subtitle": "11개 코스 → 42개 세션 목차, 진행 상태, 확인이 필요한 곳",
+          "subtitle": "11개 코스 → 42개 세션 시간표, 진도, 확인이 필요한 곳",
           "file": "lessons/claude-fde/0000-course-home.html"
         },
         {
