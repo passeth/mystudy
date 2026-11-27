@@ -174,7 +174,7 @@ export default function Lesson() {
           className="viewer-frame"
           src={`/${currentLesson.file}`}
           title={currentLesson.title}
-          sandbox="allow-same-origin allow-popups allow-scripts"
+          sandbox="allow-same-origin allow-popups allow-scripts allow-top-navigation-by-user-activation"
         />
       </div>
     </div>

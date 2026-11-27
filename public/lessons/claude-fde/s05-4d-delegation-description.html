@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="2. AI Fluency for Builders · 20분">
+<title>S05. AI Fluency와 4D 프레임워크: 위임과 설명</title>
+<link rel="stylesheet" href="fde.css">
+</head>
+<body data-session="S05">
+<!-- 자동 생성 파일: scripts/sync-fde.mjs 가 만들어요. 직접 고치지 말고 원본 노트를 고친 뒤 npm run fde:sync 하세요. -->
+<main class="wrap">
+
+<nav class="crumbs"><a href="/t/claude-fde/0000-course-home" target="_top">← 코스 홈</a><span>2. AI Fluency for Builders</span></nav>
+<header class="head">
+  <span class="eyebrow">Claude FDE 스터디 · 세션 5 / 42</span>
+  <h1>S05. AI Fluency와 4D 프레임워크: 위임과 설명</h1>
+  <div class="meta"><span>20분</span><span class="pill pill-draft">노트 초안</span><span class="pill pill-check">확인 필요 1곳</span></div>
+  <p class="official">공식 경로에서 해당하는 부분: Introduction and AI Fluency framework · How AI works · The 4D framework for builders</p>
+</header>
+
+
+<article class="note">
+<section class="sec sec-goals"><h2>오늘의 목표</h2><ul><li>AI Fluency의 뜻과 4D 프레임워크의 네 역량(위임, 설명, 분별, 책임)을 말할 수 있다.</li><li>만드는 일 하나를 단계로 쪼개 사람이 할 일과 AI에 맡길 일을 나눌 수 있다(위임).</li><li>한 줄짜리 요청을 결과물, 과정, 행동 세 가지로 풀어 다시 쓸 수 있다(설명).</li></ul></section>
+<section class="sec "><h2>핵심 정리</h2><h3>AI를 잘 쓴다는 것</h3>
+<p>코스 1이 &quot;AI는 어떻게 움직이나&quot;였다면 코스 2는 &quot;그래서 사람은 무엇을 잘해야 하나&quot;예요. <strong>AI Fluency</strong>(AI 유창성)는 AI와 <strong>효과적이고, 효율적이고, 윤리적이고, 안전하게</strong> 일하는 능력이에요. Rick Dakan, Joseph Feller 교수와 Anthropic이 만든 틀로, 서로 이어진 네 가지 역량이 뼈대예요. 영어 머리글자를 따서 <strong>4D 프레임워크</strong>라고 불러요.</p>
+<ul><li><strong>위임</strong>(Delegation): 목표를 정하고, AI를 쓸지, 언제 어떻게 쓸지 정하기</li><li><strong>설명</strong>(Description): 유용한 결과가 나오도록 목표를 잘 전달하기</li><li><strong>분별</strong>(Discernment): AI의 결과물과 행동이 얼마나 쓸 만한지 정확히 평가하기</li><li><strong>책임</strong>(Diligence): AI로 무엇을 어떻게 하는지에 책임지기</li></ul>
+<p>AI와 일하는 방식도 세 가지로 나눠요. 사람이 시킨 일을 AI가 그대로 해내는 <strong>자동화</strong>(Automation), 사람과 AI가 생각을 주고받으며 함께 만드는 <strong>증강</strong>(Augmentation), 사람이 미리 설정해 두면 AI가 독립적으로 일하는 <strong>에이전시</strong>(Agency)예요. 오늘은 앞의 두 역량을 빌더(무언가를 만드는 사람)의 일에 대어 봐요. 공식 강의가 빌더 업무에 구체적으로 어떻게 적용하는지는 볼 수 없어서, 아래 적용은 프레임워크 정의와 공개 문서로 직접 쓴 것이에요(<span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>).</p>
+<h3>위임: 무엇을 누구에게</h3>
+<p>위임에는 세 요소가 있어요.</p>
+<ul><li><strong>문제 인식</strong>(Problem Awareness): AI를 부르기 전에 목표와 일의 성격을 분명히 알기</li><li><strong>플랫폼 인식</strong>(Platform Awareness): AI 시스템의 능력과 한계 알기. S01~S04의 네 성질이 여기에 쓰여요</li><li><strong>과제 위임</strong>(Task Delegation): 사람과 AI의 강점을 살려 일을 나누기</li></ul>
+<p>빌더에게는 이런 순서예요. 고객 문제를 내 말로 한 문단 적어요. 일을 단계로 쪼개요. 단계마다 &quot;사람 / AI / 함께&quot;를 정하고 이유를 붙여요. 초안 쓰기, 코드 뼈대 만들기, 자료 요약은 AI에 맡기기 좋아요. 고객과 우선순위를 합의하는 일, 틀리면 피해가 큰 결정, 최종 승인은 사람이 쥐어요.</p>
+<h3>설명: 세 가지를 말해 준다</h3>
+<ul><li><strong>결과물 설명</strong>(Product Description): 무엇을 원하는지. 산출물, 형식, 독자, 완성의 기준</li><li><strong>과정 설명</strong>(Process Description): 어떻게 접근할지. 밟을 단계와 순서</li><li><strong>행동 설명</strong>(Performance Description): 함께 일하는 동안 AI가 어떻게 굴지. 간결하게 또는 자세하게, 동의만 하지 말고 반박하기 등</li></ul>
+<p>&quot;로그인 버그 고쳐 줘&quot; 대신 이렇게 써요. &quot;세션이 만료된 뒤 로그인이 실패한다는 신고가 있어(결과물: 이 증상이 사라져야 함). <code>src/auth/</code>의 토큰 갱신을 보고, 실패하는 테스트를 먼저 쓴 다음 고쳐 줘(과정). 확실하지 않은 부분은 추측하지 말고 물어봐 줘(행동).&quot; 이미 가진 자료는 설명하지 말고 그대로 건네요. 파일, 화면 캡처, 오류 로그가 설명보다 정확해요. S04에서 본 조종 가능성을 사람 쪽에서 쓰는 기술이 설명이에요.</p></section>
+<section class="sec sec-try callout warm"><h2>직접 해 보기 (5분)</h2><ol><li><strong>위임 지도 그리기.</strong> 이번 주에 할 일 하나(예: 고객 미팅 후 제안서 쓰기)를 다섯 단계로 쪼개세요. 단계마다 &quot;사람 / AI / 함께&quot; 중 하나와 이유 한 줄을 적으세요. 이유에 네 성질(예측, 지식, 작업 기억, 조종) 중 무엇이 걸리는지 써 보세요.</li><li><strong>세 가지 설명으로 다시 쓰기.</strong> 평소 쓰던 한 줄 요청을 하나 골라 결과물, 과정, 행동을 각각 한 문장씩 붙여 Claude.ai에 보내세요. 원래 한 줄로 받은 답과 무엇이 달라졌는지 비교해 보세요.</li></ol></section>
+<section class="sec sec-quiz"><h2>확인 문제</h2><ol class="quiz"><li value="1" class="q"><div class="q-body">AI Fluency의 정의에 들어 있는 네 가지 기준은?
+<ul><li>(a) 효과적, 효율적, 윤리적, 안전</li><li>(b) 빠르게, 싸게, 많이, 자동으로</li><li>(c) 정확, 창의, 일관, 최신</li></ul></div>
+<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">(a). 프레임워크의 정의에 그대로 나오는 네 낱말이에요.</div></details></li>
+<li value="2" class="q"><div class="q-body">위임(Delegation)의 세 요소가 아닌 것은?
+<ul><li>(a) 문제 인식</li><li>(b) 플랫폼 인식</li><li>(c) 결과물 분별</li></ul></div>
+<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">(c). 결과물 분별은 S06에서 배울 분별(Discernment)의 요소예요.</div></details></li>
+<li value="3" class="q"><div class="q-body">&quot;내 계획에 동의만 하지 말고 약점을 적극적으로 지적해 줘&quot;는 어떤 설명에 해당할까?
+<ul><li>(a) 결과물 설명</li><li>(b) 과정 설명</li><li>(c) 행동 설명</li></ul></div>
+<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">(c). 협업하는 동안 AI가 어떻게 굴지 정하는 것이 행동 설명이에요. 프레임워크의 예가 &quot;간결하게 또는 자세하게, 도전적으로 또는 지지적으로&quot;예요.</div></details></li>
+<li value="4" class="q"><div class="q-body">(서술형) 자동화, 증강, 에이전시 세 방식을 자신의 업무에서 예를 하나씩 들어 설명해 보세요.</div>
+<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">예시 답: 자동화는 회의록을 주고 정해진 형식의 요약을 받는 것. 증강은 제안서 구조를 두고 Claude와 여러 번 주고받으며 다듬는 것. 에이전시는 Claude Code에 작업과 규칙을 정해 주고 여러 파일 수정을 스스로 진행하게 하는 것.</div></details></li>
+<li value="5" class="q"><div class="q-body">(상황형) 고객사 임원이 첫 미팅에서 말해요. &quot;고객 문의 응대를 전부 AI에 맡기고 싶어요. 다음 주부터 되죠?&quot; 위임의 세 요소를 써서 어떻게 답하고, 무엇부터 하자고 제안할까요?</div>
+<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">예시 답: &quot;가능한 부분부터 빠르게 시작할 수 있어요. 다만 전부를 한 번에 맡기기 전에 세 가지를 같이 정했으면 해요&quot;라고 답한다. (문제 인식) 응대의 목표가 무엇인지, 지금 문의 유형과 처리 시간이 어떤지 먼저 확인한다. (플랫폼 인식) 사내 규정은 모델의 지식에 없으니 문서를 연결해야 하고, 답이 틀릴 수 있는 유형을 설명한다. (과제 위임) 문의를 유형별로 나눠 양이 많고 답이 문서에 있는 유형부터 AI 초안 + 상담원 확인 방식으로 시작하고, 환불 승인처럼 피해가 큰 결정은 사람이 맡는다. 첫 단계로 문의 유형 조사와 현재 처리 시간 측정(기준선)을 제안한다.</div></details></li></ol></section>
+<section class="sec sec-fde callout cool"><h2>FDE 관점</h2><p>FDE의 첫 일은 고객 문제를 듣고 틀을 잡는 것이고, 이게 위임의 문제 인식이에요. 그래서 &quot;AI로 뭘 할 수 있죠?&quot;가 아니라 &quot;이 일의 목표는 무엇이고 지금은 어떻게 하고 있죠?&quot;부터 물어요. 그다음 일을 단계로 쪼개 AI에 맡길 부분을 고르는데, 이 결정이 곧 파일럿 계획서의 &quot;먼저 출시할 부분&quot;이에요. 설명은 프로젝트 단위에서도 쓰여요. 결과물 설명에 해당하는 것이 &quot;만들기 전에 합의하는 성공 지표&quot;예요. 공식 문서도 프롬프트를 다듬기 전에 성공 기준과 시험 방법부터 정하라고 하는데, 기준이 말로 적혀 있어야 고객과 &quot;이 정도면 됐다&quot;를 같은 자로 잴 수 있어요.</p></section>
+<section class="sec sec-cards"><h2>복습 카드</h2><div class="cards"><details class="card"><summary>AI Fluency란?</summary><div class="card-a">AI와 효과적이고, 효율적이고, 윤리적이고, 안전하게 일하는 능력.</div></details><details class="card"><summary>4D 프레임워크의 네 역량은?</summary><div class="card-a">위임(Delegation), 설명(Description), 분별(Discernment), 책임(Diligence).</div></details><details class="card"><summary>AI와 일하는 세 가지 방식은?</summary><div class="card-a">자동화(시킨 일을 수행), 증강(함께 생각하며 협업), 에이전시(설정해 두면 독립적으로 수행).</div></details><details class="card"><summary>위임의 세 요소는?</summary><div class="card-a">문제 인식, 플랫폼 인식, 과제 위임.</div></details><details class="card"><summary>설명의 세 종류는?</summary><div class="card-a">결과물 설명(무엇을), 과정 설명(어떻게), 행동 설명(어떤 태도로).</div></details></div></section>
+<section class="sec sec-script"><h2>영상 대본</h2><details class="script"><summary>영상 대본 펼치기 <span class="muted">· 장면별 화면과 내레이션</span></summary><div class="script-body"><h4>장면 1 · 오늘의 질문 (약 25초)</h4>
+<p><strong>화면:</strong> 검은 화면에 두 사람. 같은 AI 아이콘을 쓰는데 한 사람의 결과물은 반듯하고 다른 사람의 결과물은 엉성함. 제목 &quot;AI를 잘 쓴다는 건 뭘까?&quot;<br><strong>내레이션:</strong> 같은 에이아이를 쓰는데 결과가 달라요. 프롬프트 문장 차이일까요? 그보다 큰 차이가 있어요. 오늘부터는 사람 쪽 역량을 배워요.</p>
+<h4>장면 2 · AI Fluency (약 35초)</h4>
+<p><strong>화면:</strong> 가운데 글자 &quot;AI Fluency&quot;. 둘레에 낱말 네 개가 하나씩 켜짐: &quot;효과적&quot;, &quot;효율적&quot;, &quot;윤리적&quot;, &quot;안전&quot;. 아래 작은 글씨 &quot;Dakan · Feller · Anthropic&quot;.<br><strong>내레이션:</strong> 에이아이 플루언시는 에이아이와 일하는 능력이에요. 기준이 네 가지예요. 효과적이고, 효율적이고, 윤리적이고, 안전하게. 두 교수와 앤트로픽이 함께 만든 틀이에요.</p>
+<h4>장면 3 · 4D 네 카드 (약 40초)</h4>
+<p><strong>화면:</strong> 위쪽에 코스 1의 카드 네 장(&quot;기계의 성질&quot;)이 작게. 아래쪽에 새 카드 네 장(&quot;사람의 역량&quot;)이 크게 놓임: 위임, 설명, 분별, 책임. 앞 두 장이 밝게 강조.<br><strong>내레이션:</strong> 뼈대는 네 가지 역량이에요. 위임, 설명, 분별, 책임. 영어로 모두 디로 시작해서 포디라고 불러요. 첫 번째 코스가 기계의 성질이었다면, 이건 사람의 역량이에요. 오늘은 앞의 둘을 봐요.</p>
+<h4>장면 4 · 일하는 세 가지 방식 (약 35초)</h4>
+<p><strong>화면:</strong> 세 칸 그림. 왼쪽 &quot;자동화&quot;: 사람 → 지시 → AI가 수행. 가운데 &quot;증강&quot;: 사람과 AI 사이 화살표가 왕복. 오른쪽 &quot;에이전시&quot;: 사람이 설정 상자를 건네고 AI가 혼자 걸어감.<br><strong>내레이션:</strong> 에이아이와 일하는 방식은 세 가지예요. 시킨 일을 그대로 해내는 자동화. 생각을 주고받으며 함께 만드는 증강. 미리 설정해 두면 혼자 일하는 에이전시예요.</p>
+<h4>장면 5 · 위임의 세 요소 (약 40초)</h4>
+<p><strong>화면:</strong> &quot;위임&quot; 카드가 펼쳐지며 세 줄: &quot;문제 인식: 목표가 뭔가&quot;, &quot;플랫폼 인식: AI가 뭘 잘하고 못하나&quot;, &quot;과제 위임: 누가 무엇을&quot;. 둘째 줄 옆에 코스 1 카드 네 장 아이콘.<br><strong>내레이션:</strong> 위임은 세 가지로 이루어져요. 먼저 목표를 분명히 아는 문제 인식. 에이아이의 능력과 한계를 아는 플랫폼 인식. 그리고 일을 나누는 과제 위임이에요. 첫 번째 코스에서 배운 네 성질이 여기서 쓰여요.</p>
+<h4>장면 6 · 빌더의 위임 지도 (약 40초)</h4>
+<p><strong>화면:</strong> 가로로 놓인 단계 다섯 개: &quot;문제 정리&quot;, &quot;초안&quot;, &quot;코드 뼈대&quot;, &quot;검토&quot;, &quot;출시 승인&quot;. 단계마다 이름표가 붙음: 사람, AI, AI, 함께, 사람.<br><strong>내레이션:</strong> 만드는 사람은 이렇게 해요. 일을 단계로 쪼개고, 단계마다 누가 할지 정해요. 초안과 코드 뼈대는 에이아이에 맡기기 좋아요. 고객과의 합의, 최종 승인은 사람이 쥐어요.</p>
+<h4>장면 7 · 설명의 세 종류 (약 40초)</h4>
+<p><strong>화면:</strong> &quot;설명&quot; 카드가 펼쳐지며 세 줄: &quot;결과물: 무엇을&quot;, &quot;과정: 어떻게&quot;, &quot;행동: 어떤 태도로&quot;. 줄마다 예가 붙음: &quot;표 한 장, 팀장용&quot;, &quot;먼저 테스트부터&quot;, &quot;모르면 물어보기&quot;.<br><strong>내레이션:</strong> 설명도 세 가지예요. 무엇을 원하는지 말하는 결과물 설명. 어떻게 접근할지 말하는 과정 설명. 그리고 어떤 태도로 일할지 말하는 행동 설명이에요.</p>
+<h4>장면 8 · 한 줄을 세 줄로 (약 40초)</h4>
+<p><strong>화면:</strong> 위에 회색 말풍선 &quot;로그인 버그 고쳐 줘&quot;. 아래에 세 줄이 색깔별로 나타남: 증상과 완성 기준(결과물), &quot;실패 테스트 먼저, 그다음 수정&quot;(과정), &quot;추측 말고 질문&quot;(행동). 옆에 파일·캡처 아이콘 &quot;가진 건 건네기&quot;.<br><strong>내레이션:</strong> 버그 고쳐 줘, 한 줄을 풀어 볼게요. 어떤 증상이 사라져야 하는지 적어요. 테스트부터 쓰라고 순서를 줘요. 모르면 물어보라고 해요. 그리고 파일이나 오류 로그는 설명하지 말고 그대로 건네요.</p>
+<h4>장면 9 · 고객 앞에서 (약 35초)</h4>
+<p><strong>화면:</strong> 회의실 그림. 고객 말풍선 &quot;전부 AI에 맡기고 싶어요&quot;. FDE가 화이트보드에 단계 다섯 개를 그리고 한 칸에 동그라미 &quot;여기부터&quot;. 아래에 &quot;먼저 출시할 부분 = 위임 결정&quot;.<br><strong>내레이션:</strong> 고객이 전부 맡기고 싶다고 하면, 일을 단계로 쪼개서 보여 줘요. 그중 맡기기 좋은 한 칸부터 시작해요. 이 결정이 파일럿의 첫 출시 범위예요. 성공 기준도 만들기 전에 말로 적어요.</p>
+<h4>장면 10 · 요약과 예고 (약 25초)</h4>
+<p><strong>화면:</strong> 세 줄 요약: &quot;1. AI Fluency = 효과적·효율적·윤리적·안전 2. 위임: 쪼개고 나눈다 3. 설명: 결과물·과정·행동을 말한다&quot;. 아래에 &quot;다음: S06 분별과 책임&quot;.<br><strong>내레이션:</strong> 정리할게요. 에이아이 플루언시는 네 역량으로 이루어져요. 위임은 일을 쪼개고 나누는 것. 설명은 결과물과 과정, 행동을 말해 주는 것이에요. 다음 시간에는 나머지 둘, 분별과 책임을 볼게요.</p></div></details></section>
+<section class="sec sec-sources"><h2>출처</h2><ul><li>Rick Dakan, Joseph Feller, Anthropic, &quot;The AI Fluency Framework&quot; 한 장 요약 (AI Fluency 정의, 4D 각 정의, 세 가지 상호작용 방식. CC BY-NC-SA 4.0): <a href="https://www-cdn.anthropic.com/334975cdec18f744b4fa511dc8518bd8d119d29d.pdf" target="_blank" rel="noopener noreferrer">https://www-cdn.anthropic.com/334975cdec18f744b4fa511dc8518bd8d119d29d.pdf</a></li><li>Rick Dakan, Joseph Feller, Anthropic, &quot;AI Fluency: Key Terminology Cheat Sheet&quot; (위임·설명의 세부 요소, 상호작용 방식 정의. CC BY-NC-SA 4.0): <a href="https://www-cdn.anthropic.com/4396730ed190e691a3712cf2fd6bfe35509deca2.pdf" target="_blank" rel="noopener noreferrer">https://www-cdn.anthropic.com/4396730ed190e691a3712cf2fd6bfe35509deca2.pdf</a></li><li>Rick Dakan, Joseph Feller, Anthropic, AI Fluency 교육자 코스 소개 PDF &quot;About this course&quot; (프레임워크가 Anthropic과 Rick Dakan, Joseph Feller 두 교수의 협력에서 나왔다는 설명): <a href="https://www-cdn.anthropic.com/files/4zrzovbb/website/254a6304b42f3fb4dc52ab36b1c3e06f06819a44.pdf" target="_blank" rel="noopener noreferrer">https://www-cdn.anthropic.com/files/4zrzovbb/website/254a6304b42f3fb4dc52ab36b1c3e06f06819a44.pdf</a></li><li>Coursera, &quot;AI Fluency for Builders&quot; (Anthropic 제공. 코스 설명, CodePath 협력, 모듈과 강의 제목): <a href="https://www.coursera.org/learn/ai-fluency-for-builders" target="_blank" rel="noopener noreferrer">https://www.coursera.org/learn/ai-fluency-for-builders</a></li><li>Coursera, &quot;AI Capabilities and Limitations&quot; (코스 1은 기계의 성질, 4D는 사람의 역량이라는 관계 설명): <a href="https://www.coursera.org/learn/ai-capabilities-and-limitations" target="_blank" rel="noopener noreferrer">https://www.coursera.org/learn/ai-capabilities-and-limitations</a></li><li>Claude Code Docs, Best practices (구체적인 프롬프트 예, 가진 자료는 건네기): <a href="https://code.claude.com/docs/en/best-practices" target="_blank" rel="noopener noreferrer">https://code.claude.com/docs/en/best-practices</a></li><li>Anthropic, Prompt engineering overview (프롬프트 전에 성공 기준과 시험 방법부터): <a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/overview" target="_blank" rel="noopener noreferrer">https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/overview</a></li><li>공식 개요 사본 <code>_official-outline-2026-11-27.txt</code> (코스 2 설명과 목차. 원 경로: <a href="https://anthropic-partners.skilljar.com/path/claude-fde" target="_blank" rel="noopener noreferrer">https://anthropic-partners.skilljar.com/path/claude-fde</a> )</li><li>anthropic.com/ai-fluency 페이지는 Skilljar로 넘어가 자동으로 읽을 수 없었어요. 정의는 위 두 PDF에서 확인했어요. 한국어 용어(위임, 설명, 분별, 책임, 행동 설명 등)는 직접 옮긴 것이에요.</li></ul></section>
+</article>
+<section class="done-box">
+  <label><input type="checkbox" data-done="S05"> 이 세션을 다 했어요 <span class="muted">(이 브라우저에만 저장돼요)</span></label>
+</section>
+<nav class="pager">
+  <a href="/t/claude-fde/s04-steerability-diagnosis" target="_top" class="prev"><small>이전</small><span>S04 · 조종 가능성과 예상 밖 출력 진단하기</span></a>
+  <a href="/t/claude-fde/s06-4d-discernment-diligence" target="_top" class="next"><small>다음</small><span>S06 · 분별과 책임: 빌더의 검증</span></a>
+</nav>
+<footer class="disclaimer" role="note">
+  <strong>비공식 학습 자료</strong>
+  <p>이 노트는 Anthropic 공식 “Claude Forward Deployed Engineer” 학습 경로의 공개 개요와 공식 문서를 바탕으로 쓴 개인 학습 노트이며, 공식 강의 필기가 아니에요. 실제 강의·퀴즈·수료는 공식 경로에서 진행해요.</p>
+  <p>공식 경로: <a href="https://anthropic-partners.skilljar.com/path/claude-fde" target="_blank" rel="noopener noreferrer">https://anthropic-partners.skilljar.com/path/claude-fde</a></p>
+</footer>
+</main>
+<script src="fde.js"></script>
+</body>
+</html>

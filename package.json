@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "gen-manifest": "node scripts/gen-manifest.mjs",
+    "fde:sync": "node scripts/sync-fde.mjs",
+    "fde:render": "node scripts/sync-fde.mjs --render-only",
     "dev": "npm run gen-manifest && vite",
     "prebuild": "node scripts/gen-manifest.mjs",
     "build": "vite build",

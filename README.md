@@ -67,8 +67,14 @@ content/topics.json              # 토픽 메타데이터: 제목, 부제, 컬�
 public/lessons/<topic>/*.html    # 실제 레슨 HTML
 public/manifest.json             # 빌드 시 자동 생성되는 목록 데이터
 scripts/gen-manifest.mjs         # lessons + topics.json -> manifest 생성
+scripts/sync-fde.mjs             # Claude FDE 스터디 노트(Markdown) -> public/lessons/claude-fde/*.html
+claude-fde-course/               # Claude FDE 스터디 원본 스냅샷·설정 (README에 동기화 절차)
 src/                             # Vite + React 프론트엔드
 ```
+
+Claude FDE 스터디 섹션은 Markdown 노트에서 HTML 레슨을 생성합니다. 노트가 바뀌면
+`npm run fde:sync` 후 `npm run build`로 확인하고 커밋합니다. 자세한 절차와 영상 처리 방식은
+[`claude-fde-course/README.md`](claude-fde-course/README.md)를 보세요.
 
 ## 데이터 흐름
 

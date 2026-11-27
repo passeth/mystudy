@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="11. Driving enterprise adoption of Claude · 20분">
+<title>S41. 3단계 Expansion: 측정, 축하, 반복, 새 유스케이스</title>
+<link rel="stylesheet" href="fde.css">
+</head>
+<body data-session="S41">
+<!-- 자동 생성 파일: scripts/sync-fde.mjs 가 만들어요. 직접 고치지 말고 원본 노트를 고친 뒤 npm run fde:sync 하세요. -->
+<main class="wrap">
+
+<nav class="crumbs"><a href="/t/claude-fde/0000-course-home" target="_top">← 코스 홈</a><span>11. Driving enterprise adoption of Claude</span></nav>
+<header class="head">
+  <span class="eyebrow">Claude FDE 스터디 · 세션 41 / 42</span>
+  <h1>S41. 3단계 Expansion: 측정, 축하, 반복, 새 유스케이스</h1>
+  <div class="meta"><span>20분</span><span class="pill pill-draft">노트 초안</span><span class="pill pill-check">확인 필요 1곳</span></div>
+  <p class="official">공식 경로에서 해당하는 부분: Phase 3 'Expansion': What is the 'Expansion' phase? · Measure impact, celebrate, and iterate · Exploring new products and use cases · Wrap up and thank you</p>
+</header>
+
+<div class="preamble"><blockquote><p>이 코스(C11)의 강의 본문은 공개돼 있지 않아요. 공식 개요에서 확인한 것은 이 단계의 이름, 수업 제목(&quot;영향을 재고, 축하하고, 반복한다&quot;, &quot;새 제품과 유스케이스 탐색&quot;), 그리고 주제 &quot;성과 나누기&quot;예요. 무엇을 어떻게 재고 나누는지는 Anthropic 공개 가이드와 제품 문서에서 확인한 것, 그리고 일반적인 실무 방식으로 썼어요. 공식 코스의 정확한 설명은 <span class="check" title="원본 노트에 (확인 필요)로 표시된 내용">확인 필요</span>예요.</p></blockquote></div>
+<article class="note">
+<section class="sec sec-goals"><h2>오늘의 목표</h2><ul><li>확장 단계에서 측정의 초점이 &quot;활동&quot;에서 &quot;사업 가치&quot;로 옮겨 간다는 것을 지표 예로 설명할 수 있다.</li><li>성과를 숫자와 이야기로 묶어 나누는 방법과, 그것이 도입을 넓히는 이유를 말할 수 있다.</li><li>다음 유스케이스나 새 제품을 고를 때 S35의 자격 판정으로 돌아가는 고리를 설명할 수 있다.</li></ul></section>
+<section class="sec "><h2>핵심 정리</h2><h3>한 바퀴를 돌고, 다음 바퀴를 고른다</h3>
+<p>텃밭을 가꾸는 사람은 수확한 뒤 세 가지를 해요. 얼마나 났는지 재고, 이웃과 나누고, 다음 철에 무엇을 심을지 정해요. <strong>확장</strong>(Expansion)이 그 단계예요. 수업 제목 그대로 재고, 축하하고, 반복한 다음 새 제품과 새 유스케이스로 넓혀요. 확장은 끝이 아니라 고리예요. 다음 유스케이스는 다시 S35의 자격 판정에서 시작해요.</p>
+<h3>재기: 활동에서 가치로</h3>
+<p>Claude Enterprise 관리자 가이드는 이 시기에 &quot;활동 지표를 좇는 데서 사업 가치를 보여 주는 쪽으로&quot; 옮기라고 해요.</p>
+<ul><li><strong>활동 지표</strong>는 쓰고 있는지를 봐요. 예: 주간 활성 사용자, 사용자당 메시지 수, 기능 사용 비율. 초기에는 이게 중요해요.</li><li><strong>가치 지표</strong>는 일이 달라졌는지를 봐요. 예: 절감 시간, Claude의 도움을 받은 업무 수, 건당 처리 시간, 품질 통과율.</li></ul>
+<p>같은 가이드는 도입 현황은 관리자 대시보드와 API로, 생산성 이득은 정기 설문으로, 그리고 팀 리더의 짧은 사례와 묶어 분기마다 보고하라고 해요. 도움말 문서에 따르면 Team과 Enterprise 플랜의 분석 화면은 네 물음으로 짜여 있어요. 누가 쓰나, 어떻게 쓰나, 결과가 무엇인가, 비용이 얼마인가. 설문 기능도 있어요. Claude Code 쪽 대시보드는 Claude Code가 참여한 PR과 코드 줄 수 같은 기여 지표를 보여 주는데, 문서 스스로 이 수치가 일부러 보수적인 과소 추정이라고 밝혀요.</p>
+<p>전환 가이드는 ROI를 세 층으로 봐요. 직접 비용 절감, 생산성 이득(절감 시간과 늘어난 산출), 전략적 이익(출시 속도, 의사 결정의 질, 직원 만족). 여기서 S36의 기준선이 다시 값을 해요. 기준선이 없으면 세 층 모두 &quot;느낌&quot;이 돼요.</p>
+<h3>축하하기: 숫자에 이야기를 붙인다</h3>
+<p>공식 개요가 꼽은 주제가 <strong>성과 나누기</strong>(sharing wins)예요. 전환 가이드는 숫자만으로는 사람이 움직이지 않으니 이야기를 붙이라고 해요. 임원에게는 월간 보고로, 직원에게는 채널과 소식지와 전체 회의의 한 꼭지로 동료의 성과를 보여 줘요. 이유도 적혀 있어요. &quot;사회적 증거는 위에서 내려오는 지시보다 도입을 빨리 이끈다.&quot; 옆 팀 동료가 해낸 일은 공지보다 설득력이 있어요. 축하는 S39의 심리적 안전감과도 이어져요. 잘 된 것만이 아니라 &quot;해 봤더니 안 됐던 것&quot;도 나눌 수 있어야 진짜예요(일반적인 실무 방식).</p>
+<h3>반복하기</h3>
+<p>관리자 가이드는 단계마다 회고하고(S37의 세 질문), 정기 설문과 챔피언 모임과 사용 분석을 돌아보라고 해요. 전환 가이드는 분기마다 사용자에게 무엇이 잘 되고, 무엇이 답답하고, 어떤 기능을 바라는지 물으라고 해요.</p>
+<h3>새 제품과 새 유스케이스</h3>
+<p>넓히는 방향은 둘이에요.</p>
+<ul><li><strong>옆으로: 새 팀과 새 유스케이스.</strong> 관리자 가이드는 유스케이스가 잘 맞고 챔피언이 있는 팀을 먼저 고르고, 팀마다 간단한 요구 파악, 맞춤 온보딩, 현지 챔피언 지정을 하라고 해요. S36에서 &quot;다음 단계&quot; 목록에 적어 둔 아이디어가 여기서 후보가 돼요.</li><li><strong>위로: 더 깊은 기능.</strong> 같은 가이드는 기능을 한꺼번에 열지 말고 핵심 기능, 지능형 기능, 통합(Claude Code, Skills), 자동화 순으로 가는 길을 예로 들어요. Cowork 배포 가이드의 다섯 단계 사다리(질문하기, 결과물 만들기, skill로 굳히기, 묶고 예약하기, 부서별 plugin)도 같은 생각이에요. 목표는 모든 사용자를 지금보다 한 칸 위로 올리는 것이에요.</li></ul></section>
+<section class="sec sec-try callout warm"><h2>직접 해 보기 (5분)</h2><ol><li><strong>성과 이야기 한 꼭지 쓰기.</strong> 내가 Claude로 해낸 일 하나를 다섯 줄로 써 보세요: 전에는 어땠나(숫자), 무엇을 바꿨나, 지금은 어떤가(숫자), 따라 하려면 무엇부터, 안 됐던 것 한 가지. Claude에게 &quot;이 글에서 숫자의 출처가 불분명한 곳을 짚어 줘&quot;라고 시키고, 어디가 걸리는지 보세요.</li><li><strong>활동 지표와 가치 지표 가르기.</strong> 다음 여섯 개를 둘로 나눠 보세요: 주간 활성 사용자, 건당 처리 시간, 사용자당 메시지 수, 재문의 비율, 기능 사용 비율, 주당 절감 시간. 그리고 가치 지표마다 &quot;기준선은 어디서 가져오나&quot;를 한 줄씩 적어 보세요.</li></ol></section>
+<section class="sec sec-quiz"><h2>확인 문제</h2><ol class="quiz"><li value="1" class="q"><div class="q-body">확장 단계에서 측정의 초점은 어떻게 바뀌나요?
+<ul><li>(a) 가치 지표에서 활동 지표로</li><li>(b) 활동 지표에서 사업 가치를 보여 주는 지표로</li><li>(c) 측정을 그만두고 설문만 한다</li></ul></div>
+<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">(b). 관리자 가이드의 표현 그대로, 활동 지표를 좇는 데서 사업 가치를 보여 주는 쪽으로 옮겨요.</div></details></li>
+<li value="2" class="q"><div class="q-body">동료의 성과를 채널과 전체 회의에서 나누는 것이 도입을 넓히는 이유로 가장 알맞은 것은?
+<ul><li>(a) 공지 횟수가 늘어서</li><li>(b) 동료가 해낸 일이라는 사회적 증거가 위에서 내려오는 지시보다 설득력이 있어서</li><li>(c) 사용량 순위를 공개할 수 있어서</li></ul></div>
+<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">(b). 전환 가이드는 사회적 증거가 위에서 내려오는 지시보다 도입을 빨리 이끈다고 적어요. (c)처럼 순위를 압박 수단으로 쓰면 심리적 안전감이 깨져요.</div></details></li>
+<li value="3" class="q"><div class="q-body">새 유스케이스 후보가 나왔을 때 알맞은 다음 걸음은?
+<ul><li>(a) 첫 파일럿이 성공했으니 검토 없이 바로 만든다</li><li>(b) S35의 네 기준으로 다시 자격을 판정하고 기준선부터 잡는다</li><li>(c) 모든 팀에 한꺼번에 배포한다</li></ul></div>
+<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">(b). 첫 파일럿의 성공이 다음 유스케이스의 적합성을 보장하지는 않아요. 네 기준으로 다시 보고 기준선을 잡아요.</div></details></li>
+<li value="4" class="q"><div class="q-body">(서술형) &quot;숫자에 이야기를 붙인다&quot;는 말의 뜻을, 좋은 성과 이야기에 들어갈 요소를 들어 두세 문장으로 설명해 보세요.</div>
+<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">예시 답: 숫자는 &quot;얼마나&quot;를 말해 주지만 &quot;나도 할 수 있겠다&quot;는 생각은 이야기에서 나온다. 좋은 성과 이야기에는 전후 숫자와 그 출처, 누가 무엇을 바꿨는지, 따라 하려면 무엇부터 하면 되는지가 들어간다. 안 됐던 것 한 가지를 넣으면 믿음이 더 간다.</div></details></li>
+<li value="5" class="q"><div class="q-body">(상황형) 분기 보고 자리에서 고객 임원이 말해요. &quot;활성 사용자 수는 알겠어요. 그래서 우리한테 뭐가 남았습니까?&quot; 어떻게 답하고, 다음 분기 보고를 어떻게 바꿀까요?</div>
+<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">예시 답: &quot;활성 사용자는 쓰고 있다는 증거고, 남은 것은 가치 지표로 보여 드리겠습니다&quot;라고 답하고 지금 있는 것부터 꺼낸다: 파일럿 유스케이스의 기준선 대비 처리 시간과 품질, 그것을 시간과 비용으로 바꾼 값, 팀 리더의 사례 하나. 다음 분기 보고는 (1) 맨 앞에 가치 지표 세 개(기준선, 목표, 실제)를 두고, (2) 활동 지표는 뒤로 보내고, (3) 사례 한두 개를 숫자와 묶고, (4) 다음에 넓힐 후보와 그 자격 판정 결과를 붙인다. 기준선이 없는 영역은 솔직히 말하고 이번 분기에 재기 시작한다.</div></details></li></ol></section>
+<section class="sec sec-fde callout cool"><h2>FDE 관점</h2><p>FDE에게 확장 단계는 &quot;다음 일이 생기는 곳&quot;이에요. 공식 경로는 이 코스를 &quot;고객이 활성화에서 규모 확대로 가는 길&quot;로 소개하고, 다루는 것 가운데 하나로 &quot;다음 일감 찾기&quot;를 들어요. 첫 파일럿의 스코어카드가 숫자로 채워지고, 그 숫자가 이야기로 조직에 퍼지면 옆 팀이 먼저 찾아와요. 그때 FDE가 할 일은 흥분해서 바로 만드는 게 아니라 S35로 돌아가 다시 자격을 판정하는 거예요. 두 번째 파일럿은 첫 번째보다 빨라요. 연결해 둔 MCP 서버, 만들어 둔 skill, 합의한 품질 기준을 다시 쓰니까요. 그래서 파일럿 계획서의 마지막 칸에는 &quot;판정 뒤 무엇을 할지&quot;를 적어요. 통과하면 누구에게 넓히는지, 다음 후보는 무엇인지, 성과를 누가 어디서 발표하는지요. 다음 시간 캡스톤에서 그 칸까지 직접 써 봐요.</p></section>
+<section class="sec sec-cards"><h2>복습 카드</h2><div class="cards"><details class="card"><summary>확장 단계의 네 가지 일은(수업 제목 기준)?</summary><div class="card-a">영향 재기, 축하하기, 반복하기, 새 제품과 유스케이스 탐색.</div></details><details class="card"><summary>활동 지표와 가치 지표의 차이는?</summary><div class="card-a">활동 지표는 쓰고 있는지(활성 사용자, 메시지 수), 가치 지표는 일이 달라졌는지(절감 시간, 처리 시간, 품질)를 본다.</div></details><details class="card"><summary>전환 가이드가 말하는 ROI의 세 층은?</summary><div class="card-a">직접 비용 절감, 생산성 이득, 전략적 이익.</div></details><details class="card"><summary>성과 나누기가 도입을 넓히는 이유는?</summary><div class="card-a">동료의 성과라는 사회적 증거가 위에서 내려오는 지시보다 빨리 사람을 움직인다.</div></details><details class="card"><summary>새 유스케이스가 나오면 어디로 돌아가나?</summary><div class="card-a">S35의 자격 판정과 S36의 기준선. 확장은 고리다.</div></details></div></section>
+<section class="sec sec-script"><h2>영상 대본</h2><details class="script"><summary>영상 대본 펼치기 <span class="muted">· 장면별 화면과 내레이션</span></summary><div class="script-body"><h4>장면 1 · 오늘의 질문 (약 25초)</h4>
+<p><strong>화면:</strong> 검은 화면에 큰 숫자 &quot;활성 사용자 80%(예시)&quot;. 그 옆에서 임원 캐릭터의 말풍선 &quot;그래서 뭐가 남았죠?&quot; 제목 &quot;쓰고 있다, 그다음은?&quot;<br><strong>내레이션:</strong> 다들 쓰고 있어요. 그런데 임원이 물어요. 그래서 뭐가 남았죠? 오늘은 이 질문에 답하는 확장 단계를 볼게요.</p>
+<h4>장면 2 · 수확 뒤의 세 가지 (약 35초)</h4>
+<p><strong>화면:</strong> 텃밭 그림. 바구니의 채소를 저울에 올림(재기), 이웃에게 건넴(나누기), 빈 밭에 새 씨앗 봉투를 들고 섬(다음 고르기). 세 장면이 고리 모양 화살표로 이어짐.<br><strong>내레이션:</strong> 텃밭을 가꾸는 사람은 수확하고 세 가지를 해요. 얼마나 났는지 재고, 이웃과 나누고, 다음에 뭘 심을지 정해요. 확장 단계가 딱 그래요. 재고, 축하하고, 반복하고, 넓혀요.</p>
+<h4>장면 3 · 활동에서 가치로 (약 40초)</h4>
+<p><strong>화면:</strong> 왼쪽 계기판 묶음 &quot;활동: 활성 사용자, 메시지 수, 기능 사용&quot;. 오른쪽 계기판 묶음 &quot;가치: 절감 시간, 처리 시간, 품질 통과율&quot;. 조명이 왼쪽에서 오른쪽으로 옮겨 감.<br><strong>내레이션:</strong> 처음에는 쓰고 있는지를 봐요. 활성 사용자나 메시지 수 같은 활동 지표예요. 이제는 일이 달라졌는지를 봐요. 절감 시간, 처리 시간, 품질 같은 가치 지표예요.</p>
+<h4>장면 4 · 어디서 재나 (약 40초)</h4>
+<p><strong>화면:</strong> 분석 화면을 본뜬 네 칸: &quot;누가 쓰나&quot;, &quot;어떻게 쓰나&quot;, &quot;결과가 무엇인가&quot;, &quot;비용이 얼마인가&quot;. 옆에 설문지 그림과 팀 리더의 짧은 사례 카드. 세 가지가 &quot;분기 보고&quot; 폴더로 들어감.<br><strong>내레이션:</strong> 도입 현황은 분석 화면에서 봐요. 누가, 어떻게 쓰고, 결과와 비용이 어떤지 나와요. 절감 시간은 정기 설문으로 물어요. 여기에 팀 리더의 짧은 사례를 묶어 분기마다 보고해요.</p>
+<h4>장면 5 · 기준선이 다시 값을 한다 (약 30초)</h4>
+<p><strong>화면:</strong> 막대 두 개. 왼쪽 막대 &quot;도입 전(기준선)&quot;은 높고, 오른쪽 막대 &quot;지금&quot;은 낮음, 사이에 &quot;차이 = 성과&quot;. 왼쪽 막대가 사라지자 오른쪽 막대만 덩그러니 남고 물음표.<br><strong>내레이션:</strong> 여기서 기준선이 다시 값을 해요. 도입 전 숫자가 있어야 지금 숫자가 성과가 돼요. 기준선이 없으면 전부 느낌이 돼요.</p>
+<h4>장면 6 · 숫자에 이야기를 붙인다 (약 40초)</h4>
+<p><strong>화면:</strong> 숫자 카드 &quot;제안서 5일 → 2시간(가이드의 예시)&quot;. 그 옆에 사람 얼굴과 말풍선 세 줄: &quot;전에는&quot;, &quot;이렇게 바꿨고&quot;, &quot;지금은&quot;. 카드와 말풍선이 합쳐져 &quot;성과 이야기&quot; 한 장이 됨.<br><strong>내레이션:</strong> 숫자만으로는 사람이 움직이지 않아요. 누가, 무엇을 바꿔서, 어떻게 됐는지 이야기를 붙여요. 그리고 채널과 전체 회의에서 나눠요.</p>
+<h4>장면 7 · 왜 나누나 (약 35초)</h4>
+<p><strong>화면:</strong> 왼쪽: 위에서 아래로 내려오는 &quot;지시&quot; 화살표, 사람들이 팔짱을 낌. 오른쪽: 옆자리 동료가 화면을 보여 주고, 주변 사람들이 몸을 기울임. 아래 글자 &quot;사회적 증거&quot;.<br><strong>내레이션:</strong> 옆 팀 동료가 해낸 일은 공지보다 설득력이 있어요. 이걸 사회적 증거라고 해요. 위에서 내려오는 지시보다 도입을 빨리 이끌어요. 안 됐던 것도 같이 나눌 수 있으면 더 좋아요.</p>
+<h4>장면 8 · 옆으로, 위로 (약 40초)</h4>
+<p><strong>화면:</strong> 가운데 원 &quot;첫 파일럿&quot;. 옆으로 뻗는 화살표 &quot;새 팀, 새 유스케이스&quot;. 위로 뻗는 사다리 다섯 칸: &quot;질문&quot;, &quot;만들기&quot;, &quot;스킬&quot;, &quot;묶고 예약&quot;, &quot;부서 플러그인&quot;. 사다리 옆에 &quot;한 칸씩&quot;.<br><strong>내레이션:</strong> 넓히는 방향은 둘이에요. 옆으로는 새 팀과 새 유스케이스로 가요. 위로는 더 깊은 기능으로 가요. 한꺼번에 열지 않고 한 칸씩 올려요.</p>
+<h4>장면 9 · 고리로 돌아간다 (약 35초)</h4>
+<p><strong>화면:</strong> 큰 고리 그림. 고리 위의 점들: &quot;자격 판정(S35)&quot;, &quot;파일럿 설계와 기준선(S36)&quot;, &quot;롤아웃(S37)&quot;, &quot;측정과 축하(S41)&quot;. 화살표가 마지막 점에서 첫 점으로 돌아감. 두 번째 바퀴는 더 짧게 그려짐.<br><strong>내레이션:</strong> 새 후보가 나오면 바로 만들지 않아요. 자격 판정으로 돌아가요. 기준선도 다시 잡아요. 두 번째 바퀴는 더 빨라요. 만들어 둔 연결과 스킬을 다시 쓰니까요.</p>
+<h4>장면 10 · 요약과 예고 (약 30초)</h4>
+<p><strong>화면:</strong> 세 줄 요약이 한 줄씩 나타남: &quot;1. 활동에서 가치로 잰다 2. 숫자에 이야기를 붙여 나눈다 3. 새 후보는 자격 판정으로 돌아간다&quot;. 아래에 &quot;다음: S42 캡스톤, 파일럿 계획서 쓰기&quot;.<br><strong>내레이션:</strong> 정리할게요. 활동이 아니라 가치로 재요. 숫자에 이야기를 붙여 나눠요. 새 후보는 자격 판정으로 돌아가요. 다음 시간은 마지막이에요. 지금까지 배운 걸 모아 파일럿 계획서를 직접 써 볼게요.</p></div></details></section>
+<section class="sec sec-sources"><h2>출처</h2><ul><li>Claude Forward Deployed Engineer 학습 경로, 코스 11 소개와 목차(확장 단계, Measure impact, celebrate, and iterate / Exploring new products and use cases, 성과 나누기), 경로 페이지의 코스 11 한 줄 소개: <a href="https://anthropic-partners.skilljar.com/path/claude-fde" target="_blank" rel="noopener noreferrer">https://anthropic-partners.skilljar.com/path/claude-fde</a> (2026-11-27에 읽은 개요는 <code>_official-outline-2026-11-27.txt</code>)</li><li>Claude Academy, Claude Enterprise Administrator Guide (성공 지표 예, Measuring Impact, 팀별 확장, 기능을 단계적으로 여는 순서, 회고와 정기 설문): <a href="https://academy.claude.com/tutorials/claude-enterprise-administrator-guide" target="_blank" rel="noopener noreferrer">https://academy.claude.com/tutorials/claude-enterprise-administrator-guide</a></li><li>Anthropic, The enterprise AI transformation guide, Step 3: Scale impact (ROI의 세 층, 숫자와 이야기, 사회적 증거, 분기 설문): <a href="https://claude.com/resources/guides/the-enterprise-ai-transformation-guide/scale-impact" target="_blank" rel="noopener noreferrer">https://claude.com/resources/guides/the-enterprise-ai-transformation-guide/scale-impact</a></li><li>Claude Help Center, View usage analytics for Team and Enterprise plans (분석 화면의 네 물음, 설문, 볼 수 있는 역할): <a href="https://support.claude.com/en/articles/12883420-view-usage-analytics-for-team-and-enterprise-plans" target="_blank" rel="noopener noreferrer">https://support.claude.com/en/articles/12883420-view-usage-analytics-for-team-and-enterprise-plans</a></li><li>Claude Code Docs, Track team usage with analytics (기여 지표와 그 보수적 집계, ROI 측정에 쓰는 법): <a href="https://code.claude.com/docs/en/analytics" target="_blank" rel="noopener noreferrer">https://code.claude.com/docs/en/analytics</a></li><li>Anthropic, Deploying Claude across your organization: How Anthropic uses Claude Cowork (PDF. 다섯 단계 사다리, 모든 사용자를 한 칸 위로): <a href="https://assets.claude.com/e784e0ee3705d9dbdbc6f3fa2a8fb8eee319b3cf.pdf" target="_blank" rel="noopener noreferrer">https://assets.claude.com/e784e0ee3705d9dbdbc6f3fa2a8fb8eee319b3cf.pdf</a></li><li>Anthropic, Claude adoption roadmap (금융 업계 가이드. 한 팀의 skill을 다른 팀이 고쳐 쓰고 두 번째 팀이 더 빨리 붙는다는 설명): <a href="https://claude.com/resources/guides/claude-for-the-financial-industry/claude-adoption-roadmap" target="_blank" rel="noopener noreferrer">https://claude.com/resources/guides/claude-for-the-financial-industry/claude-adoption-roadmap</a></li><li>영상 장면 1의 &quot;활성 사용자 80%&quot;는 지어낸 예시예요. 장면 6의 &quot;5일 → 2시간&quot;은 전환 가이드가 든 예시 문장이고 실제 고객 수치로 제시된 것이 아니에요. &quot;옆으로, 위로&quot;와 &quot;고리&quot;라는 묶음은 Study_FDE의 정리예요.</li></ul></section>
+</article>
+<section class="done-box">
+  <label><input type="checkbox" data-done="S41"> 이 세션을 다 했어요 <span class="muted">(이 브라우저에만 저장돼요)</span></label>
+</section>
+<nav class="pager">
+  <a href="/t/claude-fde/s40-acceleration" target="_top" class="prev"><small>이전</small><span>S40 · 2단계 Acceleration: CoE와 Train the Trainer</span></a>
+  <a href="/t/claude-fde/s42-capstone-pilot-plan" target="_top" class="next"><small>다음</small><span>S42 · 파일럿 계획서 쓰기</span></a>
+</nav>
+<footer class="disclaimer" role="note">
+  <strong>비공식 학습 자료</strong>
+  <p>이 노트는 Anthropic 공식 “Claude Forward Deployed Engineer” 학습 경로의 공개 개요와 공식 문서를 바탕으로 쓴 개인 학습 노트이며, 공식 강의 필기가 아니에요. 실제 강의·퀴즈·수료는 공식 경로에서 진행해요.</p>
+  <p>공식 경로: <a href="https://anthropic-partners.skilljar.com/path/claude-fde" target="_blank" rel="noopener noreferrer">https://anthropic-partners.skilljar.com/path/claude-fde</a></p>
+</footer>
+</main>
+<script src="fde.js"></script>
+</body>
+</html>

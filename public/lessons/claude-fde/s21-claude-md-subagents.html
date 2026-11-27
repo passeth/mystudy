@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="6. Claude Code 101 · 22분">
+<title>S21. 커스터마이즈 1: CLAUDE.md와 서브에이전트</title>
+<link rel="stylesheet" href="fde.css">
+</head>
+<body data-session="S21">
+<!-- 자동 생성 파일: scripts/sync-fde.mjs 가 만들어요. 직접 고치지 말고 원본 노트를 고친 뒤 npm run fde:sync 하세요. -->
+<main class="wrap">
+
+<nav class="crumbs"><a href="/t/claude-fde/0000-course-home" target="_top">← 코스 홈</a><span>6. Claude Code 101</span></nav>
+<header class="head">
+  <span class="eyebrow">Claude FDE 스터디 · 세션 21 / 42</span>
+  <h1>S21. 커스터마이즈 1: CLAUDE.md와 서브에이전트</h1>
+  <div class="meta"><span>22분</span><span class="pill pill-draft">노트 초안</span></div>
+  <p class="official">공식 경로에서 해당하는 부분: Customizing Claude Code (The CLAUDE.md file, Subagents)</p>
+</header>
+
+
+<article class="note">
+<section class="sec sec-goals"><h2>오늘의 목표</h2><ul><li>CLAUDE.md가 어떤 문제를 풀고, 파일을 어디에 두면 누구에게 적용되는지 설명할 수 있다.</li><li>CLAUDE.md에 넣을 것과 뺄 것을 가려낼 수 있다.</li><li>서브에이전트가 컨텍스트를 어떻게 아껴 주는지 설명하고, 간단한 서브에이전트 파일을 읽을 수 있다.</li></ul></section>
+<section class="sec "><h2>핵심 정리</h2><h3>CLAUDE.md: 매 세션 읽는 인수인계 메모</h3>
+<p>Claude Code의 세션은 매번 새 컨텍스트로 시작해요. 어제 알려 준 빌드 명령을 오늘은 몰라요. <strong>CLAUDE.md</strong>는 이 틈을 메우는 마크다운 파일이에요. 새로 온 동료에게 건네는 인수인계 메모처럼, Claude Code가 세션을 시작할 때마다 읽어요.</p>
+<h3>어디에 두나</h3>
+<p>파일의 위치가 적용 범위를 정해요.</p>
+<div class="table-scroll"><table><thead><tr><th>범위</th><th>위치</th><th>누구에게</th></tr></thead><tbody><tr><td>프로젝트</td><td><code>./CLAUDE.md</code> 또는 <code>./.claude/CLAUDE.md</code></td><td>팀 전체. git에 커밋해 공유</td></tr><tr><td>사용자</td><td><code>~/.claude/CLAUDE.md</code></td><td>나만, 모든 프로젝트에서</td></tr><tr><td>로컬</td><td><code>./CLAUDE.local.md</code></td><td>나만, 이 프로젝트에서. <code>.gitignore</code>에 추가</td></tr></tbody></table></div>
+<p>작업 폴더와 그 위쪽 폴더의 파일은 시작할 때 읽고, 하위 폴더의 파일은 Claude가 그 폴더의 파일을 다룰 때 읽어요. 여러 파일은 서로 덮어쓰지 않고 이어 붙여져요. 저장소에 다른 코딩 에이전트용 <code>AGENTS.md</code>만 있고 CLAUDE.md가 없으면, Claude Code는 기본적으로 AGENTS.md를 읽어요(v2.1.277 이상).</p>
+<h3>무엇을 넣나</h3>
+<p>기준은 하나예요. <strong>Claude가 코드를 읽어서는 알 수 없는 것만</strong> 적어요.</p>
+<ul><li>확인하는 법: 테스트·타입체크·린트 명령, 테스트 파일 하나만 돌리는 법</li><li>저장소에 없는 결정: 팀이 정한 규칙, 배포 방식</li><li>코드가 오해를 부르는 곳: 곳곳에 있지만 새 코드에서는 따라 하면 안 되는 옛 패턴</li><li>두 번 이상 고쳐 준 것</li></ul>
+<p>&quot;코드를 잘 정리해&quot;보다 &quot;들여쓰기는 2칸&quot;처럼 확인할 수 있게 쓰고, 200줄 아래를 목표로 해요. 길어질수록 컨텍스트를 먹고 덜 지켜져요. <code>/init</code>은 초안을 만들어 주고, <code>/memory</code>는 파일을 열어 편집하게 해 주고, <code>/context all</code>의 Memory files 목록에서 실제로 읽혔는지 확인할 수 있어요.</p>
+<p>한계도 있어요. CLAUDE.md는 <strong>맥락이지 강제 설정이 아니에요.</strong> Claude는 따르려고 하지만 보장되지는 않아요. 예외 없이 지켜야 하는 규칙은 hook의 몫이에요(S22, S25). 간결하게 쓰는 법은 S24에서 깊게 봐요.</p>
+<h3>서브에이전트: 조사는 맡기고 결론만 받는다</h3>
+<p>코드베이스를 탐색하면 읽은 파일이 전부 내 컨텍스트에 쌓여요. <strong>서브에이전트</strong>(subagent)는 자기만의 컨텍스트 윈도우에서 일하고 요약만 돌려주는 전문 조수예요. 긴 과정은 그쪽 컨텍스트에 남고, 내 대화에는 결론만 들어와요.</p>
+<ul><li><strong>내장</strong>: 읽기 전용 탐색을 하는 Explore, Plan 모드에서 조사를 맡는 Plan, 여러 단계 작업을 하는 general-purpose가 있어요. Claude가 필요할 때 알아서 써요.</li><li><strong>직접 만들기</strong>: YAML 프런트매터가 붙은 마크다운 파일이에요. <code>.claude/agents/</code>에 두면 이 프로젝트에서, <code>~/.claude/agents/</code>에 두면 내 모든 프로젝트에서 써요. 필수 항목은 <code>name</code>과 <code>description</code>뿐이고, 본문이 시스템 프롬프트가 돼요.</li></ul>
+<pre class="code" data-lang="markdown"><code>---
+name: code-reviewer
+description: Reviews code for quality and best practices
+tools: Read, Glob, Grep
+model: sonnet
+---
+
+You are a code reviewer. When invoked, analyze the code and provide
+specific, actionable feedback on quality, security, and best practices.</code></pre>
+<p>Claude는 <code>description</code>을 보고 언제 맡길지 정하고, &quot;code-reviewer 서브에이전트로 최근 변경을 봐 줘&quot;처럼 이름을 불러 시킬 수도 있어요. <code>tools</code>로 도구를 제한할 수 있어요(위 예는 읽기 전용). 파일은 Claude에게 만들어 달라고 하는 게 가장 쉬워요. 서브에이전트의 요청도 사용량 한도에 함께 잡혀요.</p></section>
+<section class="sec sec-try callout warm"><h2>직접 해 보기 (5분)</h2><p><code>~/cc-playground</code>에서 해 보세요.</p>
+<ol><li><code>/init</code>으로 CLAUDE.md 초안을 만들고, 새 동료에게 굳이 말하지 않을 줄은 지우세요. 그리고 &quot;새 파일 이름은 소문자와 하이픈만 쓴다&quot;를 한 줄 추가하세요. <code>/exit</code> 후 <code>claude</code>를 다시 실행해 <code>/context all</code>에서 Memory files에 파일이 보이는지 확인하고, &quot;회의 메모 파일을 하나 만들어 줘&quot;라고 해 보세요.
+<ul><li>관찰: 파일 이름이 규칙을 따랐나요? 따르지 않았다면 그 한 줄을 어떻게 더 구체적으로 쓸 수 있을까요?</li></ul></li><li>&quot;이 프로젝트의 .claude/agents/ 에 file-summarizer 서브에이전트를 만들어 줘. 폴더의 파일을 읽고 세 줄로 요약하는 읽기 전용 역할이야.&quot;라고 하세요. 만들어진 파일을 열어 <code>name</code>, <code>description</code>, <code>tools</code>를 읽은 뒤 &quot;file-summarizer 서브에이전트로 이 폴더를 요약해 줘&quot;라고 하세요. Claude가 새 서브에이전트를 찾지 못하면 Claude Code를 다시 시작하세요.
+<ul><li>관찰: 대화에 서브에이전트 이름이 붙은 도구 호출 줄이 보이나요? 내 대화에는 과정이 들어왔나요, 요약만 들어왔나요?</li></ul></li></ol></section>
+<section class="sec sec-quiz"><h2>확인 문제</h2><ol class="quiz"><li value="1" class="q"><div class="q-body">팀 전체가 공유해야 하는 프로젝트 지침을 둘 곳은?
+<ul><li>(a) <code>~/.claude/CLAUDE.md</code></li><li>(b) 프로젝트 루트의 <code>CLAUDE.md</code></li><li>(c) <code>CLAUDE.local.md</code></li></ul></div>
+<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">(b). 프로젝트 루트(또는 <code>.claude/</code>)의 CLAUDE.md를 커밋하면 팀이 함께 써요. (a)는 나만 모든 프로젝트에서, (c)는 나만 이 프로젝트에서 쓰는 파일이에요.</div></details></li>
+<li value="2" class="q"><div class="q-body">CLAUDE.md에 넣기에 가장 알맞은 것은?
+<ul><li>(a) 코드를 읽으면 바로 알 수 있는 폴더 구조 전체 설명</li><li>(b) 테스트 파일 하나만 돌리는 정확한 명령</li><li>(c) 절대 예외가 없어야 하는 보안 차단 규칙(이것만으로 강제하려는 목적)</li></ul></div>
+<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">(b). 코드에서 알 수 있는 것은 빼고, 예외가 없어야 하는 규칙은 CLAUDE.md만으로 강제할 수 없어 hook이나 권한 규칙에 둬요.</div></details></li>
+<li value="3" class="q"><div class="q-body">서브에이전트를 쓰는 가장 큰 이유는?
+<ul><li>(a) 메인 대화와 같은 컨텍스트를 공유해 기억을 늘리려고</li><li>(b) 별도 컨텍스트에서 일하게 해 메인 대화에는 요약만 남기려고</li><li>(c) 권한 확인을 건너뛰려고</li></ul></div>
+<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">(b). 서브에이전트는 별도 컨텍스트 윈도우에서 일하고 요약만 돌려줘요. 권한을 건너뛰는 장치가 아니에요.</div></details></li>
+<li value="4" class="q"><div class="q-body">(서술형) &quot;CLAUDE.md는 맥락이지 강제 설정이 아니다&quot;가 무슨 뜻인지, 그래서 어떤 규칙은 다른 곳에 둬야 하는지 두세 문장으로 설명해 보세요.</div>
+<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">예시 답: CLAUDE.md의 내용은 Claude가 읽고 따르려고 하는 지침이지, Claude Code가 강제로 실행하는 설정이 아니다. 그래서 대부분은 지켜지지만 매번 보장되지는 않는다. &quot;절대 하면 안 되는 일&quot;이나 &quot;매번 반드시 해야 하는 일&quot;은 hook이나 권한의 deny 규칙처럼 Claude Code가 강제하는 곳에 둔다.</div></details></li>
+<li value="5" class="q"><div class="q-body">(상황형) 고객사 개발자가 말해요. &quot;Claude가 매번 우리 테스트 명령을 틀리고, 새 세션마다 같은 설명을 반복해야 해요.&quot; 무엇을 제안하고, 어디에 무엇을 적게 할까요?</div>
+<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">예시 답: 프로젝트 CLAUDE.md를 만들자고 제안한다. <code>/init</code>으로 초안을 만든 뒤 코드에서 알 수 있는 줄은 지우고, 정확한 테스트·빌드 명령과 반복해서 설명하던 규칙을 구체적으로 적어 커밋하게 한다. 개인 취향은 CLAUDE.local.md에 두고, 새 세션에서 <code>/context all</code>로 파일이 읽혔는지 확인한다. 앞으로 같은 지적을 두 번 하게 되면 그때마다 한 줄씩 추가하는 습관을 권한다.</div></details></li></ol></section>
+<section class="sec sec-fde callout cool"><h2>FDE 관점</h2><p>FDE는 언젠가 현장을 떠나요. 그때 저장소에 남는 것이 CLAUDE.md예요. 파일럿 동안 고객 개발자가 Claude를 고쳐 준 내용을 그때그때 프로젝트 CLAUDE.md에 모아 두면, 그 파일이 다음 사용자 그룹의 온보딩 문서가 돼요. 고객 저장소에 이미 AGENTS.md가 있는지 먼저 보고, 개인 취향은 CLAUDE.local.md나 사용자 파일로 보내 팀 파일을 짧게 유지하세요. 서브에이전트도 같은 방식으로 남길 수 있어요. 고객의 리뷰 기준을 담은 읽기 전용 리뷰어를 <code>.claude/agents/</code>에 커밋하면 팀 전체가 같은 기준으로 검토받아요. 파일럿 계획서의 &quot;첫 사용자 그룹을 들이는 방법&quot;에 &quot;저장소를 받으면 이 설정이 따라온다&quot;를 한 줄로 적을 수 있어요.</p></section>
+<section class="sec sec-cards"><h2>복습 카드</h2><div class="cards"><details class="card"><summary>CLAUDE.md는 언제 읽히나?</summary><div class="card-a">세션을 시작할 때마다. 세션은 매번 새 컨텍스트로 시작하기 때문에 필요하다.</div></details><details class="card"><summary>팀 공유, 나만(모든 프로젝트), 나만(이 프로젝트)의 파일 위치는?</summary><div class="card-a"><code>./CLAUDE.md</code>, <code>~/.claude/CLAUDE.md</code>, <code>./CLAUDE.local.md</code>.</div></details><details class="card"><summary>CLAUDE.md에 넣는 기준은?</summary><div class="card-a">Claude가 코드를 읽어서는 알 수 없는 것만. 200줄 아래를 목표로.</div></details><details class="card"><summary>서브에이전트의 핵심 이점은?</summary><div class="card-a">자기 컨텍스트 윈도우에서 일하고 요약만 돌려줘 메인 컨텍스트를 아낀다.</div></details><details class="card"><summary>서브에이전트 파일의 위치와 필수 항목은?</summary><div class="card-a"><code>.claude/agents/</code>(프로젝트) 또는 <code>~/.claude/agents/</code>(개인). 필수는 <code>name</code>과 <code>description</code>.</div></details></div></section>
+<section class="sec sec-script"><h2>영상 대본</h2><details class="script"><summary>영상 대본 펼치기 <span class="muted">· 장면별 화면과 내레이션</span></summary><div class="script-body"><h4>장면 1 · 오늘의 질문 (약 25초)</h4>
+<p><strong>화면:</strong> 달력 두 칸. 어제 칸에는 &quot;테스트는 이렇게 돌려요&quot;라고 설명하는 사람, 오늘 칸에는 같은 설명을 또 하는 사람. 제목 &quot;왜 매번 다시 설명할까?&quot;<br><strong>내레이션:</strong> 어제 알려 준 걸 오늘 또 설명해요. 클로드가 잊은 걸까요? 세션이 매번 새로 시작하기 때문이에요. 오늘은 이 틈을 메우는 방법을 볼게요.</p>
+<h4>장면 2 · 인수인계 메모 (약 35초)</h4>
+<p><strong>화면:</strong> 새 세션 상자가 열릴 때마다 &quot;CLAUDE.md&quot; 메모지가 먼저 들어감. 세션 세 개가 차례로 열리고, 매번 같은 메모지가 들어감.<br><strong>내레이션:</strong> 클로드 엠디는 인수인계 메모예요. 세션이 시작될 때마다 클로드 코드가 이 파일부터 읽어요. 그래서 한 번 적어 두면 다시 설명하지 않아도 돼요.</p>
+<h4>장면 3 · 세 자리 (약 40초)</h4>
+<p><strong>화면:</strong> 폴더 그림 세 개: 저장소 루트의 &quot;CLAUDE.md&quot;(사람 여럿 아이콘), 홈 폴더의 &quot;~/.claude/CLAUDE.md&quot;(사람 하나 + 폴더 여럿), 저장소의 &quot;CLAUDE.local.md&quot;(사람 하나 + 자물쇠).<br><strong>내레이션:</strong> 두는 자리가 범위를 정해요. 저장소 루트에 두면 팀 전체가 같이 써요. 홈 폴더에 두면 나만, 모든 프로젝트에서 써요. 로컬 파일은 나만, 이 프로젝트에서만 써요.</p>
+<h4>장면 4 · 넣을 것과 뺄 것 (약 40초)</h4>
+<p><strong>화면:</strong> 저울. 왼쪽 접시 &quot;넣기&quot;: 테스트 명령, 팀이 정한 규칙, 두 번 고쳐 준 것. 오른쪽 접시 &quot;빼기&quot;: 코드에서 보이는 것. 아래 눈금자 &quot;200줄 아래&quot;.<br><strong>내레이션:</strong> 기준은 하나예요. 코드를 읽어서는 알 수 없는 것만 적어요. 테스트 명령, 팀이 정한 규칙, 두 번 고쳐 준 것들이에요. 파일은 짧을수록 잘 지켜져요.</p>
+<h4>장면 5 · 맥락이지 강제가 아니다 (약 35초)</h4>
+<p><strong>화면:</strong> 메모지 &quot;CLAUDE.md&quot;는 Claude 머리 옆에 떠 있고(&quot;읽고 판단&quot;), 옆의 철문 &quot;hook&quot;은 길을 막고 있음(&quot;반드시 실행&quot;). 둘 사이에 &quot;≠&quot;.<br><strong>내레이션:</strong> 한 가지 한계가 있어요. 이 파일은 맥락이지 강제 설정이 아니에요. 클로드는 따르려고 하지만 보장되지는 않아요. 예외가 없어야 하는 규칙은 다음 시간에 볼 훅의 몫이에요.</p>
+<h4>장면 6 · 조사가 컨텍스트를 채운다 (약 30초)</h4>
+<p><strong>화면:</strong> 메인 컨텍스트 통에 &quot;읽은 파일&quot; 블록이 우수수 떨어져 금방 참. 정작 필요한 &quot;결론&quot; 블록은 작게 하나.<br><strong>내레이션:</strong> 이제 두 번째 주제예요. 코드를 탐색하면 읽은 파일이 전부 내 컨텍스트에 쌓여요. 정작 필요한 건 결론 한 줄인데요.</p>
+<h4>장면 7 · 서브에이전트 (약 40초)</h4>
+<p><strong>화면:</strong> 메인 통 옆에 작은 통이 새로 생김(&quot;서브에이전트&quot;). 파일 블록은 작은 통에만 쌓이고, 끝나면 &quot;요약&quot; 블록 하나만 화살표를 타고 메인 통으로 넘어옴.<br><strong>내레이션:</strong> 서브에이전트는 자기만의 컨텍스트에서 일하는 조수예요. 긴 조사는 그쪽에서 하고, 내 대화에는 요약만 돌아와요. 과정은 빼고 결론만 받는 거예요.</p>
+<h4>장면 8 · 파일 하나로 만든다 (약 40초)</h4>
+<p><strong>화면:</strong> 마크다운 파일이 펼쳐짐. 위쪽 프런트매터에서 &quot;name&quot;, &quot;description&quot;, &quot;tools: Read, Glob, Grep&quot;이 차례로 강조되고, 아래 본문에 &quot;시스템 프롬프트&quot; 이름표. 파일이 &quot;.claude/agents/&quot; 폴더로 들어감.<br><strong>내레이션:</strong> 직접 만들 수도 있어요. 마크다운 파일 하나면 돼요. 이름과 설명을 적고, 쓸 수 있는 도구를 정해요. 클로드는 설명을 보고 언제 맡길지 정해요. 클로드에게 만들어 달라고 하는 게 가장 쉬워요.</p>
+<h4>장면 9 · 고객 앞에서 (약 35초)</h4>
+<p><strong>화면:</strong> FDE가 문을 나서고, 저장소에는 &quot;CLAUDE.md&quot;와 &quot;.claude/agents/reviewer.md&quot;가 남음. 새 팀원이 저장소를 받자 두 파일이 함께 따라옴.<br><strong>내레이션:</strong> 에프디이는 언젠가 현장을 떠나요. 그때 저장소에 남는 게 이 파일들이에요. 파일럿 동안 고쳐 준 내용을 모아 두면, 다음 사용자의 온보딩 문서가 돼요.</p>
+<h4>장면 10 · 요약과 예고 (약 25초)</h4>
+<p><strong>화면:</strong> 세 줄 요약: &quot;1. CLAUDE.md는 매 세션 읽는 메모 2. 코드로 알 수 없는 것만, 짧게 3. 서브에이전트는 요약만 돌려준다&quot;. 아래에 &quot;다음: S22 skills, MCP, hooks&quot;.<br><strong>내레이션:</strong> 정리할게요. 클로드 엠디는 매 세션 읽는 메모예요. 코드로 알 수 없는 것만 짧게 적어요. 서브에이전트는 따로 일하고 요약만 돌려줘요. 다음 시간에는 스킬과 엠씨피, 훅을 볼게요.</p></div></details></section>
+<section class="sec sec-sources"><h2>출처</h2><ul><li>Claude Code Docs, How Claude remembers your project (CLAUDE.md 위치 표, 로드 방식, 쓰는 법, <code>/init</code>, <code>/memory</code>, AGENTS.md, &quot;맥락이지 강제 설정이 아님&quot;): <a href="https://code.claude.com/docs/en/memory" target="_blank" rel="noopener noreferrer">https://code.claude.com/docs/en/memory</a></li><li>Claude Code Docs, Best practices (Keep CLAUDE.md short, 넣을 것의 기준): <a href="https://code.claude.com/docs/en/best-practices" target="_blank" rel="noopener noreferrer">https://code.claude.com/docs/en/best-practices</a></li><li>Claude Code Docs, Create custom subagents (내장 서브에이전트, 파일 형식과 위치, 프런트매터 표, 호출 방법, 사용량): <a href="https://code.claude.com/docs/en/sub-agents" target="_blank" rel="noopener noreferrer">https://code.claude.com/docs/en/sub-agents</a></li><li>Claude Code Docs, Extend Claude Code (기능별 쓰임 비교): <a href="https://code.claude.com/docs/en/features-overview" target="_blank" rel="noopener noreferrer">https://code.claude.com/docs/en/features-overview</a></li><li>Claude Code Docs, Commands (<code>/init</code>, <code>/memory</code>, <code>/context all</code>, <code>/agents</code>의 현재 동작): <a href="https://code.claude.com/docs/en/commands" target="_blank" rel="noopener noreferrer">https://code.claude.com/docs/en/commands</a></li><li>Claude Academy, Claude Code 101 공개 레슨 요약(The CLAUDE.md file, Subagents): <a href="https://academy.claude.com/courses/claude-code-101" target="_blank" rel="noopener noreferrer">https://academy.claude.com/courses/claude-code-101</a></li><li>본문의 code-reviewer 예시는 서브에이전트 문서의 예시를 그대로 가져온 거예요. <code>/agents</code> 명령은 v2.1.197 이전에는 대화형 화면을 열었지만, 지금은 Claude에게 요청하거나 파일을 직접 고치라는 안내만 출력해요.</li></ul></section>
+</article>
+<section class="done-box">
+  <label><input type="checkbox" data-done="S21"> 이 세션을 다 했어요 <span class="muted">(이 브라우저에만 저장돼요)</span></label>
+</section>
+<nav class="pager">
+  <a href="/t/claude-fde/s20-daily-workflows" target="_top" class="prev"><small>이전</small><span>S20 · 일상 워크플로: Explore → Plan → Code → Commit, 리뷰, 컨텍스트 명령</span></a>
+  <a href="/t/claude-fde/s22-skills-mcp-hooks" target="_top" class="next"><small>다음</small><span>S22 · 커스터마이즈 2: skills, MCP, hooks</span></a>
+</nav>
+<footer class="disclaimer" role="note">
+  <strong>비공식 학습 자료</strong>
+  <p>이 노트는 Anthropic 공식 “Claude Forward Deployed Engineer” 학습 경로의 공개 개요와 공식 문서를 바탕으로 쓴 개인 학습 노트이며, 공식 강의 필기가 아니에요. 실제 강의·퀴즈·수료는 공식 경로에서 진행해요.</p>
+  <p>공식 경로: <a href="https://anthropic-partners.skilljar.com/path/claude-fde" target="_blank" rel="noopener noreferrer">https://anthropic-partners.skilljar.com/path/claude-fde</a></p>
+</footer>
+</main>
+<script src="fde.js"></script>
+</body>
+</html>

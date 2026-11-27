@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="10. Delivery Methodology · 20분">
+<title>S37. 단계적 롤아웃, 변화 관리, 챔피언</title>
+<link rel="stylesheet" href="fde.css">
+</head>
+<body data-session="S37">
+<!-- 자동 생성 파일: scripts/sync-fde.mjs 가 만들어요. 직접 고치지 말고 원본 노트를 고친 뒤 npm run fde:sync 하세요. -->
+<main class="wrap">
+
+<nav class="crumbs"><a href="/t/claude-fde/0000-course-home" target="_top">← 코스 홈</a><span>10. Delivery Methodology</span></nav>
+<header class="head">
+  <span class="eyebrow">Claude FDE 스터디 · 세션 37 / 42</span>
+  <h1>S37. 단계적 롤아웃, 변화 관리, 챔피언</h1>
+  <div class="meta"><span>20분</span><span class="pill pill-draft">노트 초안</span></div>
+  <p class="official">공식 경로에서 해당하는 부분: Phased rollout and change management · Champion enablement and internal documentation</p>
+</header>
+
+<div class="preamble"><blockquote><p>이 코스(C10)의 강의 본문은 공개돼 있지 않아요. 공식 개요에 나온 말은 &quot;단계적 롤아웃과 도입&quot;, &quot;변화 관리&quot;, &quot;챔피언 지원과 내부 문서&quot;, 산출물의 &quot;챔피언 계획&quot;까지예요. 아래 내용은 Anthropic의 공개 문서(Claude Enterprise 관리자 가이드, Claude Code 문서의 챔피언 키트와 커뮤니케이션 키트)에서 확인한 것과 일반적인 실무 방식이에요. 단계 관문 같은 틀은 예시예요.</p></blockquote></div>
+<article class="note">
+<section class="sec sec-goals"><h2>오늘의 목표</h2><ul><li>단계적 롤아웃(phased rollout)의 흐름과, 다음 단계로 넘어가기 전에 확인할 것을 설명할 수 있다.</li><li>챔피언(champion)의 세 가지 행동을 말하고, 누구를 챔피언으로 세울지 고를 수 있다.</li><li>파일럿이 끝난 뒤 팀에 남길 내부 문서 네 가지를 정할 수 있다.</li></ul></section>
+<section class="sec "><h2>핵심 정리</h2><h3>문을 한꺼번에 열지 않는다</h3>
+<p>새 매장을 열 때 정식 개업 전에 지인만 불러 며칠 운영해 보죠. 주문이 어디서 막히는지 보고 고친 다음 문을 활짝 열어요. <strong>단계적 롤아웃</strong>도 같아요. 첫 그룹에서 배운 것으로 다음 그룹의 길을 닦아요. Claude Enterprise 관리자 가이드가 드는 예는 이래요. 50~100명 파일럿 그룹으로 시작하고, 2~4주 동안 사용을 지켜보며 의견을 모으고, 부서 단위로 넓힌 뒤, 절차가 자리 잡으면 전사로 열어요. 숫자는 그 가이드의 예이고, 작은 팀이면 그룹도 작아져요.</p>
+<p>단계 사이에는 <strong>관문</strong>을 둬요(일반적인 실무 방식). S36의 성공 지표가 통과선을 넘었는지, 같은 질문이 줄었는지, 다음 그룹에 챔피언이 있는지 봐요. 관리자 가이드는 단계마다 짧은 회고를 권하며 세 가지를 물어요. 어떤 유스케이스가 나왔나, 어떤 장벽이 남았나, 다음 단계에서 무엇을 바꿀까.</p>
+<h3>변화 관리: 공지가 아니라 첫 성공</h3>
+<p><strong>변화 관리</strong>(change management)는 사람들이 일하는 방식을 바꾸도록 돕는 일이에요. 도구를 켜 주는 것과 쓰게 만드는 것은 다른 일이에요. Claude Code 문서의 커뮤니케이션 키트는 공지를 보내기 전에 확인할 것을 적어 둬요. 질문이 모일 채널 하나, 사내 환경에서 미리 시험한 설치 명령, &quot;내 코드는 어디로 가나요?&quot;에 답할 보안·데이터 링크, 우리 코드베이스의 진짜 버그 같은 구체적인 첫 과제 하나, 처음 48시간 동안 채널을 맡을 사람, 공지를 보내거나 함께 서명할 임원. 같은 문서는 임원 이름으로 나간 공지가 첫 주 도입이 더 높다고 적어요. 파일럿 그룹에게는 따로 &quot;이번 주에 실제 일 하나에 써 보고, 좋았던 것과 거슬렸던 것을 알려 달라&quot;고 부탁해요.</p>
+<h3>챔피언: 잘 쓰고, 나누고, 답하는 동료</h3>
+<p>챔피언 키트는 이렇게 말해요. 도구 도입은 공지로 일어나지 않고, 팀의 누군가가 잘 쓰고 그걸 드러내 말하고 남이 따라 하기 쉽게 만들 때 일어난다. 챔피언의 행동은 세 가지예요.</p>
+<ul><li><strong>발견한 것을 나눈다.</strong> 스크린샷 한 장과 한두 문장. 끝난 결과가 아니라 내일 따라 할 수 있는 요령을 올려요.</li><li><strong>물어볼 사람이 된다.</strong> 설명 대신 자기가 실제로 쓴 프롬프트로 답해요.</li><li><strong>원을 넓힌다.</strong> 전용 채널, 주간 자랑 스레드 같은 가벼운 습관을 만들어요. 한 사람에게 기대는 도입은 약하니까요.</li></ul>
+<p>챔피언은 지원 부서가 아니에요. 키트가 적은 시간은 주당 40분쯤이에요(나누기 15분, 답하기 20분, 주간 스레드 5분). 보안과 데이터 처리 질문은 즉석에서 답하지 말고 관리자에게 넘겨요. 관리자 가이드는 부서나 팀마다 2~3명을 뽑아 먼저 써 보게 하고, 심화 교육과 전용 채널을 주고, 기여를 인정하라고 해요.</p>
+<h3>내부 문서: FDE가 떠난 뒤에 남는 것</h3>
+<p>챔피언 키트는 팀 위키에 오래 갈 패턴, 직접 만든 skill, CLAUDE.md 예시를 짧은 페이지로 두고 채널 상단에 걸어 두라고 해요. 남길 것은 넷이에요. 고정된 자주 묻는 질문, S21과 S24에서 다듬은 CLAUDE.md, S32~S34에서 만든 skill, 새 동료용 시작 안내. Claude Code의 <code>/team-onboarding</code>은 내 최근 세션과 명령, MCP 서버를 훑어 새 팀원이 첫 메시지로 붙여 넣을 안내를 만들어 줘요.</p></section>
+<section class="sec sec-try callout warm"><h2>직접 해 보기 (5분)</h2><ol><li><strong>시작 안내 뽑아 보기.</strong> 내가 시간을 많이 쓴 프로젝트에서 Claude Code를 열고 <code>/team-onboarding</code>을 실행해 보세요. 어떤 명령과 설정이 안내에 들어가는지, 새 동료가 읽고 바로 따라 할 수 있는지 보세요. (명령이 보이지 않으면 Claude Code 버전을 확인하세요. 문서는 버전별 세부를 문서 첫 페이지에서 다시 확인하라고 안내해요.)</li><li><strong>파일럿 그룹 공지 다섯 문장 쓰기.</strong> Claude에게 이렇게 시켜 보세요. &quot;파일럿 첫 그룹 5명에게 보낼 메시지를 다섯 문장으로 써 줘. 들어갈 것: 왜 이 사람들을 골랐는지, 이번 주에 해 볼 실제 과제 하나, 질문할 채널, 채널 담당자 이름, 금요일에 받고 싶은 의견 세 가지.&quot; 내 조직의 말투로 고쳐 쓰고, 빠진 항목이 없는지 본문의 점검 목록과 맞춰 보세요.</li></ol></section>
+<section class="sec sec-quiz"><h2>확인 문제</h2><ol class="quiz"><li value="1" class="q"><div class="q-body">챔피언에 대한 설명으로 가장 알맞은 것은?
+<ul><li>(a) 도입 문의를 전담하는 지원 부서</li><li>(b) 자기 일에 도구를 잘 쓰고, 드러내 나누고, 질문에 답하는 동료</li><li>(c) 사용량이 적은 사람을 찾아 보고하는 관리자</li></ul></div>
+<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">(b). 챔피언 키트는 챔피언을 이미 도구를 쓰고 있고 팀의 도입을 돕고 싶은 개인으로 봐요. 추가 지원 업무가 아니라 자기 일의 효과를 키우는 역할이에요.</div></details></li>
+<li value="2" class="q"><div class="q-body">챔피언이 동료에게 &quot;우리 코드가 밖으로 나가는 거 아니에요?&quot;라는 질문을 받았어요. 챔피언 키트에 맞는 대응은?
+<ul><li>(a) 아는 범위에서 즉석으로 설명한다</li><li>(b) 관리자에게 넘기고, 조직이 정한 보안·데이터 안내를 가리킨다</li><li>(c) 걱정할 필요 없다고 안심시킨다</li></ul></div>
+<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">(b). 키트는 보안과 데이터 처리 질문을 관리자에게 넘기라고 하고, 챔피언이 이 답을 즉석에서 지어내면 안 된다고 해요.</div></details></li>
+<li value="3" class="q"><div class="q-body">한 단계를 마치고 다음 그룹으로 넓히기 전에 할 일로 가장 알맞은 것은?
+<ul><li>(a) 좌석을 한꺼번에 늘린다</li><li>(b) 어떤 유스케이스가 나왔고, 어떤 장벽이 남았고, 무엇을 바꿀지 회고한다</li><li>(c) 질문 채널을 닫는다</li></ul></div>
+<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">(b). 관리자 가이드가 단계마다 권하는 회고 질문이에요. 회고 없이 넓히면 첫 그룹의 장벽이 다음 그룹에서 그대로 되풀이돼요.</div></details></li>
+<li value="4" class="q"><div class="q-body">(서술형) &quot;한 사람에게 기대는 도입은 약하다&quot;는 말의 뜻과, 그래서 챔피언이 만들어야 하는 것을 두세 문장으로 적어 보세요.</div>
+<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">예시 답: 한 사람이 혼자 답하고 혼자 사례를 올리면 그 사람이 바쁘거나 떠날 때 도입이 멈춘다. 그래서 챔피언은 자기가 없어도 굴러가는 습관, 곧 전용 채널, 주간 스레드, 고정된 질문 모음을 만들고 다음 챔피언을 세운다. 채널의 질문에 다른 사람이 답하기 시작하면 역할이 제대로 된 것이다.</div></details></li>
+<li value="5" class="q"><div class="q-body">(상황형) 파일럿 2주차, 고객 팀장이 말해요. &quot;공지 메일을 보냈는데 아무도 안 써요. 전 직원 의무 교육을 잡을까요?&quot; 어떻게 답하고, 무엇을 먼저 해 보자고 할까요?</div>
+<details class="answer"><summary>정답과 해설 보기</summary><div class="answer-body">예시 답: &quot;의무 교육은 켜는 법은 알려 줘도 써야 할 이유는 못 줍니다. 먼저 첫 성공을 만들죠&quot;라고 답한다. 먼저 해 볼 것은 (1) 이미 쓰는 한두 명의 실제 사례를 스크린샷과 프롬프트로 채널에 올리고, (2) 팀의 실제 업무에서 구체적인 첫 과제 하나를 골라 이번 주에 해 보자고 부탁하고, (3) 질문 채널에 담당자를 정해 첫 이틀 동안 바로 답하게 하고, (4) 가능하면 임원 이름으로 한 줄 요청을 다시 보내는 것이다. 교육은 그 뒤에 팀 업무에 맞춘 짧은 세션으로 잡는다.</div></details></li></ol></section>
+<section class="sec sec-fde callout cool"><h2>FDE 관점</h2><p>FDE는 언젠가 그 고객사를 떠나요. 그래서 파일럿의 성공은 &quot;FDE가 있을 때 돌아갔나&quot;가 아니라 &quot;떠난 뒤에도 쓰이나&quot;로 판가름 나요. 공식 경로가 skill 코스를 &quot;잘 되는 것을 포장해 고객 팀이 다시 쓰게 한다&quot;로 소개한 것도 같은 맥락이에요. 파일럿 계획서의 &quot;첫 사용자 그룹&quot; 칸에는 사람 이름만이 아니라 챔피언이 누구인지, 질문이 모일 채널이 어디인지, 첫 과제가 무엇인지까지 적어요. 챔피언은 직급이 아니라 행동으로 골라요. 채널에서 가장 활발한 사람, 그리고 질문을 가장 많이 하는 사람이 다음 챔피언 후보예요. 회의적인 사람도 한 명 넣으면 좋아요. 그 사람의 질문이 다음 그룹이 부딪힐 장벽을 미리 보여 주거든요.</p></section>
+<section class="sec sec-cards"><h2>복습 카드</h2><div class="cards"><details class="card"><summary>단계적 롤아웃의 기본 흐름은?</summary><div class="card-a">파일럿 그룹 → 부서 단위 확대 → 전사. 단계 사이에 회고와 관문을 둔다.</div></details><details class="card"><summary>관리자 가이드의 단계별 회고 질문 세 가지는?</summary><div class="card-a">어떤 유스케이스가 나왔나, 어떤 장벽이 남았나, 다음 단계에서 무엇을 바꿀까.</div></details><details class="card"><summary>챔피언의 세 가지 행동은?</summary><div class="card-a">발견한 것을 나눈다, 물어볼 사람이 된다, 원을 넓힌다.</div></details><details class="card"><summary>챔피언이 보안·데이터 질문을 받으면?</summary><div class="card-a">즉석에서 답하지 않고 관리자에게 넘긴다.</div></details><details class="card"><summary>공지 전에 확인할 것 중 &quot;첫 과제&quot;는 어떤 것이어야 하나?</summary><div class="card-a">일반적인 예가 아니라 우리 코드베이스나 업무의 구체적인 실제 과제 하나.</div></details></div></section>
+<section class="sec sec-script"><h2>영상 대본</h2><details class="script"><summary>영상 대본 펼치기 <span class="muted">· 장면별 화면과 내레이션</span></summary><div class="script-body"><h4>장면 1 · 오늘의 질문 (약 25초)</h4>
+<p><strong>화면:</strong> 검은 화면에 사무실 그림. 화면에 &quot;전사 공지: 오늘부터 사용 가능합니다&quot; 메일이 뜨고, 그 아래 책상 열 개 중 한 곳만 불이 켜짐. 제목 &quot;공지했는데 왜 안 쓸까?&quot;<br><strong>내레이션:</strong> 공지 메일을 보냈어요. 그런데 쓰는 사람은 한 명뿐이에요. 왜 그럴까요? 오늘은 사용자를 단계적으로 늘리는 법과 챔피언을 알아볼게요.</p>
+<h4>장면 2 · 문을 한꺼번에 열지 않는다 (약 35초)</h4>
+<p><strong>화면:</strong> 동심원 세 개. 가장 안쪽 원 &quot;파일럿 그룹&quot;이 먼저 켜지고, 가운데 원 &quot;부서&quot;, 바깥 원 &quot;전사&quot;가 차례로 켜짐. 원과 원 사이에 작은 문 그림.<br><strong>내레이션:</strong> 새 매장은 정식 개업 전에 지인만 불러 며칠 운영해 보죠. 롤아웃도 같아요. 작은 그룹에서 시작하고, 부서로 넓히고, 그다음에 전사로 가요. 앞 그룹에서 배운 걸로 다음 길을 닦아요.</p>
+<h4>장면 3 · 단계 사이의 관문 (약 35초)</h4>
+<p><strong>화면:</strong> 원 사이의 문이 확대됨. 문 위에 체크 세 줄: &quot;성공 지표 통과&quot;, &quot;같은 질문이 줄었나&quot;, &quot;다음 그룹에 챔피언이 있나&quot;. 그 아래 회고 질문 세 개가 메모지로 붙음.<br><strong>내레이션:</strong> 다음 단계로 가기 전에 문 앞에서 확인해요. 지표가 통과했는지, 같은 질문이 줄었는지, 다음 그룹에 챔피언이 있는지요. 그리고 짧게 회고해요. 무엇이 나왔고, 무엇이 막고 있고, 무엇을 바꿀지요.</p>
+<h4>장면 4 · 공지 전에 챙길 것 (약 40초)</h4>
+<p><strong>화면:</strong> 점검표 여섯 줄이 하나씩 체크됨: &quot;질문 채널&quot;, &quot;설치 명령 사내 시험&quot;, &quot;보안·데이터 링크&quot;, &quot;구체적인 첫 과제&quot;, &quot;48시간 채널 담당자&quot;, &quot;임원 스폰서&quot;.<br><strong>내레이션:</strong> 변화 관리는 공지가 아니라 첫 성공을 만드는 일이에요. 보내기 전에 여섯 가지를 챙겨요. 채널, 시험해 본 설치 명령, 보안 안내, 구체적인 첫 과제, 채널 담당자, 그리고 임원의 이름이에요.</p>
+<h4>장면 5 · 챔피언이란 (약 35초)</h4>
+<p><strong>화면:</strong> 팀원 여섯 명의 원. 그중 한 명이 밝게 빛나고, 그 사람에게서 옆 사람들에게 화살표가 퍼짐. 아래 글자 &quot;잘 쓰고, 드러내 말하고, 따라 하기 쉽게&quot;.<br><strong>내레이션:</strong> 도입은 공지로 일어나지 않아요. 팀의 누군가가 잘 쓰고, 그걸 드러내 말하고, 남이 따라 하기 쉽게 만들 때 일어나요. 그 사람이 챔피언이에요.</p>
+<h4>장면 6 · 세 가지 행동 (약 40초)</h4>
+<p><strong>화면:</strong> 카드 세 장: &quot;나눈다: 스크린샷 한 장 + 한두 문장&quot;, &quot;답한다: 설명 대신 실제 프롬프트&quot;, &quot;넓힌다: 채널과 주간 스레드&quot;. 각 카드 아래 작은 시계 &quot;15분&quot;, &quot;20분&quot;, &quot;5분&quot;.<br><strong>내레이션:</strong> 챔피언의 행동은 세 가지예요. 발견한 걸 짧게 나눠요. 질문에는 실제로 쓴 프롬프트로 답해요. 그리고 가벼운 습관을 만들어 원을 넓혀요. 다 합쳐 일주일에 사십 분쯤이에요.</p>
+<h4>장면 7 · 챔피언이 하지 않는 일 (약 30초)</h4>
+<p><strong>화면:</strong> 챔피언 캐릭터 앞에 질문 말풍선 &quot;우리 코드 밖으로 나가요?&quot; 챔피언이 옆의 &quot;관리자&quot; 캐릭터를 가리킴. 아래 글자 &quot;보안·데이터 질문은 관리자에게&quot;.<br><strong>내레이션:</strong> 챔피언은 지원 부서가 아니에요. 보안이나 데이터 처리 질문은 즉석에서 답하지 않아요. 조직이 정한 답이 있으니 관리자에게 넘겨요.</p>
+<h4>장면 8 · 남기는 문서 (약 40초)</h4>
+<p><strong>화면:</strong> 채널 상단 고정 영역에 문서 네 개가 꽂힘: &quot;자주 묻는 질문&quot;, &quot;CLAUDE.md&quot;, &quot;skill&quot;, &quot;시작 안내&quot;. &quot;시작 안내&quot; 문서 옆에 명령 &quot;/team-onboarding&quot;.<br><strong>내레이션:</strong> 파일럿이 끝나면 문서를 남겨요. 자주 묻는 질문, 클로드 엠디, 스킬, 새 동료용 시작 안내예요. 시작 안내는 클로드 코드의 팀 온보딩 명령으로 초안을 뽑을 수 있어요.</p>
+<h4>장면 9 · 고객 앞에서 (약 35초)</h4>
+<p><strong>화면:</strong> 회의실. 고객 말풍선 &quot;의무 교육을 잡을까요?&quot; FDE 말풍선 &quot;먼저 채널에 진짜 사례 세 개를 올리고, 첫 과제 하나를 정해 드리죠.&quot; 탁자 위에 스크린샷 카드 세 장.<br><strong>내레이션:</strong> 고객이 의무 교육부터 잡자고 하면 이렇게 답해요. 먼저 우리 팀의 진짜 사례 세 개를 채널에 올리죠. 그리고 이번 주에 해 볼 과제 하나를 정해 드리죠. 교육은 그다음이에요.</p>
+<h4>장면 10 · 요약과 예고 (약 25초)</h4>
+<p><strong>화면:</strong> 세 줄 요약이 한 줄씩 나타남: &quot;1. 작은 그룹에서 시작해 관문을 지나 넓힌다 2. 챔피언은 나누고, 답하고, 넓힌다 3. 떠난 뒤에 남을 문서를 만든다&quot;. 아래에 &quot;다음: S38 실패 모드와 30일 계획&quot;.<br><strong>내레이션:</strong> 정리할게요. 작은 그룹에서 시작해 관문을 지나며 넓혀요. 챔피언은 나누고, 답하고, 원을 넓혀요. 떠난 뒤에 남을 문서를 만들어요. 다음 시간에는 흔한 실패를 미리 막는 법과 삼십 일 계획을 볼게요.</p></div></details></section>
+<section class="sec sec-sources"><h2>출처</h2><ul><li>Claude Forward Deployed Engineer 학습 경로, 코스 10 소개와 목차(단계적 롤아웃과 변화 관리, 챔피언 지원과 내부 문서, 챔피언 계획): <a href="https://anthropic-partners.skilljar.com/path/claude-fde" target="_blank" rel="noopener noreferrer">https://anthropic-partners.skilljar.com/path/claude-fde</a> (2026-11-27에 읽은 개요는 <code>_official-outline-2026-11-27.txt</code>)</li><li>Claude Academy, Claude Enterprise Administrator Guide (SCIM 단계적 롤아웃 예, 챔피언 2~3명 선정과 지원, 런치 커뮤니케이션, 단계별 회고 질문): <a href="https://academy.claude.com/tutorials/claude-enterprise-administrator-guide" target="_blank" rel="noopener noreferrer">https://academy.claude.com/tutorials/claude-enterprise-administrator-guide</a></li><li>Claude Code Docs, Champion kit (챔피언의 세 행동, 주당 시간, 나눌 것과 나눌 곳, 자주 받는 질문, <code>/team-onboarding</code>): <a href="https://code.claude.com/docs/en/champion-kit" target="_blank" rel="noopener noreferrer">https://code.claude.com/docs/en/champion-kit</a></li><li>Claude Code Docs, Communications kit (공지 전 점검 목록, 임원 스폰서 공지, 파일럿 그룹용 공지, 챔피언 모집 메시지): <a href="https://code.claude.com/docs/en/communications-kit" target="_blank" rel="noopener noreferrer">https://code.claude.com/docs/en/communications-kit</a></li><li>Anthropic, The enterprise AI transformation guide, Step 1: Lay the foundation (챔피언에 회의적인 사람도 포함): <a href="https://claude.com/resources/guides/the-enterprise-ai-transformation-guide/lay-the-foundation" target="_blank" rel="noopener noreferrer">https://claude.com/resources/guides/the-enterprise-ai-transformation-guide/lay-the-foundation</a></li><li>단계 사이 &quot;관문&quot;의 세 가지 확인 항목과 &quot;남길 문서 네 가지&quot; 묶음은 Study_FDE가 정리한 예시예요. 공식 코스의 틀이 아니에요.</li></ul></section>
+</article>
+<section class="done-box">
+  <label><input type="checkbox" data-done="S37"> 이 세션을 다 했어요 <span class="muted">(이 브라우저에만 저장돼요)</span></label>
+</section>
+<nav class="pager">
+  <a href="/t/claude-fde/s36-pilot-design-roi" target="_top" class="prev"><small>이전</small><span>S36 · 파일럿 설계와 ROI 측정</span></a>
+  <a href="/t/claude-fde/s38-failure-modes-30-day" target="_top" class="next"><small>다음</small><span>S38 · 흔한 실패 모드 예방과 30일 활성화</span></a>
+</nav>
+<footer class="disclaimer" role="note">
+  <strong>비공식 학습 자료</strong>
+  <p>이 노트는 Anthropic 공식 “Claude Forward Deployed Engineer” 학습 경로의 공개 개요와 공식 문서를 바탕으로 쓴 개인 학습 노트이며, 공식 강의 필기가 아니에요. 실제 강의·퀴즈·수료는 공식 경로에서 진행해요.</p>
+  <p>공식 경로: <a href="https://anthropic-partners.skilljar.com/path/claude-fde" target="_blank" rel="noopener noreferrer">https://anthropic-partners.skilljar.com/path/claude-fde</a></p>
+</footer>
+</main>
+<script src="fde.js"></script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+{
+  "source": "/Users/passeth/.orca/bots/study-fde/study",
+  "officialPathUrl": "https://anthropic-partners.skilljar.com/path/claude-fde",
+  "courseImage": "img/hero.jpg",
+  "sessions": {
+    "S01": {
+      "video": "",
+      "poster": "img/hero.jpg",
+      "videoNote": "시범 영상(약 2분 19초, 한국어 내레이션)은 새 디자인으로 다시 만드는 중이에요. 외부에 올리면 여기에 붙어요."
+    }
+  }
+}
