@@ -130,7 +130,10 @@ const HR_RE = /^ {0,3}([-*_])(\s*\1){2,}\s*$/;
 const QUOTE_RE = /^ {0,3}>/;
 const LIST_RE = /^(\s*)([-*+]|\d{1,3}[.)])\s+(.*)$/;
 const isTableSep = (l) => /^\s*\|?\s*:?-{2,}:?\s*(\|\s*:?-{2,}:?\s*)+\|?\s*$/.test(l);
-const splitRow = (l) => l.trim().replace(/^\|/, "").replace(/\|$/, "").split("|").map((c) => c.trim());
+// 표 행 나누기: \| 는 칸 구분이 아니라 글자 | 로 남긴다
+const splitRow = (l) =>
+  l.trim().replace(/^\|/, "").replace(/(?<!\\)\|$/, "")
+    .split(/(?<!\\)\|/).map((c) => c.trim().replace(/\\\|/g, "|"));
 
 function startsBlock(lines, i) {
   const l = lines[i];
