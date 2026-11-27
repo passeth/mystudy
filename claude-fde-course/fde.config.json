@@ -53,7 +53,8 @@
       }
     },
     "S05": {
-      "zoom": "4D"
+      "zoom": "4D",
+      "video": "https://youtu.be/0THpy_f5tYg"
     },
     "S21": {
       "zoom": "CLAUDE.md"
@@ -81,6 +82,18 @@
     },
     "S04": {
       "video": "https://youtu.be/hp7_SnShfCc"
+    },
+    "S06": {
+      "video": "https://youtu.be/WBzpaInByrQ"
+    },
+    "S07": {
+      "video": "https://youtu.be/UMH9gk3lZQE"
+    },
+    "S08": {
+      "video": "https://youtu.be/x_R4wQzcq10"
+    },
+    "S09": {
+      "video": "https://youtu.be/l6bzBCS75rg"
     }
   }
 }
