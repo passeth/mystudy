@@ -1,0 +1,691 @@
+/* Claude FDE Study — Universal Interactive Slide Player CSS
+   Loads AFTER stage.css so MP4 render path stays untouched while
+   presenting the 1920x1080 stage cleanly letterboxed on desktop & mobile. */
+
+:root {
+  --f-ko: "Pretendard Variable", "Pretendard", "Bricolage Grotesque", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --sp-bg: #141314;
+  --sp-dock: #1C1A1B;
+  --sp-surface: #282526;
+  --sp-surface-hi: #343032;
+  --sp-border: rgba(244, 239, 232, 0.13);
+  --sp-text: #F4EFE8;
+  --sp-muted: #A9A29C;
+  --sp-acc: #FC4109;
+  --sp-pink: #FFABC8;
+}
+
+html, body {
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background: var(--sp-bg);
+  color: var(--sp-text);
+  font-family: var(--f-ko);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------- 16:9 Letterbox Viewport ---------- */
+#slide-viewport {
+  flex: 1 1 auto;
+  min-height: 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: calc(12px + env(safe-area-inset-top, 0px))
+           calc(16px + env(safe-area-inset-right, 0px))
+           8px
+           calc(16px + env(safe-area-inset-left, 0px));
+  overflow: hidden;
+  touch-action: pan-y;
+}
+
+#stage-frame {
+  position: relative;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  border-radius: 12px;
+  background: var(--cobalt);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(244, 239, 232, 0.10);
+  flex-shrink: 0;
+}
+
+#stage {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1920px;
+  height: 1080px;
+  transform-origin: 0 0;
+  user-select: none;
+}
+
+#stage #caps {
+  transition: transform 0.22s ease, opacity 0.18s ease;
+}
+
+#stage .ai-tag {
+  transition: transform 0.22s ease;
+}
+
+#stage.caps-hidden #caps {
+  opacity: 0 !important;
+}
+
+/* ---------- Cover Start Overlay (audio policy unlock) ---------- */
+#cover-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: 20px 24px clamp(86px, 21%, 190px) clamp(24px, 5.4%, 82px);
+  background: radial-gradient(ellipse 55% 45% at 24% 68%, rgba(11, 28, 86, 0.36), transparent 72%);
+  transition: opacity 0.24s ease, visibility 0.24s ease;
+}
+
+#cover-overlay.is-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.cover-cta-box {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 12px 18px 11px;
+  border-radius: 18px;
+  background: rgba(20, 19, 22, 0.80);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(244, 239, 232, 0.18);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.38);
+}
+
+#btn-start {
+  appearance: none;
+  border: 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 30px;
+  border-radius: 999px;
+  background: var(--sp-acc);
+  color: #F4EFE8;
+  font-family: var(--f-ko);
+  font-size: clamp(15px, 2vw, 19px);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  box-shadow: 0 10px 26px rgba(252, 65, 9, 0.42);
+  transition: transform 0.14s ease, filter 0.14s ease, box-shadow 0.14s ease;
+}
+
+#btn-start:hover {
+  filter: brightness(1.07);
+  transform: translateY(-1px);
+  box-shadow: 0 14px 30px rgba(252, 65, 9, 0.52);
+}
+
+#btn-start:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.cover-hint {
+  font-size: clamp(11px, 1.3vw, 13px);
+  color: rgba(244, 239, 232, 0.84);
+  letter-spacing: -0.01em;
+  text-align: center;
+}
+
+/* ---------- Tap Feedback Toast ---------- */
+#stage-toast {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) scale(0.92);
+  z-index: 180;
+  padding: 10px 20px;
+  border-radius: 999px;
+  background: rgba(24, 22, 24, 0.84);
+  color: var(--sp-text);
+  border: 1px solid rgba(244, 239, 232, 0.18);
+  font-size: 14px;
+  font-weight: 700;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+#stage-toast.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* ---------- Bottom Control Dock (Desktop & Portrait: Fixed below stage) ---------- */
+#slide-dock {
+  flex: 0 0 auto;
+  background: var(--sp-dock);
+  border-top: 1px solid var(--sp-border);
+  position: relative;
+  z-index: 220;
+  padding-left: env(safe-area-inset-left, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  transition: opacity 0.24s ease, transform 0.24s ease;
+}
+
+.dock-prog-track {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -1px;
+  height: 3px;
+  background: rgba(244, 239, 232, 0.08);
+  overflow: hidden;
+}
+
+#dock-prog-fill {
+  height: 100%;
+  width: 100%;
+  background: var(--sp-acc);
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+}
+
+.dock-inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 8px 16px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Top meta row: scene label + progress dots + status */
+.dock-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 24px;
+}
+
+.dock-scene-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--sp-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dock-count {
+  font-family: var(--f-disp);
+  font-size: 12px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(252, 65, 9, 0.16);
+  color: var(--sp-pink);
+  border: 1px solid rgba(255, 171, 200, 0.25);
+  flex-shrink: 0;
+}
+
+#dock-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#dock-status {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--sp-muted);
+  flex-shrink: 0;
+  transition: color 0.2s ease;
+}
+
+#dock-status.is-ended {
+  color: var(--sp-pink);
+}
+
+/* Progress dots */
+#dock-dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex: 1 1 auto;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 2px 4px;
+}
+
+#dock-dots::-webkit-scrollbar { display: none; }
+
+.sp-dot {
+  appearance: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform 0.14s ease;
+}
+
+.sp-dot::after {
+  content: "";
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background: rgba(244, 239, 232, 0.28);
+  transition: width 0.2s ease, background 0.2s ease, transform 0.16s ease;
+}
+
+.sp-dot:hover::after {
+  background: rgba(244, 239, 232, 0.65);
+  transform: scale(1.15);
+}
+
+.sp-dot.is-visited::after {
+  background: rgba(244, 239, 232, 0.52);
+}
+
+.sp-dot.is-active::after {
+  width: 22px;
+  background: var(--sp-acc);
+}
+
+/* Bottom controls row */
+.dock-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.dock-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sp-btn {
+  appearance: none;
+  border: 1px solid var(--sp-border);
+  background: var(--sp-surface);
+  color: var(--sp-text);
+  border-radius: 10px;
+  height: 38px;
+  padding: 0 13px;
+  font-family: var(--f-ko);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  white-space: nowrap;
+  transition: background 0.14s ease, border-color 0.14s ease, transform 0.12s ease, color 0.14s ease, box-shadow 0.18s ease;
+}
+
+.sp-btn[hidden] {
+  display: none !important;
+}
+
+.sp-btn:hover:not(:disabled) {
+  background: var(--sp-surface-hi);
+  border-color: rgba(244, 239, 232, 0.28);
+}
+
+.sp-btn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.sp-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.sp-btn.is-primary {
+  background: var(--sp-acc);
+  border-color: var(--sp-acc);
+  color: #F4EFE8;
+}
+
+.sp-btn.is-primary:hover:not(:disabled) {
+  filter: brightness(1.08);
+  background: var(--sp-acc);
+}
+
+.sp-btn.is-pulse {
+  background: var(--sp-acc);
+  border-color: var(--sp-acc);
+  color: #F4EFE8;
+  animation: spPulse 1.4s ease-in-out infinite;
+}
+
+@keyframes spPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(252, 65, 9, 0.55); }
+  50% { box-shadow: 0 0 0 7px rgba(252, 65, 9, 0); }
+}
+
+.sp-btn[aria-pressed="true"] {
+  background: rgba(252, 65, 9, 0.18);
+  border-color: rgba(252, 65, 9, 0.72);
+  color: #FFE4DC;
+}
+
+.sp-btn .btn-ico {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 15px;
+  height: 15px;
+  font-size: 13px;
+  line-height: 1;
+}
+
+.sp-btn .btn-ico svg {
+  width: 15px;
+  height: 15px;
+  display: block;
+}
+
+.dock-unofficial {
+  font-family: var(--f-mono);
+  font-size: 11px;
+  color: var(--sp-muted);
+  opacity: 0.82;
+  white-space: nowrap;
+  margin-left: 6px;
+}
+
+/* Compact dots slot inside controls row (hidden on desktop/portrait, shown in overlay mode) */
+.dock-ov-meta {
+  display: none;
+}
+
+/* High-contrast keyboard focus ring */
+button:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2.5px solid var(--sp-acc) !important;
+  outline-offset: 2px;
+}
+
+/* ---------- Screen-reader only ---------- */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------- Mobile Portrait (narrow + tall, fixed dock below) ---------- */
+@media (max-width: 720px) and (min-height: 501px) {
+  #slide-viewport {
+    padding: calc(8px + env(safe-area-inset-top, 0px))
+             calc(8px + env(safe-area-inset-right, 0px))
+             6px
+             calc(8px + env(safe-area-inset-left, 0px));
+  }
+  #stage-frame {
+    border-radius: 8px;
+  }
+  .dock-inner {
+    padding: 8px 10px 10px;
+    gap: 7px;
+  }
+  .dock-top {
+    flex-wrap: wrap;
+    row-gap: 4px;
+  }
+  #dock-dots {
+    order: 3;
+    flex-basis: 100%;
+    justify-content: center;
+    gap: 2px;
+  }
+  .dock-controls {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+  }
+  .dock-group {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5px;
+  }
+  .sp-btn {
+    height: 40px;
+    padding: 0 11px;
+    font-size: 12.5px;
+  }
+  .sp-btn .btn-lbl-sm-hide {
+    display: none;
+  }
+  .dock-unofficial {
+    width: 100%;
+    text-align: center;
+    margin: 2px 0 0;
+    font-size: 10.5px;
+  }
+  #cover-overlay {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: auto;
+    bottom: calc(204px + env(safe-area-inset-bottom, 0px));
+    align-items: center;
+    justify-content: center;
+    padding: 0 16px;
+    background: none;
+  }
+  .cover-cta-box {
+    align-items: center;
+    padding: 10px 16px 9px;
+    border-radius: 16px;
+    background: rgba(28, 26, 27, 0.94);
+  }
+  #btn-start {
+    padding: 11px 24px;
+    font-size: 15px;
+  }
+}
+
+/* ---------- Landscape / Short Viewport Overlay Mode ----------
+   Stage fills 100% of viewport height (16:9 letterboxed left/right only);
+   slim ~44px translucent dock floats over bottom, auto-hides after 2.5s while playing,
+   and lifts captions smoothly when visible so captions are never covered. */
+body.is-overlay #slide-viewport {
+  padding: env(safe-area-inset-top, 0px)
+           env(safe-area-inset-right, 0px)
+           0
+           env(safe-area-inset-left, 0px);
+}
+
+body.is-overlay #stage-frame {
+  border-radius: 0;
+  box-shadow: none;
+}
+
+body.is-overlay #slide-dock {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: auto;
+  background: rgba(20, 19, 22, 0.78);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(244, 239, 232, 0.14);
+}
+
+body.is-overlay.dock-hidden #slide-dock {
+  opacity: 0;
+  transform: translateY(100%);
+  pointer-events: none;
+}
+
+/* Lift captions & AI tag slightly ONLY when overlay dock is visible */
+body.is-overlay:not(.dock-hidden) #stage #caps {
+  transform: translateY(-136px);
+}
+
+body.is-overlay:not(.dock-hidden) #stage .ai-tag {
+  transform: translateY(-124px);
+}
+
+body.is-overlay .dock-inner {
+  max-width: none;
+  padding: 5px 12px 5px;
+  gap: 0;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 44px;
+}
+
+body.is-overlay .dock-top {
+  order: 2;
+  flex: 1 1 auto;
+  justify-content: center;
+  gap: 8px;
+  min-width: 0;
+  min-height: 0;
+  padding: 0 6px;
+}
+
+body.is-overlay .dock-scene-info {
+  gap: 5px;
+  font-size: 11.5px;
+  flex-shrink: 0;
+}
+
+body.is-overlay #dock-title,
+body.is-overlay #dock-status,
+body.is-overlay .dock-unofficial {
+  display: none;
+}
+
+body.is-overlay .dock-count {
+  font-size: 11px;
+  padding: 2px 7px;
+}
+
+body.is-overlay #dock-dots {
+  flex: 0 1 auto;
+  gap: 2px;
+  padding: 0;
+}
+
+body.is-overlay .sp-dot {
+  width: 15px;
+  height: 28px;
+}
+
+body.is-overlay .sp-dot::after {
+  width: 6px;
+  height: 6px;
+}
+
+body.is-overlay .sp-dot.is-active::after {
+  width: 14px;
+}
+
+body.is-overlay .dock-controls {
+  display: contents;
+}
+
+body.is-overlay .dock-group-left {
+  order: 1;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+body.is-overlay .dock-group-right {
+  order: 3;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+body.is-overlay .sp-btn {
+  height: 34px;
+  min-width: 34px;
+  padding: 0 9px;
+  font-size: 12px;
+  border-radius: 8px;
+  background: rgba(40, 37, 38, 0.85);
+}
+
+body.is-overlay .sp-btn .btn-lbl-ov-hide,
+body.is-overlay .sp-btn .btn-lbl-sm-hide {
+  display: none;
+}
+
+body.is-overlay #cover-overlay {
+  padding: 12px 16px 66px clamp(16px, 5.2%, 48px);
+}
+
+body.is-overlay .cover-cta-box {
+  padding: 8px 14px 7px;
+  gap: 4px;
+  border-radius: 14px;
+}
+
+body.is-overlay #btn-start {
+  padding: 8px 20px;
+  font-size: 13.5px;
+}
+
+body.is-overlay .cover-hint {
+  font-size: 11px;
+}
+
+/* Also ensure initial CSS paint before JS runs matches overlay mode cleanly */
+@media (max-height: 500px), (orientation: landscape) and (pointer: coarse) {
+  #slide-viewport {
+    padding: env(safe-area-inset-top, 0px)
+             env(safe-area-inset-right, 0px)
+             0
+             env(safe-area-inset-left, 0px);
+  }
+  #slide-dock {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+}

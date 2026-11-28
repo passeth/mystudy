@@ -7,6 +7,7 @@
     "gen-manifest": "node scripts/gen-manifest.mjs",
     "fde:sync": "node scripts/sync-fde.mjs",
     "fde:render": "node scripts/sync-fde.mjs --render-only",
+    "fde:slides": "node scripts/sync-fde-slides.mjs",
     "dev": "npm run gen-manifest && vite",
     "prebuild": "node scripts/gen-manifest.mjs",
     "build": "vite build",

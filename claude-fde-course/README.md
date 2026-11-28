@@ -13,7 +13,9 @@ claude-fde-course/
   assets/fde.css     # 세션·코스 홈 공통 스타일
   assets/fde.js      # 진행 상태(완료 체크, localStorage)
 scripts/sync-fde.mjs # 원본 → 스냅샷 → public/lessons/claude-fde/*.html
+scripts/sync-fde-slides.mjs  # 슬라이드 묶음 → public/slides/claude-fde/ (+ 링크 후처리)
 public/lessons/claude-fde/   # 생성 결과 (커밋함. 직접 고치지 않기)
+public/slides/claude-fde/    # 슬라이드 강의 사본 (커밋함. 직접 고치지 않기)
 ```
 
 ## 노트가 고쳐졌을 때 다시 가져오기
@@ -89,3 +91,38 @@ git add claude-fde-course public/lessons/claude-fde && git commit
 git은 바꾼 영상도 이력에 영원히 남겨서 저장소가 계속 커지고(GitHub 권장 1GB, 파일당 100MB 제한),
 Vercel 정적 배포는 영상 스트리밍용 CDN이 아니라 대역폭이 그대로 사용량에 잡혀요.
 추천 호스팅: YouTube(일부 공개) 또는 Cloudflare R2·Vercel Blob 같은 객체 저장소의 mp4 직접 링크.
+
+## 슬라이드 강의 (`/slides/claude-fde/`)
+
+같은 강의를 장면 단위로 넘기며 보는 별도 페이지예요. 장면마다 영상과 같은 모션 + 그 장면의 음성·자막이 나오고,
+오른쪽 패널은 강의 목록, 아래 패널은 학습 자료(영상·노트·문제·복습 카드·출처)예요.
+묶음은 Study_FDE 쪽에서 만들고(`<study>/slides/site/`: `_shared/`, `s01/`~`s42/`, `index.html`), 이 저장소는 사본만 둬요.
+
+- 진입: `/slides/claude-fde/` (S01로 이동), 세션별 `/slides/claude-fde/s07/` — **끝 슬래시 필수**(상대 경로 `./assets`, `../_shared`).
+- 사이트 쪽 진입점은 `fde:render`가 붙여요: 코스 홈 히어로 "슬라이드로 처음부터", 시간표 각 줄의 "슬라이드",
+  세션 페이지 영상 아래 "슬라이드로 보기". `public/slides/claude-fde/sNN/index.html`이 있는 세션에만 붙어요.
+- `vercel.json`의 SPA 리라이트는 `slides/`를 제외해요. 없는 슬라이드 파일은 앱 화면이 아니라 404가 돼요.
+
+### 슬라이드를 다시 받을 때
+
+```bash
+npm run fde:slides        # <study>/slides/site → public/slides/claude-fde/ 복사 + 링크 후처리
+npm run fde:render        # 세션 페이지·코스 홈의 슬라이드 버튼 갱신
+npm run build
+git add public/slides/claude-fde public/lessons/claude-fde && git commit
+```
+
+- 다른 위치: `npm run fde:slides -- --src <묶음 폴더>` 또는 `FDE_SLIDES_SRC=<경로>`. 기본값은 `fde.config.json`의 `source` + `/slides/site`.
+- 묶음이 아직 만들어지는 중이면(세션 폴더·`_shared`·`assets` 누락) 복사하지 않고 멈춰요. 생성이 끝난 뒤 다시 실행하세요.
+- 후처리(원본 폴더는 건드리지 않고 사본에만):
+  1. 묶음 안의 `/t/claude-fde/<id>` 링크를 `public/lessons/claude-fde/`의 실제 노트 파일과 맞춰요.
+     세션 번호(`sNN-`)가 같은 노트로 바꾸고, 코스 홈은 `0000-course-home`으로. 맞출 수 없는 링크가 있으면 실패해요.
+  2. `index.html`마다 `<!-- mystudy:trailing-slash -->` 한 줄을 넣어, 끝 슬래시 없이 열렸을 때 슬래시를 붙여 다시 열어요.
+- 사본만 다시 검사: `npm run fde:slides -- --check`.
+
+### 용량
+
+묶음은 약 63MB, 파일 758개(mp3 280 · webp 254 · js 173, 가장 큰 파일 약 0.4MB)예요.
+GitHub(파일당 100MB, 저장소 1GB 권장)와 Vercel(Git 배포, 출력 파일 수 제한 없음) 한도 안이에요.
+다만 git은 바뀐 mp3·webp를 이력에 계속 쌓으므로, 묶음을 통째로 다시 만들 때마다 저장소가 최대 수십 MB씩 커질 수 있어요.
+자주 다시 만들게 되면 음성·그림을 객체 저장소(Cloudflare R2, Vercel Blob)로 옮기는 걸 검토하세요.
