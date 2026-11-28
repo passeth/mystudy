@@ -444,6 +444,10 @@ ${data ? `<script type="application/json" id="fde-data">${JSON.stringify(data).r
 }
 
 const sessionHref = (n) => `/t/${TOPIC}/${n.slug}`;
+// 슬라이드 강의(npm run fde:slides 로 public/slides/claude-fde/ 에 넣은 묶음). 묶음이 있는 세션만 버튼을 붙여요.
+const slidesDir = join(root, "public", "slides", TOPIC);
+const slideHref = (id) => `/slides/${TOPIC}/${id.toLowerCase()}/`;
+const hasSlides = (id) => existsSync(join(slidesDir, id.toLowerCase(), "index.html"));
 const homeHref = `/t/${TOPIC}/${HOME_ID}`;
 const link = (href, html, cls = "") => `<a href="${href}" target="_top"${cls ? ` class="${cls}"` : ""}>${html}</a>`;
 const mark = (text) => `<span class="mark"><b>##</b> ${text}</span>`;
@@ -594,7 +598,8 @@ function ledger(courses, byId, currentId = "") {
       const tag = n?.video?.url ? `<span class="tag v">영상</span>` : `<span class="tag n">노트</span>`;
       const inner = `<span class="mono">${s.id}</span><span class="tt">${inline(s.topic)}</span>${tag}<span class="done-mark" data-done-mark="${s.id}" aria-hidden="true"></span>`;
       const cls = s.id === currentId ? "now" : "";
-      return `<li class="${cls}"${s.id === currentId ? ' aria-current="page"' : ""}>${n ? link(sessionHref(n), inner) : `<span class="row">${inner}</span>`}</li>`;
+      const sl = hasSlides(s.id) ? link(slideHref(s.id), "슬라이드", "sl").replace("<a ", `<a aria-label="${s.id} 슬라이드로 보기" `) : "";
+      return `<li class="${cls}${sl ? " has-sl" : ""}"${s.id === currentId ? ' aria-current="page"' : ""}>${n ? link(sessionHref(n), inner) : `<span class="row">${inner}</span>`}${sl}</li>`;
     }).join("");
     return `<div class="course rise"><h3><span>${no}${inline(c.name.replace(/^\d+\.\s*/, ""))}</span><span class="mono">${c.sessions.length}세션</span></h3>
   ${c.detail ? `<p class="cd mono">${esc(c.detail)}</p>` : ""}<ol>${rows}</ol></div>`;
@@ -689,6 +694,7 @@ function renderSession(n, all, idx, courses) {
     <h2 id="h-v" class="title">${v?.url ? `먼저 보고, <span class="ser">아래에서</span> 확인해요` : `영상은 <span class="ser">준비 중</span>, 노트부터 봐요`}</h2>
     <div class="screen rise">${screen}</div>
     <div class="under"><span>${[meta.minutes && `${meta.minutes}분 세션`, scenes && `대본 장면 ${scenes}개`].filter(Boolean).join(" · ")}</span><span>${v?.url ? "영상 + 노트" : "노트 먼저"}</span></div>
+    ${hasSlides(n.id) ? `<div class="go-row slide-row">${link(slideHref(n.id), `<span aria-hidden="true">▶</span> 슬라이드로 보기`, "go go-slide")}<span class="slide-hint">장면을 넘기며 같은 강의를 음성·자막으로</span></div>` : ""}
     ${scriptDetails}
   </div>
 </section>`;
@@ -854,6 +860,7 @@ function renderHome(courses, notes, overviewMd) {
     ${mark(`비공식 학습 노트 · 11개 코스 · ${total}세션`).replace('class="mark"', 'class="mark land"')}
     <h1 class="land l2">${accent(home.headline || "Claude FDE *스터디*")}</h1>
     <div class="lines land l3">${(home.lines || ["11개 코스를 42개 세션으로", "하루 한 세션, 15~25분", "마지막엔 파일럿 계획서 한 장"]).map((l) => `<span>${inline(l)}</span>`).join("")}</div>
+    ${first && hasSlides(first.id) ? `<div class="go-row land l3">${link(slideHref(first.id), `<span aria-hidden="true">▶</span> 슬라이드로 처음부터`, "go go-slide")}<span class="slide-hint">S01부터 장면을 넘기며 듣는 강의</span></div>` : ""}
     <span class="by">Claude Forward Deployed Engineer 학습 경로 · 개인 학습 노트</span>
   </div>`;
   const hero = home.hero

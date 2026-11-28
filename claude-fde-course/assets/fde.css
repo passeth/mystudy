@@ -219,6 +219,14 @@ details.ans.big > summary { font-size: 1.05rem; }
 .bar-track i { display: block; height: 100%; background: var(--accent); border-radius: inherit; transition: width .5s var(--soft); }
 [data-progress-next] a { font-weight: 700; }
 
+/* 슬라이드 강의 진입점 (public/slides/claude-fde/) */
+.go-slide { background: var(--pink); color: var(--ink); box-shadow: 0 6px 0 -2px rgba(32,30,31,.25); }
+.go-slide:hover { background: var(--paper); }
+.slide-hint { font: 400 13px var(--f-mono); letter-spacing: .02em; }
+.slide-row .go-slide { background: var(--paper); color: var(--ink); border: 1.5px solid var(--ink); }
+.slide-row .go-slide:hover { background: var(--ink); color: var(--paper); border-color: var(--paper); }
+.slide-row .slide-hint { color: var(--ink); background: var(--paper); border-radius: 999px; padding: 3px 12px; }
+
 /* 시간표 */
 .ledger { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 16px; }
 .course { background: var(--paper); color: var(--ink); border-radius: 22px; padding: 16px 18px 14px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
@@ -230,6 +238,10 @@ details.ans.big > summary { font-size: 1.05rem; }
 .course li > a:hover .tt { text-decoration: underline; text-decoration-color: var(--accent); }
 .course li .mono { font-size: 12.5px; opacity: .75; }
 .course li.now > a { background: var(--pink); }
+.course li.has-sl { display: flex; align-items: baseline; gap: 6px; }
+.course li.has-sl > a:first-child, .course li.has-sl > .row { flex: 1; min-width: 0; }
+.course li > a.sl { display: inline-block; flex: none; font: 700 11px var(--f-kr); color: var(--ink); background: transparent; border: 1px solid rgba(32,30,31,.45); border-radius: 999px; padding: 1px 8px; white-space: nowrap; }
+.course li > a.sl:hover { background: var(--ink); color: var(--paper); }
 .tag { font: 700 11px var(--f-kr); border-radius: 999px; padding: 1px 8px; white-space: nowrap; }
 .tag.v { background: var(--accent); color: var(--paper); }
 .tag.n { border: 1px solid rgba(32,30,31,.35); }

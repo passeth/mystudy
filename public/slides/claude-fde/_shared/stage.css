@@ -1,0 +1,483 @@
+/* v3 Stage Series — human-md.ai 영감 시네마틱 무대 CSS (1920x1080)
+   핵심: 강한 단색 벽 + 바닥 띠(경계 70~80%), 빈 공간 55~70%, 접지 그림자,
+         왼쪽 위 타이틀, #FC4109 떠다니는 점 1개, 6단 필름 그레인, 한글 Pretendard 주인공. */
+
+:root {
+  --ink: #201E1F;
+  --paper: #F4EFE8;
+  --acc: #FC4109;
+  --pink: #FFABC8;
+  --purple: #E7BFFF;
+  --sky: #5D9DC5;
+  --lilac: #CB9CF8;
+  --bottle: #26512F;
+  --mint: #69B488;
+  --tomato: #E83729;
+  --ocker: #A67325;
+  --mustard: #C0902F;
+  --cobalt: #0B41C2;
+  --sand: #D1C2AF;
+  --terra: #C85A2C;
+  --terra-deep: #CF4A1A;
+  --olive: #B0BE77;
+  --yellow: #F8D867;
+  --wood: #D7B583;
+  --table: #EFEDE8;
+  --night: #171B33;
+
+  --f-ko: "Pretendard", "Bricolage Grotesque", sans-serif;
+  --f-disp: "Bricolage Grotesque", "Pretendard", sans-serif;
+  --f-ser: "Instrument Serif", "NKSerif", serif;
+  --f-mono: "Cutive Mono", "Pretendard", monospace;
+}
+
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  width: 1920px;
+  height: 1080px;
+  overflow: hidden;
+  background: var(--ink);
+}
+#stage {
+  position: relative;
+  width: 1920px;
+  height: 1080px;
+  overflow: hidden;
+  background: var(--cobalt);
+  color: var(--ink);
+  font-family: var(--f-ko);
+  word-break: keep-all;
+}
+
+/* 6단 계단 필름 그레인 (0.9s / 6steps, 투명도 6%, inset -50%) */
+#grain {
+  position: absolute;
+  inset: -50%;
+  width: 200%;
+  height: 200%;
+  pointer-events: none;
+  z-index: 80;
+  opacity: 0.065;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.88' numOctaves='3' seed='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='260' height='260' filter='url(%23g)'/%3E%3C/svg%3E");
+  background-size: 260px 260px;
+}
+
+/* 무대 룸 레이어 */
+.room {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  will-change: transform, clip-path, opacity;
+}
+/* 벽 위 은은한 좌상단 스튜디오 빛 (radial 7%) */
+.wall-light {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse 68% 62% at 18% 12%, rgba(255, 255, 255, 0.085), transparent 68%);
+}
+/* 바닥 띠 (경계 70~80%) */
+.floor {
+  position: absolute;
+  left: -40px;
+  right: -40px;
+  bottom: -40px;
+  pointer-events: none;
+}
+/* 부드러운 접지 그림자 (#2A2620 28%, blur 8px) */
+.gshadow {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(42, 38, 32, 0.30);
+  filter: blur(10px);
+  pointer-events: none;
+  transform-origin: center center;
+}
+
+/* 떠다니는 Accent 점 1개 (#FC4109) */
+#accent-dot {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 34px;
+  height: 34px;
+  margin-left: -17px;
+  margin-top: -17px;
+  border-radius: 50%;
+  background: var(--acc);
+  z-index: 55;
+  pointer-events: none;
+  will-change: transform;
+}
+
+/* 상단 미니멀 HUD (장면 밝기에 따라 ink <-> paper 0.6초 전환) */
+#hud {
+  position: absolute;
+  left: 48px;
+  right: 48px;
+  top: 30px;
+  height: 46px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 60;
+  pointer-events: none;
+}
+.hud-left {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  font-family: var(--f-disp);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.hud-dot {
+  display: inline-block;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--acc);
+}
+.hud-pill {
+  padding: 6px 20px;
+  border-radius: 999px;
+  font-family: var(--f-disp);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+.hud-prog {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 4px;
+  background: rgba(255,255,255,0.14);
+  z-index: 62;
+}
+#hud-prog-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  background: var(--acc);
+  transform-origin: 0 50%;
+}
+
+/* 타이포그래피 (한글 Pretendard 주인공 + Bricolage/Instrument/Cutive 장식) */
+.h-hero {
+  font-family: var(--f-disp);
+  font-size: 158px;
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  white-space: pre;
+}
+.h-ch {
+  font-family: var(--f-ko);
+  font-size: 74px;
+  line-height: 1.12;
+  font-weight: 800;
+  letter-spacing: -0.032em;
+  white-space: pre;
+}
+.h-kw {
+  font-family: var(--f-ko);
+  font-size: 132px;
+  line-height: 1.05;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  white-space: pre;
+}
+.h-giant {
+  font-family: var(--f-ko);
+  font-size: 360px;
+  line-height: 0.95;
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  white-space: pre;
+}
+.body-l {
+  font-family: var(--f-ko);
+  font-size: 42px;
+  line-height: 1.32;
+  font-weight: 400;
+  letter-spacing: -0.018em;
+  white-space: pre;
+}
+.body-m {
+  font-family: var(--f-ko);
+  font-size: 34px;
+  line-height: 1.38;
+  font-weight: 450;
+  letter-spacing: -0.015em;
+  white-space: pre;
+}
+.ser-it {
+  font-family: var(--f-ser);
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+.mono {
+  font-family: var(--f-mono);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+.hash {
+  font-family: var(--f-mono);
+  color: var(--acc);
+  font-weight: 700;
+  margin-right: 12px;
+}
+.gt-line {
+  font-family: var(--f-mono);
+  font-size: 23px;
+  line-height: 1.65;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  white-space: pre;
+}
+.gt-line .gt {
+  color: var(--acc);
+  margin-right: 10px;
+}
+
+/* human-md.ai 스타일 말풍선 (paper 바탕, 1px ink 테두리, 반경 28px, 사선 꼬리) */
+.hm-bub {
+  position: absolute;
+  background: var(--paper);
+  color: var(--ink);
+  border: 1.5px solid var(--ink);
+  border-radius: 28px;
+  padding: 22px 32px;
+  font-size: 35px;
+  line-height: 1.38;
+  font-weight: 650;
+  box-shadow: 0 12px 28px -14px rgba(32, 30, 31, 0.25);
+  white-space: pre-wrap;
+}
+.hm-bub.tail-l::after {
+  content: "";
+  position: absolute;
+  left: 34px;
+  bottom: -15px;
+  width: 24px;
+  height: 16px;
+  background: var(--paper);
+  border-left: 1.5px solid var(--ink);
+  border-bottom: 1.5px solid var(--ink);
+  transform: skewX(-34deg);
+}
+.hm-bub.tail-r::after {
+  content: "";
+  position: absolute;
+  right: 34px;
+  bottom: -15px;
+  width: 24px;
+  height: 16px;
+  background: var(--paper);
+  border-right: 1.5px solid var(--ink);
+  border-bottom: 1.5px solid var(--ink);
+  transform: skewX(34deg);
+}
+
+/* 단어 알약 (paper 바탕, 1px ink 테두리, 완전 둥근 모서리) */
+.hm-pill {
+  position: absolute;
+  background: var(--paper);
+  color: var(--ink);
+  border: 1.5px solid var(--ink);
+  border-radius: 999px;
+  padding: 12px 32px 14px;
+  font-size: 36px;
+  line-height: 1.2;
+  font-weight: 700;
+  box-shadow: 0 10px 22px -12px rgba(32, 30, 31, 0.28);
+  white-space: pre;
+}
+.hm-pill.acc { background: var(--acc); border-color: var(--acc); color: var(--paper); }
+.hm-pill.ink { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+.hm-pill.pink { background: var(--pink); border-color: var(--ink); color: var(--ink); }
+.hm-pill.yellow { background: var(--yellow); border-color: var(--ink); color: var(--ink); }
+
+/* 줄 공책 페이지 (L10 요약: #F4EFE8, 줄선 blue 42%, 여백선 accent 55%, 분홍 형광펜 66%) */
+.notebook-page {
+  position: absolute;
+  inset: 0;
+  background-color: var(--paper);
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 74px,
+    rgba(93, 157, 197, 0.42) 74px,
+    rgba(93, 157, 197, 0.42) 76px
+  );
+  background-position: 0 116px;
+}
+.notebook-margin {
+  position: absolute;
+  left: 190px;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: rgba(252, 65, 9, 0.55);
+}
+.pink-hl-wrap {
+  position: relative;
+  display: inline-block;
+  padding: 0 8px;
+  z-index: 1;
+}
+.pink-hl-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 4px;
+  height: 66%;
+  background: var(--pink);
+  border-radius: 4px;
+  transform-origin: 0 50%;
+  z-index: -1;
+}
+
+/* 컷아웃 이미지 */
+.cutout {
+  position: absolute;
+  display: block;
+  object-fit: contain;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+/* 깜빡이는 캐럿 */
+.caret {
+  display: inline-block;
+  width: 14px;
+  height: 0.9em;
+  background: var(--acc);
+  vertical-align: -0.1em;
+  margin-left: 6px;
+}
+
+/* 출처 / 비공식 표시 */
+.footnote {
+  position: absolute;
+  font-family: var(--f-mono);
+  font-size: 20px;
+  line-height: 1.45;
+  font-weight: 600;
+  padding: 4px 14px;
+  border-radius: 4px;
+  white-space: pre;
+}
+
+/* 자막: 42px Pretendard, 휴대폰 가독성 최우선 */
+#caps {
+  position: absolute;
+  inset: 0;
+  z-index: 70;
+  pointer-events: none;
+}
+.cap {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  width: max-content;
+  max-width: 1740px;
+  padding: 7px 26px 9px;
+  border-radius: 8px;
+  background: rgba(32, 30, 31, 0.93);
+  color: var(--paper);
+  top: 966px;
+  text-align: center;
+  font-family: var(--f-ko);
+  font-size: 42px;
+  line-height: 54px;
+  font-weight: 600;
+  white-space: pre;
+  letter-spacing: -0.01em;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+}
+
+/* AI 생성 표시 */
+.ai-tag {
+  position: absolute;
+  right: 26px;
+  bottom: 16px;
+  font-family: var(--f-mono);
+  font-size: 16px;
+  font-weight: 600;
+  padding: 2px 9px;
+  border-radius: 4px;
+  background: rgba(32, 30, 31, 0.72);
+  color: var(--paper);
+  z-index: 75;
+}
+
+/* 기술 세션용 모노 코드·명령·설정 카드 (S10~S34) */
+.hm-code {
+  position: absolute;
+  background: #1C1A1B;
+  color: var(--paper);
+  border: 2px solid #201E1F;
+  border-radius: 22px;
+  padding: 22px 30px 26px;
+  box-shadow: 0 18px 40px -18px rgba(20, 18, 19, 0.42);
+  font-family: "IBM Plex Mono", var(--f-mono), monospace;
+  overflow: hidden;
+}
+.hm-code-hdr {
+  font-family: var(--f-mono);
+  font-size: 19px;
+  letter-spacing: 0.06em;
+  color: var(--pink);
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(244, 239, 232, 0.16);
+}
+.hm-code-line {
+  font-size: 24px;
+  line-height: 1.56;
+  padding: 3px 12px;
+  margin: 2px -12px;
+  border-left: 4px solid transparent;
+  border-radius: 4px;
+  white-space: pre-wrap;
+  word-break: break-all;
+  transition: background 0.15s;
+}
+.hm-code-line.hi {
+  background: rgba(252, 65, 9, 0.20);
+  border-left-color: var(--acc);
+}
+
+/* 워크플로·아키텍처 단계 노드 */
+.hm-flow-box {
+  position: absolute;
+  background: var(--paper);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  border-radius: 20px;
+  padding: 20px 24px;
+  box-shadow: 0 12px 26px -14px rgba(32, 30, 31, 0.28);
+}
+
+/* 진단·비교 표 행 */
+.hm-diag-row {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: rgba(244, 239, 232, 0.92);
+  color: var(--ink);
+  border: 1.5px solid var(--ink);
+  border-radius: 18px;
+  padding: 14px 26px;
+  box-shadow: 0 10px 22px -14px rgba(32, 30, 31, 0.22);
+}

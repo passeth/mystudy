@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<!-- mystudy:trailing-slash --><script>(function(l){if(!/\/$|\.html$/.test(l.pathname))l.replace(l.pathname+"/"+l.search+l.hash)})(location)</script>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>S16 · Managed Agents (슬라이드 강의)</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230B41C2'/%3E%3Ccircle cx='32' cy='32' r='14' fill='%23FC4109'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="../_shared/fonts.css">
+<link rel="stylesheet" href="../_shared/stage.css">
+<link rel="stylesheet" href="../_shared/slide_player.css">
+<link rel="stylesheet" href="../_shared/study_panels.css">
+</head>
+<body>
+<div id="app-main">
+  <main id="slide-viewport" aria-label="S16 슬라이드 무대">
+    <div id="stage-frame">
+      <div id="stage" data-composition-id="main" data-width="1920" data-height="1080">
+        <div id="hud">
+          <div id="hud-left" class="hud-left"><span class="hud-dot"></span>Claude FDE</div>
+          <div id="hud-pill" class="hud-pill">S16 · OPENING</div>
+        </div>
+        <div class="hud-prog"><div id="hud-prog-fill"></div></div>
+        <div id="accent-dot"></div>
+        <div id="caps"></div>
+        <div id="grain"></div>
+        <div class="ai-tag">AI 생성 일러스트·음성</div>
+      </div>
+
+      <div id="cover-overlay" role="dialog" aria-label="강의 시작">
+        <div class="cover-cta-box">
+          <button id="btn-start" type="button">
+            <span aria-hidden="true">▶</span>
+            <span>강의 시작</span>
+          </button>
+          <div class="cover-hint">소리 켜짐 · 총 6장면 · →/← 또는 스와이프로 넘기기</div>
+        </div>
+      </div>
+
+      <div id="stage-toast" aria-hidden="true"></div>
+    </div>
+  </main>
+
+  <nav id="slide-dock" aria-label="슬라이드 재생 컨트롤">
+    <div class="dock-prog-track" aria-hidden="true"><div id="dock-prog-fill"></div></div>
+    <div class="dock-inner">
+      <div class="dock-top">
+        <div class="dock-scene-info">
+          <span id="dock-count" class="dock-count">표지</span>
+          <span id="dock-title">Managed Agents</span>
+        </div>
+        <div id="dock-dots" role="group" aria-label="장면 이동"></div>
+        <div id="dock-status" aria-live="polite">시작을 눌러 재생하세요</div>
+      </div>
+      <div class="dock-controls">
+        <div class="dock-group dock-group-left">
+          <button id="btn-prev" class="sp-btn" type="button" aria-label="이전 장면" disabled>
+            <span class="btn-ico" aria-hidden="true">←</span><span class="btn-lbl-ov-hide">이전</span>
+          </button>
+          <button id="btn-play" class="sp-btn" type="button" aria-label="재생" disabled>
+            <span class="btn-ico" aria-hidden="true">▶</span><span class="btn-lbl-sm-hide btn-lbl-ov-hide">재생</span>
+          </button>
+          <button id="btn-replay" class="sp-btn" type="button" aria-label="현재 장면 다시 듣기" disabled>
+            <span class="btn-ico" aria-hidden="true">↻</span><span class="btn-lbl-ov-hide">다시 듣기</span>
+          </button>
+          <button id="btn-next" class="sp-btn is-primary" type="button" aria-label="다음 장면">
+            <span class="btn-lbl-ov-hide">다음</span><span class="btn-ico" aria-hidden="true">→</span>
+          </button>
+        </div>
+        <div class="dock-group dock-group-right">
+          <button id="btn-auto" class="sp-btn" type="button" aria-pressed="false" aria-label="자동 넘김 켜기 또는 끄기">
+            <span class="btn-ico" aria-hidden="true">⏩</span><span class="btn-lbl-ov-hide">자동 넘김</span>
+          </button>
+          <button id="btn-mute" class="sp-btn" type="button" aria-pressed="false" aria-label="음소거">
+            <span class="btn-ico" aria-hidden="true">🔊</span><span class="btn-lbl-sm-hide btn-lbl-ov-hide">소리</span>
+          </button>
+          <button id="btn-caps" class="sp-btn" type="button" aria-pressed="true" aria-label="자막 켜기 또는 끄기">
+            <span class="btn-ico" aria-hidden="true">CC</span><span class="btn-lbl-sm-hide btn-lbl-ov-hide">자막</span>
+          </button>
+          <button id="btn-study" class="sp-btn" type="button" aria-pressed="false" aria-controls="study-sheet" aria-label="학습 자료 및 영상 열기" title="학습 자료 · 영상">
+            <span class="btn-ico" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2.5h7.5L13 5v8.5H3z"/><path d="M5.5 7h5M5.5 9.8h5M5.5 12.2h3"/></svg></span>
+            <span class="btn-lbl-sm-hide btn-lbl-ov-hide">자료</span>
+          </button>
+          <button id="btn-toc" class="sp-btn" type="button" aria-pressed="false" aria-controls="toc-drawer" aria-label="강의 목록 열기" title="강의 목록">
+            <span class="btn-ico" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M3 4h10M3 8h10M3 12h10"/></svg></span>
+            <span class="btn-lbl-sm-hide btn-lbl-ov-hide">목록</span>
+          </button>
+          <button id="btn-fs" class="sp-btn" type="button" aria-pressed="false" aria-label="전체 화면" hidden>
+            <span class="btn-ico" aria-hidden="true">⛶</span>
+          </button>
+          <span class="dock-unofficial">비공식 학습 자료 · 공식: Anthropic Claude FDE</span>
+        </div>
+      </div>
+    </div>
+    <div id="sr-live" class="sr-only" aria-live="polite"></div>
+  </nav>
+</div>
+
+<!-- Bottom Sheet: Study Materials & Video -->
+<section id="study-sheet" role="region" aria-label="학습 자료 및 영상" aria-hidden="true">
+  <div class="panel-hdr">
+    <div class="panel-hdr-title">
+      <span class="panel-dot" aria-hidden="true"></span>
+      <span>S16 학습 자료</span>
+    </div>
+    <div class="panel-hdr-actions">
+      <button id="btn-sheet-size" class="panel-icon-btn" type="button" aria-pressed="false">전체 보기</button>
+      <button id="btn-sheet-close" class="panel-icon-btn" type="button" aria-label="학습 자료 닫기">닫기 ✕</button>
+    </div>
+  </div>
+  <div class="study-tabs" role="tablist" aria-label="학습 자료 탭">
+    <button class="study-tab" type="button" role="tab" data-tab="video" aria-selected="true">영상</button>
+    <button class="study-tab" type="button" role="tab" data-tab="notes" aria-selected="false">노트</button>
+    <button class="study-tab" type="button" role="tab" data-tab="quiz" aria-selected="false">문제</button>
+    <button class="study-tab" type="button" role="tab" data-tab="cards" aria-selected="false">복습 카드</button>
+    <button class="study-tab" type="button" role="tab" data-tab="sources" aria-selected="false">출처</button>
+  </div>
+  <div id="study-body" class="study-body" role="tabpanel"></div>
+</section>
+
+<!-- Right Drawer: Curriculum & Scene List -->
+<div id="panel-backdrop" aria-hidden="true"></div>
+<aside id="toc-drawer" role="complementary" aria-label="강의 목록" aria-hidden="true">
+  <div class="panel-hdr">
+    <div class="panel-hdr-title">
+      <span class="panel-dot" aria-hidden="true"></span>
+      <span>강의 목록</span>
+    </div>
+    <div class="panel-hdr-actions">
+      <span id="toc-prog-pill" class="panel-pill">완료 0 / 42</span>
+      <button id="btn-toc-close" class="panel-icon-btn" type="button" aria-label="강의 목록 닫기">닫기 ✕</button>
+    </div>
+  </div>
+  <div class="toc-body">
+    <div class="toc-site-links">
+      <a class="toc-site-link is-home" href="/t/claude-fde/0000-course-home">코스 홈 ↗</a>
+      <a class="toc-site-link" href="/t/claude-fde/s16-managed-agents">세션 노트 (S16) ↗</a>
+    </div>
+    <div>
+      <div class="toc-sec-label"><span>이 세션의 장면 (S16)</span><span>6장면</span></div>
+      <div id="toc-scenes-list" class="toc-scenes-list"></div>
+    </div>
+    <div>
+      <div class="toc-sec-label"><span>전체 커리큘럼 · 11개 코스</span><span>42세션</span></div>
+      <div id="toc-courses-list" class="toc-courses"></div>
+    </div>
+  </div>
+</aside>
+
+<script>
+window.ART_BASE = './art/';
+window.SHARED_ART_BASE = '../_shared/art/';
+window.ART_EXT = '.webp';
+</script>
+<script src="./assets/cues.js"></script>
+<script src="./assets/spec.js"></script>
+<script src="../_shared/stage_kit.js"></script>
+<script src="../_shared/ep_engine.js"></script>
+<script src="./assets/slide_config.js"></script>
+<script src="../_shared/curriculum.js"></script>
+<script src="./assets/study_data.js"></script>
+<script src="../_shared/slide_player.js"></script>
+<script src="../_shared/study_panels.js"></script>
+</body>
+</html>
